@@ -20,6 +20,9 @@ dependencies:
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
   equatable: ^2.0.5
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_test:
@@ -33,7 +36,7 @@ dev_dependencies:
   envied_generator: ^0.5.4+1
 
 flutter:
-
+  generate: true
   uses-material-design: true
 
   assets:

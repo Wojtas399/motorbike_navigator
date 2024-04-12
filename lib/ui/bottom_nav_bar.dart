@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motorbike_navigator/ui/extensions/context_extensions.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int selectedPageIndex;
@@ -14,18 +15,18 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) => NavigationBar(
         selectedIndex: selectedPageIndex,
         onDestinationSelected: onPageSelected,
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.map),
-            label: 'Mapa',
+            icon: const Icon(Icons.map),
+            label: context.str.map,
           ),
           NavigationDestination(
-            icon: Icon(Icons.bookmark),
-            label: 'Zapisane',
+            icon: const Icon(Icons.bookmark),
+            label: context.str.saved,
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings),
-            label: 'Ustawienia',
+            icon: const Icon(Icons.settings),
+            label: context.str.settings,
           ),
         ],
       );
