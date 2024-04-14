@@ -1,5 +1,7 @@
 {
   "map": "Mapa",
   "saved": "Zapisane",
-  "settings": "Ustawienia"
+  "settings": "Ustawienia",
+  "mapLoading": "Ładowanie mapy...",
+  "mapSearch": "Szukaj..."
 }
