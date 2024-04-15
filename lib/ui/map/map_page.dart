@@ -5,22 +5,46 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:motorbike_navigator/ui/component/gap.dart';
 import 'package:motorbike_navigator/ui/extensions/context_extensions.dart';
 import 'package:motorbike_navigator/ui/map/map_search_bar.dart';
+import 'package:motorbike_navigator/ui/map/map_search_content.dart';
 
 import '../../env.dart';
 import '../../location_provider.dart';
 import '../../location_service.dart';
 import '../component/text.dart';
 
-class MapPage extends StatelessWidget {
+class MapPage extends StatefulWidget {
   const MapPage({super.key});
 
   @override
-  Widget build(BuildContext context) => const Stack(
+  State<StatefulWidget> createState() => _MapPageState();
+}
+
+class _MapPageState extends State<MapPage> {
+  bool _isSearchMode = false;
+
+  void _onSearchBarTap() {
+    setState(() {
+      _isSearchMode = true;
+    });
+  }
+
+  void _onSearchModeClose() {
+    setState(() {
+      _isSearchMode = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => Stack(
         children: [
-          _Map(),
+          _isSearchMode ? const MapSearchContent() : const _Map(),
           Padding(
-            padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
-            child: MapSearchBar(),
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+            child: MapSearchBar(
+              isInSearchMode: _isSearchMode,
+              onTap: _onSearchBarTap,
+              onBackButtonPressed: _onSearchModeClose,
+            ),
           ),
         ],
       );
