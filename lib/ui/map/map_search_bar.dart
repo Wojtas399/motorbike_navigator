@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:motorbike_navigator/ui/extensions/context_extensions.dart';
 import 'package:motorbike_navigator/ui/map/provider/place_suggestions_provider.dart';
 
-class MapSearchBar extends ConsumerWidget {
+class MapSearchBar extends ConsumerStatefulWidget {
   final bool isInSearchMode;
   final VoidCallback onTap;
   final VoidCallback onBackButtonPressed;
@@ -15,9 +15,17 @@ class MapSearchBar extends ConsumerWidget {
     required this.onBackButtonPressed,
   });
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _State();
+}
+
+class _State extends ConsumerState<MapSearchBar> {
+  final TextEditingController _controller = TextEditingController();
+
   void _onBackButtonPressed(BuildContext context) {
     FocusScope.of(context).unfocus();
-    onBackButtonPressed();
+    _controller.clear();
+    widget.onBackButtonPressed();
   }
 
   void _onSubmitted(String? query, WidgetRef ref) {
@@ -27,19 +35,23 @@ class MapSearchBar extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => SearchBar(
+  Widget build(BuildContext context) => SearchBar(
+        controller: _controller,
         hintText: context.str.mapSearch,
         leading: IconButton(
-          onPressed:
-              isInSearchMode ? () => _onBackButtonPressed(context) : null,
+          onPressed: widget.isInSearchMode
+              ? () => _onBackButtonPressed(context)
+              : null,
           icon: Icon(
-            isInSearchMode ? Icons.arrow_back_ios_new : Icons.location_on,
+            widget.isInSearchMode
+                ? Icons.arrow_back_ios_new
+                : Icons.location_on,
             color: context.colorScheme.primary,
           ),
         ),
-        onTap: onTap,
-        elevation: isInSearchMode ? MaterialStateProperty.all(0) : null,
-        side: isInSearchMode
+        onTap: widget.onTap,
+        elevation: widget.isInSearchMode ? MaterialStateProperty.all(0) : null,
+        side: widget.isInSearchMode
             ? MaterialStateProperty.all(
                 BorderSide(
                   color: context.colorScheme.outline,
