@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:motorbike_navigator/data/api/mapbox_api_service.dart';
 import 'package:motorbike_navigator/data/dto/place_suggestion_dto.dart';
-import 'package:motorbike_navigator/data/repository/place/place_suggestion_repository_impl.dart';
+import 'package:motorbike_navigator/data/repository/place_suggestion/place_suggestion_repository_impl.dart';
 import 'package:motorbike_navigator/entity/place_suggestion.dart';
 
 import '../../../mock/data/api/mock_mapbox_api_service.dart';
@@ -33,33 +33,33 @@ void main() {
       final List<PlaceSuggestionDto> placeSuggestionDtos = [
         const PlaceSuggestionDto(
           id: 'ps1',
-          name: 'place 1',
+          name: 'place_suggestion 1',
           fullAddress: 'address 1',
         ),
         const PlaceSuggestionDto(
           id: 'ps2',
-          name: 'place 2',
+          name: 'place_suggestion 2',
           fullAddress: 'address 2',
         ),
         const PlaceSuggestionDto(
           id: 'ps3',
-          name: 'place 3',
+          name: 'place_suggestion 3',
         ),
       ];
       final List<PlaceSuggestion> expectedPlaceSuggestions = [
         const PlaceSuggestion(
           id: 'ps1',
-          name: 'place 1',
+          name: 'place_suggestion 1',
           fullAddress: 'address 1',
         ),
         const PlaceSuggestion(
           id: 'ps2',
-          name: 'place 2',
+          name: 'place_suggestion 2',
           fullAddress: 'address 2',
         ),
         const PlaceSuggestion(
           id: 'ps3',
-          name: 'place 3',
+          name: 'place_suggestion 3',
         ),
       ];
       mapboxApiService.mockSearchPlaces(result: placeSuggestionDtos);

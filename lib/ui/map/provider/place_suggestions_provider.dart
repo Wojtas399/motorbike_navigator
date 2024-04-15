@@ -1,7 +1,7 @@
 import 'package:motorbike_navigator/entity/place_suggestion.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../data/repository/place/place_suggestion_repository_method_providers.dart';
+import '../../../data/repository/place_suggestion/place_suggestion_repository_method_providers.dart';
 
 part 'place_suggestions_provider.g.dart';
 

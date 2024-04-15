@@ -8,7 +8,7 @@ void main() {
     'should map Suggestion object from mapbox plugin to PlaceSuggestionDto object',
     () {
       const String id = 'ps1';
-      const String name = 'place 1';
+      const String name = 'place_suggestion 1';
       const String fullAddress = 'address';
       final Suggestion suggestion = Suggestion(
         name: name,

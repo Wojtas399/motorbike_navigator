@@ -9,7 +9,7 @@ void main() {
     'should map PlaceSuggestionDto object to PlaceSuggestion object',
     () {
       const String id = 'ps1';
-      const String name = 'place 1';
+      const String name = 'place_suggestion 1';
       const String fullAddress = 'address';
       const PlaceSuggestionDto dto = PlaceSuggestionDto(
         id: id,

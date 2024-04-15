@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/data/repository/place/place_suggestion_repository_method_providers.dart';
+import 'package:motorbike_navigator/data/repository/place_suggestion/place_suggestion_repository_method_providers.dart';
 import 'package:motorbike_navigator/entity/place_suggestion.dart';
 import 'package:motorbike_navigator/ui/map/provider/place_suggestions_provider.dart';
 

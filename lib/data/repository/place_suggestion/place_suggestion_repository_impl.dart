@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:motorbike_navigator/data/api/mapbox_api_service.dart';
-import 'package:motorbike_navigator/data/repository/place/place_suggestion_repository.dart';
 
 import '../../../entity/place_suggestion.dart';
 import '../../dto/place_suggestion_dto.dart';
 import '../../mapper/place_suggestion_mapper.dart';
+import 'place_suggestion_repository.dart';
 
 class PlaceSuggestionRepositoryImpl implements PlaceSuggestionRepository {
   final MapboxApiService _mapboxApiService;
