@@ -10,16 +10,16 @@ void main() {
     () {
       const String id = 'ps1';
       const String name = 'place 1';
-      const String address = 'address';
+      const String fullAddress = 'address';
       const PlaceSuggestionDto dto = PlaceSuggestionDto(
         id: id,
         name: name,
-        address: address,
+        fullAddress: fullAddress,
       );
       const PlaceSuggestion expectedObject = PlaceSuggestion(
         id: id,
         name: name,
-        address: address,
+        fullAddress: fullAddress,
       );
 
       final PlaceSuggestion object = mapPlaceSuggestionFromDto(dto);

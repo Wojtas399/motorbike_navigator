@@ -16,9 +16,9 @@ void main() {
       const String query = 'p';
       const int limit = 10;
       const List<PlaceSuggestion> expectedPlaceSuggestions = [
-        PlaceSuggestion(id: 'ps1', name: 'place 1', address: 'address 1'),
-        PlaceSuggestion(id: 'ps2', name: 'place 2', address: 'address 2'),
-        PlaceSuggestion(id: 'ps3', name: 'place 3', address: 'address 3'),
+        PlaceSuggestion(id: 'ps1', name: 'place 1', fullAddress: 'address 1'),
+        PlaceSuggestion(id: 'ps2', name: 'place 2', fullAddress: 'address 2'),
+        PlaceSuggestion(id: 'ps3', name: 'place 3', fullAddress: 'address 3'),
       ];
       placeSuggestionRepository.mockSearchPlaces(
         result: expectedPlaceSuggestions,

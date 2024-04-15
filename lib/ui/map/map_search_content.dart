@@ -19,7 +19,7 @@ class MapSearchContent extends ConsumerWidget {
             ...?suggestedPlacesAsyncVal.value?.map(
               (place) => ListTile(
                 title: Text(place.name),
-                subtitle: Text(place.address ?? ''),
+                subtitle: Text(place.fullAddress ?? ''),
                 onTap: () {
                   //TODO
                 },

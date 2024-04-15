@@ -34,12 +34,12 @@ void main() {
         const PlaceSuggestionDto(
           id: 'ps1',
           name: 'place 1',
-          address: 'address 1',
+          fullAddress: 'address 1',
         ),
         const PlaceSuggestionDto(
           id: 'ps2',
           name: 'place 2',
-          address: 'address 2',
+          fullAddress: 'address 2',
         ),
         const PlaceSuggestionDto(
           id: 'ps3',
@@ -50,12 +50,12 @@ void main() {
         const PlaceSuggestion(
           id: 'ps1',
           name: 'place 1',
-          address: 'address 1',
+          fullAddress: 'address 1',
         ),
         const PlaceSuggestion(
           id: 'ps2',
           name: 'place 2',
-          address: 'address 2',
+          fullAddress: 'address 2',
         ),
         const PlaceSuggestion(
           id: 'ps3',

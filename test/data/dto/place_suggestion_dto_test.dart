@@ -9,13 +9,13 @@ void main() {
     () {
       const String id = 'ps1';
       const String name = 'place 1';
-      const String address = 'address';
+      const String fullAddress = 'address';
       final Suggestion suggestion = Suggestion(
         name: name,
         mapboxId: id,
         featureType: '',
-        address: address,
-        fullAddress: null,
+        address: null,
+        fullAddress: fullAddress,
         placeFormatted: '',
         context: Context(
           country: Country(
@@ -33,7 +33,7 @@ void main() {
       const PlaceSuggestionDto expectedDto = PlaceSuggestionDto(
         id: id,
         name: name,
-        address: address,
+        fullAddress: fullAddress,
       );
 
       final PlaceSuggestionDto dto =

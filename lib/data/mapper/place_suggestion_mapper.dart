@@ -5,5 +5,5 @@ PlaceSuggestion mapPlaceSuggestionFromDto(PlaceSuggestionDto dto) =>
     PlaceSuggestion(
       id: dto.id,
       name: dto.name,
-      address: dto.address,
+      fullAddress: dto.fullAddress,
     );

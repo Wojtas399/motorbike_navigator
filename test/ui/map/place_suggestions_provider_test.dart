@@ -36,9 +36,9 @@ void main() {
       const String query = 'query';
       const int limit = 10;
       const List<PlaceSuggestion> suggestions = [
-        PlaceSuggestion(id: 'id1', name: 'name 1', address: 'address 1'),
-        PlaceSuggestion(id: 'id2', name: 'name 2', address: 'address 2'),
-        PlaceSuggestion(id: 'id3', name: 'name 3', address: 'address 3'),
+        PlaceSuggestion(id: 'id1', name: 'name 1', fullAddress: 'address 1'),
+        PlaceSuggestion(id: 'id2', name: 'name 2', fullAddress: 'address 2'),
+        PlaceSuggestion(id: 'id3', name: 'name 3', fullAddress: 'address 3'),
       ];
       final container = ProviderContainer(
         overrides: [
