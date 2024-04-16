@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:mapbox_search/models/location.dart';
 
 class CoordinatesDto extends Equatable {
   final double latitude;
@@ -10,9 +9,8 @@ class CoordinatesDto extends Equatable {
   @override
   List<Object?> get props => [latitude, longitude];
 
-  factory CoordinatesDto.fromMapboxLocation(Location location) =>
-      CoordinatesDto(
-        location.lat,
-        location.long,
+  factory CoordinatesDto.fromJson(Map<String, dynamic> json) => CoordinatesDto(
+        json['coordinates'][0],
+        json['coordinates'][1],
       );
 }

@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/data/api/mapbox_api_service.dart';
+import 'package:motorbike_navigator/data/api/place_suggestion_api_service.dart';
 import 'package:motorbike_navigator/data/dto/place_suggestion_dto.dart';
 import 'package:motorbike_navigator/data/repository/place_suggestion/place_suggestion_repository_impl.dart';
 import 'package:motorbike_navigator/entity/place_suggestion.dart';
 
-import '../../../mock/data/api/mock_mapbox_api_service.dart';
+import '../../../mock/data/api/mock_place_suggestion_api_service.dart';
 
 void main() {
-  final mapboxApiService = MockMapboxApiService();
+  final placeSuggestionApiService = MockPlaceSuggestionApiService();
   final repositoryImplProvider = AutoDisposeProvider(
     (ref) => PlaceSuggestionRepositoryImpl(ref),
   );
@@ -16,7 +16,9 @@ void main() {
   ProviderContainer createContainer() {
     final container = ProviderContainer(
       overrides: [
-        mapboxApiServiceProvider.overrideWithValue(mapboxApiService),
+        placeSuggestionApiServiceProvider.overrideWithValue(
+          placeSuggestionApiService,
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -62,7 +64,7 @@ void main() {
           name: 'place_suggestion 3',
         ),
       ];
-      mapboxApiService.mockSearchPlaces(result: placeSuggestionDtos);
+      placeSuggestionApiService.mockSearchPlaces(result: placeSuggestionDtos);
       final container = createContainer();
 
       final List<PlaceSuggestion> foundPlaces = await container

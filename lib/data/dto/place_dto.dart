@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:mapbox_search/mapbox_search.dart';
-import 'package:mapbox_search/models/retrieve_response.dart';
-import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
+
+import 'coordinates_dto.dart';
 
 class PlaceDto extends Equatable {
   final String id;
@@ -21,15 +20,9 @@ class PlaceDto extends Equatable {
         coordinates,
       ];
 
-  factory PlaceDto.fromMapboxFeature({
-    required String id,
-    required Feature feature,
-  }) =>
-      PlaceDto(
-        id: id,
-        name: feature.properties.wikidata ?? '',
-        coordinates: CoordinatesDto.fromMapboxLocation(
-          feature.geometry.coordinates,
-        ),
+  factory PlaceDto.fromJson(Map<String, dynamic> json) => PlaceDto(
+        id: json['properties']['mapbox_id'],
+        name: json['properties']['name'],
+        coordinates: CoordinatesDto.fromJson(json['geometry']),
       );
 }

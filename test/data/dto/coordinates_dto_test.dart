@@ -1,18 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mapbox_search/models/location.dart';
 import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
 
 void main() {
   test(
-    'fromMapboxLocation, '
-    'should map Location object from mapbox_search plugin to CoordinateDto object',
+    'fromJson, '
+    'should map json object to CoordinateDto object',
     () {
       const double latitude = 50;
       const double longitude = 50.5;
-      const Location location = (lat: latitude, long: longitude);
+      final Map<String, dynamic> json = {
+        'coordinates': [latitude, longitude],
+      };
       const CoordinatesDto expectedDto = CoordinatesDto(latitude, longitude);
 
-      final CoordinatesDto dto = CoordinatesDto.fromMapboxLocation(location);
+      final CoordinatesDto dto = CoordinatesDto.fromJson(json);
 
       expect(dto, expectedDto);
     },

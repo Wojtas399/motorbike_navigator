@@ -1,8 +1,9 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/data/api/mapbox_api_service.dart';
+import 'package:motorbike_navigator/data/api/place_suggestion_api_service.dart';
 import 'package:motorbike_navigator/data/dto/place_suggestion_dto.dart';
 
-class MockMapboxApiService extends Mock implements MapboxApiService {
+class MockPlaceSuggestionApiService extends Mock
+    implements PlaceSuggestionApiService {
   void mockSearchPlaces({required List<PlaceSuggestionDto> result}) {
     when(
       () => searchPlaces(

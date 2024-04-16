@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:mapbox_search/mapbox_search.dart';
 
 class PlaceSuggestionDto extends Equatable {
   final String id;
@@ -15,10 +14,10 @@ class PlaceSuggestionDto extends Equatable {
   @override
   List<Object?> get props => [id, name, fullAddress];
 
-  factory PlaceSuggestionDto.fromMapboxSuggestion(Suggestion suggestion) =>
+  factory PlaceSuggestionDto.fromJson(Map<String, dynamic> json) =>
       PlaceSuggestionDto(
-        id: suggestion.mapboxId,
-        name: suggestion.name,
-        fullAddress: suggestion.fullAddress,
+        id: json['mapbox_id'],
+        name: json['name'],
+        fullAddress: json['full_address'],
       );
 }
