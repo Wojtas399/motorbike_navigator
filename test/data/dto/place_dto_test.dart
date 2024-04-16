@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
 import 'package:motorbike_navigator/data/dto/place_dto.dart';
+import 'package:motorbike_navigator/data/dto/place_geometry_dto.dart';
+import 'package:motorbike_navigator/data/dto/place_properties_dto.dart';
 
 void main() {
   test(
@@ -21,9 +22,13 @@ void main() {
         },
       };
       const PlaceDto expectedPlaceDto = PlaceDto(
-        id: id,
-        name: name,
-        coordinates: CoordinatesDto(latitude, longitude),
+        properties: PlacePropertiesDto(
+          mapboxId: id,
+          name: name,
+        ),
+        geometry: PlaceGeometryDto(
+          coordinates: (lat: latitude, long: longitude),
+        ),
       );
 
       final PlaceDto placeDto = PlaceDto.fromJson(json);

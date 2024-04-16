@@ -2,8 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/data/api/place_api_service.dart';
-import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
 import 'package:motorbike_navigator/data/dto/place_dto.dart';
+import 'package:motorbike_navigator/data/dto/place_geometry_dto.dart';
+import 'package:motorbike_navigator/data/dto/place_properties_dto.dart';
 import 'package:motorbike_navigator/data/repository/place/place_repository_impl.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/place.dart';
@@ -65,9 +66,13 @@ void main() {
     () async {
       const String placeId = 'p1';
       const PlaceDto expectedPlaceDto = PlaceDto(
-        id: placeId,
-        name: 'place 1',
-        coordinates: CoordinatesDto(50.5, 45.5),
+        properties: PlacePropertiesDto(
+          mapboxId: placeId,
+          name: 'place 1',
+        ),
+        geometry: PlaceGeometryDto(
+          coordinates: (lat: 50.5, long: 45.5),
+        ),
       );
       const Place expectedPlace = Place(
         id: placeId,

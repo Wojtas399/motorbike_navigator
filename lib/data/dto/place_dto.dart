@@ -1,28 +1,24 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-import 'coordinates_dto.dart';
+import 'place_geometry_dto.dart';
+import 'place_properties_dto.dart';
 
+part 'place_dto.g.dart';
+
+@JsonSerializable(fieldRename: FieldRename.snake, createToJson: false)
 class PlaceDto extends Equatable {
-  final String id;
-  final String name;
-  final CoordinatesDto coordinates;
+  final PlacePropertiesDto properties;
+  final PlaceGeometryDto geometry;
 
   const PlaceDto({
-    required this.id,
-    required this.name,
-    required this.coordinates,
+    required this.properties,
+    required this.geometry,
   });
 
   @override
-  List<Object?> get props => [
-        id,
-        name,
-        coordinates,
-      ];
+  List<Object?> get props => [properties, geometry];
 
-  factory PlaceDto.fromJson(Map<String, dynamic> json) => PlaceDto(
-        id: json['properties']['mapbox_id'],
-        name: json['properties']['name'],
-        coordinates: CoordinatesDto.fromJson(json['geometry']),
-      );
+  factory PlaceDto.fromJson(Map<String, dynamic> json) =>
+      _$PlaceDtoFromJson(json);
 }

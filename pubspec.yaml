@@ -29,6 +29,7 @@ dependencies:
   collection: ^1.18.0
   http: ^1.2.1
   uuid: ^4.4.0
+  json_annotation: ^4.8.1
 
 dev_dependencies:
   flutter_test:
@@ -40,6 +41,7 @@ dev_dependencies:
   custom_lint: ^0.6.4
   riverpod_lint: ^2.3.10
   envied_generator: ^0.5.4+1
+  json_serializable: ^6.7.1
 
 flutter:
   generate: true

@@ -2,8 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:motorbike_navigator/data/api/mapbox_search_api.dart';
 import 'package:motorbike_navigator/data/api/place_api_service.dart';
-import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
 import 'package:motorbike_navigator/data/dto/place_dto.dart';
+import 'package:motorbike_navigator/data/dto/place_geometry_dto.dart';
+import 'package:motorbike_navigator/data/dto/place_properties_dto.dart';
 
 import '../../mock/data/api/mock_mapbox_search_api.dart';
 
@@ -27,9 +28,13 @@ void main() {
         ],
       );
       const PlaceDto expectedPlaceDto = PlaceDto(
-        id: placeId,
-        name: name,
-        coordinates: CoordinatesDto(latitude, longitude),
+        properties: PlacePropertiesDto(
+          mapboxId: placeId,
+          name: name,
+        ),
+        geometry: PlaceGeometryDto(
+          coordinates: (lat: latitude, long: longitude),
+        ),
       );
       final mapboxSearchApi = MockMapboxSearchApi();
       mapboxSearchApi.mockFetchPlaceById(result: apiResponseJson);

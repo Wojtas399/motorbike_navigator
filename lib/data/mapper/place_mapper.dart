@@ -1,9 +1,12 @@
+import '../../entity/coordinates.dart';
 import '../../entity/place.dart';
 import '../dto/place_dto.dart';
-import 'coordinates_mapper.dart';
 
 Place mapPlaceFromDto(PlaceDto dto) => Place(
-      id: dto.id,
-      name: dto.name,
-      coordinates: mapCoordinatesFromDto(dto.coordinates),
+      id: dto.properties.mapboxId,
+      name: dto.properties.name,
+      coordinates: Coordinates(
+        dto.geometry.coordinates.lat,
+        dto.geometry.coordinates.long,
+      ),
     );
