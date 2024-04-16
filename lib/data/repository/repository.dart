@@ -7,8 +7,8 @@ abstract class Repository<T extends Entity> {
   final BehaviorSubject<List<T>> _repositoryState$ =
       BehaviorSubject<List<T>>.seeded([]);
 
-  Repository({List<T> initialData = const []}) {
-    _repositoryState$.add(initialData);
+  Repository({List<T> initialState = const []}) {
+    _repositoryState$.add(initialState);
   }
 
   Stream<List<T>?> get repositoryState$ => _repositoryState$.stream;

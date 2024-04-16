@@ -12,7 +12,7 @@ class TestModel extends Entity {
 }
 
 class TestRepository extends Repository<TestModel> {
-  TestRepository({super.initialData});
+  TestRepository({super.initialState});
 }
 
 void main() {
@@ -48,7 +48,7 @@ void main() {
     'should return false if repository state is not empty array',
     () {
       repository = TestRepository(
-        initialData: [
+        initialState: [
           const TestModel(id: 'id', name: 'name'),
         ],
       );
@@ -69,7 +69,7 @@ void main() {
       ];
       final String expectedException =
           '[Repository] Entity $newEntity already exists in repository state';
-      repository = TestRepository(initialData: existingEntities);
+      repository = TestRepository(initialState: existingEntities);
 
       Object? exception;
       try {
@@ -95,7 +95,7 @@ void main() {
         ...existingEntities,
         newEntity,
       ];
-      repository = TestRepository(initialData: existingEntities);
+      repository = TestRepository(initialState: existingEntities);
 
       repository.addEntity(newEntity);
 
