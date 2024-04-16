@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'location_service.dart';
+import 'ui/service/location_service.dart';
 
 part 'location_provider.g.dart';
 

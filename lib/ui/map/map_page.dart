@@ -5,10 +5,10 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 import '../../env.dart';
 import '../../location_provider.dart';
-import '../../location_service.dart';
 import '../component/gap.dart';
 import '../component/text.dart';
 import '../extensions/context_extensions.dart';
+import '../service/location_service.dart';
 import 'map_search_bar.dart';
 import 'map_search_content.dart';
 
