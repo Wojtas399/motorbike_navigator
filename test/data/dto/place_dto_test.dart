@@ -23,7 +23,7 @@ void main() {
       };
       const PlaceDto expectedPlaceDto = PlaceDto(
         properties: PlacePropertiesDto(
-          mapboxId: id,
+          id: id,
           name: name,
         ),
         geometry: PlaceGeometryDto(

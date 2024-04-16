@@ -1,6 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'place_suggestion_dto.g.dart';
+
+@JsonSerializable(fieldRename: FieldRename.snake, createToJson: false)
 class PlaceSuggestionDto extends Equatable {
+  @JsonKey(name: 'mapbox_id')
   final String id;
   final String name;
   final String? fullAddress;
@@ -15,9 +20,5 @@ class PlaceSuggestionDto extends Equatable {
   List<Object?> get props => [id, name, fullAddress];
 
   factory PlaceSuggestionDto.fromJson(Map<String, dynamic> json) =>
-      PlaceSuggestionDto(
-        id: json['mapbox_id'],
-        name: json['name'],
-        fullAddress: json['full_address'],
-      );
+      _$PlaceSuggestionDtoFromJson(json);
 }

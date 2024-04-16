@@ -67,7 +67,7 @@ void main() {
       const String placeId = 'p1';
       const PlaceDto expectedPlaceDto = PlaceDto(
         properties: PlacePropertiesDto(
-          mapboxId: placeId,
+          id: placeId,
           name: 'place 1',
         ),
         geometry: PlaceGeometryDto(

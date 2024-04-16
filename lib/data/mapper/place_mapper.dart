@@ -3,7 +3,7 @@ import '../../entity/place.dart';
 import '../dto/place_dto.dart';
 
 Place mapPlaceFromDto(PlaceDto dto) => Place(
-      id: dto.properties.mapboxId,
+      id: dto.properties.id,
       name: dto.properties.name,
       coordinates: Coordinates(
         dto.geometry.coordinates.lat,

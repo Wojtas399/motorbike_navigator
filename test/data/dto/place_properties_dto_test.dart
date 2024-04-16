@@ -13,7 +13,7 @@ void main() {
         'name': name,
       };
       const PlacePropertiesDto expectedPlacePropertiesDto = PlacePropertiesDto(
-        mapboxId: id,
+        id: id,
         name: name,
       );
 

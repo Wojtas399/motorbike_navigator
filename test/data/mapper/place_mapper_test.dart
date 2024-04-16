@@ -17,7 +17,7 @@ void main() {
       const double longitude = 45.67;
       const PlaceDto dto = PlaceDto(
         properties: PlacePropertiesDto(
-          mapboxId: id,
+          id: id,
           name: name,
         ),
         geometry: PlaceGeometryDto(
