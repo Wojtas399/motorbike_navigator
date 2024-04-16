@@ -7,11 +7,9 @@ import 'package:motorbike_navigator/entity/place_suggestion.dart';
 import '../../../mock/data/repository/mock_place_suggestion_repository.dart';
 
 void main() {
-  final placeSuggestionRepository = MockPlaceSuggestionRepository();
-
   test(
     'searchPlaces, '
-    'should return place_suggestion suggestions got directly from PlaceSuggestionRepository',
+    'should return place suggestions got directly from PlaceSuggestionRepository',
     () async {
       const String query = 'p';
       const int limit = 10;
@@ -23,6 +21,7 @@ void main() {
         PlaceSuggestion(
             id: 'ps3', name: 'place_suggestion 3', fullAddress: 'address 3'),
       ];
+      final placeSuggestionRepository = MockPlaceSuggestionRepository();
       placeSuggestionRepository.mockSearchPlaces(
         result: expectedPlaceSuggestions,
       );
