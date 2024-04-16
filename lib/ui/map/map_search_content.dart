@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/repository/place/place_repository_method_providers.dart';
 import 'provider/place_suggestions_provider.dart';
 
 class MapSearchContent extends ConsumerWidget {
   const MapSearchContent({super.key});
-
-  Future<void> _onPlacePressed(String placeId, WidgetRef ref) async {
-    final place = await ref.watch(getPlaceByIdProvider(placeId).future);
-    print(place);
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +21,9 @@ class MapSearchContent extends ConsumerWidget {
               (place) => ListTile(
                 title: Text(place.name),
                 subtitle: Text(place.fullAddress ?? ''),
-                onTap: () => _onPlacePressed(place.id, ref),
+                onTap: () {
+                  //TODO
+                },
               ),
             ),
         ],

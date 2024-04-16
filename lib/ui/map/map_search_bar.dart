@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:motorbike_navigator/ui/extensions/context_extensions.dart';
-import 'package:motorbike_navigator/ui/map/provider/place_suggestions_provider.dart';
+
+import '../extensions/context_extensions.dart';
+import 'provider/place_suggestions_provider.dart';
 
 class MapSearchBar extends ConsumerStatefulWidget {
   final bool isInSearchMode;

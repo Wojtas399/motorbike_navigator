@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:motorbike_navigator/ui/bottom_nav_bar.dart';
-import 'package:motorbike_navigator/ui/saved/saved_page.dart';
-import 'package:motorbike_navigator/ui/settings/settings_page.dart';
 
+import 'bottom_nav_bar.dart';
 import 'map/map_page.dart';
+import 'saved/saved_page.dart';
+import 'settings/settings_page.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

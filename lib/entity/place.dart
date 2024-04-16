@@ -1,5 +1,5 @@
-import 'package:motorbike_navigator/entity/coordinates.dart';
-import 'package:motorbike_navigator/entity/entity.dart';
+import 'coordinates.dart';
+import 'entity.dart';
 
 class Place extends Entity {
   final String name;

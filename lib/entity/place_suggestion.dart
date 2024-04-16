@@ -1,4 +1,4 @@
-import 'package:motorbike_navigator/entity/entity.dart';
+import 'entity.dart';
 
 class PlaceSuggestion extends Entity {
   final String name;

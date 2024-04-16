@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:motorbike_navigator/ui/extensions/context_extensions.dart';
+
+import 'extensions/context_extensions.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int selectedPageIndex;

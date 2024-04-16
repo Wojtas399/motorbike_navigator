@@ -1,7 +1,7 @@
-import 'package:motorbike_navigator/data/repository/place/place_repository_impl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../entity/place.dart';
+import 'place_repository_impl.dart';
 
 part 'place_repository.g.dart';
 

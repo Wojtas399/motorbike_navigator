@@ -1,5 +1,5 @@
-import 'package:motorbike_navigator/data/dto/place_suggestion_dto.dart';
-import 'package:motorbike_navigator/entity/place_suggestion.dart';
+import '../../entity/place_suggestion.dart';
+import '../dto/place_suggestion_dto.dart';
 
 PlaceSuggestion mapPlaceSuggestionFromDto(PlaceSuggestionDto dto) =>
     PlaceSuggestion(

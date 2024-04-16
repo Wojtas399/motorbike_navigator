@@ -32,7 +32,6 @@ class MapboxSearchApi {
     bool isSuggestions = false,
     int? limit,
   }) {
-    print(_sessionToken);
     return Uri(
       scheme: _baseUri.scheme,
       host: _baseUri.host,

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import 'package:motorbike_navigator/ui/component/gap.dart';
-import 'package:motorbike_navigator/ui/extensions/context_extensions.dart';
-import 'package:motorbike_navigator/ui/map/map_search_bar.dart';
-import 'package:motorbike_navigator/ui/map/map_search_content.dart';
 
 import '../../env.dart';
 import '../../location_provider.dart';
 import '../../location_service.dart';
+import '../component/gap.dart';
 import '../component/text.dart';
+import '../extensions/context_extensions.dart';
+import 'map_search_bar.dart';
+import 'map_search_content.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
