@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mapbox_search/models/location.dart';
-import 'package:motorbike_navigator/data/dto/coordinate_dto.dart';
+import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
 
 void main() {
   test(
@@ -10,9 +10,9 @@ void main() {
       const double latitude = 50;
       const double longitude = 50.5;
       const Location location = (lat: latitude, long: longitude);
-      const CoordinateDto expectedDto = CoordinateDto(latitude, longitude);
+      const CoordinatesDto expectedDto = CoordinatesDto(latitude, longitude);
 
-      final CoordinateDto dto = CoordinateDto.fromMapboxLocation(location);
+      final CoordinatesDto dto = CoordinatesDto.fromMapboxLocation(location);
 
       expect(dto, expectedDto);
     },
