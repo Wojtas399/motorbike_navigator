@@ -1,6 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/data/api/mapbox_search_api.dart';
 import 'package:motorbike_navigator/data/api/place_api_service.dart';
 import 'package:motorbike_navigator/data/dto/place_dto.dart';
 import 'package:motorbike_navigator/data/dto/place_geometry_dto.dart';
@@ -9,6 +7,8 @@ import 'package:motorbike_navigator/data/dto/place_properties_dto.dart';
 import '../../mock/data/api/mock_mapbox_search_api.dart';
 
 void main() {
+  final mapboxSearchApi = MockMapboxSearchApi();
+
   test(
     'fetchPlaceById, '
     'should call method from MapboxSearchApi to fetch place by id and should '
@@ -36,16 +36,10 @@ void main() {
           coordinates: (lat: latitude, long: longitude),
         ),
       );
-      final mapboxSearchApi = MockMapboxSearchApi();
       mapboxSearchApi.mockFetchPlaceById(result: apiResponseJson);
-      final container = ProviderContainer(
-        overrides: [
-          mapboxSearchApiProvider.overrideWithValue(mapboxSearchApi),
-        ],
-      );
+      final apiService = PlaceApiService(mapboxSearchApi);
 
-      final PlaceDto? placeDto =
-          await container.read(placeApiServiceProvider).fetchPlaceById(placeId);
+      final PlaceDto? placeDto = await apiService.fetchPlaceById(placeId);
 
       expect(placeDto, expectedPlaceDto);
     },

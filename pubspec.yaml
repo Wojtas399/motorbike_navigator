@@ -17,19 +17,20 @@ dependencies:
   mapbox_maps_flutter: ^1.0.0
   geolocator: ^11.0.0
   geocoding: ^3.0.0
-  flutter_riverpod: ^2.5.1
-  riverpod_annotation: ^2.3.5
   equatable: ^2.0.5
   flutter_localizations:
     sdk: flutter
   intl: any
   mapbox_search: ^4.2.2
-  mocktail: ^1.0.3
   rxdart: ^0.27.7
   collection: ^1.18.0
   http: ^1.2.1
   uuid: ^4.4.0
   json_annotation: ^4.8.1
+  flutter_bloc: ^8.1.5
+  injectable: ^2.4.1
+  get_it: ^7.7.0
+  freezed_annotation: ^2.4.1
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +43,10 @@ dev_dependencies:
   riverpod_lint: ^2.3.10
   envied_generator: ^0.5.4+1
   json_serializable: ^6.7.1
+  injectable_generator: ^2.6.1
+  freezed: ^2.5.2
+  mocktail: ^1.0.3
+  bloc_test: ^9.1.7
 
 flutter:
   generate: true

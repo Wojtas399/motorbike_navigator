@@ -1,29 +1,12 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/data/api/place_suggestion_api_service.dart';
 import 'package:motorbike_navigator/data/dto/place_suggestion_dto.dart';
 import 'package:motorbike_navigator/data/repository/place_suggestion/place_suggestion_repository_impl.dart';
 import 'package:motorbike_navigator/entity/place_suggestion.dart';
 
-import '../../../mock/data/api/mock_place_suggestion_api_service.dart';
+import '../../mock/data/api/mock_place_suggestion_api_service.dart';
 
 void main() {
   final placeSuggestionApiService = MockPlaceSuggestionApiService();
-  final repositoryImplProvider = AutoDisposeProvider(
-    (ref) => PlaceSuggestionRepositoryImpl(ref),
-  );
-
-  ProviderContainer createContainer() {
-    final container = ProviderContainer(
-      overrides: [
-        placeSuggestionApiServiceProvider.overrideWithValue(
-          placeSuggestionApiService,
-        ),
-      ],
-    );
-    addTearDown(container.dispose);
-    return container;
-  }
 
   test(
     'searchPlaces, '
@@ -65,11 +48,12 @@ void main() {
         ),
       ];
       placeSuggestionApiService.mockSearchPlaces(result: placeSuggestionDtos);
-      final container = createContainer();
+      final repositoryImpl = PlaceSuggestionRepositoryImpl(
+        placeSuggestionApiService,
+      );
 
-      final List<PlaceSuggestion> foundPlaces = await container
-          .read(repositoryImplProvider)
-          .searchPlaces(query: query, limit: limit);
+      final List<PlaceSuggestion> foundPlaces =
+          await repositoryImpl.searchPlaces(query: query, limit: limit);
 
       expect(foundPlaces, expectedPlaceSuggestions);
     },

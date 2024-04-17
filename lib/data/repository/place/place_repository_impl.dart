@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../entity/place.dart';
 import '../../api/place_api_service.dart';
@@ -8,11 +8,11 @@ import '../../mapper/place_mapper.dart';
 import '../repository.dart';
 import 'place_repository.dart';
 
+@LazySingleton(as: PlaceRepository)
 class PlaceRepositoryImpl extends Repository<Place> implements PlaceRepository {
   final PlaceApiService _placeApiService;
 
-  PlaceRepositoryImpl(Ref ref, {super.initialState})
-      : _placeApiService = ref.read(placeApiServiceProvider);
+  PlaceRepositoryImpl(this._placeApiService);
 
   @override
   Future<Place?> getPlaceById(String id) async {

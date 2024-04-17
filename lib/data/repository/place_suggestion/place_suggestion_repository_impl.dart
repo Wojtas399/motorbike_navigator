@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../entity/place_suggestion.dart';
 import '../../api/place_suggestion_api_service.dart';
@@ -6,13 +6,11 @@ import '../../dto/place_suggestion_dto.dart';
 import '../../mapper/place_suggestion_mapper.dart';
 import 'place_suggestion_repository.dart';
 
+@LazySingleton(as: PlaceSuggestionRepository)
 class PlaceSuggestionRepositoryImpl implements PlaceSuggestionRepository {
   final PlaceSuggestionApiService _placeSuggestionApiService;
 
-  PlaceSuggestionRepositoryImpl(Ref ref)
-      : _placeSuggestionApiService = ref.read(
-          placeSuggestionApiServiceProvider,
-        );
+  PlaceSuggestionRepositoryImpl(this._placeSuggestionApiService);
 
   @override
   Future<List<PlaceSuggestion>> searchPlaces({

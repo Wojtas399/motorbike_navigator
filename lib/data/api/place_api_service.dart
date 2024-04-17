@@ -1,16 +1,13 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:injectable/injectable.dart';
 
 import '../dto/place_dto.dart';
 import 'mapbox_search_api.dart';
 
-part 'place_api_service.g.dart';
-
+@injectable
 class PlaceApiService {
   final MapboxSearchApi _mapboxSearchApi;
 
-  PlaceApiService(Ref ref)
-      : _mapboxSearchApi = ref.read(mapboxSearchApiProvider);
+  PlaceApiService(this._mapboxSearchApi);
 
   Future<PlaceDto?> fetchPlaceById(String id) async {
     final json = await _mapboxSearchApi.fetchPlaceById(id);
@@ -18,6 +15,3 @@ class PlaceApiService {
     return places.isNotEmpty ? PlaceDto.fromJson(places.first) : null;
   }
 }
-
-@riverpod
-PlaceApiService placeApiService(PlaceApiServiceRef ref) => PlaceApiService(ref);

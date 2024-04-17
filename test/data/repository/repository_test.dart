@@ -11,9 +11,7 @@ class TestModel extends Entity {
   List<Object> get props => [id, name];
 }
 
-class TestRepository extends Repository<TestModel> {
-  TestRepository({super.initialState});
-}
+class TestRepository extends Repository<TestModel> {}
 
 void main() {
   late Repository repository;
@@ -25,8 +23,6 @@ void main() {
   test(
     'initial state should be empty list',
     () async {
-      repository = TestRepository();
-
       final state = await repository.repositoryState$.first;
 
       expect(state, []);
@@ -37,8 +33,6 @@ void main() {
     'isRepositoryStateEmpty, '
     'should return true if repository state is empty array',
     () {
-      repository = TestRepository();
-
       expect(repository.isRepositoryStateEmpty, true);
     },
   );
@@ -47,13 +41,27 @@ void main() {
     'isRepositoryStateEmpty, '
     'should return false if repository state is not empty array',
     () {
-      repository = TestRepository(
-        initialState: [
-          const TestModel(id: 'id', name: 'name'),
-        ],
-      );
+      final List<TestModel> entities = [
+        const TestModel(id: 'e1', name: 'first entity'),
+        const TestModel(id: 'e2', name: 'second entity'),
+      ];
+      repository.setEntities(entities);
 
       expect(repository.isRepositoryStateEmpty, false);
+    },
+  );
+
+  test(
+    'setEntities, '
+    'should assign list of entities to state',
+    () {
+      final List<TestModel> entities = [
+        const TestModel(id: 'e1', name: 'first entity'),
+        const TestModel(id: 'e2', name: 'second entity'),
+      ];
+      repository.setEntities(entities);
+
+      expect(repository.repositoryState$, emits(entities));
     },
   );
 
@@ -69,7 +77,7 @@ void main() {
       ];
       final String expectedException =
           '[Repository] Entity $newEntity already exists in repository state';
-      repository = TestRepository(initialState: existingEntities);
+      repository.setEntities(existingEntities);
 
       Object? exception;
       try {
@@ -95,7 +103,7 @@ void main() {
         ...existingEntities,
         newEntity,
       ];
-      repository = TestRepository(initialState: existingEntities);
+      repository.setEntities(existingEntities);
 
       repository.addEntity(newEntity);
 

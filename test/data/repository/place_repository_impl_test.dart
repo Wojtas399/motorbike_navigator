@@ -1,7 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/data/api/place_api_service.dart';
 import 'package:motorbike_navigator/data/dto/place_dto.dart';
 import 'package:motorbike_navigator/data/dto/place_geometry_dto.dart';
 import 'package:motorbike_navigator/data/dto/place_properties_dto.dart';
@@ -9,20 +7,10 @@ import 'package:motorbike_navigator/data/repository/place/place_repository_impl.
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/place.dart';
 
-import '../../../mock/data/api/mock_place_api_service.dart';
+import '../../mock/data/api/mock_place_api_service.dart';
 
 void main() {
   final placeApiService = MockPlaceApiService();
-
-  ProviderContainer createContainer() {
-    final container = ProviderContainer(
-      overrides: [
-        placeApiServiceProvider.overrideWithValue(placeApiService),
-      ],
-    );
-    addTearDown(container.dispose);
-    return container;
-  }
 
   test(
     'getPlaceById, '
@@ -47,13 +35,10 @@ void main() {
           coordinates: Coordinates(49.4, 41.15),
         ),
       ];
-      final repositoryImplProvider = AutoDisposeProvider(
-        (ref) => PlaceRepositoryImpl(ref, initialState: existingPlaces),
-      );
-      final container = createContainer();
+      final repositoryImpl = PlaceRepositoryImpl(placeApiService);
+      repositoryImpl.setEntities(existingPlaces);
 
-      final Place? place =
-          await container.read(repositoryImplProvider).getPlaceById('p1');
+      final Place? place = await repositoryImpl.getPlaceById('p1');
 
       expect(place, expectedPlace);
     },
@@ -92,21 +77,15 @@ void main() {
         ),
       ];
       placeApiService.mockFetchPlaceById(result: expectedPlaceDto);
-      final repositoryImplProvider = AutoDisposeProvider(
-        (ref) => PlaceRepositoryImpl(ref, initialState: existingPlaces),
-      );
-      final container = createContainer();
+      final repositoryImpl = PlaceRepositoryImpl(placeApiService);
+      repositoryImpl.setEntities(existingPlaces);
 
-      final Place? place =
-          await container.read(repositoryImplProvider).getPlaceById(placeId);
+      final Place? place = await repositoryImpl.getPlaceById(placeId);
 
       expect(place, expectedPlace);
       expect(
-        await container.read(repositoryImplProvider).repositoryState$.first,
-        [
-          ...existingPlaces,
-          expectedPlace,
-        ],
+        await repositoryImpl.repositoryState$.first,
+        [...existingPlaces, expectedPlace],
       );
       verify(
         () => placeApiService.fetchPlaceById(placeId),

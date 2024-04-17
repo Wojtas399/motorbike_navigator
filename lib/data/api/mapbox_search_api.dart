@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../env.dart';
 
-part 'mapbox_search_api.g.dart';
-
+@singleton
 class MapboxSearchApi {
   final String _sessionToken = const Uuid().v4();
   final Uri _baseUri = Uri.parse('https://api.mapbox.com/search/searchbox/v1/');
@@ -47,6 +46,3 @@ class MapboxSearchApi {
     );
   }
 }
-
-@Riverpod(keepAlive: true)
-MapboxSearchApi mapboxSearchApi(MapboxSearchApiRef ref) => MapboxSearchApi();

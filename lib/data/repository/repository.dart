@@ -7,13 +7,13 @@ abstract class Repository<T extends Entity> {
   final BehaviorSubject<List<T>> _repositoryState$ =
       BehaviorSubject<List<T>>.seeded([]);
 
-  Repository({List<T> initialState = const []}) {
-    _repositoryState$.add(initialState);
-  }
-
   Stream<List<T>?> get repositoryState$ => _repositoryState$.stream;
 
   bool get isRepositoryStateEmpty => _repositoryState$.value.isEmpty == true;
+
+  void setEntities(List<T> entities) {
+    _repositoryState$.add(entities);
+  }
 
   void addEntity(T entity) {
     final bool doesEntityExist = _repositoryState$.value.firstWhereOrNull(

@@ -1,16 +1,13 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:injectable/injectable.dart';
 
 import '../dto/place_suggestion_dto.dart';
 import 'mapbox_search_api.dart';
 
-part 'place_suggestion_api_service.g.dart';
-
+@injectable
 class PlaceSuggestionApiService {
   final MapboxSearchApi _mapboxSearchApi;
 
-  PlaceSuggestionApiService(Ref ref)
-      : _mapboxSearchApi = ref.read(mapboxSearchApiProvider);
+  PlaceSuggestionApiService(this._mapboxSearchApi);
 
   Future<List<PlaceSuggestionDto>> searchPlaces({
     required String query,
@@ -26,9 +23,3 @@ class PlaceSuggestionApiService {
         .toList();
   }
 }
-
-@riverpod
-PlaceSuggestionApiService placeSuggestionApiService(
-  PlaceSuggestionApiServiceRef ref,
-) =>
-    PlaceSuggestionApiService(ref);

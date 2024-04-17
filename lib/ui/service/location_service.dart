@@ -1,13 +1,9 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../entity/coordinates.dart';
 
-part 'location_service.g.dart';
-
-@riverpod
-LocationService locationService(LocationServiceRef ref) => LocationService();
-
+@injectable
 class LocationService {
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
@@ -22,7 +18,7 @@ class LocationService {
     return !(permission == LocationPermission.deniedForever);
   }
 
-  Future<Coordinates?> getCurrentPosition() async {
+  Future<Coordinates?> getCurrentLocation() async {
     final hasPermission = await _handleLocationPermission();
     if (!hasPermission) return null;
     final position = await Geolocator.getCurrentPosition(
