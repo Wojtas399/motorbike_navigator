@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
+import '../../entity/coordinates.dart';
 import '../../env.dart';
 import '../component/gap.dart';
 import '../component/text.dart';
 import '../extensions/context_extensions.dart';
-import '../service/location_service.dart';
 import 'map_search_bar.dart';
 import 'map_search_content.dart';
 import 'provider/location_provider.dart';
@@ -60,7 +60,7 @@ class _Map extends ConsumerStatefulWidget {
 class _MapState extends ConsumerState<_Map> {
   MapboxMap? mapboxMap;
 
-  _onMapCreated(MapboxMap mapboxMap, MapPosition? currentPosition) async {
+  _onMapCreated(MapboxMap mapboxMap, Coordinates? currentPosition) async {
     mapboxMap.loadStyleURI(Env.mapboxStyleUri);
     mapboxMap.annotations.createPointAnnotationManager().then(
       (pointAnnotationManager) async {

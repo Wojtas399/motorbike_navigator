@@ -1,6 +1,7 @@
-import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../entity/coordinates.dart';
 
 part 'location_service.g.dart';
 
@@ -21,22 +22,12 @@ class LocationService {
     return !(permission == LocationPermission.deniedForever);
   }
 
-  Future<MapPosition?> getCurrentPosition() async {
+  Future<Coordinates?> getCurrentPosition() async {
     final hasPermission = await _handleLocationPermission();
     if (!hasPermission) return null;
     final position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
-    return MapPosition(position.longitude, position.latitude);
+    return Coordinates(position.latitude, position.longitude);
   }
-}
-
-class MapPosition extends Equatable {
-  final double longitude;
-  final double latitude;
-
-  const MapPosition(this.longitude, this.latitude);
-
-  @override
-  List<Object?> get props => [longitude, latitude];
 }
