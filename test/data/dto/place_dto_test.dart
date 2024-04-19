@@ -10,12 +10,14 @@ void main() {
     () {
       const String id = 'p1';
       const String name = 'place';
+      const String fullAddress = 'full address';
       const double latitude = 50.5;
       const double longitude = 47.6;
       final Map<String, dynamic> json = {
         'properties': {
           'mapbox_id': id,
           'name': name,
+          'full_address': fullAddress,
         },
         'geometry': {
           'coordinates': [longitude, latitude],
@@ -25,6 +27,7 @@ void main() {
         properties: PlacePropertiesDto(
           id: id,
           name: name,
+          fullAddress: fullAddress,
         ),
         geometry: PlaceGeometryDto(
           coordinates: (lat: latitude, long: longitude),

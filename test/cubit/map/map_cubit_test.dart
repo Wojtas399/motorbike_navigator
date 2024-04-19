@@ -1,11 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
-import 'package:motorbike_navigator/entity/place.dart';
 import 'package:motorbike_navigator/entity/place_suggestion.dart';
 import 'package:motorbike_navigator/ui/map/cubit/map_cubit.dart';
 import 'package:motorbike_navigator/ui/map/cubit/map_state.dart';
 
+import '../../creator/place_creator.dart';
 import '../../mock/data/repository/mock_place_repository.dart';
 import '../../mock/data/repository/mock_place_suggestion_repository.dart';
 import '../../mock/ui_service/mock_location_service.dart';
@@ -89,11 +89,7 @@ void main() {
     'loadPlaceDetails, '
     'should get place details from PlaceRepository and should set mode to map',
     setUp: () => placeRepository.mockGetPlaceById(
-      result: const Place(
-        id: 'p1',
-        name: 'place 1',
-        coordinates: Coordinates(50, 50),
-      ),
+      result: createPlace(id: 'p1', name: 'place 1'),
     ),
     build: () => createCubit(),
     act: (cubit) async => await cubit.loadPlaceDetails('p1'),
@@ -101,14 +97,10 @@ void main() {
       const MapState(
         status: MapStatus.loading,
       ),
-      const MapState(
+      MapState(
         status: MapStatus.success,
         mode: MapMode.map,
-        selectedPlace: Place(
-          id: 'p1',
-          name: 'place 1',
-          coordinates: Coordinates(50, 50),
-        ),
+        selectedPlace: createPlace(id: 'p1', name: 'place 1'),
       ),
     ],
     verify: (_) => verify(

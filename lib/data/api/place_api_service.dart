@@ -12,6 +12,7 @@ class PlaceApiService {
   Future<PlaceDto?> fetchPlaceById(String id) async {
     final json = await _mapboxSearchApi.fetchPlaceById(id);
     final List places = json['features'] as List;
+    print(places.first);
     return places.isNotEmpty ? PlaceDto.fromJson(places.first) : null;
   }
 }

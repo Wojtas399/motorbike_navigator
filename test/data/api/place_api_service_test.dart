@@ -16,6 +16,7 @@ void main() {
     () async {
       const String placeId = 'p1';
       const String name = 'place 1';
+      const String fullAddress = 'full address';
       const double latitude = 50.23;
       const double longitude = 44.3;
       final Map<String, dynamic> apiResponseJson = _createPlaceResponseJson(
@@ -23,6 +24,7 @@ void main() {
           _createPlaceDetailsResponseJson(
             mapboxId: placeId,
             name: name,
+            fullAddress: fullAddress,
             coordinates: (lat: latitude, long: longitude),
           ),
         ],
@@ -31,6 +33,7 @@ void main() {
         properties: PlacePropertiesDto(
           id: placeId,
           name: name,
+          fullAddress: fullAddress,
         ),
         geometry: PlaceGeometryDto(
           coordinates: (lat: latitude, long: longitude),
@@ -56,12 +59,14 @@ Map<String, dynamic> _createPlaceResponseJson({
 Map<String, dynamic> _createPlaceDetailsResponseJson({
   required String mapboxId,
   required String name,
+  required String fullAddress,
   required ({double lat, double long}) coordinates,
 }) =>
     {
       'properties': {
         'mapbox_id': mapboxId,
         'name': name,
+        'full_address': fullAddress,
       },
       'geometry': {
         'coordinates': [coordinates.long, coordinates.lat],

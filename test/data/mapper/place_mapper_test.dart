@@ -13,12 +13,14 @@ void main() {
     () {
       const String id = 'p1';
       const String name = 'place';
+      const String fullAddress = 'full address';
       const double latitude = 50.5;
       const double longitude = 45.67;
       const PlaceDto dto = PlaceDto(
         properties: PlacePropertiesDto(
           id: id,
           name: name,
+          fullAddress: fullAddress,
         ),
         geometry: PlaceGeometryDto(
           coordinates: (lat: latitude, long: longitude),
@@ -27,6 +29,7 @@ void main() {
       const Place expectedPlace = Place(
         id: id,
         name: name,
+        fullAddress: fullAddress,
         coordinates: Coordinates(latitude, longitude),
       );
 
