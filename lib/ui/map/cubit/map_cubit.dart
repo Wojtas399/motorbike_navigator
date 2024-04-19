@@ -65,4 +65,10 @@ class MapCubit extends Cubit<MapState> {
       selectedPlace: place,
     ));
   }
+
+  void resetSelectedPlace() {
+    emit(state.copyWith(
+      selectedPlace: null,
+    ));
+  }
 }

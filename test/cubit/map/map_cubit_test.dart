@@ -107,4 +107,32 @@ void main() {
       () => placeRepository.getPlaceById('p1'),
     ).called(1),
   );
+
+  blocTest(
+    'resetSelectedPlace, '
+    'should set selectedPlace param as null',
+    setUp: () => placeRepository.mockGetPlaceById(
+      result: createPlace(id: 'p1', name: 'place 1'),
+    ),
+    build: () => createCubit(),
+    act: (cubit) async {
+      await cubit.loadPlaceDetails('p1');
+      cubit.resetSelectedPlace();
+    },
+    expect: () => [
+      const MapState(
+        status: MapStatus.loading,
+      ),
+      MapState(
+        status: MapStatus.success,
+        mode: MapMode.map,
+        selectedPlace: createPlace(id: 'p1', name: 'place 1'),
+      ),
+      const MapState(
+        status: MapStatus.success,
+        mode: MapMode.map,
+        selectedPlace: null,
+      ),
+    ],
+  );
 }
