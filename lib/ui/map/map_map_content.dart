@@ -20,56 +20,52 @@ class MapMapContent extends StatefulWidget {
 }
 
 class _MapState extends State<MapMapContent> {
-  MapboxMap? mapboxMap;
+  PointAnnotationManager? _pointAnnotationManager;
+  PointAnnotation? _selectedPlacePointAnnotation;
 
   _onMapCreated(MapboxMap mapboxMap, Coordinates? currentLocation) async {
     mapboxMap.loadStyleURI(Env.mapboxStyleUri);
-    mapboxMap.annotations.createPointAnnotationManager().then(
-      (pointAnnotationManager) async {
-        if (currentLocation != null) {
-          final ByteData bytes = await rootBundle.load(
-            'assets/location_icon.png',
-          );
-          _setMarker(pointAnnotationManager, bytes, currentLocation);
-        }
-      },
-    );
+    final pointAnnotationManager =
+        await mapboxMap.annotations.createPointAnnotationManager();
     setState(() {
-      this.mapboxMap = mapboxMap;
+      _pointAnnotationManager = pointAnnotationManager;
     });
-  }
-
-  void _onSelectedPlaceChanged(Place? place) {
-    if (mapboxMap != null && place != null) {
-      mapboxMap!.annotations.createPointAnnotationManager().then(
-        (pointAnnotationManager) async {
-          final ByteData bytes = await rootBundle.load('assets/pin.png');
-          _setMarker(pointAnnotationManager, bytes, place.coordinates);
-        },
-      );
+    if (currentLocation != null) {
+      final ByteData bytes = await rootBundle.load('assets/location_icon.png');
+      await _setMarker(bytes, currentLocation);
     }
   }
 
-  void _setMarker(
-    PointAnnotationManager pointAnnotationManager,
+  Future<void> _onSelectedPlaceChanged(Place? place) async {
+    if (place != null && _selectedPlacePointAnnotation == null) {
+      final ByteData bytes = await rootBundle.load('assets/pin.png');
+      final pointAnnotation = await _setMarker(bytes, place.coordinates);
+      setState(() {
+        _selectedPlacePointAnnotation = pointAnnotation;
+      });
+    } else if (place == null && _selectedPlacePointAnnotation != null) {
+      await _pointAnnotationManager?.delete(_selectedPlacePointAnnotation!);
+      setState(() {
+        _selectedPlacePointAnnotation = null;
+      });
+    }
+  }
+
+  Future<PointAnnotation?> _setMarker(
     ByteData markerByteData,
     Coordinates coordinates,
-  ) {
-    final Uint8List list = markerByteData.buffer.asUint8List();
-    var options = <PointAnnotationOptions>[];
-    options.add(
-      PointAnnotationOptions(
-        geometry: Point(
-          coordinates: Position(
-            coordinates.longitude,
-            coordinates.latitude,
-          ),
-        ).toJson(),
-        image: list,
-      ),
-    );
-    pointAnnotationManager.createMulti(options);
-  }
+  ) async =>
+      await _pointAnnotationManager?.create(
+        PointAnnotationOptions(
+          geometry: Point(
+            coordinates: Position(
+              coordinates.longitude,
+              coordinates.latitude,
+            ),
+          ).toJson(),
+          image: markerByteData.buffer.asUint8List(),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {

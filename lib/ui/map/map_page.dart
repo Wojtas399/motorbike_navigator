@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../dependency_injection.dart';
+import '../../entity/place.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 import 'map_map_content.dart';
 import 'map_search_bar.dart';
 import 'map_search_content.dart';
+import 'map_selected_place_details.dart';
 
 class MapPage extends StatelessWidget {
   const MapPage({super.key});
@@ -26,6 +28,9 @@ class _Content extends StatelessWidget {
     final MapMode mapMode = context.select(
       (MapCubit cubit) => cubit.state.mode,
     );
+    final Place? selectedPlace = context.select(
+      (MapCubit cubit) => cubit.state.selectedPlace,
+    );
 
     return Stack(
       children: [
@@ -37,6 +42,13 @@ class _Content extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
           child: MapSearchBar(),
         ),
+        if (selectedPlace != null)
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: MapSelectedPlaceDetails(place: selectedPlace),
+          ),
       ],
     );
   }

@@ -3,5 +3,6 @@
   "saved": "Zapisane",
   "settings": "Ustawienia",
   "mapLoading": "Ładowanie mapy...",
-  "mapSearch": "Szukaj..."
+  "mapSearch": "Szukaj...",
+  "close": "Zamknij"
 }

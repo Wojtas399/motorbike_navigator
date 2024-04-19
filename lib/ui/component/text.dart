@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-enum _TextType { titleMedium }
+enum _TextType {
+  titleMedium,
+  bodyMedium,
+}
 
 abstract class _Text extends StatelessWidget {
   final String data;
@@ -13,6 +16,7 @@ abstract class _Text extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final textStyle = switch (textType) {
       _TextType.titleMedium => textTheme.titleMedium,
+      _TextType.bodyMedium => textTheme.bodyMedium,
     };
 
     return Text(
@@ -24,4 +28,8 @@ abstract class _Text extends StatelessWidget {
 
 class TitleMedium extends _Text {
   const TitleMedium(super.data) : super(textType: _TextType.titleMedium);
+}
+
+class BodyMedium extends _Text {
+  const BodyMedium(super.data) : super(textType: _TextType.bodyMedium);
 }
