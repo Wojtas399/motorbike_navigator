@@ -18,7 +18,7 @@ void main() {
           'name': name,
         },
         'geometry': {
-          'coordinates': [latitude, longitude],
+          'coordinates': [longitude, latitude],
         },
       };
       const PlaceDto expectedPlaceDto = PlaceDto(

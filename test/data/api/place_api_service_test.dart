@@ -64,6 +64,6 @@ Map<String, dynamic> _createPlaceDetailsResponseJson({
         'name': name,
       },
       'geometry': {
-        'coordinates': [coordinates.lat, coordinates.long],
+        'coordinates': [coordinates.long, coordinates.lat],
       },
     };

@@ -19,7 +19,7 @@ class PlaceGeometryDto extends Equatable {
       _$PlaceGeometryDtoFromJson(json);
 
   static ({double lat, double long}) _fromJson(List coordinates) => (
-        lat: coordinates.first,
-        long: coordinates.last,
+        lat: coordinates.last,
+        long: coordinates.first,
       );
 }

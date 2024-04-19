@@ -9,7 +9,7 @@ void main() {
       const double latitude = 50.5;
       const double longitude = 47.6;
       final Map<String, dynamic> json = {
-        'coordinates': [latitude, longitude],
+        'coordinates': [longitude, latitude],
       };
       const PlaceGeometryDto expectedPlaceGeometryDto = PlaceGeometryDto(
         coordinates: (lat: latitude, long: longitude),
