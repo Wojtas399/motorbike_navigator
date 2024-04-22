@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../extensions/context_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 
@@ -20,21 +21,45 @@ class MapSearchContent extends StatelessWidget {
       (MapCubit cubit) => cubit.state.placeSuggestions,
     );
 
-    return Padding(
-      padding: const EdgeInsets.only(top: kToolbarHeight + 48),
-      child: Column(
-        children: [
-          if (cubitStatus.isLoading) const LinearProgressIndicator(),
-          if (cubitStatus.isSuccess)
-            ...?suggestedPlaces?.map(
-              (place) => ListTile(
-                title: Text(place.name),
-                subtitle: Text(place.fullAddress ?? ''),
-                onTap: () => _onPlacePressed(place.id, context),
-              ),
-            ),
-        ],
+    return Container(
+      margin: const EdgeInsets.only(top: kToolbarHeight + 48),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: context.colorScheme.outline,
+            width: 0.4,
+          ),
+        ),
       ),
+      child: cubitStatus.isLoading
+          ? const LinearProgressIndicator()
+          : cubitStatus.isSuccess
+              ? SingleChildScrollView(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                    child: Column(
+                      children: [
+                        ...ListTile.divideTiles(
+                          context: context,
+                          tiles: [
+                            ...?suggestedPlaces?.map(
+                              (place) => ListTile(
+                                title: Text(place.name),
+                                contentPadding: EdgeInsets.zero,
+                                subtitle: place.fullAddress != null
+                                    ? Text(place.fullAddress!)
+                                    : null,
+                                onTap: () => _onPlacePressed(place.id, context),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : null,
     );
   }
 }

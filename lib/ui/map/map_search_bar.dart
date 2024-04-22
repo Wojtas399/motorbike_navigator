@@ -26,7 +26,7 @@ class _State extends State<MapSearchBar> {
   }
 
   void _onSubmitted(String? query) {
-    if (query != null) {
+    if (query != null && query.isNotEmpty) {
       context.read<MapCubit>().searchPlaceSuggestions(query);
     }
   }
@@ -40,6 +40,7 @@ class _State extends State<MapSearchBar> {
     return SearchBar(
       controller: _controller,
       hintText: context.str.mapSearch,
+      textInputAction: TextInputAction.search,
       leading: IconButton(
         onPressed: isSearchMode ? _onBackButtonPressed : null,
         icon: Icon(
