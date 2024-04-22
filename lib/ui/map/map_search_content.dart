@@ -22,6 +22,7 @@ class MapSearchContent extends StatelessWidget {
     );
 
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(top: kToolbarHeight + 48),
       decoration: BoxDecoration(
         border: Border(
@@ -35,28 +36,23 @@ class MapSearchContent extends StatelessWidget {
           ? const LinearProgressIndicator()
           : cubitStatus.isSuccess
               ? SingleChildScrollView(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                    child: Column(
-                      children: [
-                        ...ListTile.divideTiles(
-                          context: context,
-                          tiles: [
-                            ...?suggestedPlaces?.map(
-                              (place) => ListTile(
-                                title: Text(place.name),
-                                contentPadding: EdgeInsets.zero,
-                                subtitle: place.fullAddress != null
-                                    ? Text(place.fullAddress!)
-                                    : null,
-                                onTap: () => _onPlacePressed(place.id, context),
-                              ),
+                  child: Column(
+                    children: [
+                      ...ListTile.divideTiles(
+                        color: context.colorScheme.outline.withOpacity(0.25),
+                        tiles: [
+                          ...?suggestedPlaces?.map(
+                            (place) => ListTile(
+                              title: Text(place.name),
+                              subtitle: place.fullAddress != null
+                                  ? Text(place.fullAddress!)
+                                  : null,
+                              onTap: () => _onPlacePressed(place.id, context),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 )
               : null,
