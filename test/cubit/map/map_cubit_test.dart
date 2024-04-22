@@ -109,6 +109,40 @@ void main() {
   );
 
   blocTest(
+    'resetPlaceSuggestions, '
+    'should set placeSuggestions param as null',
+    setUp: () => placeSuggestionRepository.mockSearchPlaces(
+      result: const [
+        PlaceSuggestion(id: 'p1', name: 'place 1', fullAddress: 'address 1'),
+        PlaceSuggestion(id: 'p2', name: 'place 2', fullAddress: 'address 2'),
+        PlaceSuggestion(id: 'p3', name: 'place 3', fullAddress: 'address 3'),
+      ],
+    ),
+    build: () => createCubit(),
+    act: (cubit) async {
+      await cubit.searchPlaceSuggestions('query');
+      cubit.resetPlaceSuggestions();
+    },
+    expect: () => [
+      const MapState(
+        status: MapStatus.loading,
+      ),
+      const MapState(
+        status: MapStatus.success,
+        placeSuggestions: [
+          PlaceSuggestion(id: 'p1', name: 'place 1', fullAddress: 'address 1'),
+          PlaceSuggestion(id: 'p2', name: 'place 2', fullAddress: 'address 2'),
+          PlaceSuggestion(id: 'p3', name: 'place 3', fullAddress: 'address 3'),
+        ],
+      ),
+      const MapState(
+        status: MapStatus.success,
+        placeSuggestions: null,
+      ),
+    ],
+  );
+
+  blocTest(
     'resetSelectedPlace, '
     'should set selectedPlace param as null',
     setUp: () => placeRepository.mockGetPlaceById(

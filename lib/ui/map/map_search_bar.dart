@@ -14,6 +14,31 @@ class MapSearchBar extends StatefulWidget {
 
 class _State extends State<MapSearchBar> {
   final TextEditingController _controller = TextEditingController();
+  bool _isClearButtonVisible = false;
+
+  @override
+  void initState() {
+    _controller.addListener(_onControllerValueChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onControllerValueChanged);
+    super.dispose();
+  }
+
+  void _onControllerValueChanged() {
+    if (_isClearButtonVisible && _controller.text.isEmpty) {
+      setState(() {
+        _isClearButtonVisible = false;
+      });
+    } else if (!_isClearButtonVisible && _controller.text.isNotEmpty) {
+      setState(() {
+        _isClearButtonVisible = true;
+      });
+    }
+  }
 
   void _onTap() {
     context.read<MapCubit>().changeMode(MapMode.search);
@@ -21,8 +46,12 @@ class _State extends State<MapSearchBar> {
 
   void _onBackButtonPressed() {
     FocusScope.of(context).unfocus();
-    _controller.clear();
     context.read<MapCubit>().changeMode(MapMode.map);
+  }
+
+  void _onClearButtonPressed() {
+    _controller.clear();
+    context.read<MapCubit>().resetPlaceSuggestions();
   }
 
   void _onSubmitted(String? query) {
@@ -48,6 +77,13 @@ class _State extends State<MapSearchBar> {
           color: context.colorScheme.primary,
         ),
       ),
+      trailing: [
+        if (_isClearButtonVisible)
+          IconButton(
+            onPressed: _onClearButtonPressed,
+            icon: const Icon(Icons.close),
+          ),
+      ],
       onTap: _onTap,
       elevation: isSearchMode ? MaterialStateProperty.all(0) : null,
       side: isSearchMode
