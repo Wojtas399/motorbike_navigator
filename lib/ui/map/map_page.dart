@@ -5,7 +5,7 @@ import '../../dependency_injection.dart';
 import '../../entity/place.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
-import 'map_map_content.dart';
+import 'map_content.dart';
 import 'map_search_bar.dart';
 import 'map_search_content.dart';
 import 'map_selected_place_details.dart';
@@ -16,12 +16,12 @@ class MapPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (_) => getIt.get<MapCubit>()..initialize(),
-        child: const _Content(),
+        child: const _Body(),
       );
 }
 
-class _Content extends StatelessWidget {
-  const _Content();
+class _Body extends StatelessWidget {
+  const _Body();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _Content extends StatelessWidget {
     return Stack(
       children: [
         switch (mapMode) {
-          MapMode.map => const MapMapContent(),
+          MapMode.map => const MapContent(),
           MapMode.search => const MapSearchContent(),
         },
         const Padding(

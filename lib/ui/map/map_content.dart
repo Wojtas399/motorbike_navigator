@@ -12,8 +12,10 @@ import '../extensions/context_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 
-class MapMapContent extends StatelessWidget {
-  const MapMapContent({super.key});
+const LatLng _defaultLocation = LatLng(52.23178179122954, 21.006002101026827);
+
+class MapContent extends StatelessWidget {
+  const MapContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +28,18 @@ class MapMapContent extends StatelessWidget {
     final Place? selectedPlace = context.select(
       (MapCubit cubit) => cubit.state.selectedPlace,
     );
-    final LatLng displayedPoint = LatLng(
-      selectedPlace?.coordinates.latitude ??
-          currentLocation?.latitude ??
-          52.23178179122954,
-      selectedPlace?.coordinates.longitude ??
-          currentLocation?.longitude ??
-          21.006002101026827,
-    );
+    LatLng displayedPoint = _defaultLocation;
+    if (selectedPlace != null) {
+      displayedPoint = LatLng(
+        selectedPlace.coordinates.latitude,
+        selectedPlace.coordinates.longitude,
+      );
+    } else if (currentLocation != null) {
+      displayedPoint = LatLng(
+        currentLocation.latitude,
+        currentLocation.longitude,
+      );
+    }
 
     return cubitStatus.isLoading
         ? const _LoadingContent()
@@ -46,20 +52,21 @@ class MapMapContent extends StatelessWidget {
               TileLayer(
                 urlTemplate: Env.mapboxTemplateUrl,
               ),
-              MarkerLayer(
-                markers: [
-                  Marker(
-                    width: selectedPlace != null ? 70 : 20,
-                    height: selectedPlace != null ? 70 : 20,
-                    point: displayedPoint,
-                    child: Image.asset(
-                      selectedPlace != null
-                          ? 'assets/pin.png'
-                          : 'assets/location_icon.png',
+              if (displayedPoint != _defaultLocation)
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      width: selectedPlace != null ? 70 : 20,
+                      height: selectedPlace != null ? 70 : 20,
+                      point: displayedPoint,
+                      child: Image.asset(
+                        selectedPlace != null
+                            ? 'assets/pin.png'
+                            : 'assets/location_icon.png',
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
             ],
           );
   }
