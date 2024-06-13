@@ -6,10 +6,9 @@ import '../../../entity/place_suggestion.dart';
 
 part 'map_state.freezed.dart';
 
-enum MapStatus { initial, loading, success, failure }
+enum MapStatus { loading, success, failure }
 
 extension MapStatusExtensions on MapStatus {
-  bool get isInitial => this == MapStatus.initial;
   bool get isLoading => this == MapStatus.loading;
   bool get isSuccess => this == MapStatus.success;
 }
@@ -23,7 +22,7 @@ extension MapModeExtensions on MapMode {
 @freezed
 class MapState with _$MapState {
   const factory MapState({
-    @Default(MapStatus.initial) MapStatus status,
+    @Default(MapStatus.loading) MapStatus status,
     @Default(MapMode.map) MapMode mode,
     Coordinates? currentLocation,
     List<PlaceSuggestion>? placeSuggestions,

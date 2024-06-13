@@ -31,9 +31,6 @@ void main() {
     act: (cubit) async => await cubit.initialize(),
     expect: () => [
       const MapState(
-        status: MapStatus.loading,
-      ),
-      const MapState(
         status: MapStatus.success,
         currentLocation: Coordinates(50.2, 25.4),
       ),

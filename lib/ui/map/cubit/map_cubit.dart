@@ -22,9 +22,6 @@ class MapCubit extends Cubit<MapState> {
   ) : super(const MapState());
 
   Future<void> initialize() async {
-    emit(state.copyWith(
-      status: MapStatus.loading,
-    ));
     final Coordinates? currentLocation =
         await _locationService.getCurrentLocation();
     emit(state.copyWith(

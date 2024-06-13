@@ -39,7 +39,7 @@ class _Content extends StatelessWidget {
           MapMode.search => const MapSearchContent(),
         },
         const Padding(
-          padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
+          padding: EdgeInsets.fromLTRB(24, kToolbarHeight + 24, 24, 0),
           child: MapSearchBar(),
         ),
         if (selectedPlace != null)

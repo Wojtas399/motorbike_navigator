@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../entity/coordinates.dart';
 import '../../entity/place.dart';
@@ -12,60 +12,8 @@ import '../extensions/context_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 
-class MapMapContent extends StatefulWidget {
+class MapMapContent extends StatelessWidget {
   const MapMapContent({super.key});
-
-  @override
-  State createState() => _MapState();
-}
-
-class _MapState extends State<MapMapContent> {
-  PointAnnotationManager? _pointAnnotationManager;
-  PointAnnotation? _selectedPlacePointAnnotation;
-
-  _onMapCreated(MapboxMap mapboxMap, Coordinates? currentLocation) async {
-    mapboxMap.loadStyleURI(Env.mapboxStyleUri);
-    final pointAnnotationManager =
-        await mapboxMap.annotations.createPointAnnotationManager();
-    setState(() {
-      _pointAnnotationManager = pointAnnotationManager;
-    });
-    if (currentLocation != null) {
-      final ByteData bytes = await rootBundle.load('assets/location_icon.png');
-      await _setMarker(bytes, currentLocation);
-    }
-  }
-
-  Future<void> _onSelectedPlaceChanged(Place? place) async {
-    if (place != null && _selectedPlacePointAnnotation == null) {
-      final ByteData bytes = await rootBundle.load('assets/pin.png');
-      final pointAnnotation = await _setMarker(bytes, place.coordinates);
-      setState(() {
-        _selectedPlacePointAnnotation = pointAnnotation;
-      });
-    } else if (place == null && _selectedPlacePointAnnotation != null) {
-      await _pointAnnotationManager?.delete(_selectedPlacePointAnnotation!);
-      setState(() {
-        _selectedPlacePointAnnotation = null;
-      });
-    }
-  }
-
-  Future<PointAnnotation?> _setMarker(
-    ByteData markerByteData,
-    Coordinates coordinates,
-  ) async =>
-      await _pointAnnotationManager?.create(
-        PointAnnotationOptions(
-          geometry: Point(
-            coordinates: Position(
-              coordinates.longitude,
-              coordinates.latitude,
-            ),
-          ).toJson(),
-          image: markerByteData.buffer.asUint8List(),
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -78,30 +26,41 @@ class _MapState extends State<MapMapContent> {
     final Place? selectedPlace = context.select(
       (MapCubit cubit) => cubit.state.selectedPlace,
     );
-    _onSelectedPlaceChanged(selectedPlace);
+    final LatLng displayedPoint = LatLng(
+      selectedPlace?.coordinates.latitude ??
+          currentLocation?.latitude ??
+          52.23178179122954,
+      selectedPlace?.coordinates.longitude ??
+          currentLocation?.longitude ??
+          21.006002101026827,
+    );
 
-    return cubitStatus.isInitial || cubitStatus.isLoading
+    return cubitStatus.isLoading
         ? const _LoadingContent()
-        : Scaffold(
-            body: MapWidget(
-              onMapCreated: (mapbox) => _onMapCreated(mapbox, currentLocation),
-              cameraOptions: CameraOptions(
-                center: selectedPlace != null || currentLocation != null
-                    ? Point(
-                        coordinates: selectedPlace != null
-                            ? Position(
-                                selectedPlace.coordinates.longitude,
-                                selectedPlace.coordinates.latitude,
-                              )
-                            : Position(
-                                currentLocation!.longitude,
-                                currentLocation.latitude,
-                              ),
-                      ).toJson()
-                    : null,
-                zoom: 14.0,
-              ),
+        : FlutterMap(
+            options: MapOptions(
+              initialCenter: displayedPoint,
+              keepAlive: true,
             ),
+            children: [
+              TileLayer(
+                urlTemplate: Env.mapboxTemplateUrl,
+              ),
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    width: selectedPlace != null ? 70 : 20,
+                    height: selectedPlace != null ? 70 : 20,
+                    point: displayedPoint,
+                    child: Image.asset(
+                      selectedPlace != null
+                          ? 'assets/pin.png'
+                          : 'assets/location_icon.png',
+                    ),
+                  ),
+                ],
+              ),
+            ],
           );
   }
 }

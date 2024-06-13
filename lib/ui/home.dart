@@ -28,9 +28,7 @@ class _State extends State<Home> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: SafeArea(
-          child: _pages[_selectedPageIndex],
-        ),
+        body: _pages[_selectedPageIndex],
         bottomNavigationBar: BottomNavBar(
           selectedPageIndex: _selectedPageIndex,
           onPageSelected: _onPageSelected,
