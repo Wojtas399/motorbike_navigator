@@ -18,6 +18,7 @@ extension MapStatusExtensions on MapStatus {
 class MapState with _$MapState {
   const factory MapState({
     @Default(MapStatus.loading) MapStatus status,
+    @Default('') String searchQuery,
     @Default(_defaultLocation) Coordinates centerLocation,
     Coordinates? userLocation,
     List<PlaceSuggestion>? placeSuggestions,

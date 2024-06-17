@@ -4,11 +4,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../extensions/context_extensions.dart';
 import '../search_form/search_form.dart';
 import 'cubit/map_cubit.dart';
+import 'cubit/map_state.dart';
 
-class MapSearchBar extends StatelessWidget {
+class MapSearchBar extends StatefulWidget {
   const MapSearchBar({super.key});
 
+  @override
+  State<StatefulWidget> createState() => _State();
+}
+
+class _State extends State<MapSearchBar> {
+  final FocusNode _focusNode = FocusNode();
+  final TextEditingController _controller = TextEditingController();
+
+  void _onSearchQueryChanged(String searchQuery) {
+    _controller.text = searchQuery;
+  }
+
   void _onTap(BuildContext context) {
+    _focusNode.unfocus();
     Navigator.of(context).push(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 300),
@@ -29,22 +43,29 @@ class MapSearchBar extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => SearchBar(
-        hintText: context.str.mapSearch,
-        textInputAction: TextInputAction.search,
-        leading: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Icon(
-            Icons.location_on,
-            color: context.colorScheme.primary,
+  Widget build(BuildContext context) => BlocListener<MapCubit, MapState>(
+        listenWhen: (prevState, currState) =>
+            prevState.searchQuery != currState.searchQuery,
+        listener: (_, state) => _onSearchQueryChanged(state.searchQuery),
+        child: SearchBar(
+          controller: _controller,
+          focusNode: _focusNode,
+          hintText: context.str.mapSearch,
+          textInputAction: TextInputAction.search,
+          leading: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Icon(
+              Icons.location_on,
+              color: context.colorScheme.primary,
+            ),
           ),
+          trailing: [
+            IconButton(
+              onPressed: () => _onClearButtonPressed(context),
+              icon: const Icon(Icons.close),
+            ),
+          ],
+          onTap: () => _onTap(context),
         ),
-        trailing: [
-          IconButton(
-            onPressed: () => _onClearButtonPressed(context),
-            icon: const Icon(Icons.close),
-          ),
-        ],
-        onTap: () => _onTap(context),
       );
 }

@@ -48,6 +48,7 @@ class MapCubit extends Cubit<MapState> {
     );
     emit(state.copyWith(
       status: MapStatus.success,
+      searchQuery: query,
       placeSuggestions: suggestions,
     ));
   }
@@ -66,6 +67,7 @@ class MapCubit extends Cubit<MapState> {
 
   void resetPlaceSuggestions() {
     emit(state.copyWith(
+      searchQuery: '',
       placeSuggestions: null,
     ));
   }

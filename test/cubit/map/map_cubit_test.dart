@@ -73,6 +73,7 @@ void main() {
       ),
       const MapState(
         status: MapStatus.success,
+        searchQuery: 'query',
         placeSuggestions: [
           PlaceSuggestion(id: 'p1', name: 'place 1', fullAddress: 'address 1'),
           PlaceSuggestion(id: 'p2', name: 'place 2', fullAddress: 'address 2'),
@@ -122,7 +123,8 @@ void main() {
 
   blocTest(
     'resetPlaceSuggestions, '
-    'should set placeSuggestions param as null',
+    'should set placeSuggestions param as null and searchQuery param as empty '
+    'string',
     setUp: () => placeSuggestionRepository.mockSearchPlaces(
       result: const [
         PlaceSuggestion(id: 'p1', name: 'place 1', fullAddress: 'address 1'),
@@ -141,6 +143,7 @@ void main() {
       ),
       const MapState(
         status: MapStatus.success,
+        searchQuery: 'query',
         placeSuggestions: [
           PlaceSuggestion(id: 'p1', name: 'place 1', fullAddress: 'address 1'),
           PlaceSuggestion(id: 'p2', name: 'place 2', fullAddress: 'address 2'),
@@ -149,6 +152,7 @@ void main() {
       ),
       const MapState(
         status: MapStatus.success,
+        searchQuery: '',
         placeSuggestions: null,
       ),
     ],
