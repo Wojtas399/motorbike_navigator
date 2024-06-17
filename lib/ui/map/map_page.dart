@@ -5,6 +5,7 @@ import '../../dependency_injection.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 import 'map_content.dart';
+import 'map_route_content.dart';
 import 'map_search_bar.dart';
 import 'map_search_content.dart';
 
@@ -32,11 +33,13 @@ class _Body extends StatelessWidget {
         switch (mapMode) {
           MapMode.map => const MapContent(),
           MapMode.search => const MapSearchContent(),
+          MapMode.route => const MapRouteContent(),
         },
-        const Padding(
-          padding: EdgeInsets.fromLTRB(24, kToolbarHeight + 24, 24, 0),
-          child: MapSearchBar(),
-        ),
+        if (mapMode != MapMode.route)
+          const Padding(
+            padding: EdgeInsets.fromLTRB(24, kToolbarHeight + 24, 24, 0),
+            child: MapSearchBar(),
+          ),
       ],
     );
   }

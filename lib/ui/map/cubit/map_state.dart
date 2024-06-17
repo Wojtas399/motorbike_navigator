@@ -14,7 +14,7 @@ extension MapStatusExtensions on MapStatus {
   bool get isSuccess => this == MapStatus.success;
 }
 
-enum MapMode { map, search }
+enum MapMode { map, search, route }
 
 extension MapModeExtensions on MapMode {
   bool get isSearch => this == MapMode.search;

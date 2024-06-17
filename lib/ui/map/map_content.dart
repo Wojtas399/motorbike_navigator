@@ -119,7 +119,7 @@ class _MapState extends State<_Map> {
             ),
           ],
         ),
-        if (userLocation != null) const _MoveBackToUserLocationButton(),
+        const _ActionButtons(),
         if (selectedPlaceCoordinates != null)
           const Positioned(
             bottom: 0,
@@ -132,16 +132,41 @@ class _MapState extends State<_Map> {
   }
 }
 
-class _MoveBackToUserLocationButton extends StatelessWidget {
-  const _MoveBackToUserLocationButton();
+class _ActionButtons extends StatelessWidget {
+  const _ActionButtons();
+
+  void _onMoveBackToUserLocation(BuildContext context) {
+    context.read<MapCubit>().moveBackToUserLocation();
+  }
+
+  void _onOpenRoute(BuildContext context) {
+    context.read<MapCubit>().changeMode(MapMode.route);
+  }
 
   @override
-  Widget build(BuildContext context) => Positioned(
-        bottom: 24,
-        right: 24,
-        child: FloatingActionButton(
-          onPressed: context.read<MapCubit>().moveBackToUserLocation,
-          child: const Icon(Icons.my_location),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final bool doesUserLocationExist = context.select(
+      (MapCubit cubit) => cubit.state.userLocation != null,
+    );
+
+    return Positioned(
+      bottom: 24,
+      right: 24,
+      child: Column(
+        children: [
+          if (doesUserLocationExist) ...[
+            FloatingActionButton(
+              onPressed: () => _onMoveBackToUserLocation(context),
+              child: const Icon(Icons.my_location),
+            ),
+            const SizedBox(height: 24),
+          ],
+          FloatingActionButton(
+            onPressed: () => _onOpenRoute(context),
+            child: const Icon(Icons.directions),
+          ),
+        ],
+      ),
+    );
+  }
 }
