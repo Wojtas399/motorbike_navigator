@@ -8,9 +8,7 @@ import '../extensions/context_extensions.dart';
 import 'cubit/map_cubit.dart';
 
 class MapSelectedPlaceDetails extends StatefulWidget {
-  final Place place;
-
-  const MapSelectedPlaceDetails({super.key, required this.place});
+  const MapSelectedPlaceDetails({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();
@@ -43,48 +41,54 @@ class _State extends State<MapSelectedPlaceDetails>
   }
 
   @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _animationController,
-        builder: (_, __) => Transform.translate(
-          offset: Offset(0, _positionAnimation.value),
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-            decoration: BoxDecoration(
-              color: context.colorScheme.surface,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(32),
-                topRight: Radius.circular(32),
+  Widget build(BuildContext context) {
+    final Place? selectedPlace = context.select(
+      (MapCubit cubit) => cubit.state.selectedPlace,
+    );
+
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (_, __) => Transform.translate(
+        offset: Offset(0, _positionAnimation.value),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+          decoration: BoxDecoration(
+            color: context.colorScheme.surface,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(32),
+              topRight: Radius.circular(32),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.25),
+                offset: const Offset(0, -2),
+                blurRadius: 20,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
-                  offset: const Offset(0, -2),
-                  blurRadius: 20,
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TitleMedium(widget.place.name),
-                const GapVertical8(),
-                BodyMedium(widget.place.fullAddress),
-                const GapVertical24(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: _onClose,
-                        child: Text(context.str.close),
-                      ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TitleMedium(selectedPlace!.name),
+              const GapVertical8(),
+              BodyMedium(selectedPlace.fullAddress),
+              const GapVertical24(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: _onClose,
+                      child: Text(context.str.close),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
+  }
 }

@@ -10,6 +10,7 @@ import '../extensions/context_extensions.dart';
 import '../extensions/coordinates_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
+import 'map_selected_place_details.dart';
 
 class MapContent extends StatelessWidget {
   const MapContent({super.key});
@@ -86,37 +87,61 @@ class _MapState extends State<_Map> {
       (MapCubit cubit) => cubit.state.selectedPlace?.coordinates,
     );
 
-    return FlutterMap(
-      mapController: _mapController,
-      options: MapOptions(
-        initialCenter: centerLocation.toLatLng(),
-        keepAlive: true,
-        onPositionChanged: (camera, _) =>
-            _onCameraPositionChanged(camera, context),
-      ),
+    return Stack(
       children: [
-        TileLayer(
-          urlTemplate: Env.mapboxTemplateUrl,
-        ),
-        MarkerLayer(
-          markers: [
-            if (userLocation != null)
-              Marker(
-                width: 20,
-                height: 20,
-                point: userLocation.toLatLng(),
-                child: Image.asset('assets/location_icon.png'),
-              ),
-            if (selectedPlaceCoordinates != null)
-              Marker(
-                width: 70,
-                height: 70,
-                point: selectedPlaceCoordinates.toLatLng(),
-                child: Image.asset('assets/pin.png'),
-              ),
+        FlutterMap(
+          mapController: _mapController,
+          options: MapOptions(
+            initialCenter: centerLocation.toLatLng(),
+            keepAlive: true,
+            onPositionChanged: (camera, _) =>
+                _onCameraPositionChanged(camera, context),
+          ),
+          children: [
+            TileLayer(urlTemplate: Env.mapboxTemplateUrl),
+            MarkerLayer(
+              markers: [
+                if (userLocation != null)
+                  Marker(
+                    width: 20,
+                    height: 20,
+                    point: userLocation.toLatLng(),
+                    child: Image.asset('assets/location_icon.png'),
+                  ),
+                if (selectedPlaceCoordinates != null)
+                  Marker(
+                    width: 70,
+                    height: 70,
+                    point: selectedPlaceCoordinates.toLatLng(),
+                    child: Image.asset('assets/pin.png'),
+                  ),
+              ],
+            ),
           ],
         ),
+        if (userLocation != null) const _MoveBackToUserLocationButton(),
+        if (selectedPlaceCoordinates != null)
+          const Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: MapSelectedPlaceDetails(),
+          ),
       ],
     );
   }
+}
+
+class _MoveBackToUserLocationButton extends StatelessWidget {
+  const _MoveBackToUserLocationButton();
+
+  @override
+  Widget build(BuildContext context) => Positioned(
+        bottom: 24,
+        right: 24,
+        child: FloatingActionButton(
+          onPressed: context.read<MapCubit>().moveBackToUserLocation,
+          child: const Icon(Icons.my_location),
+        ),
+      );
 }

@@ -9,6 +9,7 @@ class MapSearchContent extends StatelessWidget {
   const MapSearchContent({super.key});
 
   void _onPlacePressed(String placeId, BuildContext context) {
+    FocusScope.of(context).unfocus();
     context.read<MapCubit>().loadPlaceDetails(placeId);
   }
 
