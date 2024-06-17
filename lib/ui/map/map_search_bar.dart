@@ -85,9 +85,9 @@ class _State extends State<MapSearchBar> {
           ),
       ],
       onTap: _onTap,
-      elevation: isSearchMode ? MaterialStateProperty.all(0) : null,
+      elevation: isSearchMode ? WidgetStateProperty.all(0) : null,
       side: isSearchMode
-          ? MaterialStateProperty.all(
+          ? WidgetStateProperty.all(
               BorderSide(
                 color: context.colorScheme.outline,
                 width: 1.0,

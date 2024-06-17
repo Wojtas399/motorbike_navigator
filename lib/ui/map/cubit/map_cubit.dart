@@ -26,7 +26,14 @@ class MapCubit extends Cubit<MapState> {
         await _locationService.getCurrentLocation();
     emit(state.copyWith(
       status: MapStatus.success,
-      currentLocation: currentLocation,
+      centerLocation: currentLocation ?? state.centerLocation,
+      userLocation: currentLocation,
+    ));
+  }
+
+  void onCenterLocationChanged(Coordinates newCenterLocation) {
+    emit(state.copyWith(
+      centerLocation: newCenterLocation,
     ));
   }
 
@@ -59,6 +66,7 @@ class MapCubit extends Cubit<MapState> {
     emit(state.copyWith(
       status: MapStatus.success,
       mode: MapMode.map,
+      centerLocation: place?.coordinates ?? state.centerLocation,
       selectedPlace: place,
     ));
   }
@@ -71,6 +79,13 @@ class MapCubit extends Cubit<MapState> {
 
   void resetSelectedPlace() {
     emit(state.copyWith(
+      selectedPlace: null,
+    ));
+  }
+
+  void moveBackToUserLocation() {
+    emit(state.copyWith(
+      centerLocation: state.userLocation ?? state.centerLocation,
       selectedPlace: null,
     ));
   }
