@@ -8,6 +8,7 @@ import '../component/gap.dart';
 import '../component/text.dart';
 import '../extensions/context_extensions.dart';
 import '../extensions/coordinates_extensions.dart';
+import '../route_form/map_route_content.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 import 'map_selected_place_details.dart';
@@ -139,8 +140,17 @@ class _ActionButtons extends StatelessWidget {
     context.read<MapCubit>().moveBackToUserLocation();
   }
 
-  void _onOpenRoute(BuildContext context) {
-    context.read<MapCubit>().changeMode(MapMode.route);
+  void _onOpenRouteForm(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 300),
+        pageBuilder: (_, __, ___) => const RouteForm(),
+        transitionsBuilder: (_, animation, __, child) => FadeTransition(
+          opacity: animation,
+          child: child,
+        ),
+      ),
+    );
   }
 
   @override
@@ -157,12 +167,14 @@ class _ActionButtons extends StatelessWidget {
           if (doesUserLocationExist) ...[
             FloatingActionButton(
               onPressed: () => _onMoveBackToUserLocation(context),
+              heroTag: null,
               child: const Icon(Icons.my_location),
             ),
             const SizedBox(height: 24),
           ],
           FloatingActionButton(
-            onPressed: () => _onOpenRoute(context),
+            onPressed: () => _onOpenRouteForm(context),
+            heroTag: null,
             child: const Icon(Icons.directions),
           ),
         ],

@@ -14,17 +14,10 @@ extension MapStatusExtensions on MapStatus {
   bool get isSuccess => this == MapStatus.success;
 }
 
-enum MapMode { map, search, route }
-
-extension MapModeExtensions on MapMode {
-  bool get isSearch => this == MapMode.search;
-}
-
 @freezed
 class MapState with _$MapState {
   const factory MapState({
     @Default(MapStatus.loading) MapStatus status,
-    @Default(MapMode.map) MapMode mode,
     @Default(_defaultLocation) Coordinates centerLocation,
     Coordinates? userLocation,
     List<PlaceSuggestion>? placeSuggestions,

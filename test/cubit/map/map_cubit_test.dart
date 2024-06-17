@@ -56,18 +56,6 @@ void main() {
   );
 
   blocTest(
-    'changeMode, '
-    'should change mode in state',
-    build: () => createCubit(),
-    act: (cubit) => cubit.changeMode(MapMode.search),
-    expect: () => [
-      const MapState(
-        mode: MapMode.search,
-      ),
-    ],
-  );
-
-  blocTest(
     'searchPlaceSuggestions, '
     'should get place suggestions from PlaceRepository limited to 10 suggestions',
     setUp: () => placeSuggestionRepository.mockSearchPlaces(
@@ -119,7 +107,6 @@ void main() {
       ),
       MapState(
         status: MapStatus.success,
-        mode: MapMode.map,
         centerLocation: const Coordinates(50.1, 12.1),
         selectedPlace: createPlace(
           id: 'p1',
@@ -188,7 +175,6 @@ void main() {
       ),
       MapState(
         status: MapStatus.success,
-        mode: MapMode.map,
         centerLocation: const Coordinates(50.1, 12.1),
         selectedPlace: createPlace(
           id: 'p1',
@@ -198,7 +184,6 @@ void main() {
       ),
       const MapState(
         status: MapStatus.success,
-        mode: MapMode.map,
         centerLocation: Coordinates(50.1, 12.1),
         selectedPlace: null,
       ),

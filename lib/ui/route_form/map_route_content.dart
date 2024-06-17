@@ -1,39 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../component/gap.dart';
 import '../extensions/context_extensions.dart';
-import 'cubit/map_cubit.dart';
-import 'cubit/map_state.dart';
 
-class MapRouteContent extends StatelessWidget {
-  const MapRouteContent({super.key});
+class RouteForm extends StatelessWidget {
+  const RouteForm({super.key});
 
   @override
-  Widget build(BuildContext context) => const SafeArea(
-        child: Column(
-          children: [
-            GapVertical24(),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _BackButton(),
-                Expanded(
-                  child: Row(
-                    children: [
-                      _RouteIcons(),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: _Form(),
-                      ),
-                      SizedBox(width: 8),
-                      _SwapPointsButton(),
-                    ],
+  Widget build(BuildContext context) => const Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              GapVertical24(),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _BackButton(),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        _RouteIcons(),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: _Form(),
+                        ),
+                        SizedBox(width: 8),
+                        _SwapPointsButton(),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       );
 }
@@ -42,7 +41,7 @@ class _BackButton extends StatelessWidget {
   const _BackButton();
 
   void _onPressed(BuildContext context) {
-    context.read<MapCubit>().changeMode(MapMode.map);
+    Navigator.pop(context);
   }
 
   @override

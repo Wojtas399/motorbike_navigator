@@ -8,7 +8,6 @@ void main() {
     () {
       const MapState expectedState = MapState(
         status: MapStatus.loading,
-        mode: MapMode.map,
         centerLocation: Coordinates(
           52.23178179122954,
           21.006002101026827,

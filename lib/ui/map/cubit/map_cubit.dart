@@ -37,12 +37,6 @@ class MapCubit extends Cubit<MapState> {
     ));
   }
 
-  void changeMode(MapMode mode) {
-    emit(state.copyWith(
-      mode: mode,
-    ));
-  }
-
   Future<void> searchPlaceSuggestions(String query) async {
     emit(state.copyWith(
       status: MapStatus.loading,
@@ -65,7 +59,6 @@ class MapCubit extends Cubit<MapState> {
     final Place? place = await _placeRepository.getPlaceById(placeId);
     emit(state.copyWith(
       status: MapStatus.success,
-      mode: MapMode.map,
       centerLocation: place?.coordinates ?? state.centerLocation,
       selectedPlace: place,
     ));

@@ -3,11 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../dependency_injection.dart';
 import 'cubit/map_cubit.dart';
-import 'cubit/map_state.dart';
 import 'map_content.dart';
-import 'map_route_content.dart';
 import 'map_search_bar.dart';
-import 'map_search_content.dart';
 
 class MapPage extends StatelessWidget {
   const MapPage({super.key});
@@ -23,24 +20,13 @@ class _Body extends StatelessWidget {
   const _Body();
 
   @override
-  Widget build(BuildContext context) {
-    final MapMode mapMode = context.select(
-      (MapCubit cubit) => cubit.state.mode,
-    );
-
-    return Stack(
-      children: [
-        switch (mapMode) {
-          MapMode.map => const MapContent(),
-          MapMode.search => const MapSearchContent(),
-          MapMode.route => const MapRouteContent(),
-        },
-        if (mapMode != MapMode.route)
-          const Padding(
+  Widget build(BuildContext context) => const Stack(
+        children: [
+          MapContent(),
+          Padding(
             padding: EdgeInsets.fromLTRB(24, kToolbarHeight + 24, 24, 0),
             child: MapSearchBar(),
           ),
-      ],
-    );
-  }
+        ],
+      );
 }
