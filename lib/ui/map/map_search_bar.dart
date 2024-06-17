@@ -21,7 +21,7 @@ class _State extends State<MapSearchBar> {
     _controller.text = searchQuery;
   }
 
-  void _onTap(BuildContext context) {
+  void _onTap() {
     _focusNode.unfocus();
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -38,7 +38,7 @@ class _State extends State<MapSearchBar> {
     );
   }
 
-  void _onClearButtonPressed(BuildContext context) {
+  void _onClearButtonPressed() {
     context.read<MapCubit>().resetPlaceSuggestions();
   }
 
@@ -47,25 +47,29 @@ class _State extends State<MapSearchBar> {
         listenWhen: (prevState, currState) =>
             prevState.searchQuery != currState.searchQuery,
         listener: (_, state) => _onSearchQueryChanged(state.searchQuery),
-        child: SearchBar(
-          controller: _controller,
-          focusNode: _focusNode,
-          hintText: context.str.mapSearch,
-          textInputAction: TextInputAction.search,
-          leading: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Icon(
-              Icons.location_on,
-              color: context.colorScheme.primary,
+        child: BlocSelector<MapCubit, MapState, String>(
+          selector: (state) => state.searchQuery,
+          builder: (BuildContext context, String searchQuery) => SearchBar(
+            controller: _controller,
+            focusNode: _focusNode,
+            hintText: context.str.mapSearch,
+            textInputAction: TextInputAction.search,
+            leading: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Icon(
+                Icons.location_on,
+                color: context.colorScheme.primary,
+              ),
             ),
+            trailing: [
+              if (searchQuery.isNotEmpty)
+                IconButton(
+                  onPressed: _onClearButtonPressed,
+                  icon: const Icon(Icons.close),
+                ),
+            ],
+            onTap: _onTap,
           ),
-          trailing: [
-            IconButton(
-              onPressed: () => _onClearButtonPressed(context),
-              icon: const Icon(Icons.close),
-            ),
-          ],
-          onTap: () => _onTap(context),
         ),
       );
 }

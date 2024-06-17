@@ -160,16 +160,21 @@ void main() {
 
   blocTest(
     'resetSelectedPlace, '
-    'should set selectedPlace param as null',
-    setUp: () => placeRepository.mockGetPlaceById(
-      result: createPlace(
-        id: 'p1',
-        name: 'place 1',
-        coordinates: const Coordinates(50.1, 12.1),
-      ),
-    ),
+    'should set placeSuggestions and selectedPlace params as null and '
+    'searchQuery param as empty string',
+    setUp: () {
+      placeSuggestionRepository.mockSearchPlaces(result: []);
+      placeRepository.mockGetPlaceById(
+        result: createPlace(
+          id: 'p1',
+          name: 'place 1',
+          coordinates: const Coordinates(50.1, 12.1),
+        ),
+      );
+    },
     build: () => createCubit(),
     act: (cubit) async {
+      await cubit.searchPlaceSuggestions('query');
       await cubit.loadPlaceDetails('p1');
       cubit.resetSelectedPlace();
     },
@@ -177,8 +182,20 @@ void main() {
       const MapState(
         status: MapStatus.loading,
       ),
+      const MapState(
+        status: MapStatus.success,
+        searchQuery: 'query',
+        placeSuggestions: [],
+      ),
+      const MapState(
+        status: MapStatus.loading,
+        searchQuery: 'query',
+        placeSuggestions: [],
+      ),
       MapState(
         status: MapStatus.success,
+        searchQuery: 'query',
+        placeSuggestions: [],
         centerLocation: const Coordinates(50.1, 12.1),
         selectedPlace: createPlace(
           id: 'p1',
@@ -188,6 +205,8 @@ void main() {
       ),
       const MapState(
         status: MapStatus.success,
+        searchQuery: '',
+        placeSuggestions: null,
         centerLocation: Coordinates(50.1, 12.1),
         selectedPlace: null,
       ),

@@ -74,6 +74,8 @@ class MapCubit extends Cubit<MapState> {
 
   void resetSelectedPlace() {
     emit(state.copyWith(
+      searchQuery: '',
+      placeSuggestions: null,
       selectedPlace: null,
     ));
   }
