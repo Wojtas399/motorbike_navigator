@@ -8,11 +8,13 @@ import 'search_form_search_container.dart';
 import 'search_form_suggested_places.dart';
 
 class SearchForm extends StatelessWidget {
-  const SearchForm({super.key});
+  final String query;
+
+  const SearchForm({super.key, required this.query});
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (_) => getIt.get<SearchFormCubit>(),
+        create: (_) => getIt.get<SearchFormCubit>()..initialize(query),
         child: const Scaffold(
           appBar: SearchFormSearchContainer(),
           body: SafeArea(

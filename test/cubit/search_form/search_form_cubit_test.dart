@@ -17,6 +17,48 @@ void main() {
   });
 
   blocTest(
+    'initialize, '
+    'query is empty string, '
+    'should do nothing',
+    build: () => createCubit(),
+    act: (cubit) async => await cubit.initialize(''),
+    expect: () => [],
+  );
+
+  blocTest(
+    'initialize, '
+    'should get place suggestions from PlaceRepository limited to 10 suggestions',
+    build: () => createCubit(),
+    setUp: () => placeSuggestionRepository.mockSearchPlaces(
+      result: [
+        const PlaceSuggestion(id: 'p1', name: 'place 1'),
+        const PlaceSuggestion(id: 'p2', name: 'place 2'),
+      ],
+    ),
+    act: (cubit) async => await cubit.initialize('query'),
+    expect: () => [
+      const SearchFormState(
+        status: SearchFormStateStatus.loading,
+        searchQuery: 'query',
+      ),
+      const SearchFormState(
+        status: SearchFormStateStatus.completed,
+        searchQuery: 'query',
+        placeSuggestions: [
+          PlaceSuggestion(id: 'p1', name: 'place 1'),
+          PlaceSuggestion(id: 'p2', name: 'place 2'),
+        ],
+      ),
+    ],
+    verify: (_) => verify(
+      () => placeSuggestionRepository.searchPlaces(
+        query: 'query',
+        limit: 10,
+      ),
+    ).called(1),
+  );
+
+  blocTest(
     'onSearchQueryChanged, '
     'should update searchQuery param in state',
     build: () => createCubit(),

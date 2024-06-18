@@ -49,7 +49,7 @@ class _SearchBarState extends State<_SearchBar> {
     SchedulerBinding.instance.addPostFrameCallback((Duration _) {
       FocusScope.of(context).requestFocus(_focusNode);
     });
-    // _controller.text = context.read<MapCubit>().state.searchQuery;
+    _controller.text = context.read<SearchFormCubit>().state.searchQuery;
     _controller.addListener(_onControllerValueChanged);
     super.initState();
   }

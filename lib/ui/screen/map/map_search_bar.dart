@@ -29,7 +29,9 @@ class _State extends State<MapSearchBar> {
       String searchQuery,
     }) results = await Navigator.of(context).push(
       FadePageRouteAnimation(
-        page: const SearchForm(),
+        page: SearchForm(
+          query: context.read<MapCubit>().state.searchQuery,
+        ),
       ),
     );
     if (mounted) {
