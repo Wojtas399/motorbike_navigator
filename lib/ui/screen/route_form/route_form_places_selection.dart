@@ -72,92 +72,52 @@ class _Form extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const Column(
         children: [
-          _StartPlace(),
+          _PlaceTextField(
+            hintText: 'Wybierz miejsce startowe',
+          ),
           GapVertical24(),
-          _DestinationPlace(),
+          _PlaceTextField(
+            hintText: 'Wybierz miejsce docelowe',
+          ),
         ],
       );
 }
 
-class _StartPlace extends StatefulWidget {
-  const _StartPlace();
-
-  @override
-  State<StatefulWidget> createState() => _StartPlaceState();
-}
-
-class _StartPlaceState extends State<_StartPlace> {
-  final TextEditingController _controller = TextEditingController();
-
-  Future<void> _onStartPlaceTap(BuildContext context) async {
-    final PlaceSuggestion? placeSuggestion = await Navigator.push(
-      context,
-      SlideLeftPageRouteAnimation(
-        page: const SearchForm(query: ''),
-      ),
-    );
-    if (placeSuggestion != null && context.mounted) {
-      //TODO
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) => _RouteTextField(
-        hintText: 'Wybierz miejsce startowe',
-        controller: _controller,
-        onTap: () => _onStartPlaceTap(context),
-      );
-}
-
-class _DestinationPlace extends StatefulWidget {
-  const _DestinationPlace();
-
-  @override
-  State<StatefulWidget> createState() => _DestinationPlaceState();
-}
-
-class _DestinationPlaceState extends State<_DestinationPlace> {
-  final TextEditingController _controller = TextEditingController();
-
-  Future<void> _onStartPlaceTap(BuildContext context) async {
-    final PlaceSuggestion? placeSuggestion = await Navigator.push(
-      context,
-      SlideLeftPageRouteAnimation(
-        page: const SearchForm(query: ''),
-      ),
-    );
-    if (placeSuggestion != null && context.mounted) {
-      //TODO
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) => _RouteTextField(
-        hintText: 'Wybierz miejsce docelowe',
-        controller: _controller,
-        onTap: () => _onStartPlaceTap(context),
-      );
-}
-
-class _RouteTextField extends StatelessWidget {
+class _PlaceTextField extends StatefulWidget {
   final String? hintText;
-  final TextEditingController? controller;
-  final VoidCallback? onTap;
 
-  const _RouteTextField({
+  const _PlaceTextField({
     this.hintText,
-    this.controller,
-    this.onTap,
   });
+
+  @override
+  State<StatefulWidget> createState() => _PlaceTextFieldState();
+}
+
+class _PlaceTextFieldState extends State<_PlaceTextField> {
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  Future<void> _onTap() async {
+    _focusNode.unfocus();
+    final PlaceSuggestion? placeSuggestion = await Navigator.push(
+      context,
+      SlideLeftPageRouteAnimation(
+        page: SearchForm(query: _controller.text),
+      ),
+    );
+    if (context.mounted) _controller.text = placeSuggestion?.name ?? '';
+  }
 
   @override
   Widget build(BuildContext context) => TextField(
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
-          hintText: hintText,
+          hintText: widget.hintText,
         ),
-        controller: controller,
-        onTap: onTap,
+        controller: _controller,
+        focusNode: _focusNode,
+        onTap: _onTap,
       );
 }
 
