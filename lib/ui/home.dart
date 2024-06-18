@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'bottom_nav_bar.dart';
 import 'screen/map/map_screen.dart';
 import 'screen/saved/saved_screen.dart';
-import 'settings/settings_page.dart';
+import 'screen/settings/settings_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,7 +17,7 @@ class _State extends State<Home> {
   final List<Widget> _pages = [
     const MapScreen(),
     const SavedScreen(),
-    const SettingsPage(),
+    const SettingsScreen(),
   ];
 
   void _onPageSelected(int pageIndex) {
