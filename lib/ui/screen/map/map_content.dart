@@ -8,7 +8,7 @@ import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
-import '../../route_form/map_route_content.dart';
+import '../route_form/map_route_content.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 import 'map_selected_place_details.dart';

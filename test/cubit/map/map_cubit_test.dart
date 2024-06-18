@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/place_suggestion.dart';
-import 'package:motorbike_navigator/ui/map/cubit/map_cubit.dart';
-import 'package:motorbike_navigator/ui/map/cubit/map_state.dart';
+import 'package:motorbike_navigator/ui/screen/map/cubit/map_cubit.dart';
+import 'package:motorbike_navigator/ui/screen/map/cubit/map_state.dart';
 
 import '../../creator/place_creator.dart';
 import '../../mock/data/repository/mock_place_repository.dart';
