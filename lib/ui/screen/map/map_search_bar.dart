@@ -22,16 +22,19 @@ class _State extends State<MapSearchBar> {
     _controller.text = searchQuery;
   }
 
-  void _onTap() {
+  Future<void> _onTap() async {
     _focusNode.unfocus();
-    Navigator.of(context).push(
+    final ({
+      String placeId,
+      String searchQuery,
+    }) results = await Navigator.of(context).push(
       FadePageRouteAnimation(
-        page: BlocProvider.value(
-          value: context.read<MapCubit>(),
-          child: const SearchForm(),
-        ),
+        page: const SearchForm(),
       ),
     );
+    if (mounted) {
+      context.read<MapCubit>().loadPlaceDetails(results.placeId);
+    }
   }
 
   void _onClearButtonPressed() {
