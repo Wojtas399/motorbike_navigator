@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../entity/place_suggestion.dart';
 import '../../animation/slide_left_page_route_animation.dart';
 import '../../component/gap.dart';
 import '../../extensions/context_extensions.dart';
@@ -69,22 +70,22 @@ class _Form extends StatelessWidget {
   const _Form();
 
   Future<void> _onStartPlaceTap(BuildContext context) async {
-    final SearchFormResults? results = await _askForSearchFormResults(context);
-    if (results != null && context.mounted) {
+    final PlaceSuggestion? placeSuggestion =
+        await _askForPlaceSuggestion(context);
+    if (placeSuggestion != null && context.mounted) {
       //TODO
     }
   }
 
   Future<void> _onDestinationPlaceTap(BuildContext context) async {
-    final SearchFormResults? results = await _askForSearchFormResults(context);
-    if (results != null && context.mounted) {
+    final PlaceSuggestion? placeSuggestion =
+        await _askForPlaceSuggestion(context);
+    if (placeSuggestion != null && context.mounted) {
       //TODO
     }
   }
 
-  Future<SearchFormResults?> _askForSearchFormResults(
-    BuildContext context,
-  ) async =>
+  Future<PlaceSuggestion?> _askForPlaceSuggestion(BuildContext context) async =>
       await Navigator.push(
         context,
         SlideLeftPageRouteAnimation(

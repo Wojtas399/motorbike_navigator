@@ -53,8 +53,9 @@ void main() {
 
   blocTest(
     'loadPlaceDetails, '
-    'should get place details from PlaceRepository and should change '
-    'displayedLocation, selectedPlace and searchQuery params',
+    'should get place details from PlaceRepository, should change '
+    'displayedLocation and selectedPlace params and should assign name of place '
+    'to searchQuery param',
     setUp: () => placeRepository.mockGetPlaceById(
       result: createPlace(
         id: 'p1',
@@ -63,14 +64,18 @@ void main() {
       ),
     ),
     build: () => createCubit(),
-    act: (cubit) async => await cubit.loadPlaceDetails('p1', 'query'),
+    act: (cubit) async => await cubit.loadPlaceDetails(
+      placeId: 'p1',
+      placeName: 'place name',
+    ),
     expect: () => [
       const MapState(
         status: MapStatus.loading,
+        searchQuery: 'place name',
       ),
       MapState(
         status: MapStatus.success,
-        searchQuery: 'query',
+        searchQuery: 'place name',
         centerLocation: const Coordinates(50.1, 12.1),
         selectedPlace: createPlace(
           id: 'p1',
@@ -99,16 +104,20 @@ void main() {
     },
     build: () => createCubit(),
     act: (cubit) async {
-      await cubit.loadPlaceDetails('p1', 'query');
+      await cubit.loadPlaceDetails(
+        placeId: 'p1',
+        placeName: 'place name',
+      );
       cubit.resetSelectedPlace();
     },
     expect: () => [
       const MapState(
         status: MapStatus.loading,
+        searchQuery: 'place name',
       ),
       MapState(
         status: MapStatus.success,
-        searchQuery: 'query',
+        searchQuery: 'place name',
         centerLocation: const Coordinates(50.1, 12.1),
         selectedPlace: createPlace(
           id: 'p1',
@@ -127,8 +136,8 @@ void main() {
 
   blocTest(
     'moveBackToUserLocation, '
-    'should assign userLocation to displayedLocation and should set '
-    'selectedPlace as null',
+    'should assign userLocation to displayedLocation, should set selectedPlace '
+    'as null and searchQuery as empty string',
     build: () => createCubit(),
     setUp: () {
       locationService.mockGetCurrentLocation(
@@ -144,7 +153,10 @@ void main() {
     },
     act: (cubit) async {
       await cubit.initialize();
-      await cubit.loadPlaceDetails('p1', 'query');
+      await cubit.loadPlaceDetails(
+        placeId: 'p1',
+        placeName: 'place name',
+      );
       cubit.moveBackToUserLocation();
     },
     expect: () => [
@@ -155,12 +167,13 @@ void main() {
       ),
       const MapState(
         status: MapStatus.loading,
+        searchQuery: 'place name',
         centerLocation: Coordinates(50.2, 25.4),
         userLocation: Coordinates(50.2, 25.4),
       ),
       MapState(
         status: MapStatus.success,
-        searchQuery: 'query',
+        searchQuery: 'place name',
         centerLocation: const Coordinates(50.1, 12.1),
         userLocation: const Coordinates(50.2, 25.4),
         selectedPlace: createPlace(
@@ -171,7 +184,7 @@ void main() {
       ),
       const MapState(
         status: MapStatus.success,
-        searchQuery: 'query',
+        searchQuery: '',
         centerLocation: Coordinates(50.2, 25.4),
         userLocation: Coordinates(50.2, 25.4),
       ),

@@ -33,14 +33,17 @@ class MapCubit extends Cubit<MapState> {
     ));
   }
 
-  Future<void> loadPlaceDetails(String placeId, String searchQuery) async {
+  Future<void> loadPlaceDetails({
+    required String placeId,
+    required String placeName,
+  }) async {
     emit(state.copyWith(
       status: MapStatus.loading,
+      searchQuery: placeName,
     ));
     final Place? place = await _placeRepository.getPlaceById(placeId);
     emit(state.copyWith(
       status: MapStatus.success,
-      searchQuery: searchQuery,
       centerLocation: place?.coordinates ?? state.centerLocation,
       selectedPlace: place,
     ));
@@ -55,6 +58,7 @@ class MapCubit extends Cubit<MapState> {
 
   void moveBackToUserLocation() {
     emit(state.copyWith(
+      searchQuery: '',
       centerLocation: state.userLocation ?? state.centerLocation,
       selectedPlace: null,
     ));

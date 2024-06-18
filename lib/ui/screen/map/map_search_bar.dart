@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../entity/place_suggestion.dart';
 import '../../animation/fade_page_route_animation.dart';
 import '../../extensions/context_extensions.dart';
 import '../search_form/search_form.dart';
@@ -24,17 +25,17 @@ class _State extends State<MapSearchBar> {
 
   Future<void> _onTap() async {
     _focusNode.unfocus();
-    final SearchFormResults? results = await Navigator.of(context).push(
+    final PlaceSuggestion? placeSuggestion = await Navigator.of(context).push(
       FadePageRouteAnimation(
         page: SearchForm(
           query: context.read<MapCubit>().state.searchQuery,
         ),
       ),
     );
-    if (results != null && mounted) {
+    if (placeSuggestion != null && mounted) {
       context.read<MapCubit>().loadPlaceDetails(
-            results.selectedPlaceId,
-            results.searchQuery,
+            placeId: placeSuggestion.id,
+            placeName: placeSuggestion.name,
           );
     }
   }
