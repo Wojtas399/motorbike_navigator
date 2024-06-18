@@ -7,6 +7,11 @@ import 'cubit/search_form_state.dart';
 import 'search_form_search_container.dart';
 import 'search_form_suggested_places.dart';
 
+typedef SearchFormResults = ({
+  String selectedPlaceId,
+  String searchQuery,
+});
+
 class SearchForm extends StatelessWidget {
   final String query;
 

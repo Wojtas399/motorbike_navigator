@@ -37,7 +37,7 @@ class SearchFormCubit extends Cubit<SearchFormState> {
     if (query.isEmpty) return;
     emit(state.copyWith(
       status: SearchFormStateStatus.loading,
-      searchQuery: 'query',
+      searchQuery: query,
     ));
     final List<PlaceSuggestion> suggestions =
         await _placeSuggestionRepository.searchPlaces(

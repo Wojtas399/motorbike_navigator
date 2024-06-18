@@ -74,9 +74,6 @@ class _SearchBarState extends State<_SearchBar> {
 
   void _onBackButtonPressed(BuildContext context) {
     FocusScope.of(context).unfocus();
-    // final mapCubit = context.read<MapCubit>();
-    // final bool isPlaceNotSelected = mapCubit.state.selectedPlace == null;
-    // if (isPlaceNotSelected) mapCubit.resetPlaceSuggestions();
     Navigator.pop(context);
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../entity/place_suggestion.dart';
 import '../../extensions/context_extensions.dart';
 import 'cubit/search_form_cubit.dart';
+import 'search_form.dart';
 
 class SearchFormSuggestedPlaces extends StatelessWidget {
   const SearchFormSuggestedPlaces({super.key});
@@ -36,10 +37,10 @@ class _SuggestedPlaceItem extends StatelessWidget {
 
   void _onPlacePressed(String placeId, BuildContext context) {
     FocusScope.of(context).unfocus();
-    Navigator.pop(
+    Navigator.pop<SearchFormResults>(
       context,
       (
-        placeId: placeId,
+        selectedPlaceId: placeId,
         searchQuery: context.read<SearchFormCubit>().state.searchQuery,
       ),
     );

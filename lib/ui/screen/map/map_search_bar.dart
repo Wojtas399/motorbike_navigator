@@ -24,19 +24,16 @@ class _State extends State<MapSearchBar> {
 
   Future<void> _onTap() async {
     _focusNode.unfocus();
-    final ({
-      String placeId,
-      String searchQuery,
-    }) results = await Navigator.of(context).push(
+    final SearchFormResults? results = await Navigator.of(context).push(
       FadePageRouteAnimation(
         page: SearchForm(
           query: context.read<MapCubit>().state.searchQuery,
         ),
       ),
     );
-    if (mounted) {
+    if (results != null && mounted) {
       context.read<MapCubit>().loadPlaceDetails(
-            results.placeId,
+            results.selectedPlaceId,
             results.searchQuery,
           );
     }
