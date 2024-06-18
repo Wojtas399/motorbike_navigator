@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../animation/fade_page_route_animation.dart';
 import '../../extensions/context_extensions.dart';
 import '../search_form/search_form.dart';
 import 'cubit/map_cubit.dart';
@@ -23,17 +24,11 @@ class _State extends State<MapSearchBar> {
 
   void _onTap() {
     _focusNode.unfocus();
-    //TODO: Create something like FadePageRouteBuilder
     Navigator.of(context).push(
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 300),
-        pageBuilder: (_, __, ___) => BlocProvider.value(
+      FadePageRouteAnimation(
+        page: BlocProvider.value(
           value: context.read<MapCubit>(),
           child: const SearchForm(),
-        ),
-        transitionsBuilder: (_, animation, __, child) => FadeTransition(
-          opacity: animation,
-          child: child,
         ),
       ),
     );

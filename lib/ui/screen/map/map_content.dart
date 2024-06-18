@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 
 import '../../../entity/coordinates.dart';
 import '../../../env.dart';
+import '../../animation/fade_page_route_animation.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../extensions/context_extensions.dart';
@@ -142,13 +143,8 @@ class _ActionButtons extends StatelessWidget {
 
   void _onOpenRouteForm(BuildContext context) {
     Navigator.of(context).push(
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 300),
-        pageBuilder: (_, __, ___) => const RouteForm(),
-        transitionsBuilder: (_, animation, __, child) => FadeTransition(
-          opacity: animation,
-          child: child,
-        ),
+      FadePageRouteAnimation(
+        page: const RouteForm(),
       ),
     );
   }
