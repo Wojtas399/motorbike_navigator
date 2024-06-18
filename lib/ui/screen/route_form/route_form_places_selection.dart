@@ -1,39 +1,32 @@
 import 'package:flutter/material.dart';
 
+import '../../animation/slide_left_page_route_animation.dart';
 import '../../component/gap.dart';
 import '../../extensions/context_extensions.dart';
+import '../search_form/search_form.dart';
 
-class RouteForm extends StatelessWidget {
-  const RouteForm({super.key});
+class RouteFormPlacesSelection extends StatelessWidget {
+  const RouteFormPlacesSelection({super.key});
 
   @override
-  Widget build(BuildContext context) => const Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: [
-              GapVertical24(),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _BackButton(),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        _RouteIcons(),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: _Form(),
-                        ),
-                        SizedBox(width: 8),
-                        _SwapPointsButton(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
+  Widget build(BuildContext context) => const Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _BackButton(),
+          Expanded(
+            child: Row(
+              children: [
+                _RouteIcons(),
+                SizedBox(width: 8),
+                Expanded(
+                  child: _Form(),
+                ),
+                SizedBox(width: 8),
+                _SwapPointsButton(),
+              ],
+            ),
           ),
-        ),
+        ],
       );
 }
 
@@ -75,15 +68,41 @@ class _RouteIcons extends StatelessWidget {
 class _Form extends StatelessWidget {
   const _Form();
 
+  Future<void> _onStartPlaceTap(BuildContext context) async {
+    final SearchFormResults? results = await _askForSearchFormResults(context);
+    if (results != null && context.mounted) {
+      //TODO
+    }
+  }
+
+  Future<void> _onDestinationPlaceTap(BuildContext context) async {
+    final SearchFormResults? results = await _askForSearchFormResults(context);
+    if (results != null && context.mounted) {
+      //TODO
+    }
+  }
+
+  Future<SearchFormResults?> _askForSearchFormResults(
+    BuildContext context,
+  ) async =>
+      await Navigator.push(
+        context,
+        SlideLeftPageRouteAnimation(
+          page: const SearchForm(query: ''),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) => Column(
         children: [
           _RouteTextField(
             hintText: 'Wybierz miejsce startowe',
+            onTap: () => _onStartPlaceTap(context),
           ),
-          GapVertical24(),
+          const GapVertical24(),
           _RouteTextField(
             hintText: 'Wybierz miejsce docelowe',
+            onTap: () => _onDestinationPlaceTap(context),
           ),
         ],
       );
@@ -91,20 +110,21 @@ class _Form extends StatelessWidget {
 
 class _RouteTextField extends StatelessWidget {
   final String? hintText;
+  final VoidCallback? onTap;
 
   const _RouteTextField({
     this.hintText,
+    this.onTap,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        border: const OutlineInputBorder(),
-        hintText: hintText,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => TextField(
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          hintText: hintText,
+        ),
+        onTap: onTap,
+      );
 }
 
 class _SwapPointsButton extends StatelessWidget {
