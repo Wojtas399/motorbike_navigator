@@ -17,6 +17,27 @@ void main() {
   });
 
   blocTest(
+    'onSearchQueryChanged, '
+    'should update searchQuery param in state',
+    build: () => createCubit(),
+    act: (cubit) => cubit.onSearchQueryChanged('query'),
+    expect: () => [
+      const SearchFormState(
+        searchQuery: 'query',
+      ),
+    ],
+  );
+
+  blocTest(
+    'searchPlaceSuggestions, '
+    'searchQuery param is empty string, '
+    'should do nothing',
+    build: () => createCubit(),
+    act: (cubit) => cubit.searchPlaceSuggestions(),
+    expect: () => [],
+  );
+
+  blocTest(
     'searchPlaceSuggestions, '
     'should get place suggestions from PlaceRepository limited to 10 suggestions',
     build: () => createCubit(),
@@ -26,13 +47,21 @@ void main() {
         const PlaceSuggestion(id: 'p2', name: 'place 2'),
       ],
     ),
-    act: (cubit) => cubit.searchPlaceSuggestions('query'),
+    act: (cubit) {
+      cubit.onSearchQueryChanged('query');
+      cubit.searchPlaceSuggestions();
+    },
     expect: () => [
       const SearchFormState(
+        searchQuery: 'query',
+      ),
+      const SearchFormState(
         status: SearchFormStateStatus.loading,
+        searchQuery: 'query',
       ),
       const SearchFormState(
         status: SearchFormStateStatus.completed,
+        searchQuery: 'query',
         placeSuggestions: [
           PlaceSuggestion(id: 'p1', name: 'place 1'),
           PlaceSuggestion(id: 'p2', name: 'place 2'),
@@ -59,15 +88,21 @@ void main() {
     ),
     build: () => createCubit(),
     act: (cubit) async {
-      await cubit.searchPlaceSuggestions('query');
+      cubit.onSearchQueryChanged('query');
+      await cubit.searchPlaceSuggestions();
       cubit.resetPlaceSuggestions();
     },
     expect: () => [
       const SearchFormState(
+        searchQuery: 'query',
+      ),
+      const SearchFormState(
         status: SearchFormStateStatus.loading,
+        searchQuery: 'query',
       ),
       const SearchFormState(
         status: SearchFormStateStatus.completed,
+        searchQuery: 'query',
         placeSuggestions: [
           PlaceSuggestion(id: 'p1', name: 'place 1'),
           PlaceSuggestion(id: 'p2', name: 'place 2'),
@@ -75,6 +110,7 @@ void main() {
       ),
       const SearchFormState(
         status: SearchFormStateStatus.completed,
+        searchQuery: 'query',
         placeSuggestions: null,
       ),
     ],

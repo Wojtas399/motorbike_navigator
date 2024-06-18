@@ -33,13 +33,14 @@ class MapCubit extends Cubit<MapState> {
     ));
   }
 
-  Future<void> loadPlaceDetails(String placeId) async {
+  Future<void> loadPlaceDetails(String placeId, String searchQuery) async {
     emit(state.copyWith(
       status: MapStatus.loading,
     ));
     final Place? place = await _placeRepository.getPlaceById(placeId);
     emit(state.copyWith(
       status: MapStatus.success,
+      searchQuery: searchQuery,
       centerLocation: place?.coordinates ?? state.centerLocation,
       selectedPlace: place,
     ));

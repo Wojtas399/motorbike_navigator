@@ -13,13 +13,20 @@ class SearchFormCubit extends Cubit<SearchFormState> {
     this._placeSuggestionRepository,
   ) : super(const SearchFormState());
 
-  Future<void> searchPlaceSuggestions(String query) async {
+  void onSearchQueryChanged(String query) {
+    emit(state.copyWith(
+      searchQuery: query,
+    ));
+  }
+
+  Future<void> searchPlaceSuggestions() async {
+    if (state.searchQuery.isEmpty) return;
     emit(state.copyWith(
       status: SearchFormStateStatus.loading,
     ));
     final List<PlaceSuggestion> suggestions =
         await _placeSuggestionRepository.searchPlaces(
-      query: query,
+      query: state.searchQuery,
       limit: 10,
     );
     emit(state.copyWith(

@@ -33,7 +33,10 @@ class _State extends State<MapSearchBar> {
       ),
     );
     if (mounted) {
-      context.read<MapCubit>().loadPlaceDetails(results.placeId);
+      context.read<MapCubit>().loadPlaceDetails(
+            results.placeId,
+            results.searchQuery,
+          );
     }
   }
 

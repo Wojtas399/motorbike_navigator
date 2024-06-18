@@ -80,10 +80,12 @@ class _SearchBarState extends State<_SearchBar> {
     Navigator.pop(context);
   }
 
-  void _onSearch(String? query) {
-    if (query != null && query.isNotEmpty) {
-      context.read<SearchFormCubit>().searchPlaceSuggestions(query);
-    }
+  void _onQueryChanged(String query, BuildContext context) {
+    context.read<SearchFormCubit>().onSearchQueryChanged(query);
+  }
+
+  void _onSearch() {
+    context.read<SearchFormCubit>().searchPlaceSuggestions();
   }
 
   void _onClearButtonPressed() {
@@ -115,6 +117,7 @@ class _SearchBarState extends State<_SearchBar> {
             width: 1.0,
           ),
         ),
-        onSubmitted: _onSearch,
+        onChanged: (String query) => _onQueryChanged(query, context),
+        onSubmitted: (_) => _onSearch(),
       );
 }

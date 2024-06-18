@@ -53,8 +53,8 @@ void main() {
 
   blocTest(
     'loadPlaceDetails, '
-    'should get place details from PlaceRepository, should set mode to map and '
-    'should change displayedLocation and selectedPlace params',
+    'should get place details from PlaceRepository and should change '
+    'displayedLocation, selectedPlace and searchQuery params',
     setUp: () => placeRepository.mockGetPlaceById(
       result: createPlace(
         id: 'p1',
@@ -63,13 +63,14 @@ void main() {
       ),
     ),
     build: () => createCubit(),
-    act: (cubit) async => await cubit.loadPlaceDetails('p1'),
+    act: (cubit) async => await cubit.loadPlaceDetails('p1', 'query'),
     expect: () => [
       const MapState(
         status: MapStatus.loading,
       ),
       MapState(
         status: MapStatus.success,
+        searchQuery: 'query',
         centerLocation: const Coordinates(50.1, 12.1),
         selectedPlace: createPlace(
           id: 'p1',
@@ -98,7 +99,7 @@ void main() {
     },
     build: () => createCubit(),
     act: (cubit) async {
-      await cubit.loadPlaceDetails('p1');
+      await cubit.loadPlaceDetails('p1', 'query');
       cubit.resetSelectedPlace();
     },
     expect: () => [
@@ -107,6 +108,7 @@ void main() {
       ),
       MapState(
         status: MapStatus.success,
+        searchQuery: 'query',
         centerLocation: const Coordinates(50.1, 12.1),
         selectedPlace: createPlace(
           id: 'p1',
@@ -116,6 +118,7 @@ void main() {
       ),
       const MapState(
         status: MapStatus.success,
+        searchQuery: '',
         centerLocation: Coordinates(50.1, 12.1),
         selectedPlace: null,
       ),
@@ -141,7 +144,7 @@ void main() {
     },
     act: (cubit) async {
       await cubit.initialize();
-      await cubit.loadPlaceDetails('p1');
+      await cubit.loadPlaceDetails('p1', 'query');
       cubit.moveBackToUserLocation();
     },
     expect: () => [
@@ -157,6 +160,7 @@ void main() {
       ),
       MapState(
         status: MapStatus.success,
+        searchQuery: 'query',
         centerLocation: const Coordinates(50.1, 12.1),
         userLocation: const Coordinates(50.2, 25.4),
         selectedPlace: createPlace(
@@ -167,6 +171,7 @@ void main() {
       ),
       const MapState(
         status: MapStatus.success,
+        searchQuery: 'query',
         centerLocation: Coordinates(50.2, 25.4),
         userLocation: Coordinates(50.2, 25.4),
       ),
