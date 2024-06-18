@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../extensions/context_extensions.dart';
 import '../../screen/map/cubit/map_cubit.dart';
+import 'cubit/search_form_cubit.dart';
 
 class SearchFormSearchContainer extends StatelessWidget
     implements PreferredSizeWidget {
@@ -74,21 +75,21 @@ class _SearchBarState extends State<_SearchBar> {
 
   void _onBackButtonPressed(BuildContext context) {
     FocusScope.of(context).unfocus();
-    final mapCubit = context.read<MapCubit>();
-    final bool isPlaceNotSelected = mapCubit.state.selectedPlace == null;
-    if (isPlaceNotSelected) mapCubit.resetPlaceSuggestions();
+    // final mapCubit = context.read<MapCubit>();
+    // final bool isPlaceNotSelected = mapCubit.state.selectedPlace == null;
+    // if (isPlaceNotSelected) mapCubit.resetPlaceSuggestions();
     Navigator.pop(context);
   }
 
   void _onSearch(String? query) {
     if (query != null && query.isNotEmpty) {
-      context.read<MapCubit>().searchPlaceSuggestions(query);
+      context.read<SearchFormCubit>().searchPlaceSuggestions(query);
     }
   }
 
   void _onClearButtonPressed() {
     _controller.clear();
-    context.read<MapCubit>().resetPlaceSuggestions();
+    context.read<SearchFormCubit>().resetPlaceSuggestions();
   }
 
   @override
