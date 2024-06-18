@@ -40,7 +40,7 @@ class _State extends State<MapSearchBar> {
   }
 
   void _onClearButtonPressed() {
-    // context.read<MapCubit>().resetPlaceSuggestions();
+    context.read<MapCubit>().resetSelectedPlace();
   }
 
   @override
