@@ -21,7 +21,6 @@ class MapState with _$MapState {
     @Default('') String searchQuery,
     @Default(_defaultLocation) Coordinates centerLocation,
     Coordinates? userLocation,
-    List<PlaceSuggestion>? placeSuggestions,
     Place? selectedPlace,
   }) = _MapState;
 }
