@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../entity/place.dart';
-import '../component/gap.dart';
-import '../component/text.dart';
-import '../extensions/context_extensions.dart';
+import '../../../entity/place.dart';
+import '../../component/gap.dart';
+import '../../component/text.dart';
+import '../../extensions/context_extensions.dart';
 import 'cubit/map_cubit.dart';
 
 class MapSelectedPlaceDetails extends StatefulWidget {

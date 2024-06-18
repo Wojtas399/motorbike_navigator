@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'bottom_nav_bar.dart';
-import 'map/map_page.dart';
 import 'saved/saved_page.dart';
+import 'screen/map/map_screen.dart';
 import 'settings/settings_page.dart';
 
 class Home extends StatefulWidget {
@@ -15,7 +15,7 @@ class Home extends StatefulWidget {
 class _State extends State<Home> {
   int _selectedPageIndex = 0;
   final List<Widget> _pages = [
-    const MapPage(),
+    const MapScreen(),
     const SavedPage(),
     const SettingsPage(),
   ];

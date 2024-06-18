@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../data/repository/place/place_repository.dart';
-import '../../../data/repository/place_suggestion/place_suggestion_repository.dart';
-import '../../../entity/coordinates.dart';
-import '../../../entity/place.dart';
-import '../../../entity/place_suggestion.dart';
-import '../../service/location_service.dart';
+import '../../../../data/repository/place/place_repository.dart';
+import '../../../../data/repository/place_suggestion/place_suggestion_repository.dart';
+import '../../../../entity/coordinates.dart';
+import '../../../../entity/place.dart';
+import '../../../../entity/place_suggestion.dart';
+import '../../../service/location_service.dart';
 import 'map_state.dart';
 
 @injectable
