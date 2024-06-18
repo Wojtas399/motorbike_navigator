@@ -69,52 +69,84 @@ class _RouteIcons extends StatelessWidget {
 class _Form extends StatelessWidget {
   const _Form();
 
-  Future<void> _onStartPlaceTap(BuildContext context) async {
-    final PlaceSuggestion? placeSuggestion =
-        await _askForPlaceSuggestion(context);
-    if (placeSuggestion != null && context.mounted) {
-      //TODO
-    }
-  }
-
-  Future<void> _onDestinationPlaceTap(BuildContext context) async {
-    final PlaceSuggestion? placeSuggestion =
-        await _askForPlaceSuggestion(context);
-    if (placeSuggestion != null && context.mounted) {
-      //TODO
-    }
-  }
-
-  Future<PlaceSuggestion?> _askForPlaceSuggestion(BuildContext context) async =>
-      await Navigator.push(
-        context,
-        SlideLeftPageRouteAnimation(
-          page: const SearchForm(query: ''),
-        ),
+  @override
+  Widget build(BuildContext context) => const Column(
+        children: [
+          _StartPlace(),
+          GapVertical24(),
+          _DestinationPlace(),
+        ],
       );
+}
+
+class _StartPlace extends StatefulWidget {
+  const _StartPlace();
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          _RouteTextField(
-            hintText: 'Wybierz miejsce startowe',
-            onTap: () => _onStartPlaceTap(context),
-          ),
-          const GapVertical24(),
-          _RouteTextField(
-            hintText: 'Wybierz miejsce docelowe',
-            onTap: () => _onDestinationPlaceTap(context),
-          ),
-        ],
+  State<StatefulWidget> createState() => _StartPlaceState();
+}
+
+class _StartPlaceState extends State<_StartPlace> {
+  final TextEditingController _controller = TextEditingController();
+
+  Future<void> _onStartPlaceTap(BuildContext context) async {
+    final PlaceSuggestion? placeSuggestion = await Navigator.push(
+      context,
+      SlideLeftPageRouteAnimation(
+        page: const SearchForm(query: ''),
+      ),
+    );
+    if (placeSuggestion != null && context.mounted) {
+      //TODO
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => _RouteTextField(
+        hintText: 'Wybierz miejsce startowe',
+        controller: _controller,
+        onTap: () => _onStartPlaceTap(context),
+      );
+}
+
+class _DestinationPlace extends StatefulWidget {
+  const _DestinationPlace();
+
+  @override
+  State<StatefulWidget> createState() => _DestinationPlaceState();
+}
+
+class _DestinationPlaceState extends State<_DestinationPlace> {
+  final TextEditingController _controller = TextEditingController();
+
+  Future<void> _onStartPlaceTap(BuildContext context) async {
+    final PlaceSuggestion? placeSuggestion = await Navigator.push(
+      context,
+      SlideLeftPageRouteAnimation(
+        page: const SearchForm(query: ''),
+      ),
+    );
+    if (placeSuggestion != null && context.mounted) {
+      //TODO
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => _RouteTextField(
+        hintText: 'Wybierz miejsce docelowe',
+        controller: _controller,
+        onTap: () => _onStartPlaceTap(context),
       );
 }
 
 class _RouteTextField extends StatelessWidget {
   final String? hintText;
+  final TextEditingController? controller;
   final VoidCallback? onTap;
 
   const _RouteTextField({
     this.hintText,
+    this.controller,
     this.onTap,
   });
 
@@ -124,6 +156,7 @@ class _RouteTextField extends StatelessWidget {
           border: const OutlineInputBorder(),
           hintText: hintText,
         ),
+        controller: controller,
         onTap: onTap,
       );
 }
