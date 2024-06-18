@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../entity/place_suggestion.dart';
-import '../extensions/context_extensions.dart';
-import '../screen/map/cubit/map_cubit.dart';
+import '../../../entity/place_suggestion.dart';
+import '../../extensions/context_extensions.dart';
+import '../../screen/map/cubit/map_cubit.dart';
 
 class SearchFormSuggestedPlaces extends StatelessWidget {
   const SearchFormSuggestedPlaces({super.key});

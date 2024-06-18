@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../screen/map/cubit/map_cubit.dart';
-import '../screen/map/cubit/map_state.dart';
+import '../../screen/map/cubit/map_cubit.dart';
+import '../../screen/map/cubit/map_state.dart';
 import 'search_form_search_container.dart';
 import 'search_form_suggested_places.dart';
 

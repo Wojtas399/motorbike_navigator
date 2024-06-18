@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../extensions/context_extensions.dart';
-import '../../search_form/search_form.dart';
+import '../search_form/search_form.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 
