@@ -6,6 +6,8 @@ import '../../component/gap.dart';
 import 'cubit/route_form_cubit.dart';
 import 'route_form_places_selection.dart';
 
+typedef RouteFormResult = ({String startPlaceId, String destinationId});
+
 class RouteFormScreen extends StatelessWidget {
   const RouteFormScreen({super.key});
 
@@ -18,9 +20,35 @@ class RouteFormScreen extends StatelessWidget {
               children: [
                 GapVertical24(),
                 RouteFormPlacesSelection(),
+                GapVertical24(),
+                _SubmitButton(),
               ],
             ),
           ),
         ),
       );
+}
+
+class _SubmitButton extends StatelessWidget {
+  const _SubmitButton();
+
+  void _onPressed(BuildContext context) {
+    final cubitState = context.read<RouteFormCubit>().state;
+    Navigator.pop(context, (
+      startPlaceId: cubitState.startPlace!.id,
+      destinationId: cubitState.destination!.id,
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isActive = context.select(
+      (RouteFormCubit cubit) => cubit.state.isCompleted,
+    );
+
+    return FilledButton(
+      onPressed: isActive ? () => _onPressed(context) : null,
+      child: const Text('Wyznacz trasę'),
+    );
+  }
 }

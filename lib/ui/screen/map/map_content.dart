@@ -141,12 +141,13 @@ class _ActionButtons extends StatelessWidget {
     context.read<MapCubit>().moveBackToUserLocation();
   }
 
-  void _onOpenRouteForm(BuildContext context) {
-    Navigator.of(context).push(
+  Future<void> _onOpenRouteForm(BuildContext context) async {
+    final RouteFormResult? route = await Navigator.of(context).push(
       FadePageRouteAnimation(
         page: const RouteFormScreen(),
       ),
     );
+    print(route);
   }
 
   @override
