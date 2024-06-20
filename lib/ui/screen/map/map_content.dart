@@ -11,6 +11,7 @@ import '../../extensions/coordinates_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 import 'map_action_buttons.dart';
+import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
 import 'map_selected_place_details.dart';
 
@@ -88,9 +89,6 @@ class _MapState extends State<_Map> {
     final Coordinates centerLocation = context.select(
       (MapCubit cubit) => cubit.state.centerLocation,
     );
-    final Coordinates? userLocation = context.select(
-      (MapCubit cubit) => cubit.state.userLocation,
-    );
     final Coordinates? selectedPlaceCoordinates = context.select(
       (MapCubit cubit) => cubit.state.selectedPlace?.coordinates,
     );
@@ -107,24 +105,7 @@ class _MapState extends State<_Map> {
           ),
           children: [
             TileLayer(urlTemplate: Env.mapboxTemplateUrl),
-            MarkerLayer(
-              markers: [
-                if (userLocation != null)
-                  Marker(
-                    width: 20,
-                    height: 20,
-                    point: userLocation.toLatLng(),
-                    child: Image.asset('assets/location_icon.png'),
-                  ),
-                if (selectedPlaceCoordinates != null)
-                  Marker(
-                    width: 70,
-                    height: 70,
-                    point: selectedPlaceCoordinates.toLatLng(),
-                    child: Image.asset('assets/pin.png'),
-                  ),
-              ],
-            ),
+            const MapMarkerLayer(),
             const MapPolylineLayer(),
           ],
         ),
