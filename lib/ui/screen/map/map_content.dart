@@ -69,18 +69,27 @@ class _MapState extends State<_Map> {
 
   void _onCubitStateChanged(MapState state) {
     if (state.status == MapStatus.waypointsLoaded) {
-      _mapController.moveAndRotate(
-        state.wayPoints!.first.toLatLng(),
-        13,
-        0,
-      );
+      _adjustViewToRoute(state.wayPoints!.first, state.wayPoints!.last);
     } else if (state.centerLocation == state.userLocation) {
-      _mapController.moveAndRotate(
-        state.centerLocation.toLatLng(),
-        13,
-        0,
-      );
+      _adjustViewToPoint(state.centerLocation);
     }
+  }
+
+  void _adjustViewToRoute(Coordinates startLocation, Coordinates endLocation) {
+    final bounds = LatLngBounds(
+      startLocation.toLatLng(),
+      endLocation.toLatLng(),
+    );
+    final cameraFit = CameraFit.bounds(
+      bounds: bounds,
+      padding: const EdgeInsets.all(48),
+    );
+    _mapController.moveAndRotate(bounds.center, 13, 0);
+    _mapController.fitCamera(cameraFit);
+  }
+
+  void _adjustViewToPoint(Coordinates point) {
+    _mapController.moveAndRotate(point.toLatLng(), 13, 0);
   }
 
   @override
