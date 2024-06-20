@@ -9,7 +9,6 @@ void main() {
     'should map json object to NavigationDto object',
     () {
       final Map<String, dynamic> json = {
-        'uuid': 'n1',
         'routes': [
           {
             'distance': 500.2,
@@ -31,7 +30,6 @@ void main() {
         ],
       };
       const NavigationDto expectedNavigationDto = NavigationDto(
-        id: 'n1',
         routes: [
           RouteDto(
             distanceInMeters: 500.2,

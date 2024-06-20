@@ -23,7 +23,6 @@ void main() {
       const startLocation = (lat: 50.1, long: 18.1);
       const destinationLocation = (lat: 51.2, long: 19.2);
       final Map<String, dynamic> json = {
-        'uuid': 'n1',
         'routes': [
           {
             'distance': 1000.1,
@@ -45,7 +44,6 @@ void main() {
         ],
       };
       const NavigationDto expectedNavigationDto = NavigationDto(
-        id: 'n1',
         routes: [
           RouteDto(
             distanceInMeters: 1000.1,

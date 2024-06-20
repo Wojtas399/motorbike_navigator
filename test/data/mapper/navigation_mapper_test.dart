@@ -11,9 +11,9 @@ void main() {
     'mapNavigationFromDto, '
     'should map NavigationDto model to Navigation model',
     () {
-      const String id = 'n1';
+      const Coordinates startLocation = Coordinates(50.1, 18.1);
+      const Coordinates endLocation = Coordinates(51.1, 19.1);
       const NavigationDto dto = NavigationDto(
-        id: id,
         routes: [
           RouteDto(
             distanceInMeters: 1000.1,
@@ -25,9 +25,10 @@ void main() {
           ),
         ],
       );
-      const Navigation expectedNavigation = Navigation(
-        id: id,
-        routes: [
+      final Navigation expectedNavigation = Navigation(
+        startLocation: startLocation,
+        endLocation: endLocation,
+        routes: const [
           Route(
             distanceInMeters: 1000.1,
             waypoints: [
@@ -37,7 +38,11 @@ void main() {
         ],
       );
 
-      final Navigation navigation = mapNavigationFromDto(dto);
+      final Navigation navigation = mapNavigationFromDto(
+        startLocation: startLocation,
+        endLocation: endLocation,
+        dto: dto,
+      );
 
       expect(navigation, expectedNavigation);
     },

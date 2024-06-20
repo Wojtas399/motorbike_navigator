@@ -7,17 +7,14 @@ part 'navigation_dto.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, createToJson: false)
 class NavigationDto extends Equatable {
-  @JsonKey(name: 'uuid')
-  final String id;
   final List<RouteDto> routes;
 
   const NavigationDto({
-    required this.id,
     required this.routes,
   });
 
   @override
-  List<Object?> get props => [id, routes];
+  List<Object?> get props => [routes];
 
   factory NavigationDto.fromJson(Map<String, dynamic> json) =>
       _$NavigationDtoFromJson(json);
