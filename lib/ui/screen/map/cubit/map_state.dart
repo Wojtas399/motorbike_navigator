@@ -5,12 +5,10 @@ import '../../../../entity/place.dart';
 
 part 'map_state.freezed.dart';
 
-enum MapStatus { loading, success, failure }
+enum MapStatus { loading, completed, waypointsLoaded }
 
 extension MapStatusExtensions on MapStatus {
   bool get isLoading => this == MapStatus.loading;
-
-  bool get isSuccess => this == MapStatus.success;
 }
 
 @freezed

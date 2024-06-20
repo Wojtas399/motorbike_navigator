@@ -6,7 +6,7 @@ import 'package:motorbike_navigator/entity/place.dart';
 
 import '../../creator/place_creator.dart';
 import '../../creator/place_dto_creator.dart';
-import '../../mock/data/api/mock_place_api_service.dart';
+import '../../mock/data/api_service/mock_place_api_service.dart';
 
 void main() {
   final placeApiService = MockPlaceApiService();

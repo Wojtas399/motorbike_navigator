@@ -3,7 +3,7 @@ import 'package:motorbike_navigator/data/dto/place_suggestion_dto.dart';
 import 'package:motorbike_navigator/data/repository/place_suggestion/place_suggestion_repository_impl.dart';
 import 'package:motorbike_navigator/entity/place_suggestion.dart';
 
-import '../../mock/data/api/mock_place_suggestion_api_service.dart';
+import '../../mock/data/api_service/mock_place_suggestion_api_service.dart';
 
 void main() {
   final placeSuggestionApiService = MockPlaceSuggestionApiService();

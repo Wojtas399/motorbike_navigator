@@ -39,7 +39,7 @@ void main() {
     act: (cubit) async => await cubit.initialize(),
     expect: () => [
       const MapState(
-        status: MapStatus.success,
+        status: MapStatus.completed,
         centerLocation: Coordinates(50.2, 25.4),
         userLocation: Coordinates(50.2, 25.4),
       ),
@@ -49,7 +49,7 @@ void main() {
   blocTest(
     'initialize, '
     'current location is null, '
-    'should only emit success status',
+    'should only emit completed status',
     setUp: () => locationService.mockGetCurrentLocation(
       result: null,
     ),
@@ -57,7 +57,22 @@ void main() {
     act: (cubit) async => await cubit.initialize(),
     expect: () => [
       const MapState(
-        status: MapStatus.success,
+        status: MapStatus.completed,
+      ),
+    ],
+  );
+
+  blocTest(
+    'onCenterLocationChanged, '
+    'should update centerLocation in state',
+    build: () => createCubit(),
+    act: (cubit) => cubit.onCenterLocationChanged(
+      const Coordinates(50.1, 18.1),
+    ),
+    expect: () => [
+      const MapState(
+        status: MapStatus.completed,
+        centerLocation: Coordinates(50.1, 18.1),
       ),
     ],
   );
@@ -85,7 +100,7 @@ void main() {
         searchQuery: 'place name',
       ),
       MapState(
-        status: MapStatus.success,
+        status: MapStatus.completed,
         searchQuery: 'place name',
         centerLocation: const Coordinates(50.1, 12.1),
         selectedPlace: createPlace(
@@ -127,7 +142,7 @@ void main() {
         searchQuery: 'place name',
       ),
       MapState(
-        status: MapStatus.success,
+        status: MapStatus.completed,
         searchQuery: 'place name',
         centerLocation: const Coordinates(50.1, 12.1),
         selectedPlace: createPlace(
@@ -137,7 +152,7 @@ void main() {
         ),
       ),
       const MapState(
-        status: MapStatus.success,
+        status: MapStatus.completed,
         searchQuery: '',
         centerLocation: Coordinates(50.1, 12.1),
         selectedPlace: null,
@@ -172,7 +187,7 @@ void main() {
     },
     expect: () => [
       const MapState(
-        status: MapStatus.success,
+        status: MapStatus.completed,
         centerLocation: Coordinates(50.2, 25.4),
         userLocation: Coordinates(50.2, 25.4),
       ),
@@ -183,7 +198,7 @@ void main() {
         userLocation: Coordinates(50.2, 25.4),
       ),
       MapState(
-        status: MapStatus.success,
+        status: MapStatus.completed,
         searchQuery: 'place name',
         centerLocation: const Coordinates(50.1, 12.1),
         userLocation: const Coordinates(50.2, 25.4),
@@ -194,7 +209,7 @@ void main() {
         ),
       ),
       const MapState(
-        status: MapStatus.success,
+        status: MapStatus.completed,
         searchQuery: '',
         centerLocation: Coordinates(50.2, 25.4),
         userLocation: Coordinates(50.2, 25.4),
@@ -386,6 +401,7 @@ void main() {
     ),
     expect: () => [
       const MapState(
+        status: MapStatus.waypointsLoaded,
         wayPoints: [
           Coordinates(50.25, 18.25),
           Coordinates(50.5, 18.5),

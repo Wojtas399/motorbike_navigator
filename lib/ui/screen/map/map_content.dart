@@ -67,7 +67,13 @@ class _MapState extends State<_Map> {
   }
 
   void _onCubitStateChanged(MapState state) {
-    if (state.centerLocation == state.userLocation) {
+    if (state.status == MapStatus.waypointsLoaded) {
+      _mapController.moveAndRotate(
+        state.wayPoints!.first.toLatLng(),
+        13,
+        0,
+      );
+    } else if (state.centerLocation == state.userLocation) {
       _mapController.moveAndRotate(
         state.centerLocation.toLatLng(),
         13,
@@ -87,6 +93,9 @@ class _MapState extends State<_Map> {
     );
     final Coordinates? selectedPlaceCoordinates = context.select(
       (MapCubit cubit) => cubit.state.selectedPlace?.coordinates,
+    );
+    final List<Coordinates>? waypoints = context.select(
+      (MapCubit cubit) => cubit.state.wayPoints,
     );
 
     return Stack(
@@ -119,6 +128,16 @@ class _MapState extends State<_Map> {
                   ),
               ],
             ),
+            if (waypoints != null)
+              PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: waypoints.map((point) => point.toLatLng()).toList(),
+                    strokeWidth: 6,
+                    color: context.colorScheme.primary,
+                  ),
+                ],
+              ),
           ],
         ),
         const _ActionButtons(),
@@ -147,7 +166,12 @@ class _ActionButtons extends StatelessWidget {
         page: const RouteFormScreen(),
       ),
     );
-    print(route);
+    if (route != null && context.mounted) {
+      await context.read<MapCubit>().loadRouteWaypoints(
+            startPlaceId: route.startPlaceId,
+            destinationId: route.destinationId,
+          );
+    }
   }
 
   @override

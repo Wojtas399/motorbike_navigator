@@ -18,10 +18,10 @@ class RouteGeometryDto extends Equatable {
   factory RouteGeometryDto.fromJson(Map<String, dynamic> json) =>
       _$RouteGeometryDtoFromJson(json);
 
-  static List<({double lat, double long})> _fromJson(List<List> coordinates) =>
+  static List<({double lat, double long})> _fromJson(List coordinates) =>
       coordinates
           .map<({double lat, double long})>(
-            (List coordinates) => (
+            (coordinates) => (
               lat: coordinates.last,
               long: coordinates.first,
             ),
