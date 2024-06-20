@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/data/api/place_suggestion_api_service.dart';
+import 'package:motorbike_navigator/data/api_service/place_suggestion_api_service.dart';
 import 'package:motorbike_navigator/data/dto/place_suggestion_dto.dart';
 
 import '../../mock/data/api/mock_mapbox_search_api.dart';

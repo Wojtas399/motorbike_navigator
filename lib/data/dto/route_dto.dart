@@ -7,16 +7,17 @@ part 'route_dto.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, createToJson: false)
 class RouteDto extends Equatable {
-  final double distance;
+  @JsonKey(name: 'distance')
+  final double distanceInMeters;
   final RouteGeometryDto geometry;
 
   const RouteDto({
-    required this.distance,
+    required this.distanceInMeters,
     required this.geometry,
   });
 
   @override
-  List<Object?> get props => [distance, geometry];
+  List<Object?> get props => [distanceInMeters, geometry];
 
   factory RouteDto.fromJson(Map<String, dynamic> json) =>
       _$RouteDtoFromJson(json);

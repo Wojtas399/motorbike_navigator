@@ -12,7 +12,7 @@ void main() {
         'uuid': 'n1',
         'routes': [
           {
-            'distance': 5.2,
+            'distance': 500.2,
             'geometry': {
               'coordinates': [
                 [19.1, 50.1],
@@ -21,7 +21,7 @@ void main() {
             }
           },
           {
-            'distance': 10.5,
+            'distance': 1000.5,
             'geometry': {
               'coordinates': [
                 [21.3, 51.3],
@@ -34,7 +34,7 @@ void main() {
         id: 'n1',
         routes: [
           RouteDto(
-            distance: 5.2,
+            distanceInMeters: 500.2,
             geometry: RouteGeometryDto(
               coordinates: [
                 (lat: 50.1, long: 19.1),
@@ -43,7 +43,7 @@ void main() {
             ),
           ),
           RouteDto(
-            distance: 10.5,
+            distanceInMeters: 1000.5,
             geometry: RouteGeometryDto(
               coordinates: [
                 (lat: 51.3, long: 21.3),

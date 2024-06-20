@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 
+import '../api/mapbox_search_api.dart';
 import '../dto/place_dto.dart';
-import 'mapbox_search_api.dart';
 
 @injectable
 class PlaceApiService {

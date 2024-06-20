@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/data/api/place_suggestion_api_service.dart';
+import 'package:motorbike_navigator/data/api_service/place_suggestion_api_service.dart';
 import 'package:motorbike_navigator/data/dto/place_suggestion_dto.dart';
 
 class MockPlaceSuggestionApiService extends Mock
