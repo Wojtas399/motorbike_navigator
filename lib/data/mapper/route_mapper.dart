@@ -1,9 +1,8 @@
 import '../../entity/coordinates.dart';
-import '../../entity/route.dart';
+import '../../entity/navigation.dart';
 import '../dto/route_dto.dart';
 
-Route mapRouteFromDto(RouteDto routeDto, String id) => Route(
-      id: id,
+Route mapRouteFromDto(RouteDto routeDto) => Route(
       distanceInMeters: routeDto.distanceInMeters,
       waypoints: routeDto.geometry.coordinates
           .map(
