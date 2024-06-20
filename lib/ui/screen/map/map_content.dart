@@ -11,6 +11,7 @@ import '../../extensions/coordinates_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 import 'map_action_buttons.dart';
+import 'map_polyline_layer.dart';
 import 'map_selected_place_details.dart';
 
 class MapContent extends StatelessWidget {
@@ -93,9 +94,6 @@ class _MapState extends State<_Map> {
     final Coordinates? selectedPlaceCoordinates = context.select(
       (MapCubit cubit) => cubit.state.selectedPlace?.coordinates,
     );
-    final List<Coordinates>? waypoints = context.select(
-      (MapCubit cubit) => cubit.state.wayPoints,
-    );
 
     return Stack(
       children: [
@@ -127,16 +125,7 @@ class _MapState extends State<_Map> {
                   ),
               ],
             ),
-            if (waypoints != null)
-              PolylineLayer(
-                polylines: [
-                  Polyline(
-                    points: waypoints.map((point) => point.toLatLng()).toList(),
-                    strokeWidth: 6,
-                    color: context.colorScheme.primary,
-                  ),
-                ],
-              ),
+            const MapPolylineLayer(),
           ],
         ),
         const MapActionButtons(),
