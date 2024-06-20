@@ -4,14 +4,13 @@ import 'package:flutter_map/flutter_map.dart';
 
 import '../../../entity/coordinates.dart';
 import '../../../env.dart';
-import '../../animation/fade_page_route_animation.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
-import '../route_form/route_form_screen.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
+import 'map_action_buttons.dart';
 import 'map_selected_place_details.dart';
 
 class MapContent extends StatelessWidget {
@@ -140,7 +139,7 @@ class _MapState extends State<_Map> {
               ),
           ],
         ),
-        const _ActionButtons(),
+        const MapActionButtons(),
         if (selectedPlaceCoordinates != null)
           const Positioned(
             bottom: 0,
@@ -149,57 +148,6 @@ class _MapState extends State<_Map> {
             child: MapSelectedPlaceDetails(),
           ),
       ],
-    );
-  }
-}
-
-class _ActionButtons extends StatelessWidget {
-  const _ActionButtons();
-
-  void _onMoveBackToUserLocation(BuildContext context) {
-    context.read<MapCubit>().moveBackToUserLocation();
-  }
-
-  Future<void> _onOpenRouteForm(BuildContext context) async {
-    final RouteFormResult? route = await Navigator.of(context).push(
-      FadePageRouteAnimation(
-        page: const RouteFormScreen(),
-      ),
-    );
-    if (route != null && context.mounted) {
-      await context.read<MapCubit>().loadRouteWaypoints(
-            startPlaceId: route.startPlaceId,
-            destinationId: route.destinationId,
-          );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bool doesUserLocationExist = context.select(
-      (MapCubit cubit) => cubit.state.userLocation != null,
-    );
-
-    return Positioned(
-      bottom: 24,
-      right: 24,
-      child: Column(
-        children: [
-          if (doesUserLocationExist) ...[
-            FloatingActionButton(
-              onPressed: () => _onMoveBackToUserLocation(context),
-              heroTag: null,
-              child: const Icon(Icons.my_location),
-            ),
-            const SizedBox(height: 24),
-          ],
-          FloatingActionButton(
-            onPressed: () => _onOpenRouteForm(context),
-            heroTag: null,
-            child: const Icon(Icons.directions),
-          ),
-        ],
-      ),
     );
   }
 }
