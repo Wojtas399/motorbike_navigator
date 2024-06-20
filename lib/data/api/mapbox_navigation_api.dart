@@ -11,26 +11,23 @@ class MapboxNavigationApi {
     'https://api.mapbox.com/directions/v5/mapbox/driving',
   );
 
-  Future<Map<String, dynamic>> fetchRoute({
-    required ({double lat, double long}) startPlaceCoordinates,
-    required ({double lat, double long}) destinationCoordinates,
+  Future<Map<String, dynamic>> fetchNavigation({
+    required ({double lat, double long}) startLocation,
+    required ({double lat, double long}) destinationLocation,
   }) async {
-    final uri = _createUri(
-      startPlaceCoordinates: startPlaceCoordinates,
-      destinationCoordinates: destinationCoordinates,
-    );
+    final uri = _createUri(startLocation, destinationLocation);
     final response = await http.get(uri);
     return json.decode(response.body);
   }
 
-  Uri _createUri({
-    required ({double lat, double long}) startPlaceCoordinates,
-    required ({double lat, double long}) destinationCoordinates,
-  }) {
+  Uri _createUri(
+    ({double lat, double long}) startLocation,
+    ({double lat, double long}) destinationLocation,
+  ) {
     final String startPlaceCoordStr =
-        '${startPlaceCoordinates.long},${startPlaceCoordinates.lat}';
+        '${startLocation.long},${startLocation.lat}';
     final String destinationCoordStr =
-        '${destinationCoordinates.long},${destinationCoordinates.lat}';
+        '${destinationLocation.long},${destinationLocation.lat}';
     return Uri(
       scheme: _baseUri.scheme,
       host: _baseUri.host,
