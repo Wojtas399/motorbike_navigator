@@ -69,7 +69,7 @@ class MapCubit extends Cubit<MapState> {
     ));
   }
 
-  Future<void> loadRouteWaypoints({
+  Future<void> loadNavigation({
     required String startPlaceId,
     required String destinationId,
   }) async {
@@ -85,7 +85,11 @@ class MapCubit extends Cubit<MapState> {
     if (navigation != null && navigation.routes.isNotEmpty) {
       emit(state.copyWith(
         status: MapStatus.waypointsLoaded,
-        wayPoints: navigation.routes.first.waypoints,
+        navigation: MapStateNavigation(
+          startPlace: startPlace,
+          destination: destination,
+          wayPoints: navigation.routes.first.waypoints,
+        ),
       ));
     }
   }

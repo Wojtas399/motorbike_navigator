@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../entity/coordinates.dart';
@@ -19,8 +20,23 @@ class MapState with _$MapState {
     @Default(_defaultLocation) Coordinates centerLocation,
     Coordinates? userLocation,
     Place? selectedPlace,
-    List<Coordinates>? wayPoints,
+    MapStateNavigation? navigation,
   }) = _MapState;
+}
+
+class MapStateNavigation extends Equatable {
+  final Place startPlace;
+  final Place destination;
+  final List<Coordinates> wayPoints;
+
+  const MapStateNavigation({
+    required this.startPlace,
+    required this.destination,
+    required this.wayPoints,
+  });
+
+  @override
+  List<Object?> get props => [startPlace, destination, wayPoints];
 }
 
 const Coordinates _defaultLocation = Coordinates(

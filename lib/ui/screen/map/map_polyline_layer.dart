@@ -13,7 +13,7 @@ class MapPolylineLayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Coordinates>? waypoints = context.select(
-      (MapCubit cubit) => cubit.state.wayPoints,
+      (MapCubit cubit) => cubit.state.navigation?.wayPoints,
     );
 
     return PolylineLayer(

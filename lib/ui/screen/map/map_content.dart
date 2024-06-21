@@ -69,7 +69,10 @@ class _MapState extends State<_Map> {
 
   void _onCubitStateChanged(MapState state) {
     if (state.status == MapStatus.waypointsLoaded) {
-      _adjustViewToRoute(state.wayPoints!.first, state.wayPoints!.last);
+      _adjustViewToRoute(
+        state.navigation!.wayPoints.first,
+        state.navigation!.wayPoints.last,
+      );
     } else if (state.centerLocation == state.userLocation) {
       _adjustViewToPoint(state.centerLocation);
     }

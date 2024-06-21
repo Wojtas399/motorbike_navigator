@@ -19,7 +19,7 @@ class MapActionButtons extends StatelessWidget {
       ),
     );
     if (route != null && context.mounted) {
-      await context.read<MapCubit>().loadRouteWaypoints(
+      await context.read<MapCubit>().loadNavigation(
             startPlaceId: route.startPlaceId,
             destinationId: route.destinationId,
           );

@@ -218,7 +218,7 @@ void main() {
   );
 
   blocTest(
-    'loadRouteWaypoints, '
+    'loadNavigation, '
     'start place does not exist, '
     'should finish method call',
     build: () => createCubit(),
@@ -234,7 +234,7 @@ void main() {
         )),
       );
     },
-    act: (cubit) async => await cubit.loadRouteWaypoints(
+    act: (cubit) async => await cubit.loadNavigation(
       startPlaceId: 'p1',
       destinationId: 'p2',
     ),
@@ -246,7 +246,7 @@ void main() {
   );
 
   blocTest(
-    'loadRouteWaypoints, '
+    'loadNavigation, '
     'destination does not exist, '
     'should finish method call',
     build: () => createCubit(),
@@ -262,7 +262,7 @@ void main() {
         () => placeRepository.getPlaceById('p2'),
       ).thenAnswer((_) => Future.value(null));
     },
-    act: (cubit) async => await cubit.loadRouteWaypoints(
+    act: (cubit) async => await cubit.loadNavigation(
       startPlaceId: 'p1',
       destinationId: 'p2',
     ),
@@ -274,7 +274,7 @@ void main() {
   );
 
   blocTest(
-    'loadRouteWaypoints, '
+    'loadNavigation, '
     'navigation does not exist, '
     'should finish method call',
     build: () => createCubit(),
@@ -297,7 +297,7 @@ void main() {
         navigation: null,
       );
     },
-    act: (cubit) async => await cubit.loadRouteWaypoints(
+    act: (cubit) async => await cubit.loadNavigation(
       startPlaceId: 'p1',
       destinationId: 'p2',
     ),
@@ -315,7 +315,7 @@ void main() {
   );
 
   blocTest(
-    'loadRouteWaypoints, '
+    'loadNavigation, '
     'navigation does not contain any routes, '
     'should finish method call',
     build: () => createCubit(),
@@ -342,7 +342,7 @@ void main() {
         ),
       );
     },
-    act: (cubit) async => await cubit.loadRouteWaypoints(
+    act: (cubit) async => await cubit.loadNavigation(
       startPlaceId: 'p1',
       destinationId: 'p2',
     ),
@@ -360,7 +360,7 @@ void main() {
   );
 
   blocTest(
-    'loadRouteWaypoints, '
+    'loadNavigation, '
     'should load coordinates of start and destination places and should load '
     'waypoints between these two locations',
     build: () => createCubit(),
@@ -369,6 +369,7 @@ void main() {
         () => placeRepository.getPlaceById('p1'),
       ).thenAnswer(
         (_) => Future.value(createPlace(
+          id: 'p1',
           coordinates: const Coordinates(50.1, 18.1),
         )),
       );
@@ -376,6 +377,7 @@ void main() {
         () => placeRepository.getPlaceById('p2'),
       ).thenAnswer(
         (_) => Future.value(createPlace(
+          id: 'p2',
           coordinates: const Coordinates(51.2, 19.2),
         )),
       );
@@ -395,17 +397,27 @@ void main() {
         ),
       );
     },
-    act: (cubit) async => await cubit.loadRouteWaypoints(
+    act: (cubit) async => await cubit.loadNavigation(
       startPlaceId: 'p1',
       destinationId: 'p2',
     ),
     expect: () => [
-      const MapState(
+      MapState(
         status: MapStatus.waypointsLoaded,
-        wayPoints: [
-          Coordinates(50.25, 18.25),
-          Coordinates(50.5, 18.5),
-        ],
+        navigation: MapStateNavigation(
+          startPlace: createPlace(
+            id: 'p1',
+            coordinates: const Coordinates(50.1, 18.1),
+          ),
+          destination: createPlace(
+            id: 'p2',
+            coordinates: const Coordinates(51.2, 19.2),
+          ),
+          wayPoints: const [
+            Coordinates(50.25, 18.25),
+            Coordinates(50.5, 18.5),
+          ],
+        ),
       ),
     ],
     verify: (_) {
