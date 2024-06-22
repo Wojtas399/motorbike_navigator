@@ -23,72 +23,77 @@ class _State extends State<MapRouteDetails>
   void initState() {
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 250),
     );
-    _positionAnimation = Tween<double>(begin: 0, end: 400).animate(
+    _positionAnimation = Tween<double>(begin: -350, end: 0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeInCubic,
       ),
     );
+    _animationController.forward();
     super.initState();
   }
 
+  Future<void> _onSubmit() async {
+    // await context.read<MapCubit>().loadNavigation();
+  }
+
   void _onClose() {
-    // _animationController.forward().whenComplete(
-    //       context.read<MapCubit>().resetSelectedPlace,
-    //     );
+    _animationController.reverse().whenComplete(
+          context.read<MapCubit>().closeRouteSelection,
+        );
   }
 
   @override
-  Widget build(BuildContext context) {
-    final MapStateNavigation? navigation = context.select(
-      (MapCubit cubit) => cubit.state.navigation,
-    );
-
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (_, __) => Transform.translate(
-        offset: Offset(0, _positionAnimation.value),
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(24, kToolbarHeight + 32, 16, 24),
-          decoration: BoxDecoration(
-            color: context.colorScheme.surface,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(32),
-              bottomRight: Radius.circular(32),
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: _animationController,
+        builder: (_, __) => Transform.translate(
+          offset: Offset(0, _positionAnimation.value),
+          child: _BodyContainer(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _RouteForm(),
+                const GapVertical24(),
+                _Buttons(
+                  onSubmitButtonPressed: _onSubmit,
+                  onCloseButtonPressed: _onClose,
+                ),
+              ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                offset: const Offset(0, -2),
-                blurRadius: 20,
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const _RouteForm(),
-              const GapVertical24(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      onPressed: _onClose,
-                      child: Text(context.str.close),
-                    ),
-                  ),
-                ],
-              ),
-            ],
           ),
         ),
-      ),
-    );
-  }
+      );
+}
+
+class _BodyContainer extends StatelessWidget {
+  final Widget child;
+
+  const _BodyContainer({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.fromLTRB(24, kToolbarHeight + 32, 16, 24),
+        decoration: BoxDecoration(
+          color: context.colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(32),
+            bottomRight: Radius.circular(32),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              offset: const Offset(0, -2),
+              blurRadius: 20,
+            ),
+          ],
+        ),
+        child: child,
+      );
 }
 
 class _RouteForm extends StatelessWidget {
@@ -120,4 +125,37 @@ class _RouteForm extends StatelessWidget {
       onSwapLocationsTap: () => _onSwapLocationsTap(context),
     );
   }
+}
+
+class _Buttons extends StatelessWidget {
+  final VoidCallback onSubmitButtonPressed;
+  final VoidCallback onCloseButtonPressed;
+
+  const _Buttons({
+    required this.onSubmitButtonPressed,
+    required this.onCloseButtonPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        width: double.infinity,
+        child: Column(
+          children: [
+            SizedBox(
+              width: 300,
+              child: FilledButton(
+                onPressed: onSubmitButtonPressed,
+                child: const Text('Szukaj trasy'),
+              ),
+            ),
+            SizedBox(
+              width: 300,
+              child: TextButton(
+                onPressed: onCloseButtonPressed,
+                child: Text(context.str.close),
+              ),
+            ),
+          ],
+        ),
+      );
 }

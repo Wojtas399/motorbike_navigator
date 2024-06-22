@@ -78,6 +78,36 @@ void main() {
   );
 
   blocTest(
+    'openRouteSelection, '
+    'should set mode as MapMode.routeSelection',
+    build: () => createCubit(),
+    act: (cubit) => cubit.openRouteSelection(),
+    expect: () => [
+      const MapState(
+        mode: MapMode.routeSelection,
+      ),
+    ],
+  );
+
+  blocTest(
+    'closeRouteSelection, '
+    'should set mode as MapMode.preview',
+    build: () => createCubit(),
+    act: (cubit) {
+      cubit.openRouteSelection();
+      cubit.closeRouteSelection();
+    },
+    expect: () => [
+      const MapState(
+        mode: MapMode.routeSelection,
+      ),
+      const MapState(
+        mode: MapMode.preview,
+      ),
+    ],
+  );
+
+  blocTest(
     'loadPlaceDetails, '
     'should get place details from PlaceRepository, should change '
     'displayedLocation and selectedPlace params and should assign name of place '

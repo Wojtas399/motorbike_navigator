@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../animation/fade_page_route_animation.dart';
-import '../route_form/route_form_screen.dart';
 import 'cubit/map_cubit.dart';
 
 class MapActionButtons extends StatelessWidget {
@@ -13,17 +11,18 @@ class MapActionButtons extends StatelessWidget {
   }
 
   Future<void> _onOpenRouteForm(BuildContext context) async {
-    final RouteFormResult? route = await Navigator.of(context).push(
-      FadePageRouteAnimation(
-        page: const RouteFormScreen(),
-      ),
-    );
-    if (route != null && context.mounted) {
-      await context.read<MapCubit>().loadNavigation(
-            startPlaceId: route.startPlaceId,
-            destinationId: route.destinationId,
-          );
-    }
+    context.read<MapCubit>().openRouteSelection();
+    // final RouteFormResult? route = await Navigator.of(context).push(
+    //   FadePageRouteAnimation(
+    //     page: const RouteFormScreen(),
+    //   ),
+    // );
+    // if (route != null && context.mounted) {
+    //   await context.read<MapCubit>().loadNavigation(
+    //         startPlaceId: route.startPlaceId,
+    //         destinationId: route.destinationId,
+    //       );
+    // }
   }
 
   @override

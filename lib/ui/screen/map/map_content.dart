@@ -100,6 +100,9 @@ class _MapState extends State<_Map> {
   @override
   Widget build(BuildContext context) {
     context.watch<MapCubit>().stream.listen(_onCubitStateChanged);
+    final MapMode mode = context.select(
+      (MapCubit cubit) => cubit.state.mode,
+    );
     final Coordinates centerLocation = context.select(
       (MapCubit cubit) => cubit.state.centerLocation,
     );
@@ -131,7 +134,7 @@ class _MapState extends State<_Map> {
             padding: EdgeInsets.fromLTRB(24, kToolbarHeight + 24, 24, 0),
             child: MapSearchBar(),
           ),
-        const MapActionButtons(),
+        if (mode == MapMode.preview) const MapActionButtons(),
         if (selectedPlaceCoordinates != null)
           const Positioned(
             bottom: 0,
@@ -139,7 +142,7 @@ class _MapState extends State<_Map> {
             right: 0,
             child: MapSelectedPlaceDetails(),
           ),
-        if (navigation != null)
+        if (mode == MapMode.routeSelection)
           const Positioned(
             top: 0,
             left: 0,

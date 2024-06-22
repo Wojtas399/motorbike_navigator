@@ -3,10 +3,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../entity/coordinates.dart';
 import '../../../../entity/place.dart';
+import '../../../../entity/place_suggestion.dart';
 
 part 'map_state.freezed.dart';
 
 enum MapStatus { loading, completed, waypointsLoaded }
+
+enum MapMode { preview, routeSelection }
 
 extension MapStatusExtensions on MapStatus {
   bool get isLoading => this == MapStatus.loading;
@@ -16,6 +19,7 @@ extension MapStatusExtensions on MapStatus {
 class MapState with _$MapState {
   const factory MapState({
     @Default(MapStatus.loading) MapStatus status,
+    @Default(MapMode.preview) MapMode mode,
     @Default('') String searchQuery,
     @Default(_defaultLocation) Coordinates centerLocation,
     Coordinates? userLocation,

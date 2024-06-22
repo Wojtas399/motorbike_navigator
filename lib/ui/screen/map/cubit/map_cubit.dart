@@ -38,6 +38,18 @@ class MapCubit extends Cubit<MapState> {
     ));
   }
 
+  void openRouteSelection() {
+    emit(state.copyWith(
+      mode: MapMode.routeSelection,
+    ));
+  }
+
+  void closeRouteSelection() {
+    emit(state.copyWith(
+      mode: MapMode.preview,
+    ));
+  }
+
   Future<void> loadPlaceDetails({
     required String placeId,
     required String placeName,
