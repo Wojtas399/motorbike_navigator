@@ -53,6 +53,34 @@ void main() {
   );
 
   blocTest(
+    'swapPlaceSuggestions, '
+    'should swap values of startPlaceSuggestion and destinationSuggestion',
+    build: () => createCubit(),
+    act: (cubit) {
+      cubit.onStartPlaceSuggestionChanged(
+        const PlaceSuggestion(id: 'p1', name: 'start place'),
+      );
+      cubit.onDestinationSuggestionChanged(
+        const PlaceSuggestion(id: 'p2', name: 'destination'),
+      );
+      cubit.swapPlaceSuggestions();
+    },
+    expect: () => [
+      const NavigationState(
+        startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'start place'),
+      ),
+      const NavigationState(
+        startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'start place'),
+        destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'destination'),
+      ),
+      const NavigationState(
+        startPlaceSuggestion: PlaceSuggestion(id: 'p2', name: 'destination'),
+        destinationSuggestion: PlaceSuggestion(id: 'p1', name: 'start place'),
+      ),
+    ],
+  );
+
+  blocTest(
     'loadNavigation, '
     'startPlaceSuggestion is null, '
     'should finish method call',

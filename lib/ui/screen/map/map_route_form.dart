@@ -7,6 +7,7 @@ import '../../component/gap.dart';
 import '../../extensions/context_extensions.dart';
 import '../search_form/search_form.dart';
 import 'cubit/navigation_cubit.dart';
+import 'cubit/navigation_state.dart';
 
 class MapRouteForm extends StatelessWidget {
   const MapRouteForm({super.key});
@@ -79,15 +80,26 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
     }
   }
 
+  void _onStartPlaceSuggestionChanged(PlaceSuggestion? startPlaceSuggestion) {
+    _controller.text = startPlaceSuggestion?.name ?? '';
+  }
+
   @override
-  Widget build(BuildContext context) => TextField(
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          hintText: 'Wybierz miejsce startowe',
+  Widget build(BuildContext context) =>
+      BlocListener<NavigationCubit, NavigationState>(
+        listenWhen: (prevState, currState) =>
+            prevState.startPlaceSuggestion != currState.startPlaceSuggestion,
+        listener: (_, state) =>
+            _onStartPlaceSuggestionChanged(state.startPlaceSuggestion),
+        child: TextField(
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Wybierz miejsce startowe',
+          ),
+          controller: _controller,
+          focusNode: _focusNode,
+          onTap: () => _onTap(context),
         ),
-        controller: _controller,
-        focusNode: _focusNode,
-        onTap: () => _onTap(context),
       );
 }
 
@@ -118,15 +130,26 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
     }
   }
 
+  void _onDestinationSuggestionChanged(PlaceSuggestion? destinationSuggestion) {
+    _controller.text = destinationSuggestion?.name ?? '';
+  }
+
   @override
-  Widget build(BuildContext context) => TextField(
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          hintText: 'Wybierz miejsce docelowe',
+  Widget build(BuildContext context) =>
+      BlocListener<NavigationCubit, NavigationState>(
+        listenWhen: (prevState, currState) =>
+            prevState.destinationSuggestion != currState.destinationSuggestion,
+        listener: (_, state) =>
+            _onDestinationSuggestionChanged(state.destinationSuggestion),
+        child: TextField(
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Wybierz miejsce docelowe',
+          ),
+          controller: _controller,
+          focusNode: _focusNode,
+          onTap: () => _onTap(context),
         ),
-        controller: _controller,
-        focusNode: _focusNode,
-        onTap: () => _onTap(context),
       );
 }
 
@@ -134,7 +157,7 @@ class _SwapPointsButton extends StatelessWidget {
   const _SwapPointsButton();
 
   void _onPressed(BuildContext context) {
-    //TODO
+    context.read<NavigationCubit>().swapPlaceSuggestions();
   }
 
   @override

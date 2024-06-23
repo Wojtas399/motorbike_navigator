@@ -77,7 +77,7 @@ class _BodyContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.fromLTRB(24, kToolbarHeight + 32, 16, 24),
+        padding: const EdgeInsets.fromLTRB(24, kToolbarHeight + 24, 16, 24),
         decoration: BoxDecoration(
           color: context.colorScheme.surface,
           borderRadius: const BorderRadius.only(

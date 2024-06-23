@@ -30,6 +30,13 @@ class NavigationCubit extends Cubit<NavigationState> {
     ));
   }
 
+  void swapPlaceSuggestions() {
+    emit(state.copyWith(
+      startPlaceSuggestion: state.destinationSuggestion,
+      destinationSuggestion: state.startPlaceSuggestion,
+    ));
+  }
+
   Future<void> loadNavigation() async {
     if (state.startPlaceSuggestion == null ||
         state.destinationSuggestion == null) return;
