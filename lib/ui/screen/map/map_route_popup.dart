@@ -105,22 +105,21 @@ class _Buttons extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-        width: double.infinity,
-        child: Column(
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Row(
           children: [
-            SizedBox(
-              width: 300,
+            Expanded(
+              child: OutlinedButton(
+                onPressed: onCloseButtonPressed,
+                child: Text(context.str.close),
+              ),
+            ),
+            const GapHorizontal16(),
+            Expanded(
               child: FilledButton(
                 onPressed: onSubmitButtonPressed,
                 child: Text(context.str.mapSearchRoute),
-              ),
-            ),
-            SizedBox(
-              width: 300,
-              child: TextButton(
-                onPressed: onCloseButtonPressed,
-                child: Text(context.str.close),
               ),
             ),
           ],
