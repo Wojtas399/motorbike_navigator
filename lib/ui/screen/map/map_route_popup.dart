@@ -7,15 +7,14 @@ import 'cubit/map_cubit.dart';
 import 'cubit/navigation_cubit.dart';
 import 'map_route_form.dart';
 
-class MapRouteDetails extends StatefulWidget {
-  const MapRouteDetails({super.key});
+class MapRoutePopup extends StatefulWidget {
+  const MapRoutePopup({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();
 }
 
-class _State extends State<MapRouteDetails>
-    with SingleTickerProviderStateMixin {
+class _State extends State<MapRoutePopup> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _positionAnimation;
 

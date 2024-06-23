@@ -15,7 +15,7 @@ import 'cubit/navigation_state.dart';
 import 'map_action_buttons.dart';
 import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
-import 'map_route_details.dart';
+import 'map_route_popup.dart';
 import 'map_search_bar.dart';
 import 'map_selected_place_details.dart';
 
@@ -157,7 +157,7 @@ class _MapState extends State<_Map> {
             top: 0,
             left: 0,
             right: 0,
-            child: MapRouteDetails(),
+            child: MapRoutePopup(),
           ),
       ],
     );
