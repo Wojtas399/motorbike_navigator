@@ -6,17 +6,17 @@ import '../../../../data/repository/place/place_repository.dart';
 import '../../../../entity/navigation.dart';
 import '../../../../entity/place.dart';
 import '../../../../entity/place_suggestion.dart';
-import 'navigation_state.dart';
+import 'route_form_state.dart';
 
 @injectable
-class NavigationCubit extends Cubit<NavigationState> {
+class RouteFormCubit extends Cubit<RouteFormState> {
   final PlaceRepository _placeRepository;
   final NavigationRepository _navigationRepository;
 
-  NavigationCubit(
+  RouteFormCubit(
     this._placeRepository,
     this._navigationRepository,
-  ) : super(const NavigationState());
+  ) : super(const RouteFormState());
 
   void onStartPlaceSuggestionChanged(PlaceSuggestion startPlaceSuggestion) {
     emit(state.copyWith(

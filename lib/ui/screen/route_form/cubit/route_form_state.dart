@@ -3,13 +3,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../../entity/coordinates.dart';
 import '../../../../entity/place_suggestion.dart';
 
-part 'navigation_state.freezed.dart';
+part 'route_form_state.freezed.dart';
 
 @freezed
-class NavigationState with _$NavigationState {
-  const factory NavigationState({
+class RouteFormState with _$RouteFormState {
+  const factory RouteFormState({
     PlaceSuggestion? startPlaceSuggestion,
     PlaceSuggestion? destinationSuggestion,
     List<Coordinates>? wayPoints,
-  }) = _NavigationState;
+  }) = _RouteFormState;
 }

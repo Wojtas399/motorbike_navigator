@@ -6,49 +6,18 @@ import '../../animation/slide_left_page_route_animation.dart';
 import '../../component/gap.dart';
 import '../../extensions/context_extensions.dart';
 import '../search_form/search_form.dart';
-import 'cubit/navigation_cubit.dart';
-import 'cubit/navigation_state.dart';
+import 'cubit/route_form_cubit.dart';
+import 'cubit/route_form_state.dart';
 
-class MapRouteForm extends StatelessWidget {
-  const MapRouteForm({super.key});
-
-  @override
-  Widget build(BuildContext context) => const Row(
-        children: [
-          _RouteIcons(),
-          GapHorizontal8(),
-          Expanded(
-            child: Column(
-              children: [
-                _StartPlaceTextField(),
-                GapVertical24(),
-                _DestinationTextField(),
-              ],
-            ),
-          ),
-          SizedBox(width: 8),
-          _SwapPointsButton(),
-        ],
-      );
-}
-
-class _RouteIcons extends StatelessWidget {
-  const _RouteIcons();
+class RouteFormTextFields extends StatelessWidget {
+  const RouteFormTextFields({super.key});
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) => const Column(
         children: [
-          Icon(
-            Icons.my_location,
-            color: context.colorScheme.primary,
-          ),
-          const GapVertical16(),
-          const Icon(Icons.more_vert),
-          const GapVertical16(),
-          const Icon(
-            Icons.location_on_outlined,
-            color: Colors.red,
-          ),
+          _StartPlaceTextField(),
+          GapVertical24(),
+          _DestinationTextField(),
         ],
       );
 }
@@ -74,7 +43,7 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
     );
     if (startPlaceSuggestion != null && context.mounted) {
       context
-          .read<NavigationCubit>()
+          .read<RouteFormCubit>()
           .onStartPlaceSuggestionChanged(startPlaceSuggestion);
       _controller.text = startPlaceSuggestion.name;
     }
@@ -86,7 +55,7 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
 
   @override
   Widget build(BuildContext context) =>
-      BlocListener<NavigationCubit, NavigationState>(
+      BlocListener<RouteFormCubit, RouteFormState>(
         listenWhen: (prevState, currState) =>
             prevState.startPlaceSuggestion != currState.startPlaceSuggestion,
         listener: (_, state) =>
@@ -124,7 +93,7 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
     );
     if (destinationSuggestion != null && context.mounted) {
       context
-          .read<NavigationCubit>()
+          .read<RouteFormCubit>()
           .onDestinationSuggestionChanged(destinationSuggestion);
       _controller.text = destinationSuggestion.name;
     }
@@ -136,7 +105,7 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
 
   @override
   Widget build(BuildContext context) =>
-      BlocListener<NavigationCubit, NavigationState>(
+      BlocListener<RouteFormCubit, RouteFormState>(
         listenWhen: (prevState, currState) =>
             prevState.destinationSuggestion != currState.destinationSuggestion,
         listener: (_, state) =>
@@ -149,23 +118,6 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
           controller: _controller,
           focusNode: _focusNode,
           onTap: () => _onTap(context),
-        ),
-      );
-}
-
-class _SwapPointsButton extends StatelessWidget {
-  const _SwapPointsButton();
-
-  void _onPressed(BuildContext context) {
-    context.read<NavigationCubit>().swapPlaceSuggestions();
-  }
-
-  @override
-  Widget build(BuildContext context) => IconButton(
-        onPressed: () => _onPressed(context),
-        icon: const Icon(
-          Icons.swap_vert,
-          size: 32,
         ),
       );
 }

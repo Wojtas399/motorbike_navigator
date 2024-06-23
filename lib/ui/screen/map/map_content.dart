@@ -8,14 +8,14 @@ import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
+import '../route_form/cubit/route_form_cubit.dart';
+import '../route_form/cubit/route_form_state.dart';
+import '../route_form/route_form_popup.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
-import 'cubit/navigation_cubit.dart';
-import 'cubit/navigation_state.dart';
 import 'map_action_buttons.dart';
 import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
-import 'map_route_popup.dart';
 import 'map_search_bar.dart';
 import 'map_selected_place_details.dart';
 
@@ -71,7 +71,7 @@ class _MapState extends State<_Map> {
         ));
   }
 
-  void _onNavigationCubitStateChanged(NavigationState state) {
+  void _onNavigationCubitStateChanged(RouteFormState state) {
     if (state.wayPoints != null) {
       _adjustViewToRoute(
         state.wayPoints!.first,
@@ -107,7 +107,7 @@ class _MapState extends State<_Map> {
   Widget build(BuildContext context) {
     context.watch<MapCubit>().stream.listen(_onMapCubitStateChanged);
     context
-        .watch<NavigationCubit>()
+        .watch<RouteFormCubit>()
         .stream
         .listen(_onNavigationCubitStateChanged);
     final MapMode mode = context.select(
@@ -157,7 +157,7 @@ class _MapState extends State<_Map> {
             top: 0,
             left: 0,
             right: 0,
-            child: MapRoutePopup(),
+            child: RouteFormPopup(),
           ),
       ],
     );

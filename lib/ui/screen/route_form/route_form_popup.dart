@@ -3,18 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../component/gap.dart';
 import '../../extensions/context_extensions.dart';
-import 'cubit/map_cubit.dart';
-import 'cubit/navigation_cubit.dart';
-import 'map_route_form.dart';
+import '../map/cubit/map_cubit.dart';
+import 'cubit/route_form_cubit.dart';
+import 'route_form_text_fields.dart';
 
-class MapRoutePopup extends StatefulWidget {
-  const MapRoutePopup({super.key});
+class RouteFormPopup extends StatefulWidget {
+  const RouteFormPopup({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();
 }
 
-class _State extends State<MapRoutePopup> with SingleTickerProviderStateMixin {
+class _State extends State<RouteFormPopup> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _positionAnimation;
 
@@ -35,7 +35,7 @@ class _State extends State<MapRoutePopup> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _onSubmit() async {
-    await context.read<NavigationCubit>().loadNavigation();
+    await context.read<RouteFormCubit>().loadNavigation();
   }
 
   void _onClose() {
@@ -54,9 +54,19 @@ class _State extends State<MapRoutePopup> with SingleTickerProviderStateMixin {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const MapRouteForm(),
+                const Row(
+                  children: [
+                    _RouteIcons(),
+                    GapHorizontal8(),
+                    Expanded(
+                      child: RouteFormTextFields(),
+                    ),
+                    GapHorizontal8(),
+                    _SwapPlaceSuggestionsButton(),
+                  ],
+                ),
                 const GapVertical24(),
-                _Buttons(
+                _FormActionButtons(
                   onSubmitButtonPressed: _onSubmit,
                   onCloseButtonPressed: _onClose,
                 ),
@@ -95,11 +105,49 @@ class _BodyContainer extends StatelessWidget {
       );
 }
 
-class _Buttons extends StatelessWidget {
+class _RouteIcons extends StatelessWidget {
+  const _RouteIcons();
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          Icon(
+            Icons.my_location,
+            color: context.colorScheme.primary,
+          ),
+          const GapVertical16(),
+          const Icon(Icons.more_vert),
+          const GapVertical16(),
+          const Icon(
+            Icons.location_on_outlined,
+            color: Colors.red,
+          ),
+        ],
+      );
+}
+
+class _SwapPlaceSuggestionsButton extends StatelessWidget {
+  const _SwapPlaceSuggestionsButton();
+
+  void _onPressed(BuildContext context) {
+    context.read<RouteFormCubit>().swapPlaceSuggestions();
+  }
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+        onPressed: () => _onPressed(context),
+        icon: const Icon(
+          Icons.swap_vert,
+          size: 32,
+        ),
+      );
+}
+
+class _FormActionButtons extends StatelessWidget {
   final VoidCallback onSubmitButtonPressed;
   final VoidCallback onCloseButtonPressed;
 
-  const _Buttons({
+  const _FormActionButtons({
     required this.onSubmitButtonPressed,
     required this.onCloseButtonPressed,
   });

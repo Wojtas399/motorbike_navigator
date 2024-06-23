@@ -3,8 +3,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/navigation.dart';
 import 'package:motorbike_navigator/entity/place_suggestion.dart';
-import 'package:motorbike_navigator/ui/screen/map/cubit/navigation_cubit.dart';
-import 'package:motorbike_navigator/ui/screen/map/cubit/navigation_state.dart';
+import 'package:motorbike_navigator/ui/screen/route_form/cubit/route_form_cubit.dart';
+import 'package:motorbike_navigator/ui/screen/route_form/cubit/route_form_state.dart';
 
 import '../../creator/place_creator.dart';
 import '../../mock/data/repository/mock_navigation_repository.dart';
@@ -14,7 +14,7 @@ void main() {
   final placeRepository = MockPlaceRepository();
   final navigationRepository = MockNavigationRepository();
 
-  NavigationCubit createCubit() => NavigationCubit(
+  RouteFormCubit createCubit() => RouteFormCubit(
         placeRepository,
         navigationRepository,
       );
@@ -27,7 +27,7 @@ void main() {
       const PlaceSuggestion(id: 'p1', name: 'place suggestion'),
     ),
     expect: () => [
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(
           id: 'p1',
           name: 'place suggestion',
@@ -43,7 +43,7 @@ void main() {
       const PlaceSuggestion(id: 'p1', name: 'place suggestion'),
     ),
     expect: () => [
-      const NavigationState(
+      const RouteFormState(
         destinationSuggestion: PlaceSuggestion(
           id: 'p1',
           name: 'place suggestion',
@@ -66,14 +66,14 @@ void main() {
       cubit.swapPlaceSuggestions();
     },
     expect: () => [
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'start place'),
       ),
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'start place'),
         destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'destination'),
       ),
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p2', name: 'destination'),
         destinationSuggestion: PlaceSuggestion(id: 'p1', name: 'start place'),
       ),
@@ -92,7 +92,7 @@ void main() {
       await cubit.loadNavigation();
     },
     expect: () => [
-      const NavigationState(
+      const RouteFormState(
         destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'place 2'),
       ),
     ],
@@ -110,7 +110,7 @@ void main() {
       await cubit.loadNavigation();
     },
     expect: () => [
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
       ),
     ],
@@ -143,10 +143,10 @@ void main() {
       await cubit.loadNavigation();
     },
     expect: () => [
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
       ),
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
         destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'place 2'),
       ),
@@ -184,10 +184,10 @@ void main() {
       await cubit.loadNavigation();
     },
     expect: () => [
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
       ),
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
         destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'place 2'),
       ),
@@ -232,10 +232,10 @@ void main() {
       await cubit.loadNavigation();
     },
     expect: () => [
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
       ),
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
         destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'place 2'),
       ),
@@ -290,10 +290,10 @@ void main() {
       await cubit.loadNavigation();
     },
     expect: () => [
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
       ),
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
         destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'place 2'),
       ),
@@ -358,14 +358,14 @@ void main() {
       await cubit.loadNavigation();
     },
     expect: () => [
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
       ),
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
         destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'place 2'),
       ),
-      const NavigationState(
+      const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
         destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'place 2'),
         wayPoints: [
