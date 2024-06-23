@@ -16,6 +16,7 @@ void main() {
       const NavigationDto dto = NavigationDto(
         routes: [
           RouteDto(
+            durationInSeconds: 333.333,
             distanceInMeters: 1000.1,
             geometry: RouteGeometryDto(
               coordinates: [
@@ -30,6 +31,7 @@ void main() {
         endLocation: endLocation,
         routes: const [
           Route(
+            durationInSeconds: 333.333,
             distanceInMeters: 1000.1,
             waypoints: [
               Coordinates(18.1, 50.1),

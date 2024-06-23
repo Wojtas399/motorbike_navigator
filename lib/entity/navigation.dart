@@ -21,16 +21,19 @@ class Navigation extends Entity {
 }
 
 class Route extends Equatable {
+  final double durationInSeconds;
   final double distanceInMeters;
   final List<Coordinates> waypoints;
 
   const Route({
+    required this.durationInSeconds,
     required this.distanceInMeters,
     required this.waypoints,
   });
 
   @override
   List<Object?> get props => [
+        durationInSeconds,
         distanceInMeters,
         waypoints,
       ];

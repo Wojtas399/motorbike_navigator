@@ -338,6 +338,7 @@ void main() {
           endLocation: const Coordinates(51.2, 19.2),
           routes: const [
             Route(
+              durationInSeconds: 333.333,
               distanceInMeters: 1000.1,
               waypoints: [
                 Coordinates(50.25, 18.25),

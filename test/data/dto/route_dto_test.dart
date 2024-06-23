@@ -7,8 +7,10 @@ void main() {
     'fromJson, '
     'should map json object to RouteDto object',
     () {
+      const double durationInSeconds = 333.333;
       const double distanceInMeters = 3450.20;
       final Map<String, dynamic> json = {
+        'duration': durationInSeconds,
         'distance': distanceInMeters,
         'geometry': {
           'coordinates': [
@@ -19,6 +21,7 @@ void main() {
         },
       };
       const RouteDto expectedRouteDto = RouteDto(
+        durationInSeconds: durationInSeconds,
         distanceInMeters: distanceInMeters,
         geometry: RouteGeometryDto(
           coordinates: [

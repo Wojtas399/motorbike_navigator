@@ -10,8 +10,10 @@ void main() {
     'mapRouteFromDto, '
     'should map RouteDto model to Route model',
     () {
+      const double durationInSeconds = 333.333;
       const double distanceInMeters = 2500.25;
       const RouteDto dto = RouteDto(
+        durationInSeconds: durationInSeconds,
         distanceInMeters: distanceInMeters,
         geometry: RouteGeometryDto(
           coordinates: [
@@ -21,6 +23,7 @@ void main() {
         ),
       );
       const Route expectedRoute = Route(
+        durationInSeconds: durationInSeconds,
         distanceInMeters: distanceInMeters,
         waypoints: [
           Coordinates(18.2, 50.2),

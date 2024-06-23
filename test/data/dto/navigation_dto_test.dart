@@ -11,6 +11,7 @@ void main() {
       final Map<String, dynamic> json = {
         'routes': [
           {
+            'duration': 333.333,
             'distance': 500.2,
             'geometry': {
               'coordinates': [
@@ -20,6 +21,7 @@ void main() {
             }
           },
           {
+            'duration': 444.444,
             'distance': 1000.5,
             'geometry': {
               'coordinates': [
@@ -32,6 +34,7 @@ void main() {
       const NavigationDto expectedNavigationDto = NavigationDto(
         routes: [
           RouteDto(
+            durationInSeconds: 333.333,
             distanceInMeters: 500.2,
             geometry: RouteGeometryDto(
               coordinates: [
@@ -41,6 +44,7 @@ void main() {
             ),
           ),
           RouteDto(
+            durationInSeconds: 444.444,
             distanceInMeters: 1000.5,
             geometry: RouteGeometryDto(
               coordinates: [
