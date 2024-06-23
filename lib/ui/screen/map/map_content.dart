@@ -10,6 +10,8 @@ import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
+import 'cubit/navigation_cubit.dart';
+import 'cubit/navigation_state.dart';
 import 'map_action_buttons.dart';
 import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
@@ -69,13 +71,17 @@ class _MapState extends State<_Map> {
         ));
   }
 
-  void _onCubitStateChanged(MapState state) {
-    if (state.status == MapStatus.waypointsLoaded) {
+  void _onNavigationCubitStateChanged(NavigationState state) {
+    if (state.wayPoints != null) {
       _adjustViewToRoute(
-        state.navigation!.wayPoints.first,
-        state.navigation!.wayPoints.last,
+        state.wayPoints!.first,
+        state.wayPoints!.last,
       );
-    } else if (state.centerLocation == state.userLocation) {
+    }
+  }
+
+  void _onMapCubitStateChanged(MapState state) {
+    if (state.centerLocation == state.userLocation) {
       _adjustViewToPoint(state.centerLocation);
     }
   }
@@ -99,7 +105,11 @@ class _MapState extends State<_Map> {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<MapCubit>().stream.listen(_onCubitStateChanged);
+    context.watch<MapCubit>().stream.listen(_onMapCubitStateChanged);
+    context
+        .watch<NavigationCubit>()
+        .stream
+        .listen(_onNavigationCubitStateChanged);
     final MapMode mode = context.select(
       (MapCubit cubit) => cubit.state.mode,
     );

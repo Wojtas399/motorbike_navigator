@@ -2,13 +2,22 @@ import 'package:flutter/material.dart';
 
 abstract class _Gap extends StatelessWidget {
   final double vertical;
+  final double horizontal;
 
-  const _Gap({this.vertical = 0});
+  const _Gap({
+    this.vertical = 0,
+    this.horizontal = 0,
+  });
 
   @override
   Widget build(BuildContext context) => SizedBox(
         height: vertical,
+        width: horizontal,
       );
+}
+
+class GapHorizontal8 extends _Gap {
+  const GapHorizontal8() : super(horizontal: 8);
 }
 
 class GapVertical24 extends _Gap {

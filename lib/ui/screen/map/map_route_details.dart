@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../component/gap.dart';
-import '../../component/route_form_component.dart';
 import '../../extensions/context_extensions.dart';
 import 'cubit/map_cubit.dart';
-import 'cubit/map_state.dart';
+import 'cubit/navigation_cubit.dart';
+import 'map_route_form.dart';
 
 class MapRouteDetails extends StatefulWidget {
   const MapRouteDetails({super.key});
@@ -36,7 +36,7 @@ class _State extends State<MapRouteDetails>
   }
 
   Future<void> _onSubmit() async {
-    // await context.read<MapCubit>().loadNavigation();
+    await context.read<NavigationCubit>().loadNavigation();
   }
 
   void _onClose() {
@@ -55,7 +55,7 @@ class _State extends State<MapRouteDetails>
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _RouteForm(),
+                const MapRouteForm(),
                 const GapVertical24(),
                 _Buttons(
                   onSubmitButtonPressed: _onSubmit,
@@ -94,37 +94,6 @@ class _BodyContainer extends StatelessWidget {
         ),
         child: child,
       );
-}
-
-class _RouteForm extends StatelessWidget {
-  const _RouteForm();
-
-  Future<void> _onStartPlaceTap(BuildContext context) async {
-    //TODO: Should open search form
-  }
-
-  Future<void> _onDestinationPlaceTap(BuildContext context) async {
-    //TODO: Should open search form
-  }
-
-  Future<void> _onSwapLocationsTap(BuildContext context) async {
-    //TODO: Should swap locations
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final MapStateNavigation? navigation = context.select(
-      (MapCubit cubit) => cubit.state.navigation,
-    );
-
-    return RouteFormComponent(
-      initialStartPlaceValue: navigation?.startPlace.name,
-      initialDestinationValue: navigation?.destination.name,
-      onStartPlaceTap: () => _onStartPlaceTap(context),
-      onDestinationTap: () => _onDestinationPlaceTap(context),
-      onSwapLocationsTap: () => _onSwapLocationsTap(context),
-    );
-  }
 }
 
 class _Buttons extends StatelessWidget {
