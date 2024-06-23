@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../entity/coordinates.dart';
 import '../../../../entity/place.dart';
-import '../../../../entity/place_suggestion.dart';
 
 part 'map_state.freezed.dart';
 
