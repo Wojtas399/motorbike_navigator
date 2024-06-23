@@ -92,9 +92,9 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
         listener: (_, state) =>
             _onStartPlaceSuggestionChanged(state.startPlaceSuggestion),
         child: TextField(
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Wybierz miejsce startowe',
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            hintText: context.str.mapSelectStartPlace,
           ),
           controller: _controller,
           focusNode: _focusNode,
@@ -142,9 +142,9 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
         listener: (_, state) =>
             _onDestinationSuggestionChanged(state.destinationSuggestion),
         child: TextField(
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Wybierz miejsce docelowe',
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            hintText: context.str.mapSelectDestination,
           ),
           controller: _controller,
           focusNode: _focusNode,

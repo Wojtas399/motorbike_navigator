@@ -113,7 +113,7 @@ class _Buttons extends StatelessWidget {
               width: 300,
               child: FilledButton(
                 onPressed: onSubmitButtonPressed,
-                child: const Text('Szukaj trasy'),
+                child: Text(context.str.mapSearchRoute),
               ),
             ),
             SizedBox(

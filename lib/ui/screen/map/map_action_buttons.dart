@@ -12,17 +12,6 @@ class MapActionButtons extends StatelessWidget {
 
   Future<void> _onOpenRouteForm(BuildContext context) async {
     context.read<MapCubit>().openRouteSelection();
-    // final RouteFormResult? route = await Navigator.of(context).push(
-    //   FadePageRouteAnimation(
-    //     page: const RouteFormScreen(),
-    //   ),
-    // );
-    // if (route != null && context.mounted) {
-    //   await context.read<MapCubit>().loadNavigation(
-    //         startPlaceId: route.startPlaceId,
-    //         destinationId: route.destinationId,
-    //       );
-    // }
   }
 
   @override

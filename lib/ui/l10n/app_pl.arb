@@ -1,4 +1,9 @@
 {
+  "@----------MAP----------": {},
+  "mapSelectStartPlace": "Wybierz miejsce startowe",
+  "mapSelectDestination": "Wybierz miejsce docelowe",
+  "mapSearchRoute": "Szukaj trasy",
+  "@----------COMMON----------": {},
   "map": "Mapa",
   "saved": "Zapisane",
   "settings": "Ustawienia",
