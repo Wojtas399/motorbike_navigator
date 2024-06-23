@@ -16,6 +16,7 @@ import 'cubit/map_state.dart';
 import 'map_action_buttons.dart';
 import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
+import 'map_route_details.dart';
 import 'map_search_bar.dart';
 import 'map_selected_place_details.dart';
 
@@ -119,8 +120,8 @@ class _MapState extends State<_Map> {
     final Coordinates? selectedPlaceCoordinates = context.select(
       (MapCubit cubit) => cubit.state.selectedPlace?.coordinates,
     );
-    final MapStateNavigation? navigation = context.select(
-      (MapCubit cubit) => cubit.state.navigation,
+    final List<Coordinates>? wayPoints = context.select(
+      (RouteFormCubit cubit) => cubit.state.wayPoints,
     );
 
     return Stack(
@@ -139,7 +140,7 @@ class _MapState extends State<_Map> {
             const MapPolylineLayer(),
           ],
         ),
-        if (navigation == null)
+        if (mode == MapMode.preview)
           const Padding(
             padding: EdgeInsets.fromLTRB(24, kToolbarHeight + 24, 24, 0),
             child: MapSearchBar(),
@@ -158,6 +159,13 @@ class _MapState extends State<_Map> {
             left: 0,
             right: 0,
             child: RouteFormPopup(),
+          ),
+        if (mode == MapMode.routeSelection && wayPoints != null)
+          const Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: MapRouteDetails(),
           ),
       ],
     );

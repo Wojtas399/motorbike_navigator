@@ -16,6 +16,10 @@ abstract class _Gap extends StatelessWidget {
       );
 }
 
+class GapHorizontal4 extends _Gap {
+  const GapHorizontal4() : super(horizontal: 4);
+}
+
 class GapHorizontal8 extends _Gap {
   const GapHorizontal8() : super(horizontal: 8);
 }
