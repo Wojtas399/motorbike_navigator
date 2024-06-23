@@ -2,30 +2,25 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
-import 'package:motorbike_navigator/entity/navigation.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_cubit.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_state.dart';
 
 import '../../creator/place_creator.dart';
-import '../../mock/data/repository/mock_navigation_repository.dart';
 import '../../mock/data/repository/mock_place_repository.dart';
 import '../../mock/ui_service/mock_location_service.dart';
 
 void main() {
   final locationService = MockLocationService();
   final placeRepository = MockPlaceRepository();
-  final navigationRepository = MockNavigationRepository();
 
   MapCubit createCubit() => MapCubit(
         locationService,
         placeRepository,
-        navigationRepository,
       );
 
   tearDown(() {
     reset(locationService);
     reset(placeRepository);
-    reset(navigationRepository);
   });
 
   blocTest(
@@ -245,220 +240,5 @@ void main() {
         userLocation: Coordinates(50.2, 25.4),
       ),
     ],
-  );
-
-  blocTest(
-    'loadNavigation, '
-    'start place does not exist, '
-    'should finish method call',
-    build: () => createCubit(),
-    setUp: () {
-      when(
-        () => placeRepository.getPlaceById('p1'),
-      ).thenAnswer((_) => Future.value(null));
-      when(
-        () => placeRepository.getPlaceById('p2'),
-      ).thenAnswer(
-        (_) => Future.value(createPlace(
-          coordinates: const Coordinates(51.2, 19.2),
-        )),
-      );
-    },
-    act: (cubit) async => await cubit.loadNavigation(
-      startPlaceId: 'p1',
-      destinationId: 'p2',
-    ),
-    expect: () => [],
-    verify: (_) {
-      verify(() => placeRepository.getPlaceById('p1')).called(1);
-      verify(() => placeRepository.getPlaceById('p2')).called(1);
-    },
-  );
-
-  blocTest(
-    'loadNavigation, '
-    'destination does not exist, '
-    'should finish method call',
-    build: () => createCubit(),
-    setUp: () {
-      when(
-        () => placeRepository.getPlaceById('p1'),
-      ).thenAnswer(
-        (_) => Future.value(createPlace(
-          coordinates: const Coordinates(51.2, 19.2),
-        )),
-      );
-      when(
-        () => placeRepository.getPlaceById('p2'),
-      ).thenAnswer((_) => Future.value(null));
-    },
-    act: (cubit) async => await cubit.loadNavigation(
-      startPlaceId: 'p1',
-      destinationId: 'p2',
-    ),
-    expect: () => [],
-    verify: (_) {
-      verify(() => placeRepository.getPlaceById('p1')).called(1);
-      verify(() => placeRepository.getPlaceById('p2')).called(1);
-    },
-  );
-
-  blocTest(
-    'loadNavigation, '
-    'navigation does not exist, '
-    'should finish method call',
-    build: () => createCubit(),
-    setUp: () {
-      when(
-        () => placeRepository.getPlaceById('p1'),
-      ).thenAnswer(
-        (_) => Future.value(createPlace(
-          coordinates: const Coordinates(50.1, 18.1),
-        )),
-      );
-      when(
-        () => placeRepository.getPlaceById('p2'),
-      ).thenAnswer(
-        (_) => Future.value(createPlace(
-          coordinates: const Coordinates(51.2, 19.2),
-        )),
-      );
-      navigationRepository.mockLoadNavigationByStartAndEndLocations(
-        navigation: null,
-      );
-    },
-    act: (cubit) async => await cubit.loadNavigation(
-      startPlaceId: 'p1',
-      destinationId: 'p2',
-    ),
-    expect: () => [],
-    verify: (_) {
-      verify(() => placeRepository.getPlaceById('p1')).called(1);
-      verify(() => placeRepository.getPlaceById('p2')).called(1);
-      verify(
-        () => navigationRepository.loadNavigationByStartAndEndLocations(
-          startLocation: const Coordinates(50.1, 18.1),
-          endLocation: const Coordinates(51.2, 19.2),
-        ),
-      ).called(1);
-    },
-  );
-
-  blocTest(
-    'loadNavigation, '
-    'navigation does not contain any routes, '
-    'should finish method call',
-    build: () => createCubit(),
-    setUp: () {
-      when(
-        () => placeRepository.getPlaceById('p1'),
-      ).thenAnswer(
-        (_) => Future.value(createPlace(
-          coordinates: const Coordinates(50.1, 18.1),
-        )),
-      );
-      when(
-        () => placeRepository.getPlaceById('p2'),
-      ).thenAnswer(
-        (_) => Future.value(createPlace(
-          coordinates: const Coordinates(51.2, 19.2),
-        )),
-      );
-      navigationRepository.mockLoadNavigationByStartAndEndLocations(
-        navigation: Navigation(
-          startLocation: const Coordinates(50.1, 18.1),
-          endLocation: const Coordinates(51.2, 19.2),
-          routes: const [],
-        ),
-      );
-    },
-    act: (cubit) async => await cubit.loadNavigation(
-      startPlaceId: 'p1',
-      destinationId: 'p2',
-    ),
-    expect: () => [],
-    verify: (_) {
-      verify(() => placeRepository.getPlaceById('p1')).called(1);
-      verify(() => placeRepository.getPlaceById('p2')).called(1);
-      verify(
-        () => navigationRepository.loadNavigationByStartAndEndLocations(
-          startLocation: const Coordinates(50.1, 18.1),
-          endLocation: const Coordinates(51.2, 19.2),
-        ),
-      ).called(1);
-    },
-  );
-
-  blocTest(
-    'loadNavigation, '
-    'should load coordinates of start and destination places and should load '
-    'waypoints between these two locations',
-    build: () => createCubit(),
-    setUp: () {
-      when(
-        () => placeRepository.getPlaceById('p1'),
-      ).thenAnswer(
-        (_) => Future.value(createPlace(
-          id: 'p1',
-          coordinates: const Coordinates(50.1, 18.1),
-        )),
-      );
-      when(
-        () => placeRepository.getPlaceById('p2'),
-      ).thenAnswer(
-        (_) => Future.value(createPlace(
-          id: 'p2',
-          coordinates: const Coordinates(51.2, 19.2),
-        )),
-      );
-      navigationRepository.mockLoadNavigationByStartAndEndLocations(
-        navigation: Navigation(
-          startLocation: const Coordinates(50.1, 18.1),
-          endLocation: const Coordinates(51.2, 19.2),
-          routes: const [
-            Route(
-              distanceInMeters: 1000.1,
-              waypoints: [
-                Coordinates(50.25, 18.25),
-                Coordinates(50.5, 18.5),
-              ],
-            ),
-          ],
-        ),
-      );
-    },
-    act: (cubit) async => await cubit.loadNavigation(
-      startPlaceId: 'p1',
-      destinationId: 'p2',
-    ),
-    expect: () => [
-      MapState(
-        status: MapStatus.waypointsLoaded,
-        navigation: MapStateNavigation(
-          startPlace: createPlace(
-            id: 'p1',
-            coordinates: const Coordinates(50.1, 18.1),
-          ),
-          destination: createPlace(
-            id: 'p2',
-            coordinates: const Coordinates(51.2, 19.2),
-          ),
-          wayPoints: const [
-            Coordinates(50.25, 18.25),
-            Coordinates(50.5, 18.5),
-          ],
-        ),
-      ),
-    ],
-    verify: (_) {
-      verify(() => placeRepository.getPlaceById('p1')).called(1);
-      verify(() => placeRepository.getPlaceById('p2')).called(1);
-      verify(
-        () => navigationRepository.loadNavigationByStartAndEndLocations(
-          startLocation: const Coordinates(50.1, 18.1),
-          endLocation: const Coordinates(51.2, 19.2),
-        ),
-      ).called(1);
-    },
   );
 }
