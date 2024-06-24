@@ -94,7 +94,7 @@ class _MapState extends State<_Map> {
     );
     final cameraFit = CameraFit.bounds(
       bounds: bounds,
-      padding: const EdgeInsets.all(48),
+      padding: const EdgeInsets.fromLTRB(48, 256, 48, 48),
     );
     _mapController.moveAndRotate(bounds.center, 13, 0);
     _mapController.fitCamera(cameraFit);

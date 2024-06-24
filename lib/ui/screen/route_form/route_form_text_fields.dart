@@ -16,7 +16,7 @@ class RouteFormTextFields extends StatelessWidget {
   Widget build(BuildContext context) => const Column(
         children: [
           _StartPlaceTextField(),
-          GapVertical24(),
+          GapVertical16(),
           _DestinationTextField(),
         ],
       );
@@ -60,11 +60,8 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
             prevState.startPlaceSuggestion != currState.startPlaceSuggestion,
         listener: (_, state) =>
             _onStartPlaceSuggestionChanged(state.startPlaceSuggestion),
-        child: TextField(
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            hintText: context.str.mapSelectStartPlace,
-          ),
+        child: _CustomTextField(
+          hintText: context.str.mapSelectStartPlace,
           controller: _controller,
           focusNode: _focusNode,
           onTap: () => _onTap(context),
@@ -110,14 +107,37 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
             prevState.destinationSuggestion != currState.destinationSuggestion,
         listener: (_, state) =>
             _onDestinationSuggestionChanged(state.destinationSuggestion),
-        child: TextField(
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            hintText: context.str.mapSelectDestination,
-          ),
+        child: _CustomTextField(
+          hintText: context.str.mapSelectDestination,
           controller: _controller,
           focusNode: _focusNode,
           onTap: () => _onTap(context),
         ),
+      );
+}
+
+class _CustomTextField extends StatelessWidget {
+  final String hintText;
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final VoidCallback onTap;
+
+  const _CustomTextField({
+    required this.hintText,
+    required this.controller,
+    required this.focusNode,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) => TextField(
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          hintText: context.str.mapSelectDestination,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+        ),
+        controller: controller,
+        focusNode: focusNode,
+        onTap: onTap,
       );
 }

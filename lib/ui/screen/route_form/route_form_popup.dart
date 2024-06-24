@@ -57,7 +57,7 @@ class _State extends State<RouteFormPopup> with SingleTickerProviderStateMixin {
                 const Row(
                   children: [
                     _RouteIcons(),
-                    GapHorizontal8(),
+                    GapHorizontal16(),
                     Expanded(
                       child: RouteFormTextFields(),
                     ),
@@ -65,7 +65,7 @@ class _State extends State<RouteFormPopup> with SingleTickerProviderStateMixin {
                     _SwapPlaceSuggestionsButton(),
                   ],
                 ),
-                const GapVertical24(),
+                const GapVertical16(),
                 _FormActionButtons(
                   onSubmitButtonPressed: _onSubmit,
                   onCloseButtonPressed: _onClose,
@@ -86,7 +86,7 @@ class _BodyContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.fromLTRB(24, kToolbarHeight + 24, 16, 24),
+        padding: const EdgeInsets.fromLTRB(24, kToolbarHeight + 16, 16, 24),
         decoration: BoxDecoration(
           color: context.colorScheme.surface,
           borderRadius: const BorderRadius.only(
@@ -115,9 +115,9 @@ class _RouteIcons extends StatelessWidget {
             Icons.my_location,
             color: context.colorScheme.primary,
           ),
-          const GapVertical16(),
+          const GapVertical8(),
           const Icon(Icons.more_vert),
-          const GapVertical16(),
+          const GapVertical8(),
           const Icon(
             Icons.location_on_outlined,
             color: Colors.red,
