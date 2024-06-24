@@ -13,11 +13,9 @@ import '../../cubit/route/route_state.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 import '../route_form/route_form_popup.dart';
-import 'map_action_buttons.dart';
 import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
 import 'map_route_details.dart';
-import 'map_search_bar.dart';
 import 'map_selected_place_details.dart';
 
 class MapContent extends StatelessWidget {
@@ -137,12 +135,12 @@ class _MapState extends State<_Map> {
             const MapMarkerLayer(),
           ],
         ),
-        if (mode == MapMode.preview)
-          const Padding(
-            padding: EdgeInsets.fromLTRB(24, kToolbarHeight + 24, 24, 0),
-            child: MapSearchBar(),
-          ),
-        if (mode == MapMode.preview) const MapActionButtons(),
+        // if (mode == MapMode.preview)
+        //   const Padding(
+        //     padding: EdgeInsets.fromLTRB(24, kToolbarHeight + 24, 24, 0),
+        //     child: MapSearchBar(),
+        //   ),
+        // if (mode == MapMode.preview) const MapActionButtons(),
         if (selectedPlaceCoordinates != null)
           const Positioned(
             bottom: 0,
@@ -164,7 +162,28 @@ class _MapState extends State<_Map> {
             right: 0,
             child: MapRouteDetails(),
           ),
+        const Positioned(
+          bottom: 24,
+          left: 24,
+          right: 24,
+          child: _StartRideButton(),
+        ),
       ],
     );
   }
+}
+
+class _StartRideButton extends StatelessWidget {
+  const _StartRideButton();
+
+  void _onPressed() {
+    //TODO
+  }
+
+  @override
+  Widget build(BuildContext context) => FilledButton.icon(
+        onPressed: _onPressed,
+        icon: const Icon(Icons.navigation),
+        label: const Text('Rozpocznij jazdę'),
+      );
 }
