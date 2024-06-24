@@ -6,6 +6,7 @@ import '../../../entity/coordinates.dart';
 import '../../../env.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
+import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/map/map_cubit.dart';
 import '../../cubit/map/map_state.dart';
 import '../../cubit/route/route_cubit.dart';
@@ -176,13 +177,13 @@ class _MapState extends State<_Map> {
 class _StartRideButton extends StatelessWidget {
   const _StartRideButton();
 
-  void _onPressed() {
-    //TODO
+  void _onPressed(BuildContext context) {
+    context.read<DriveCubit>().startDrive();
   }
 
   @override
   Widget build(BuildContext context) => FilledButton.icon(
-        onPressed: _onPressed,
+        onPressed: () => _onPressed(context),
         icon: const Icon(Icons.navigation),
         label: const Text('Rozpocznij jazdę'),
       );

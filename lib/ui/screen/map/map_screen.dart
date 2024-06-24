@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
+import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/map/map_cubit.dart';
 import '../../cubit/route/route_cubit.dart';
 import 'map_content.dart';
@@ -17,6 +18,9 @@ class MapScreen extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => getIt.get<RouteCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => getIt.get<DriveCubit>(),
           ),
         ],
         child: const MapContent(),
