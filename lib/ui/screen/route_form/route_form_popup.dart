@@ -40,8 +40,11 @@ class _State extends State<RouteFormPopup> with SingleTickerProviderStateMixin {
 
   void _onClose() {
     _animationController.reverse().whenComplete(
-          context.read<MapCubit>().closeRouteSelection,
-        );
+      () {
+        context.read<RouteFormCubit>().resetForm();
+        context.read<MapCubit>().closeRouteSelection();
+      },
+    );
   }
 
   @override

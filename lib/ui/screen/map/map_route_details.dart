@@ -5,7 +5,6 @@ import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../extensions/context_extensions.dart';
 import '../route_form/cubit/route_form_cubit.dart';
-import 'cubit/map_cubit.dart';
 
 class MapRouteDetails extends StatefulWidget {
   const MapRouteDetails({super.key});
@@ -35,10 +34,8 @@ class _State extends State<MapRouteDetails>
     super.initState();
   }
 
-  void _onClose() {
-    _animationController.reverse().whenComplete(
-          context.read<MapCubit>().resetSelectedPlace,
-        );
+  void _onStartNavigation() {
+    //TODO
   }
 
   @override
@@ -57,7 +54,7 @@ class _State extends State<MapRouteDetails>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _StartNavigationButton(
-                      onPressed: _onClose,
+                      onPressed: _onStartNavigation,
                     ),
                   ],
                 ),

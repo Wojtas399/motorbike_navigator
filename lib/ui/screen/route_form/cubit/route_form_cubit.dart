@@ -56,4 +56,8 @@ class RouteFormCubit extends Cubit<RouteFormState> {
       ));
     }
   }
+
+  void resetForm() {
+    emit(const RouteFormState());
+  }
 }

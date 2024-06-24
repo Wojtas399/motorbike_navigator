@@ -398,4 +398,76 @@ void main() {
       ).called(1);
     },
   );
+
+  blocTest(
+    'resetForm, '
+    'should set initial state values',
+    build: () => createCubit(),
+    setUp: () {
+      when(
+        () => placeRepository.getPlaceById('p1'),
+      ).thenAnswer(
+        (_) => Future.value(createPlace(
+          id: 'p1',
+          coordinates: const Coordinates(50.1, 18.1),
+        )),
+      );
+      when(
+        () => placeRepository.getPlaceById('p2'),
+      ).thenAnswer(
+        (_) => Future.value(createPlace(
+          id: 'p2',
+          coordinates: const Coordinates(51.2, 19.2),
+        )),
+      );
+      navigationRepository.mockLoadNavigationByStartAndEndLocations(
+        navigation: Navigation(
+          startLocation: const Coordinates(50.1, 18.1),
+          endLocation: const Coordinates(51.2, 19.2),
+          routes: const [
+            Route(
+              durationInSeconds: 333.333,
+              distanceInMeters: 1000.1,
+              waypoints: [
+                Coordinates(50.25, 18.25),
+                Coordinates(50.5, 18.5),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+    act: (cubit) async {
+      cubit.onStartPlaceSuggestionChanged(
+        const PlaceSuggestion(id: 'p1', name: 'place 1'),
+      );
+      cubit.onDestinationSuggestionChanged(
+        const PlaceSuggestion(id: 'p2', name: 'place 2'),
+      );
+      await cubit.loadNavigation();
+      cubit.resetForm();
+    },
+    expect: () => [
+      const RouteFormState(
+        startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
+      ),
+      const RouteFormState(
+        startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
+        destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'place 2'),
+      ),
+      const RouteFormState(
+        startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
+        destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'place 2'),
+        route: Route(
+          durationInSeconds: 333.333,
+          distanceInMeters: 1000.1,
+          waypoints: [
+            Coordinates(50.25, 18.25),
+            Coordinates(50.5, 18.5),
+          ],
+        ),
+      ),
+      const RouteFormState(),
+    ],
+  );
 }
