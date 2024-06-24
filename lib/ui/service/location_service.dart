@@ -10,16 +10,22 @@ class LocationService {
     if (!hasPermission) {
       yield null;
     } else {
-      final position$ = Geolocator.getPositionStream(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.bestForNavigation,
-        ),
-      );
+      final position$ = _getPositionStream();
       await for (final position in position$) {
         yield Coordinates(position.latitude, position.longitude);
       }
     }
   }
+
+  Stream<double> getCurrentSpeedInMetersPerHour() => _getPositionStream().map(
+        (Position position) => position.speed,
+      );
+
+  Stream<Position> _getPositionStream() => Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.bestForNavigation,
+        ),
+      );
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
