@@ -136,8 +136,8 @@ class _MapState extends State<_Map> {
           ),
           children: [
             TileLayer(urlTemplate: Env.mapboxTemplateUrl),
-            const MapMarkerLayer(),
             const MapPolylineLayer(),
+            const MapMarkerLayer(),
           ],
         ),
         if (mode == MapMode.preview)
