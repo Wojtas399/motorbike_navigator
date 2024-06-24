@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'cubit/map_cubit.dart';
+import '../../cubit/map/map_cubit.dart';
 
 class MapActionButtons extends StatelessWidget {
   const MapActionButtons({super.key});

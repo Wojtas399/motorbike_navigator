@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../entity/place_suggestion.dart';
 import '../../animation/fade_page_route_animation.dart';
+import '../../cubit/map/map_cubit.dart';
+import '../../cubit/map/map_state.dart';
 import '../../extensions/context_extensions.dart';
 import '../search_form/search_form.dart';
-import 'cubit/map_cubit.dart';
-import 'cubit/map_state.dart';
 
 class MapSearchBar extends StatefulWidget {
   const MapSearchBar({super.key});

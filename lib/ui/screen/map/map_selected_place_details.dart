@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../entity/place.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
+import '../../cubit/map/map_cubit.dart';
 import '../../extensions/context_extensions.dart';
-import 'cubit/map_cubit.dart';
 
 class MapSelectedPlaceDetails extends StatefulWidget {
   const MapSelectedPlaceDetails({super.key});

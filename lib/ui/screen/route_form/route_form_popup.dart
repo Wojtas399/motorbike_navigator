@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../component/gap.dart';
+import '../../cubit/map/map_cubit.dart';
 import '../../extensions/context_extensions.dart';
-import '../map/cubit/map_cubit.dart';
 import 'cubit/route_form_cubit.dart';
 import 'route_form_text_fields.dart';
 

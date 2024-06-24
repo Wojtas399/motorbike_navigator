@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
+import '../../cubit/map/map_cubit.dart';
 import '../route_form/cubit/route_form_cubit.dart';
-import 'cubit/map_cubit.dart';
 import 'map_content.dart';
 
 class MapScreen extends StatelessWidget {
