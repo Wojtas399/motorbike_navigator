@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../entity/coordinates.dart';
+
 part 'drive_state.freezed.dart';
 
 @freezed
@@ -8,5 +10,6 @@ class DriveState with _$DriveState {
     @Default(0) double durationInSeconds,
     @Default(0) double distanceInMeters,
     @Default(0) double speedInKmPerH,
+    List<Coordinates>? waypoints,
   }) = _DriveState;
 }
