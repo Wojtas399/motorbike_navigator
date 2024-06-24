@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../component/gap.dart';
 import '../../component/text.dart';
+import '../../cubit/route/route_cubit.dart';
 import '../../extensions/context_extensions.dart';
-import '../route_form/cubit/route_form_cubit.dart';
 
 class MapRouteDetails extends StatefulWidget {
   const MapRouteDetails({super.key});
@@ -130,7 +130,7 @@ class _Distance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double? distanceInMeters = context.select(
-      (RouteFormCubit cubit) => cubit.state.route?.distanceInMeters,
+      (RouteCubit cubit) => cubit.state.route?.distanceInMeters,
     );
     double? distanceInKm;
     if (distanceInMeters != null) {
@@ -147,7 +147,7 @@ class _Duration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double? durationInSeconds = context.select(
-      (RouteFormCubit cubit) => cubit.state.route?.durationInSeconds,
+      (RouteCubit cubit) => cubit.state.route?.durationInSeconds,
     );
     double? durationInMinutes;
     if (durationInSeconds != null) {

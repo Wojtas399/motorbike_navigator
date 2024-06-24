@@ -8,10 +8,10 @@ import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/map/map_cubit.dart';
 import '../../cubit/map/map_state.dart';
+import '../../cubit/route/route_cubit.dart';
+import '../../cubit/route/route_state.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
-import '../route_form/cubit/route_form_cubit.dart';
-import '../route_form/cubit/route_form_state.dart';
 import '../route_form/route_form_popup.dart';
 import 'map_action_buttons.dart';
 import 'map_marker_layer.dart';
@@ -72,7 +72,7 @@ class _MapState extends State<_Map> {
         ));
   }
 
-  void _onRouteFormCubitStateChanged(RouteFormState state) {
+  void _onRouteCubitStateChanged(RouteState state) {
     if (state.route != null) {
       _adjustViewToRoute(
         state.route!.waypoints.first,
@@ -107,10 +107,7 @@ class _MapState extends State<_Map> {
   @override
   Widget build(BuildContext context) {
     context.watch<MapCubit>().stream.listen(_onMapCubitStateChanged);
-    context
-        .watch<RouteFormCubit>()
-        .stream
-        .listen(_onRouteFormCubitStateChanged);
+    context.watch<RouteCubit>().stream.listen(_onRouteCubitStateChanged);
     final MapMode mode = context.select(
       (MapCubit cubit) => cubit.state.mode,
     );
@@ -121,7 +118,7 @@ class _MapState extends State<_Map> {
       (MapCubit cubit) => cubit.state.selectedPlace?.coordinates,
     );
     final List<Coordinates>? wayPoints = context.select(
-      (RouteFormCubit cubit) => cubit.state.route?.waypoints,
+      (RouteCubit cubit) => cubit.state.route?.waypoints,
     );
 
     return Stack(

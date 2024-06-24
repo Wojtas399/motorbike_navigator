@@ -5,8 +5,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../../../entity/coordinates.dart';
 import '../../cubit/map/map_cubit.dart';
+import '../../cubit/route/route_cubit.dart';
 import '../../extensions/coordinates_extensions.dart';
-import '../route_form/cubit/route_form_cubit.dart';
 
 class MapMarkerLayer extends StatelessWidget {
   const MapMarkerLayer({super.key});
@@ -20,7 +20,7 @@ class MapMarkerLayer extends StatelessWidget {
       (MapCubit cubit) => cubit.state.selectedPlace?.coordinates,
     );
     final List<Coordinates>? routeWaypoints = context.select(
-      (RouteFormCubit cubit) => cubit.state.route?.waypoints,
+      (RouteCubit cubit) => cubit.state.route?.waypoints,
     );
 
     return MarkerLayer(

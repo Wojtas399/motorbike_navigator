@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../entity/place_suggestion.dart';
 import '../../animation/slide_left_page_route_animation.dart';
 import '../../component/gap.dart';
+import '../../cubit/route/route_cubit.dart';
+import '../../cubit/route/route_state.dart';
 import '../../extensions/context_extensions.dart';
 import '../search_form/search_form.dart';
-import 'cubit/route_form_cubit.dart';
-import 'cubit/route_form_state.dart';
 
 class RouteFormTextFields extends StatelessWidget {
   const RouteFormTextFields({super.key});
@@ -43,7 +43,7 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
     );
     if (startPlaceSuggestion != null && context.mounted) {
       context
-          .read<RouteFormCubit>()
+          .read<RouteCubit>()
           .onStartPlaceSuggestionChanged(startPlaceSuggestion);
       _controller.text = startPlaceSuggestion.name;
     }
@@ -54,8 +54,7 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      BlocListener<RouteFormCubit, RouteFormState>(
+  Widget build(BuildContext context) => BlocListener<RouteCubit, RouteState>(
         listenWhen: (prevState, currState) =>
             prevState.startPlaceSuggestion != currState.startPlaceSuggestion,
         listener: (_, state) =>
@@ -90,7 +89,7 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
     );
     if (destinationSuggestion != null && context.mounted) {
       context
-          .read<RouteFormCubit>()
+          .read<RouteCubit>()
           .onDestinationSuggestionChanged(destinationSuggestion);
       _controller.text = destinationSuggestion.name;
     }
@@ -101,8 +100,7 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      BlocListener<RouteFormCubit, RouteFormState>(
+  Widget build(BuildContext context) => BlocListener<RouteCubit, RouteState>(
         listenWhen: (prevState, currState) =>
             prevState.destinationSuggestion != currState.destinationSuggestion,
         listener: (_, state) =>

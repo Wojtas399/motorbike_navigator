@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 import '../../../entity/coordinates.dart';
+import '../../cubit/route/route_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
-import '../route_form/cubit/route_form_cubit.dart';
 
 class MapPolylineLayer extends StatelessWidget {
   const MapPolylineLayer({super.key});
@@ -13,7 +13,7 @@ class MapPolylineLayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Coordinates>? waypoints = context.select(
-      (RouteFormCubit cubit) => cubit.state.route?.waypoints,
+      (RouteCubit cubit) => cubit.state.route?.waypoints,
     );
 
     return PolylineLayer(

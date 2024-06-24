@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../component/gap.dart';
 import '../../cubit/map/map_cubit.dart';
+import '../../cubit/route/route_cubit.dart';
 import '../../extensions/context_extensions.dart';
-import 'cubit/route_form_cubit.dart';
 import 'route_form_text_fields.dart';
 
 class RouteFormPopup extends StatefulWidget {
@@ -35,13 +35,13 @@ class _State extends State<RouteFormPopup> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _onSubmit() async {
-    await context.read<RouteFormCubit>().loadNavigation();
+    await context.read<RouteCubit>().loadNavigation();
   }
 
   void _onClose() {
     _animationController.reverse().whenComplete(
       () {
-        context.read<RouteFormCubit>().resetForm();
+        context.read<RouteCubit>().reset();
         context.read<MapCubit>().closeRouteSelection();
       },
     );
@@ -133,7 +133,7 @@ class _SwapPlaceSuggestionsButton extends StatelessWidget {
   const _SwapPlaceSuggestionsButton();
 
   void _onPressed(BuildContext context) {
-    context.read<RouteFormCubit>().swapPlaceSuggestions();
+    context.read<RouteCubit>().swapPlaceSuggestions();
   }
 
   @override
