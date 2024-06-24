@@ -5,6 +5,22 @@ import '../../entity/coordinates.dart';
 
 @injectable
 class LocationService {
+  Stream<Coordinates?> getCurrentLocation() async* {
+    final hasPermission = await _handleLocationPermission();
+    if (!hasPermission) {
+      yield null;
+    } else {
+      final position$ = Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.bestForNavigation,
+        ),
+      );
+      await for (final position in position$) {
+        yield Coordinates(position.latitude, position.longitude);
+      }
+    }
+  }
+
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -16,14 +32,5 @@ class LocationService {
       if (permission == LocationPermission.denied) return false;
     }
     return !(permission == LocationPermission.deniedForever);
-  }
-
-  Future<Coordinates?> getCurrentLocation() async {
-    final hasPermission = await _handleLocationPermission();
-    if (!hasPermission) return null;
-    final position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    return Coordinates(position.latitude, position.longitude);
   }
 }

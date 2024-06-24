@@ -7,11 +7,11 @@ class MapActionButtons extends StatelessWidget {
   const MapActionButtons({super.key});
 
   void _onMoveBackToUserLocation(BuildContext context) {
-    context.read<MapCubit>().moveBackToUserLocation();
+    // context.read<MapCubit>().moveBackToUserLocation();
   }
 
   Future<void> _onOpenRouteForm(BuildContext context) async {
-    context.read<MapCubit>().openRouteSelection();
+    // context.read<MapCubit>().openRouteSelection();
   }
 
   @override

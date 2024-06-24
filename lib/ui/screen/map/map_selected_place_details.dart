@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../entity/place.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
-import '../../cubit/map/map_cubit.dart';
 import '../../extensions/context_extensions.dart';
 
 class MapSelectedPlaceDetails extends StatefulWidget {
@@ -35,16 +32,16 @@ class _State extends State<MapSelectedPlaceDetails>
   }
 
   void _onClose() {
-    _animationController.forward().whenComplete(
-          context.read<MapCubit>().resetSelectedPlace,
-        );
+    // _animationController.forward().whenComplete(
+    //       context.read<MapCubit>().resetSelectedPlace,
+    //     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final Place? selectedPlace = context.select(
-      (MapCubit cubit) => cubit.state.selectedPlace,
-    );
+    // final Place? selectedPlace = context.select(
+    //   (MapCubit cubit) => cubit.state.selectedPlace,
+    // );
 
     return AnimatedBuilder(
       animation: _animationController,
@@ -70,9 +67,9 @@ class _State extends State<MapSelectedPlaceDetails>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TitleMedium(selectedPlace!.name),
+              const TitleMedium('selectedPlace!.name'),
               const GapVertical8(),
-              BodyMedium(selectedPlace.fullAddress),
+              const BodyMedium('selectedPlace.fullAddress'),
               const GapVertical24(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

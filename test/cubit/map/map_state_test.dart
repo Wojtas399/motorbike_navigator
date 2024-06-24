@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/ui/cubit/map/map_state.dart';
 
 void main() {
@@ -8,13 +7,8 @@ void main() {
     () {
       const MapState expectedState = MapState(
         status: MapStatus.loading,
-        searchQuery: '',
-        centerLocation: Coordinates(
-          52.23178179122954,
-          21.006002101026827,
-        ),
+        centerLocation: null,
         userLocation: null,
-        selectedPlace: null,
       );
 
       const state = MapState();
