@@ -72,11 +72,11 @@ class _MapState extends State<_Map> {
         ));
   }
 
-  void _onNavigationCubitStateChanged(RouteFormState state) {
-    if (state.wayPoints != null) {
+  void _onRouteFormCubitStateChanged(RouteFormState state) {
+    if (state.route != null) {
       _adjustViewToRoute(
-        state.wayPoints!.first,
-        state.wayPoints!.last,
+        state.route!.waypoints.first,
+        state.route!.waypoints.last,
       );
     }
   }
@@ -110,7 +110,7 @@ class _MapState extends State<_Map> {
     context
         .watch<RouteFormCubit>()
         .stream
-        .listen(_onNavigationCubitStateChanged);
+        .listen(_onRouteFormCubitStateChanged);
     final MapMode mode = context.select(
       (MapCubit cubit) => cubit.state.mode,
     );
@@ -121,7 +121,7 @@ class _MapState extends State<_Map> {
       (MapCubit cubit) => cubit.state.selectedPlace?.coordinates,
     );
     final List<Coordinates>? wayPoints = context.select(
-      (RouteFormCubit cubit) => cubit.state.wayPoints,
+      (RouteFormCubit cubit) => cubit.state.route?.waypoints,
     );
 
     return Stack(

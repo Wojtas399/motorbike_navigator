@@ -312,8 +312,8 @@ void main() {
 
   blocTest(
     'loadNavigation, '
-    'should load coordinates of start and destination places and should load '
-    'waypoints between these two locations',
+    'should load coordinates of start and destination places, should load '
+    'routes between these two locations and should emit first of the routes',
     build: () => createCubit(),
     setUp: () {
       when(
@@ -345,6 +345,14 @@ void main() {
                 Coordinates(50.5, 18.5),
               ],
             ),
+            Route(
+              durationInSeconds: 222.222,
+              distanceInMeters: 2000.2,
+              waypoints: [
+                Coordinates(50.25, 18.25),
+                Coordinates(50.5, 18.5),
+              ],
+            ),
           ],
         ),
       );
@@ -369,10 +377,14 @@ void main() {
       const RouteFormState(
         startPlaceSuggestion: PlaceSuggestion(id: 'p1', name: 'place 1'),
         destinationSuggestion: PlaceSuggestion(id: 'p2', name: 'place 2'),
-        wayPoints: [
-          Coordinates(50.25, 18.25),
-          Coordinates(50.5, 18.5),
-        ],
+        route: Route(
+          durationInSeconds: 333.333,
+          distanceInMeters: 1000.1,
+          waypoints: [
+            Coordinates(50.25, 18.25),
+            Coordinates(50.5, 18.5),
+          ],
+        ),
       ),
     ],
     verify: (_) {

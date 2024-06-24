@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../extensions/context_extensions.dart';
+import '../route_form/cubit/route_form_cubit.dart';
 import 'cubit/map_cubit.dart';
 
 class MapRouteDetails extends StatefulWidget {
@@ -41,78 +42,139 @@ class _State extends State<MapRouteDetails>
   }
 
   @override
-  Widget build(BuildContext context) {
-    // final Place? selectedPlace = context.select(
-    //   (MapCubit cubit) => cubit.state.selectedPlace,
-    // );
-
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (_, __) => Transform.translate(
-        offset: Offset(0, _positionAnimation.value),
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-          decoration: BoxDecoration(
-            color: context.colorScheme.surface,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(32),
-              topRight: Radius.circular(32),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                offset: const Offset(0, -2),
-                blurRadius: 20,
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'Dystans: ',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: context.colorScheme.outline,
-                        ),
-                  ),
-                  const GapHorizontal4(),
-                  const TitleMedium('2.4 km'),
-                ],
-              ),
-              const GapVertical8(),
-              Row(
-                children: [
-                  Text(
-                    'Szacowany czas: ',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: context.colorScheme.outline,
-                        ),
-                  ),
-                  const GapHorizontal4(),
-                  const TitleMedium('3 min'),
-                ],
-              ),
-              const GapVertical24(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: FilledButton.icon(
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: _animationController,
+        builder: (_, __) => Transform.translate(
+          offset: Offset(0, _positionAnimation.value),
+          child: _Body(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _RouteInfo(),
+                const GapVertical16(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _StartNavigationButton(
                       onPressed: _onClose,
-                      icon: const Icon(Icons.navigation),
-                      label: const Text('Rozpocznij'),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+      );
+}
+
+class _Body extends StatelessWidget {
+  final Widget child;
+
+  const _Body({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+        decoration: BoxDecoration(
+          color: context.colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(32),
+            topRight: Radius.circular(32),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              offset: const Offset(0, -2),
+              blurRadius: 20,
+            ),
+          ],
+        ),
+        child: child,
+      );
+}
+
+class _RouteInfo extends StatelessWidget {
+  const _RouteInfo();
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          Row(
+            children: [
+              LabelLarge(
+                '${context.str.mapRouteDistance}: ',
+                color: context.colorScheme.outline,
+              ),
+              const GapHorizontal4(),
+              const _Distance(),
+            ],
+          ),
+          const GapVertical8(),
+          Row(
+            children: [
+              LabelLarge(
+                '${context.str.mapRouteEstimatedDuration}: ',
+                color: context.colorScheme.outline,
+              ),
+              const GapHorizontal4(),
+              const _Duration(),
+            ],
+          ),
+        ],
+      );
+}
+
+class _Distance extends StatelessWidget {
+  const _Distance();
+
+  @override
+  Widget build(BuildContext context) {
+    final double? distanceInMeters = context.select(
+      (RouteFormCubit cubit) => cubit.state.route?.distanceInMeters,
     );
+    double? distanceInKm;
+    if (distanceInMeters != null) {
+      distanceInKm = distanceInMeters / 1000;
+    }
+
+    return TitleMedium('${distanceInKm?.toStringAsFixed(2)} km');
   }
+}
+
+class _Duration extends StatelessWidget {
+  const _Duration();
+
+  @override
+  Widget build(BuildContext context) {
+    final double? durationInSeconds = context.select(
+      (RouteFormCubit cubit) => cubit.state.route?.durationInSeconds,
+    );
+    double? durationInMinutes;
+    if (durationInSeconds != null) {
+      durationInMinutes = durationInSeconds / 60;
+    }
+
+    return TitleMedium('${durationInMinutes?.toStringAsFixed(2)} min');
+  }
+}
+
+class _StartNavigationButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const _StartNavigationButton({
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        width: 250,
+        child: FilledButton.icon(
+          onPressed: onPressed,
+          icon: const Icon(Icons.navigation),
+          label: Text(context.str.mapStartNavigation),
+        ),
+      );
 }

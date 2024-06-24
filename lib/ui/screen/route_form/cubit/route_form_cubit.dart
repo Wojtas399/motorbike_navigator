@@ -52,7 +52,7 @@ class RouteFormCubit extends Cubit<RouteFormState> {
     );
     if (navigation != null && navigation.routes.isNotEmpty) {
       emit(state.copyWith(
-        wayPoints: navigation.routes.first.waypoints,
+        route: navigation.routes.first,
       ));
     }
   }
