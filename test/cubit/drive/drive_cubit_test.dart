@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
+import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/cubit/drive/drive_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/drive/drive_state.dart';
 
@@ -20,41 +21,39 @@ void main() {
 
   blocTest(
     'startDrive, '
-    'should start timer and should listen to current location and speed',
+    'should start timer and should listen to current position',
     build: () => createCubit(),
     setUp: () {
       when(
-        () => locationService.getCurrentLocation(),
+        locationService.getPosition,
       ).thenAnswer(
         (_) => Stream.fromIterable(
           const [
-            Coordinates(50.1, 18.1),
-            Coordinates(51.2, 19.2),
-            Coordinates(52.3, 20.3),
+            Position(
+              coordinates: Coordinates(50.1, 18.1),
+              speedInMetersPerSecond: 15,
+            ),
+            Position(
+              coordinates: Coordinates(51.2, 19.2),
+              speedInMetersPerSecond: 20,
+            ),
+            Position(
+              coordinates: Coordinates(52.3, 20.3),
+              speedInMetersPerSecond: 25,
+            ),
           ],
         ),
       );
       when(
-        () => locationService.getCurrentSpeedInMetersPerHour(),
-      ).thenAnswer(
-        (_) => Stream.fromIterable(const [15, 20, 25]),
-      );
-      when(
         () => mapService.calculateDistanceInMeters(
-          location1: const Coordinates(50.1, 18.1),
+          location1: const Coordinates(51.2, 19.2),
           location2: const Coordinates(50.1, 18.1),
-        ),
-      ).thenReturn(0);
-      when(
-        () => mapService.calculateDistanceInMeters(
-          location1: const Coordinates(50.1, 18.1),
-          location2: const Coordinates(51.2, 19.2),
         ),
       ).thenReturn(10);
       when(
         () => mapService.calculateDistanceInMeters(
-          location1: const Coordinates(50.1, 18.1),
-          location2: const Coordinates(52.3, 20.3),
+          location1: const Coordinates(52.3, 20.3),
+          location2: const Coordinates(51.2, 19.2),
         ),
       ).thenReturn(20);
     },
@@ -70,7 +69,7 @@ void main() {
       ),
       const DriveState(
         status: DriveStateStatus.ongoing,
-        speedInKmPerH: 0.015,
+        speedInKmPerH: 15 * 3.6,
         waypoints: [
           Coordinates(50.1, 18.1),
         ],
@@ -78,7 +77,7 @@ void main() {
       const DriveState(
         status: DriveStateStatus.ongoing,
         distanceInMeters: 10,
-        speedInKmPerH: 0.015,
+        speedInKmPerH: 20 * 3.6,
         waypoints: [
           Coordinates(50.1, 18.1),
           Coordinates(51.2, 19.2),
@@ -86,27 +85,8 @@ void main() {
       ),
       const DriveState(
         status: DriveStateStatus.ongoing,
-        distanceInMeters: 10,
-        speedInKmPerH: 0.02,
-        waypoints: [
-          Coordinates(50.1, 18.1),
-          Coordinates(51.2, 19.2),
-        ],
-      ),
-      const DriveState(
-        status: DriveStateStatus.ongoing,
-        distanceInMeters: 20,
-        speedInKmPerH: 0.02,
-        waypoints: [
-          Coordinates(50.1, 18.1),
-          Coordinates(51.2, 19.2),
-          Coordinates(52.3, 20.3),
-        ],
-      ),
-      const DriveState(
-        status: DriveStateStatus.ongoing,
-        distanceInMeters: 20,
-        speedInKmPerH: 0.025,
+        distanceInMeters: 30,
+        speedInKmPerH: 25 * 3.6,
         waypoints: [
           Coordinates(50.1, 18.1),
           Coordinates(51.2, 19.2),
@@ -116,8 +96,8 @@ void main() {
       const DriveState(
         status: DriveStateStatus.ongoing,
         durationInSeconds: 1,
-        distanceInMeters: 20,
-        speedInKmPerH: 0.025,
+        distanceInMeters: 30,
+        speedInKmPerH: 25 * 3.6,
         waypoints: [
           Coordinates(50.1, 18.1),
           Coordinates(51.2, 19.2),
@@ -127,8 +107,8 @@ void main() {
       const DriveState(
         status: DriveStateStatus.ongoing,
         durationInSeconds: 2,
-        distanceInMeters: 20,
-        speedInKmPerH: 0.025,
+        distanceInMeters: 30,
+        speedInKmPerH: 25 * 3.6,
         waypoints: [
           Coordinates(50.1, 18.1),
           Coordinates(51.2, 19.2),
@@ -137,14 +117,13 @@ void main() {
       ),
     ],
     verify: (_) {
-      verify(locationService.getCurrentLocation).called(1);
-      verify(locationService.getCurrentSpeedInMetersPerHour).called(1);
+      verify(locationService.getPosition).called(1);
       verify(
         () => mapService.calculateDistanceInMeters(
           location1: any(named: 'location1'),
           location2: any(named: 'location2'),
         ),
-      ).called(3);
+      ).called(2);
     },
   );
 }

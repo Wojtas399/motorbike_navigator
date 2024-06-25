@@ -1,11 +1,11 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/entity/coordinates.dart';
+import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/service/location_service.dart';
 
 class MockLocationService extends Mock implements LocationService {
-  void mockGetCurrentLocation({Coordinates? expectedLocation}) {
+  void mockGetPosition({Position? expectedPosition}) {
     when(
-      getCurrentLocation,
-    ).thenAnswer((_) => Stream.value(expectedLocation));
+      getPosition,
+    ).thenAnswer((_) => Stream.value(expectedPosition));
   }
 }

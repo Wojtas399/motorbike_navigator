@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../entity/coordinates.dart';
+import '../../../entity/position.dart';
 import '../../service/location_service.dart';
 import 'map_state.dart';
 
@@ -14,7 +15,7 @@ class MapCubit extends Cubit<MapState> {
   ) : super(const MapState());
 
   Future<void> initialize() async {
-    final currentLocation$ = _locationService.getCurrentLocation();
+    final currentLocation$ = _getCurrentLocation();
     await for (final currentLocation in currentLocation$) {
       emit(state.copyWith(
         status: MapStatus.completed,
@@ -30,4 +31,9 @@ class MapCubit extends Cubit<MapState> {
       centerLocation: newCenterLocation,
     ));
   }
+
+  Stream<Coordinates?> _getCurrentLocation() =>
+      _locationService.getPosition().map(
+            (Position? position) => position?.coordinates,
+          );
 }

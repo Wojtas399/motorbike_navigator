@@ -1,42 +1,43 @@
-import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:injectable/injectable.dart';
 
 import '../../entity/coordinates.dart';
+import '../../entity/position.dart';
 
 @injectable
 class LocationService {
-  Stream<Coordinates?> getCurrentLocation() async* {
+  Stream<Position?> getPosition() async* {
     final hasPermission = await _handleLocationPermission();
     if (!hasPermission) {
       yield null;
     } else {
       final position$ = _getPositionStream();
       await for (final position in position$) {
-        yield Coordinates(position.latitude, position.longitude);
+        yield Position(
+          coordinates: Coordinates(position.latitude, position.longitude),
+          speedInMetersPerSecond: position.speed,
+        );
       }
     }
   }
 
-  Stream<double> getCurrentSpeedInMetersPerHour() => _getPositionStream().map(
-        (Position position) => position.speed,
-      );
-
-  Stream<Position> _getPositionStream() => Geolocator.getPositionStream(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.bestForNavigation,
+  Stream<geolocator.Position> _getPositionStream() =>
+      geolocator.Geolocator.getPositionStream(
+        locationSettings: const geolocator.LocationSettings(
+          accuracy: geolocator.LocationAccuracy.bestForNavigation,
         ),
       );
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
-    LocationPermission permission;
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    geolocator.LocationPermission permission;
+    serviceEnabled = await geolocator.Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) return false;
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) return false;
+    permission = await geolocator.Geolocator.checkPermission();
+    if (permission == geolocator.LocationPermission.denied) {
+      permission = await geolocator.Geolocator.requestPermission();
+      if (permission == geolocator.LocationPermission.denied) return false;
     }
-    return !(permission == LocationPermission.deniedForever);
+    return !(permission == geolocator.LocationPermission.deniedForever);
   }
 }

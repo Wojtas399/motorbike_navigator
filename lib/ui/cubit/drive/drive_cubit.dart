@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../../entity/coordinates.dart';
+import '../../../entity/position.dart';
 import '../../service/location_service.dart';
 import '../../service/map_service.dart';
 import 'drive_state.dart';
@@ -15,6 +14,7 @@ class DriveCubit extends Cubit<DriveState> {
   final LocationService _locationService;
   final MapService _mapService;
   Timer? _timer;
+  StreamSubscription<Position?>? _positionListener;
 
   DriveCubit(
     this._locationService,
@@ -35,6 +35,11 @@ class DriveCubit extends Cubit<DriveState> {
     await _listenToDistanceAndSpeed();
   }
 
+  void finishDrive() {
+    _timer?.cancel();
+    _positionListener?.cancel();
+  }
+
   void _startTimer() {
     _timer = Timer.periodic(
       const Duration(seconds: 1),
@@ -47,44 +52,25 @@ class DriveCubit extends Cubit<DriveState> {
   }
 
   Future<void> _listenToDistanceAndSpeed() async {
-    final listenedParams$ = Rx.combineLatest2(
-      _locationService.getCurrentLocation(),
-      _locationService.getCurrentSpeedInMetersPerHour(),
-      (Coordinates? location, double speed) => _ListenedParams(
-        location: location,
-        speed: speed,
-      ),
-    );
-    await for (final listenedParams in listenedParams$) {
-      List<Coordinates> updatedWaypoints = [...?state.waypoints];
-      if (listenedParams.location != null) {
-        updatedWaypoints.add(listenedParams.location!);
-        updatedWaypoints = updatedWaypoints.toSet().toList();
-      }
-      emit(state.copyWith(
-        distanceInMeters: updatedWaypoints.length != state.waypoints?.length &&
-                updatedWaypoints.isNotEmpty
-            ? _mapService.calculateDistanceInMeters(
-                location1: updatedWaypoints.first,
-                location2: updatedWaypoints.last,
-              )
-            : state.distanceInMeters,
-        speedInKmPerH: listenedParams.speed * 0.001,
-        waypoints: updatedWaypoints,
-      ));
-    }
+    _positionListener =
+        _locationService.getPosition().listen(_onPositionUpdated);
   }
-}
 
-class _ListenedParams extends Equatable {
-  final Coordinates? location;
-  final double speed;
-
-  const _ListenedParams({
-    required this.location,
-    required this.speed,
-  });
-
-  @override
-  List<Object?> get props => [location, speed];
+  void _onPositionUpdated(Position? position) {
+    if (position == null) return;
+    List<Coordinates> updatedWaypoints = [...?state.waypoints];
+    double distanceFromPreviousLocation = 0;
+    if (updatedWaypoints.isNotEmpty) {
+      distanceFromPreviousLocation = _mapService.calculateDistanceInMeters(
+        location1: position.coordinates,
+        location2: updatedWaypoints.last,
+      );
+    }
+    updatedWaypoints.add(position.coordinates);
+    emit(state.copyWith(
+      distanceInMeters: state.distanceInMeters + distanceFromPreviousLocation,
+      speedInKmPerH: position.speedInMetersPerSecond * 3.6,
+      waypoints: updatedWaypoints,
+    ));
+  }
 }

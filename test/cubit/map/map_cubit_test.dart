@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
+import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/cubit/map/map_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/map/map_state.dart';
 
@@ -18,10 +19,13 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should get current location from LocationService and should assign it to '
-    'centerLocation and userLocation params',
-    setUp: () => locationService.mockGetCurrentLocation(
-      expectedLocation: const Coordinates(50.2, 25.4),
+    'should get coordinates of current position got form LocationService '
+    'and should assign it to centerLocation and userLocation params',
+    setUp: () => locationService.mockGetPosition(
+      expectedPosition: const Position(
+        coordinates: Coordinates(50.2, 25.4),
+        speedInMetersPerSecond: 0,
+      ),
     ),
     build: () => createCubit(),
     act: (cubit) async => await cubit.initialize(),
@@ -36,10 +40,10 @@ void main() {
 
   blocTest(
     'initialize, '
-    'current location is null, '
+    'current position is null, '
     'should only emit completed status',
-    setUp: () => locationService.mockGetCurrentLocation(
-      expectedLocation: null,
+    setUp: () => locationService.mockGetPosition(
+      expectedPosition: null,
     ),
     build: () => createCubit(),
     act: (cubit) async => await cubit.initialize(),
