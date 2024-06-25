@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -15,6 +16,7 @@ class DriveCubit extends Cubit<DriveState> {
   final MapService _mapService;
   Timer? _timer;
   StreamSubscription<Position?>? _positionListener;
+  List<double> _speedsInKmPerH = [];
 
   DriveCubit(
     this._locationService,
@@ -24,6 +26,7 @@ class DriveCubit extends Cubit<DriveState> {
   @override
   Future<void> close() {
     _timer?.cancel();
+    _positionListener?.cancel();
     return super.close();
   }
 
@@ -38,6 +41,7 @@ class DriveCubit extends Cubit<DriveState> {
   void finishDrive() {
     _timer?.cancel();
     _positionListener?.cancel();
+    _speedsInKmPerH = [];
   }
 
   void _startTimer() {
@@ -45,7 +49,7 @@ class DriveCubit extends Cubit<DriveState> {
       const Duration(seconds: 1),
       (timer) {
         emit(state.copyWith(
-          durationInSeconds: timer.tick.toDouble(),
+          duration: Duration(seconds: state.duration.inSeconds + 1),
         ));
       },
     );
@@ -61,15 +65,17 @@ class DriveCubit extends Cubit<DriveState> {
     List<Coordinates> updatedWaypoints = [...?state.waypoints];
     double distanceFromPreviousLocation = 0;
     if (updatedWaypoints.isNotEmpty) {
-      distanceFromPreviousLocation = _mapService.calculateDistanceInMeters(
+      distanceFromPreviousLocation = _mapService.calculateDistanceInKm(
         location1: position.coordinates,
         location2: updatedWaypoints.last,
       );
     }
+    _speedsInKmPerH.add(position.speedInMetersPerSecond * 3.6);
     updatedWaypoints.add(position.coordinates);
     emit(state.copyWith(
-      distanceInMeters: state.distanceInMeters + distanceFromPreviousLocation,
+      distanceInKm: state.distanceInKm + distanceFromPreviousLocation,
       speedInKmPerH: position.speedInMetersPerSecond * 3.6,
+      avgSpeedInKmPerH: _speedsInKmPerH.average,
       waypoints: updatedWaypoints,
     ));
   }

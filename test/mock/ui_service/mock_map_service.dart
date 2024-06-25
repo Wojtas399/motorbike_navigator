@@ -7,11 +7,11 @@ class MockMapService extends Mock implements MapService {
     registerFallbackValue(const Coordinates(0, 0));
   }
 
-  void mockCalculateDistanceInMeters({
+  void mockCalculateDistanceInKm({
     required double expectedDistance,
   }) {
     when(
-      () => calculateDistanceInMeters(
+      () => calculateDistanceInKm(
         location1: any(named: 'location1'),
         location2: any(named: 'location2'),
       ),

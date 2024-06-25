@@ -45,13 +45,13 @@ void main() {
         ),
       );
       when(
-        () => mapService.calculateDistanceInMeters(
+        () => mapService.calculateDistanceInKm(
           location1: const Coordinates(51.2, 19.2),
           location2: const Coordinates(50.1, 18.1),
         ),
       ).thenReturn(10);
       when(
-        () => mapService.calculateDistanceInMeters(
+        () => mapService.calculateDistanceInKm(
           location1: const Coordinates(52.3, 20.3),
           location2: const Coordinates(51.2, 19.2),
         ),
@@ -70,14 +70,16 @@ void main() {
       const DriveState(
         status: DriveStateStatus.ongoing,
         speedInKmPerH: 15 * 3.6,
+        avgSpeedInKmPerH: 15 * 3.6,
         waypoints: [
           Coordinates(50.1, 18.1),
         ],
       ),
       const DriveState(
         status: DriveStateStatus.ongoing,
-        distanceInMeters: 10,
+        distanceInKm: 10,
         speedInKmPerH: 20 * 3.6,
+        avgSpeedInKmPerH: ((15 * 3.6) + (20 * 3.6)) / 2,
         waypoints: [
           Coordinates(50.1, 18.1),
           Coordinates(51.2, 19.2),
@@ -85,19 +87,9 @@ void main() {
       ),
       const DriveState(
         status: DriveStateStatus.ongoing,
-        distanceInMeters: 30,
+        distanceInKm: 30,
         speedInKmPerH: 25 * 3.6,
-        waypoints: [
-          Coordinates(50.1, 18.1),
-          Coordinates(51.2, 19.2),
-          Coordinates(52.3, 20.3),
-        ],
-      ),
-      const DriveState(
-        status: DriveStateStatus.ongoing,
-        durationInSeconds: 1,
-        distanceInMeters: 30,
-        speedInKmPerH: 25 * 3.6,
+        avgSpeedInKmPerH: ((15 * 3.6) + (20 * 3.6) + (25 * 3.6)) / 3,
         waypoints: [
           Coordinates(50.1, 18.1),
           Coordinates(51.2, 19.2),
@@ -106,9 +98,22 @@ void main() {
       ),
       const DriveState(
         status: DriveStateStatus.ongoing,
-        durationInSeconds: 2,
-        distanceInMeters: 30,
+        duration: Duration(seconds: 1),
+        distanceInKm: 30,
         speedInKmPerH: 25 * 3.6,
+        avgSpeedInKmPerH: ((15 * 3.6) + (20 * 3.6) + (25 * 3.6)) / 3,
+        waypoints: [
+          Coordinates(50.1, 18.1),
+          Coordinates(51.2, 19.2),
+          Coordinates(52.3, 20.3),
+        ],
+      ),
+      const DriveState(
+        status: DriveStateStatus.ongoing,
+        duration: Duration(seconds: 2),
+        distanceInKm: 30,
+        speedInKmPerH: 25 * 3.6,
+        avgSpeedInKmPerH: ((15 * 3.6) + (20 * 3.6) + (25 * 3.6)) / 3,
         waypoints: [
           Coordinates(50.1, 18.1),
           Coordinates(51.2, 19.2),
@@ -119,7 +124,7 @@ void main() {
     verify: (_) {
       verify(locationService.getPosition).called(1);
       verify(
-        () => mapService.calculateDistanceInMeters(
+        () => mapService.calculateDistanceInKm(
           location1: any(named: 'location1'),
           location2: any(named: 'location2'),
         ),

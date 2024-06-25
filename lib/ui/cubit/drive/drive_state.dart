@@ -10,9 +10,10 @@ enum DriveStateStatus { initial, ongoing }
 class DriveState with _$DriveState {
   const factory DriveState({
     @Default(DriveStateStatus.initial) DriveStateStatus status,
-    @Default(0) double durationInSeconds,
-    @Default(0) double distanceInMeters,
+    @Default(Duration.zero) Duration duration,
+    @Default(0) double distanceInKm,
     @Default(0) double speedInKmPerH,
+    @Default(0) double avgSpeedInKmPerH,
     List<Coordinates>? waypoints,
   }) = _DriveState;
 }

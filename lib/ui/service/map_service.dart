@@ -5,7 +5,7 @@ import '../../entity/coordinates.dart';
 
 @injectable
 class MapService {
-  double calculateDistanceInMeters({
+  double calculateDistanceInKm({
     required Coordinates location1,
     required Coordinates location2,
   }) {
@@ -15,7 +15,7 @@ class MapService {
       location1.longitude,
       location2.latitude,
       location2.longitude,
-      'meters',
+      'kilometers',
     );
   }
 }
