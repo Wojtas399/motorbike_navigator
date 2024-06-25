@@ -66,12 +66,17 @@ void main() {
     },
     expect: () => [
       const DriveState(
+        status: DriveStateStatus.ongoing,
+      ),
+      const DriveState(
+        status: DriveStateStatus.ongoing,
         speedInKmPerH: 0.015,
         waypoints: [
           Coordinates(50.1, 18.1),
         ],
       ),
       const DriveState(
+        status: DriveStateStatus.ongoing,
         distanceInMeters: 10,
         speedInKmPerH: 0.015,
         waypoints: [
@@ -80,6 +85,7 @@ void main() {
         ],
       ),
       const DriveState(
+        status: DriveStateStatus.ongoing,
         distanceInMeters: 10,
         speedInKmPerH: 0.02,
         waypoints: [
@@ -88,6 +94,7 @@ void main() {
         ],
       ),
       const DriveState(
+        status: DriveStateStatus.ongoing,
         distanceInMeters: 20,
         speedInKmPerH: 0.02,
         waypoints: [
@@ -97,6 +104,7 @@ void main() {
         ],
       ),
       const DriveState(
+        status: DriveStateStatus.ongoing,
         distanceInMeters: 20,
         speedInKmPerH: 0.025,
         waypoints: [
@@ -106,6 +114,7 @@ void main() {
         ],
       ),
       const DriveState(
+        status: DriveStateStatus.ongoing,
         durationInSeconds: 1,
         distanceInMeters: 20,
         speedInKmPerH: 0.025,
@@ -116,6 +125,7 @@ void main() {
         ],
       ),
       const DriveState(
+        status: DriveStateStatus.ongoing,
         durationInSeconds: 2,
         distanceInMeters: 20,
         speedInKmPerH: 0.025,

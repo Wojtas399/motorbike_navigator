@@ -28,6 +28,9 @@ class DriveCubit extends Cubit<DriveState> {
   }
 
   Future<void> startDrive() async {
+    emit(state.copyWith(
+      status: DriveStateStatus.ongoing,
+    ));
     _startTimer();
     await _listenToDistanceAndSpeed();
   }
