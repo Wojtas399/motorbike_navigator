@@ -131,4 +131,16 @@ void main() {
       ).called(2);
     },
   );
+
+  blocTest(
+    'finishDrive, '
+    'should emit status set as DriveStateStatus.finished',
+    build: () => createCubit(),
+    act: (cubit) => cubit.finishDrive(),
+    expect: () => [
+      const DriveState(
+        status: DriveStateStatus.finished,
+      ),
+    ],
+  );
 }

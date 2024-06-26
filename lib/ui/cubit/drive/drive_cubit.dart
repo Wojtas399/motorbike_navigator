@@ -42,6 +42,9 @@ class DriveCubit extends Cubit<DriveState> {
     _timer?.cancel();
     _positionListener?.cancel();
     _speedsInKmPerH = [];
+    emit(state.copyWith(
+      status: DriveStateStatus.finished,
+    ));
   }
 
   void _startTimer() {

@@ -94,20 +94,20 @@ class _MapState extends State<_Map> {
             const MapMarkerLayer(),
           ],
         ),
-        switch (driveStatus) {
-          DriveStateStatus.initial => const Positioned(
-              bottom: 24,
-              left: 24,
-              right: 24,
-              child: _StartRideButton(),
-            ),
-          DriveStateStatus.ongoing => const Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: MapDriveDetails(),
-            ),
-        }
+        if (driveStatus == DriveStateStatus.initial)
+          const Positioned(
+            bottom: 24,
+            left: 24,
+            right: 24,
+            child: _StartRideButton(),
+          ),
+        if (driveStatus == DriveStateStatus.ongoing)
+          const Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: MapDriveDetails(),
+          ),
       ],
     );
   }
