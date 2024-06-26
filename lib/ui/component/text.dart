@@ -4,6 +4,7 @@ enum _TextType {
   labelLarge,
   bodyMedium,
   titleMedium,
+  titleLarge,
 }
 
 abstract class _Text extends StatelessWidget {
@@ -24,6 +25,7 @@ abstract class _Text extends StatelessWidget {
       _TextType.labelLarge => textTheme.labelLarge,
       _TextType.titleMedium => textTheme.titleMedium,
       _TextType.bodyMedium => textTheme.bodyMedium,
+      _TextType.titleLarge => textTheme.titleLarge,
     };
 
     return Text(
@@ -48,4 +50,8 @@ class BodyMedium extends _Text {
 
 class TitleMedium extends _Text {
   const TitleMedium(super.data) : super(textType: _TextType.titleMedium);
+}
+
+class TitleLarge extends _Text {
+  const TitleLarge(super.data) : super(textType: _TextType.titleLarge);
 }

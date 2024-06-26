@@ -8,10 +8,12 @@ import '../../../env.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/drive/drive_cubit.dart';
+import '../../cubit/drive/drive_state.dart';
 import '../../cubit/map/map_cubit.dart';
 import '../../cubit/map/map_state.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
+import 'map_drive_details.dart';
 import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
 
@@ -71,6 +73,9 @@ class _MapState extends State<_Map> {
   Widget build(BuildContext context) {
     final Coordinates? centerLocation =
         context.read<MapCubit>().state.centerLocation;
+    final DriveStateStatus driveStatus = context.select(
+      (DriveCubit cubit) => cubit.state.status,
+    );
 
     return Stack(
       children: [
@@ -89,12 +94,20 @@ class _MapState extends State<_Map> {
             const MapMarkerLayer(),
           ],
         ),
-        const Positioned(
-          bottom: 24,
-          left: 24,
-          right: 24,
-          child: _StartRideButton(),
-        ),
+        switch (driveStatus) {
+          DriveStateStatus.initial => const Positioned(
+              bottom: 24,
+              left: 24,
+              right: 24,
+              child: _StartRideButton(),
+            ),
+          DriveStateStatus.ongoing => const Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: MapDriveDetails(),
+            ),
+        }
       ],
     );
   }
