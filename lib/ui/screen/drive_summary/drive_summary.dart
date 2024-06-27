@@ -23,8 +23,45 @@ class DriveSummary extends StatelessWidget {
               ),
               GapVertical24(),
               DriveSummaryData(),
+              GapVertical24(),
+              _DriveActions(),
             ],
           ),
+        ),
+      );
+}
+
+class _DriveActions extends StatelessWidget {
+  const _DriveActions();
+
+  void _onDelete(BuildContext context) {
+    //TODO
+  }
+
+  void _onSave(BuildContext context) {
+    //TODO
+  }
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () => _onDelete(context),
+                child: Text(context.str.delete),
+              ),
+            ),
+            const GapHorizontal16(),
+            Expanded(
+              child: FilledButton(
+                onPressed: () => _onSave(context),
+                child: Text(context.str.save),
+              ),
+            ),
+          ],
         ),
       );
 }

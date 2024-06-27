@@ -18,5 +18,7 @@
   "settings": "Ustawienia",
   "mapLoading": "Ładowanie mapy...",
   "mapSearch": "Szukaj...",
-  "close": "Zamknij"
+  "close": "Zamknij",
+  "delete": "Usuń",
+  "save": "Zapisz"
 }
