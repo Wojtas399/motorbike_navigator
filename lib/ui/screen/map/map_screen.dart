@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
 import '../../cubit/drive/drive_cubit.dart';
+import '../../cubit/drive/drive_state.dart';
 import '../../cubit/map/map_cubit.dart';
-import '../../cubit/route/route_cubit.dart';
 import 'map_content.dart';
 
 class MapScreen extends StatelessWidget {
@@ -17,12 +17,39 @@ class MapScreen extends StatelessWidget {
             create: (_) => getIt.get<MapCubit>()..initialize(),
           ),
           BlocProvider(
-            create: (_) => getIt.get<RouteCubit>(),
-          ),
-          BlocProvider(
             create: (_) => getIt.get<DriveCubit>(),
           ),
         ],
-        child: const MapContent(),
+        child: const _DriveCubitListener(
+          child: MapContent(),
+        ),
+      );
+}
+
+class _DriveCubitListener extends StatelessWidget {
+  final Widget child;
+
+  const _DriveCubitListener({required this.child});
+
+  void _onStatusChanged(DriveStateStatus status, BuildContext context) {
+    if (status == DriveStateStatus.finished) {
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (_) => BlocProvider.value(
+      //       value: context.read<DriveCubit>(),
+      //       child: const MapDriveSummary(),
+      //     ),
+      //   ),
+      // );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => BlocListener<DriveCubit, DriveState>(
+        listenWhen: (prevState, currState) =>
+            prevState.status != currState.status,
+        listener: (context, state) => _onStatusChanged(state.status, context),
+        child: child,
       );
 }

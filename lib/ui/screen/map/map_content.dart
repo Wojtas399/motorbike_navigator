@@ -26,7 +26,7 @@ class MapContent extends StatelessWidget {
       (MapCubit cubit) => cubit.state.status,
     );
 
-    return cubitStatus.isLoading ? const _LoadingIndicator() : const _Map();
+    return cubitStatus.isLoading ? const _LoadingIndicator() : const _Content();
   }
 }
 
@@ -44,6 +44,37 @@ class _LoadingIndicator extends StatelessWidget {
           ],
         ),
       );
+}
+
+class _Content extends StatelessWidget {
+  const _Content();
+
+  @override
+  Widget build(BuildContext context) {
+    final DriveStateStatus driveStatus = context.select(
+      (DriveCubit cubit) => cubit.state.status,
+    );
+
+    return Stack(
+      children: [
+        const _Map(),
+        if (driveStatus == DriveStateStatus.initial)
+          const Positioned(
+            bottom: 24,
+            left: 24,
+            right: 24,
+            child: _StartRideButton(),
+          ),
+        if (driveStatus == DriveStateStatus.ongoing)
+          const Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: MapDriveDetails(),
+          ),
+      ],
+    );
+  }
 }
 
 class _Map extends StatefulWidget {
@@ -69,46 +100,46 @@ class _MapState extends State<_Map> {
         ));
   }
 
+  void _onUserPositionChanged(Coordinates position) {
+    _mapController.move(position.toLatLng(), 13);
+  }
+
   @override
   Widget build(BuildContext context) {
     final Coordinates? centerLocation =
         context.read<MapCubit>().state.centerLocation;
-    final DriveStateStatus driveStatus = context.select(
-      (DriveCubit cubit) => cubit.state.status,
-    );
 
-    return Stack(
-      children: [
-        FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-            initialCenter: centerLocation?.toLatLng() ??
-                const LatLng(52.23178179122954, 21.006002101026827),
-            keepAlive: true,
-            onPositionChanged: (camera, _) =>
-                _onCameraPositionChanged(camera, context),
-          ),
-          children: [
-            TileLayer(urlTemplate: Env.mapboxTemplateUrl),
-            const MapPolylineLayer(),
-            const MapMarkerLayer(),
-          ],
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<MapCubit, MapState>(
+          listenWhen: (prevState, currState) =>
+              currState.userLocation != null &&
+              currState.userLocation != prevState.userLocation,
+          listener: (_, state) => _onUserPositionChanged(state.userLocation!),
         ),
-        if (driveStatus == DriveStateStatus.initial)
-          const Positioned(
-            bottom: 24,
-            left: 24,
-            right: 24,
-            child: _StartRideButton(),
-          ),
-        if (driveStatus == DriveStateStatus.ongoing)
-          const Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: MapDriveDetails(),
-          ),
+        BlocListener<DriveCubit, DriveState>(
+          listenWhen: (prevState, currState) =>
+              currState.waypoints?.isNotEmpty == true,
+          listener: (_, state) =>
+              _onUserPositionChanged(state.waypoints!.first),
+        ),
       ],
+      child: FlutterMap(
+        mapController: _mapController,
+        options: MapOptions(
+          initialCenter: centerLocation?.toLatLng() ??
+              const LatLng(52.23178179122954, 21.006002101026827),
+          onPositionChanged: (camera, _) =>
+              _onCameraPositionChanged(camera, context),
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: Env.mapboxTemplateUrl,
+          ),
+          const MapPolylineLayer(),
+          const MapMarkerLayer(),
+        ],
+      ),
     );
   }
 }

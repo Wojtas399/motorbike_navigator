@@ -22,7 +22,10 @@ class MapMarkerLayer extends StatelessWidget {
             width: 20,
             height: 20,
             point: userLocation.toLatLng(),
-            child: Image.asset('assets/location_icon.png'),
+            child: const Icon(
+              Icons.my_location,
+              color: Colors.blue,
+            ),
           ),
       ],
     );

@@ -5,6 +5,7 @@ import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../extensions/context_extensions.dart';
+import '../../extensions/duration_extensions.dart';
 
 class MapDriveDetails extends StatelessWidget {
   const MapDriveDetails({super.key});
@@ -88,11 +89,8 @@ class _Duration extends StatelessWidget {
     final Duration duration = context.select(
       (DriveCubit cubit) => cubit.state.duration,
     );
-    final int hours = duration.inHours;
-    final int minutes = duration.inMinutes % 60;
-    final int seconds = duration.inSeconds % 60;
 
-    return TitleLarge('$hours h $minutes min $seconds s');
+    return TitleLarge(duration.toUIFormat());
   }
 }
 
