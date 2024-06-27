@@ -5,8 +5,8 @@ import '../../../dependency_injection.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
 import '../../cubit/map/map_cubit.dart';
+import '../drive_summary/drive_summary.dart';
 import 'map_content.dart';
-import 'map_drive_summary.dart';
 
 class MapScreen extends StatelessWidget {
   const MapScreen({super.key});
@@ -39,7 +39,7 @@ class _DriveCubitListener extends StatelessWidget {
         MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: context.read<DriveCubit>(),
-            child: const MapDriveSummary(),
+            child: const DriveSummary(),
           ),
         ),
       );
