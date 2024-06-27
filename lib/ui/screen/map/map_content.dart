@@ -74,10 +74,10 @@ class _Content extends StatelessWidget {
             right: 0,
             child: MapDriveDetails(),
           ),
-        const Positioned(
-          bottom: 88,
+        Positioned(
+          bottom: driveStatus == DriveStateStatus.ongoing ? 280 : 88,
           right: 24,
-          child: _FollowUserLocationButton(),
+          child: const _FollowUserLocationButton(),
         ),
       ],
     );
@@ -124,7 +124,16 @@ class _MapState extends State<_Map> {
   void _onUserPositionChanged(Coordinates position) {
     if (context.read<MapCubit>().state.focusMode ==
         MapFocusMode.followUserLocation) {
-      _mapController.move(position.toLatLng(), 13);
+      final bool isInDriveMode =
+          context.read<DriveCubit>().state.status == DriveStateStatus.ongoing;
+      final double centerPositionLatCorrection = isInDriveMode ? -0.012 : 0;
+      _mapController.move(
+        LatLng(
+          position.latitude + centerPositionLatCorrection,
+          position.longitude,
+        ),
+        13,
+      );
     }
   }
 
@@ -144,8 +153,7 @@ class _MapState extends State<_Map> {
         BlocListener<DriveCubit, DriveState>(
           listenWhen: (prevState, currState) =>
               currState.waypoints?.isNotEmpty == true,
-          listener: (_, state) =>
-              _onUserPositionChanged(state.waypoints!.first),
+          listener: (_, state) => _onUserPositionChanged(state.waypoints!.last),
         ),
       ],
       child: FlutterMap(
