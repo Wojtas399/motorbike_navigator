@@ -55,16 +55,66 @@ void main() {
   );
 
   blocTest(
-    'onCenterLocationChanged, '
-    'should update centerLocation in state',
+    'onMapDrag, '
+    'should set focus mode as free and should update centerLocation in state',
     build: () => createCubit(),
-    act: (cubit) => cubit.onCenterLocationChanged(
+    act: (cubit) => cubit.onMapDrag(
       const Coordinates(50.1, 18.1),
     ),
     expect: () => [
       const MapState(
         status: MapStatus.completed,
+        focusMode: MapFocusMode.free,
         centerLocation: Coordinates(50.1, 18.1),
+      ),
+    ],
+  );
+
+  blocTest(
+    'followUserLocation, '
+    'userLocation is null, '
+    'should do nothing',
+    build: () => createCubit(),
+    act: (cubit) => cubit.followUserLocation(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'followUserLocation, '
+    'userLocation is not null, '
+    'should set focus mode to followUserLocation and should assign user location '
+    'to centerLocation param',
+    build: () => createCubit(),
+    setUp: () => locationService.mockGetPosition(
+      expectedPosition: const Position(
+        coordinates: Coordinates(50.2, 25.4),
+        speedInMetersPerSecond: 0,
+      ),
+    ),
+    act: (cubit) async {
+      await cubit.initialize();
+      cubit.onMapDrag(
+        const Coordinates(50.1, 25.2),
+      );
+      cubit.followUserLocation();
+    },
+    expect: () => [
+      const MapState(
+        status: MapStatus.completed,
+        centerLocation: Coordinates(50.2, 25.4),
+        userLocation: Coordinates(50.2, 25.4),
+      ),
+      const MapState(
+        status: MapStatus.completed,
+        focusMode: MapFocusMode.free,
+        centerLocation: Coordinates(50.1, 25.2),
+        userLocation: Coordinates(50.2, 25.4),
+      ),
+      const MapState(
+        status: MapStatus.completed,
+        focusMode: MapFocusMode.followUserLocation,
+        centerLocation: Coordinates(50.2, 25.4),
+        userLocation: Coordinates(50.2, 25.4),
       ),
     ],
   );

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -72,6 +74,11 @@ class _Content extends StatelessWidget {
             right: 0,
             child: MapDriveDetails(),
           ),
+        const Positioned(
+          bottom: 88,
+          right: 24,
+          child: _FollowUserLocationButton(),
+        ),
       ],
     );
   }
@@ -86,22 +93,39 @@ class _Map extends StatefulWidget {
 
 class _MapState extends State<_Map> {
   late final MapController _mapController;
+  StreamSubscription? _mapListener;
 
   @override
   void initState() {
     _mapController = MapController();
+    _mapListener = _mapController.mapEventStream.listen(
+      (MapEvent event) {
+        if (event.source == MapEventSource.onDrag) {
+          _onDragMap(event.camera.center);
+        }
+      },
+    );
     super.initState();
   }
 
-  void _onCameraPositionChanged(MapCamera camera, BuildContext context) {
-    context.read<MapCubit>().onCenterLocationChanged(Coordinates(
-          camera.center.latitude,
-          camera.center.longitude,
+  @override
+  void dispose() {
+    _mapListener?.cancel();
+    super.dispose();
+  }
+
+  void _onDragMap(LatLng newCenterPosition) {
+    context.read<MapCubit>().onMapDrag(Coordinates(
+          newCenterPosition.latitude,
+          newCenterPosition.longitude,
         ));
   }
 
   void _onUserPositionChanged(Coordinates position) {
-    _mapController.move(position.toLatLng(), 13);
+    if (context.read<MapCubit>().state.focusMode ==
+        MapFocusMode.followUserLocation) {
+      _mapController.move(position.toLatLng(), 13);
+    }
   }
 
   @override
@@ -129,8 +153,6 @@ class _MapState extends State<_Map> {
         options: MapOptions(
           initialCenter: centerLocation?.toLatLng() ??
               const LatLng(52.23178179122954, 21.006002101026827),
-          onPositionChanged: (camera, _) =>
-              _onCameraPositionChanged(camera, context),
         ),
         children: [
           TileLayer(
@@ -142,6 +164,20 @@ class _MapState extends State<_Map> {
       ),
     );
   }
+}
+
+class _FollowUserLocationButton extends StatelessWidget {
+  const _FollowUserLocationButton();
+
+  void _onPressed(BuildContext context) {
+    context.read<MapCubit>().followUserLocation();
+  }
+
+  @override
+  Widget build(BuildContext context) => FloatingActionButton(
+        onPressed: () => _onPressed(context),
+        child: const Icon(Icons.near_me),
+      );
 }
 
 class _StartRideButton extends StatelessWidget {

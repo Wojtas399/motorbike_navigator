@@ -25,10 +25,19 @@ class MapCubit extends Cubit<MapState> {
     }
   }
 
-  void onCenterLocationChanged(Coordinates newCenterLocation) {
+  void onMapDrag(Coordinates newCenterLocation) {
     emit(state.copyWith(
       status: MapStatus.completed,
+      focusMode: MapFocusMode.free,
       centerLocation: newCenterLocation,
+    ));
+  }
+
+  void followUserLocation() {
+    if (state.userLocation == null) return;
+    emit(state.copyWith(
+      focusMode: MapFocusMode.followUserLocation,
+      centerLocation: state.userLocation!,
     ));
   }
 
