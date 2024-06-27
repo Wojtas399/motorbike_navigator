@@ -6,6 +6,7 @@ import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
 import '../../cubit/map/map_cubit.dart';
 import 'map_content.dart';
+import 'map_drive_summary.dart';
 
 class MapScreen extends StatelessWidget {
   const MapScreen({super.key});
@@ -33,15 +34,15 @@ class _DriveCubitListener extends StatelessWidget {
 
   void _onStatusChanged(DriveStateStatus status, BuildContext context) {
     if (status == DriveStateStatus.finished) {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (_) => BlocProvider.value(
-      //       value: context.read<DriveCubit>(),
-      //       child: const MapDriveSummary(),
-      //     ),
-      //   ),
-      // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: context.read<DriveCubit>(),
+            child: const MapDriveSummary(),
+          ),
+        ),
+      );
     }
   }
 
