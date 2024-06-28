@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 enum _TextType {
+  labelMedium,
   labelLarge,
   bodyMedium,
   titleMedium,
@@ -22,6 +23,7 @@ abstract class _Text extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final textStyle = switch (textType) {
+      _TextType.labelMedium => textTheme.labelMedium,
       _TextType.labelLarge => textTheme.labelLarge,
       _TextType.titleMedium => textTheme.titleMedium,
       _TextType.bodyMedium => textTheme.bodyMedium,
@@ -35,6 +37,13 @@ abstract class _Text extends StatelessWidget {
       ),
     );
   }
+}
+
+class LabelMedium extends _Text {
+  const LabelMedium(
+    super.data, {
+    super.color,
+  }) : super(textType: _TextType.labelMedium);
 }
 
 class LabelLarge extends _Text {
