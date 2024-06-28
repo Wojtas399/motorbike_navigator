@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../../entity/coordinates.dart';
 import '../../../env.dart';
 import '../../cubit/drive/drive_cubit.dart';
+import '../../cubit/map/map_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 
@@ -17,22 +17,23 @@ class DriveSummaryMapPreview extends StatelessWidget {
     final List<Coordinates>? routeWaypoints =
         context.read<DriveCubit>().state.waypoints;
     CameraFit? cameraFit;
-    LatLng initialCenter = const LatLng(18, 50);
-    if (routeWaypoints != null && routeWaypoints.length >= 2) {
-      cameraFit = CameraFit.bounds(
-        bounds: LatLngBounds(
-          routeWaypoints.first.toLatLng(),
-          routeWaypoints.last.toLatLng(),
-        ),
-        padding: const EdgeInsets.all(128),
-      );
-      initialCenter = routeWaypoints.first.toLatLng();
-      // _mapController.fitCamera(cameraFit);
+    Coordinates initialCenter = context.read<MapCubit>().state.userLocation!;
+    if (routeWaypoints?.isNotEmpty == true) {
+      initialCenter = routeWaypoints!.first;
+      if (routeWaypoints.length >= 2) {
+        cameraFit = CameraFit.bounds(
+          bounds: LatLngBounds(
+            routeWaypoints.first.toLatLng(),
+            routeWaypoints.last.toLatLng(),
+          ),
+          padding: const EdgeInsets.all(128),
+        );
+      }
     }
 
     return FlutterMap(
       options: MapOptions(
-        initialCenter: initialCenter,
+        initialCenter: initialCenter.toLatLng(),
         initialCameraFit: cameraFit,
       ),
       children: [
@@ -75,19 +76,25 @@ class _MarkerLayer extends StatelessWidget {
     final List<Coordinates>? routeWaypoints = context.select(
       (DriveCubit cubit) => cubit.state.waypoints,
     );
+    final Coordinates userLocation =
+        context.read<MapCubit>().state.userLocation!;
+    Coordinates startLocation = userLocation;
+    Coordinates endLocation = userLocation;
+    if (routeWaypoints?.isNotEmpty == true) {
+      startLocation = routeWaypoints!.first;
+      endLocation = routeWaypoints.last;
+    }
 
     return MarkerLayer(
       markers: [
-        if (routeWaypoints?.isNotEmpty == true) ...[
-          Marker(
-            point: routeWaypoints!.first.toLatLng(),
-            child: const _StartRouteMarker(),
-          ),
-          Marker(
-            point: routeWaypoints.last.toLatLng(),
-            child: const _EndRouteMarker(),
-          ),
-        ],
+        Marker(
+          point: startLocation.toLatLng(),
+          child: const _StartRouteMarker(),
+        ),
+        Marker(
+          point: endLocation.toLatLng(),
+          child: const _EndRouteMarker(),
+        ),
       ],
     );
   }
