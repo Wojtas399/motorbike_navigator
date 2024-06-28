@@ -1,15 +1,21 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 import '../../../entity/coordinates.dart';
 import '../../../env.dart';
+import '../../config/app_router.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 
-class DriveSummaryMapPreview extends StatelessWidget {
-  const DriveSummaryMapPreview({super.key});
+class DriveSummaryRoute extends StatelessWidget {
+  const DriveSummaryRoute({super.key});
+
+  void _onTap(BuildContext context) {
+    context.pushRoute(const RoutePreviewRoute());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +34,12 @@ class DriveSummaryMapPreview extends StatelessWidget {
 
     return FlutterMap(
       options: MapOptions(
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.none,
+        ),
         initialCenter: routeWaypoints.first.toLatLng(),
         initialCameraFit: cameraFit,
+        onTap: (_, __) => _onTap(context),
       ),
       children: [
         TileLayer(

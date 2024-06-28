@@ -15,5 +15,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: DriveSummaryRoute.page,
         ),
+        AutoRoute(
+          page: RoutePreviewRoute.page,
+        ),
       ];
 }

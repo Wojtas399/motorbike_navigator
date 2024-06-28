@@ -7,7 +7,7 @@ import '../../cubit/drive/drive_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../service/dialog_service.dart';
 import 'drive_summary_data.dart';
-import 'drive_summary_map_preview.dart';
+import 'drive_summary_route.dart';
 
 @RoutePage()
 class DriveSummaryScreen extends StatelessWidget {
@@ -24,7 +24,7 @@ class DriveSummaryScreen extends StatelessWidget {
               SizedBox(
                 height: 400,
                 width: double.infinity,
-                child: DriveSummaryMapPreview(),
+                child: DriveSummaryRoute(),
               ),
               GapVertical24(),
               DriveSummaryData(),
