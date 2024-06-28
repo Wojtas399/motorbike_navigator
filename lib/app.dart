@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:motorbike_navigator/ui/config/app_router.dart';
 
-import 'ui/home.dart';
+import 'dependency_injection.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: getIt<AppRouter>().config(
+        navigatorObservers: () => [
+          HeroController(),
+        ],
+      ),
       title: 'Motorbike navigator',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
@@ -23,7 +29,6 @@ class App extends StatelessWidget {
       supportedLocales: const [
         Locale('pl'),
       ],
-      home: const Home(),
     );
   }
 }

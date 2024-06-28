@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../../component/gap.dart';
@@ -5,8 +6,9 @@ import '../../extensions/context_extensions.dart';
 import 'drive_summary_data.dart';
 import 'drive_summary_map_preview.dart';
 
-class DriveSummary extends StatelessWidget {
-  const DriveSummary({super.key});
+@RoutePage()
+class DriveSummaryScreen extends StatelessWidget {
+  const DriveSummaryScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -35,7 +37,7 @@ class _DriveActions extends StatelessWidget {
   const _DriveActions();
 
   void _onDelete(BuildContext context) {
-    //TODO
+    //TODO: We have to ask user if he surely want to delete the drive.
   }
 
   void _onSave(BuildContext context) {

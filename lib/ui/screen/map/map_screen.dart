@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,9 +6,10 @@ import '../../../dependency_injection.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
 import '../../cubit/map/map_cubit.dart';
-import '../drive_summary/drive_summary.dart';
+import '../drive_summary/drive_summary_screen.dart';
 import 'map_content.dart';
 
+@RoutePage()
 class MapScreen extends StatelessWidget {
   const MapScreen({super.key});
 
@@ -39,7 +41,7 @@ class _DriveCubitListener extends StatelessWidget {
         MaterialPageRoute(
           builder: (_) => BlocProvider.value(
             value: context.read<DriveCubit>(),
-            child: const DriveSummary(),
+            child: const DriveSummaryScreen(),
           ),
         ),
       );
