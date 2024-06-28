@@ -20,5 +20,7 @@
   "mapSearch": "Szukaj...",
   "close": "Zamknij",
   "delete": "Usuń",
-  "save": "Zapisz"
+  "save": "Zapisz",
+  "cancel": "Anuluj",
+  "confirm": "Potwierdź"
 }
