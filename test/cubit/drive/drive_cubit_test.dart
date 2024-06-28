@@ -21,7 +21,17 @@ void main() {
 
   blocTest(
     'startDrive, '
-    'should start timer and should listen to current position',
+    'startLocation is null, '
+    'should finish method call',
+    build: () => createCubit(),
+    act: (cubit) => cubit.startDrive(startLocation: null),
+    expect: () => [],
+  );
+
+  blocTest(
+    'startDrive, '
+    'should insert start location to waypoints, should start timer and should '
+    'listen to position changes',
     build: () => createCubit(),
     setUp: () {
       when(
@@ -46,19 +56,25 @@ void main() {
       );
       when(
         () => mapService.calculateDistanceInKm(
-          location1: const Coordinates(51.2, 19.2),
+          location1: const Coordinates(50, 18),
           location2: const Coordinates(50.1, 18.1),
+        ),
+      ).thenReturn(5);
+      when(
+        () => mapService.calculateDistanceInKm(
+          location1: const Coordinates(50.1, 18.1),
+          location2: const Coordinates(51.2, 19.2),
         ),
       ).thenReturn(10);
       when(
         () => mapService.calculateDistanceInKm(
-          location1: const Coordinates(52.3, 20.3),
-          location2: const Coordinates(51.2, 19.2),
+          location1: const Coordinates(51.2, 19.2),
+          location2: const Coordinates(52.3, 20.3),
         ),
       ).thenReturn(20);
     },
     act: (cubit) async {
-      await cubit.startDrive();
+      cubit.startDrive(startLocation: const Coordinates(50, 18));
       await Future.delayed(
         const Duration(seconds: 2),
       );
@@ -66,31 +82,38 @@ void main() {
     expect: () => [
       const DriveState(
         status: DriveStateStatus.ongoing,
+        waypoints: [
+          Coordinates(50, 18),
+        ],
       ),
       const DriveState(
         status: DriveStateStatus.ongoing,
+        distanceInKm: 5,
         speedInKmPerH: 15 * 3.6,
         avgSpeedInKmPerH: 15 * 3.6,
         waypoints: [
+          Coordinates(50, 18),
           Coordinates(50.1, 18.1),
         ],
       ),
       const DriveState(
         status: DriveStateStatus.ongoing,
-        distanceInKm: 10,
+        distanceInKm: 15,
         speedInKmPerH: 20 * 3.6,
         avgSpeedInKmPerH: ((15 * 3.6) + (20 * 3.6)) / 2,
         waypoints: [
+          Coordinates(50, 18),
           Coordinates(50.1, 18.1),
           Coordinates(51.2, 19.2),
         ],
       ),
       const DriveState(
         status: DriveStateStatus.ongoing,
-        distanceInKm: 30,
+        distanceInKm: 35,
         speedInKmPerH: 25 * 3.6,
         avgSpeedInKmPerH: ((15 * 3.6) + (20 * 3.6) + (25 * 3.6)) / 3,
         waypoints: [
+          Coordinates(50, 18),
           Coordinates(50.1, 18.1),
           Coordinates(51.2, 19.2),
           Coordinates(52.3, 20.3),
@@ -99,10 +122,11 @@ void main() {
       const DriveState(
         status: DriveStateStatus.ongoing,
         duration: Duration(seconds: 1),
-        distanceInKm: 30,
+        distanceInKm: 35,
         speedInKmPerH: 25 * 3.6,
         avgSpeedInKmPerH: ((15 * 3.6) + (20 * 3.6) + (25 * 3.6)) / 3,
         waypoints: [
+          Coordinates(50, 18),
           Coordinates(50.1, 18.1),
           Coordinates(51.2, 19.2),
           Coordinates(52.3, 20.3),
@@ -111,10 +135,11 @@ void main() {
       const DriveState(
         status: DriveStateStatus.ongoing,
         duration: Duration(seconds: 2),
-        distanceInKm: 30,
+        distanceInKm: 35,
         speedInKmPerH: 25 * 3.6,
         avgSpeedInKmPerH: ((15 * 3.6) + (20 * 3.6) + (25 * 3.6)) / 3,
         waypoints: [
+          Coordinates(50, 18),
           Coordinates(50.1, 18.1),
           Coordinates(51.2, 19.2),
           Coordinates(52.3, 20.3),
@@ -128,7 +153,7 @@ void main() {
           location1: any(named: 'location1'),
           location2: any(named: 'location2'),
         ),
-      ).called(2);
+      ).called(3);
     },
   );
 
@@ -141,6 +166,30 @@ void main() {
       const DriveState(
         status: DriveStateStatus.finished,
       ),
+    ],
+  );
+
+  blocTest(
+    'resetDrive, '
+    'should set default state',
+    build: () => createCubit(),
+    setUp: () {
+      locationService.mockGetPosition(expectedPosition: null);
+    },
+    act: (cubit) {
+      cubit.startDrive(
+        startLocation: const Coordinates(50, 18),
+      );
+      cubit.resetDrive();
+    },
+    expect: () => [
+      const DriveState(
+        status: DriveStateStatus.ongoing,
+        waypoints: [
+          Coordinates(50, 18),
+        ],
+      ),
+      const DriveState(),
     ],
   );
 }

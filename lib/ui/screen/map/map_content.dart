@@ -192,7 +192,9 @@ class _StartRideButton extends StatelessWidget {
   const _StartRideButton();
 
   void _onPressed(BuildContext context) {
-    context.read<DriveCubit>().startDrive();
+    context.read<DriveCubit>().startDrive(
+          startLocation: context.read<MapCubit>().state.userLocation,
+        );
   }
 
   @override

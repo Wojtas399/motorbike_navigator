@@ -5,7 +5,6 @@ import 'package:flutter_map/flutter_map.dart';
 import '../../../entity/coordinates.dart';
 import '../../../env.dart';
 import '../../cubit/drive/drive_cubit.dart';
-import '../../cubit/map/map_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 
@@ -14,26 +13,22 @@ class DriveSummaryMapPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Coordinates>? routeWaypoints =
+    final List<Coordinates> routeWaypoints =
         context.read<DriveCubit>().state.waypoints;
     CameraFit? cameraFit;
-    Coordinates initialCenter = context.read<MapCubit>().state.userLocation!;
-    if (routeWaypoints?.isNotEmpty == true) {
-      initialCenter = routeWaypoints!.first;
-      if (routeWaypoints.length >= 2) {
-        cameraFit = CameraFit.bounds(
-          bounds: LatLngBounds(
-            routeWaypoints.first.toLatLng(),
-            routeWaypoints.last.toLatLng(),
-          ),
-          padding: const EdgeInsets.all(128),
-        );
-      }
+    if (routeWaypoints.toSet().length >= 2) {
+      cameraFit = CameraFit.bounds(
+        bounds: LatLngBounds(
+          routeWaypoints.first.toLatLng(),
+          routeWaypoints.last.toLatLng(),
+        ),
+        padding: const EdgeInsets.all(128),
+      );
     }
 
     return FlutterMap(
       options: MapOptions(
-        initialCenter: initialCenter.toLatLng(),
+        initialCenter: routeWaypoints.first.toLatLng(),
         initialCameraFit: cameraFit,
       ),
       children: [
@@ -52,12 +47,12 @@ class _PolylineLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Coordinates>? routeWaypoints =
+    final List<Coordinates> routeWaypoints =
         context.read<DriveCubit>().state.waypoints;
 
     return PolylineLayer(
       polylines: [
-        if (routeWaypoints != null)
+        if (routeWaypoints.length >= 2)
           Polyline(
             points: routeWaypoints.map((point) => point.toLatLng()).toList(),
             strokeWidth: 6,
@@ -73,26 +68,17 @@ class _MarkerLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Coordinates>? routeWaypoints = context.select(
-      (DriveCubit cubit) => cubit.state.waypoints,
-    );
-    final Coordinates userLocation =
-        context.read<MapCubit>().state.userLocation!;
-    Coordinates startLocation = userLocation;
-    Coordinates endLocation = userLocation;
-    if (routeWaypoints?.isNotEmpty == true) {
-      startLocation = routeWaypoints!.first;
-      endLocation = routeWaypoints.last;
-    }
+    final List<Coordinates> routeWaypoints =
+        context.read<DriveCubit>().state.waypoints;
 
     return MarkerLayer(
       markers: [
         Marker(
-          point: startLocation.toLatLng(),
+          point: routeWaypoints.first.toLatLng(),
           child: const _StartRouteMarker(),
         ),
         Marker(
-          point: endLocation.toLatLng(),
+          point: routeWaypoints.last.toLatLng(),
           child: const _EndRouteMarker(),
         ),
       ],

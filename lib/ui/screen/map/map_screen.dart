@@ -39,15 +39,8 @@ class _DriveCubitListener extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => MultiBlocProvider(
-            providers: [
-              BlocProvider.value(
-                value: context.read<MapCubit>(),
-              ),
-              BlocProvider.value(
-                value: context.read<DriveCubit>(),
-              ),
-            ],
+          builder: (_) => BlocProvider.value(
+            value: context.read<DriveCubit>(),
             child: const DriveSummaryScreen(),
           ),
         ),

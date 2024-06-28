@@ -30,12 +30,16 @@ class DriveCubit extends Cubit<DriveState> {
     return super.close();
   }
 
-  Future<void> startDrive() async {
+  void startDrive({
+    required Coordinates? startLocation,
+  }) {
+    if (startLocation == null) return;
     emit(state.copyWith(
       status: DriveStateStatus.ongoing,
+      waypoints: [startLocation],
     ));
     _startTimer();
-    await _listenToDistanceAndSpeed();
+    _listenPosition();
   }
 
   void finishDrive() {
@@ -45,6 +49,10 @@ class DriveCubit extends Cubit<DriveState> {
     emit(state.copyWith(
       status: DriveStateStatus.finished,
     ));
+  }
+
+  void resetDrive() {
+    emit(const DriveState());
   }
 
   void _startTimer() {
@@ -58,23 +66,23 @@ class DriveCubit extends Cubit<DriveState> {
     );
   }
 
-  Future<void> _listenToDistanceAndSpeed() async {
+  void _listenPosition() {
     _positionListener =
         _locationService.getPosition().listen(_onPositionUpdated);
   }
 
   void _onPositionUpdated(Position? position) {
     if (position == null) return;
-    List<Coordinates> updatedWaypoints = [...?state.waypoints];
+    List<Coordinates> updatedWaypoints = [...state.waypoints];
     double distanceFromPreviousLocation = 0;
     if (updatedWaypoints.isNotEmpty) {
       distanceFromPreviousLocation = _mapService.calculateDistanceInKm(
-        location1: position.coordinates,
-        location2: updatedWaypoints.last,
+        location1: updatedWaypoints.last,
+        location2: position.coordinates,
       );
     }
-    _speedsInKmPerH.add(position.speedInMetersPerSecond * 3.6);
     updatedWaypoints.add(position.coordinates);
+    _speedsInKmPerH.add(position.speedInMetersPerSecond * 3.6);
     emit(state.copyWith(
       distanceInKm: state.distanceInKm + distanceFromPreviousLocation,
       speedInKmPerH: position.speedInMetersPerSecond * 3.6,

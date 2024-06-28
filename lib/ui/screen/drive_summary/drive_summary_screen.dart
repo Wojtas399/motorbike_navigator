@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../component/gap.dart';
+import '../../cubit/drive/drive_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../service/dialog_service.dart';
 import 'drive_summary_data.dart';
@@ -43,8 +45,8 @@ class _DriveActions extends StatelessWidget {
       message: context.str.driveDeleteConfirmationMessage,
     );
     if (deleteConfirmation == true && context.mounted) {
-      //TODO: Should call method from DriveCubit to delete drive
-      context.maybePop();
+      await context.maybePop();
+      if (context.mounted) context.read<DriveCubit>().resetDrive();
     }
   }
 
