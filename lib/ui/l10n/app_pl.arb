@@ -12,6 +12,8 @@
   "driveDuration": "Czas trwania",
   "driveSpeed": "Prędkość",
   "driveAvgSpeed": "Średnia prędkość",
+  "driveDeleteConfirmationTitle": "Potwierdzenie usunięcia",
+  "driveDeleteConfirmationMessage": "Czy na pewno chcesz usunąć tę aktywność?",
   "@----------COMMON----------": {},
   "map": "Mapa",
   "saved": "Zapisane",

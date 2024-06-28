@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../component/gap.dart';
 import '../../extensions/context_extensions.dart';
+import '../../service/dialog_service.dart';
 import 'drive_summary_data.dart';
 import 'drive_summary_map_preview.dart';
 
@@ -36,12 +37,19 @@ class DriveSummaryScreen extends StatelessWidget {
 class _DriveActions extends StatelessWidget {
   const _DriveActions();
 
-  void _onDelete(BuildContext context) {
-    //TODO: We have to ask user if he surely want to delete the drive.
+  Future<void> _onDelete(BuildContext context) async {
+    final bool deleteConfirmation = await askForConfirmation(
+      title: context.str.driveDeleteConfirmationTitle,
+      message: context.str.driveDeleteConfirmationMessage,
+    );
+    if (deleteConfirmation == true && context.mounted) {
+      //TODO: Should call method from DriveCubit to delete drive
+      context.maybePop();
+    }
   }
 
   void _onSave(BuildContext context) {
-    //TODO
+    //TODO: Should call method from DriveCubit to save drive
   }
 
   @override
