@@ -1,4 +1,7 @@
 {
+  "@----------SIGN_IN----------": {},
+  "signInTitle": "Logowanie",
+  "signInWithGoogleLabel": "Zaloguj z Google",
   "@----------MAP----------": {},
   "mapSelectStartPlace": "Wybierz miejsce startowe",
   "mapSelectDestination": "Wybierz miejsce docelowe",
