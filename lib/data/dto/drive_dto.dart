@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'coordinates_dto.dart';
+
 part 'drive_dto.freezed.dart';
 part 'drive_dto.g.dart';
 
@@ -12,7 +14,7 @@ class DriveDto with _$DriveDto {
     required double distanceInKm,
     required int durationInSeconds,
     required double avgSpeedInKmPerH,
-    required List<List<double>> waypoints,
+    required List<CoordinatesDto> waypoints,
   }) = _DriveDto;
 
   factory DriveDto.fromJson(Map<String, Object?> json) =>
