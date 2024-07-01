@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:motorbike_navigator/ui/config/app_router.dart';
 
 import 'dependency_injection.dart';
+import 'ui/config/app_router.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

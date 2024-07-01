@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:motorbike_navigator/ui/component/text.dart';
 
 import '../extensions/context_extensions.dart';
+import 'text.dart';
 
 class ConfirmationDialogComponent extends StatelessWidget {
   final String title;

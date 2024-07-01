@@ -152,8 +152,8 @@ class _MapState extends State<_Map> {
         ),
         BlocListener<DriveCubit, DriveState>(
           listenWhen: (prevState, currState) =>
-              currState.waypoints?.isNotEmpty == true,
-          listener: (_, state) => _onUserPositionChanged(state.waypoints!.last),
+              currState.waypoints.isNotEmpty == true,
+          listener: (_, state) => _onUserPositionChanged(state.waypoints.last),
         ),
       ],
       child: FlutterMap(
