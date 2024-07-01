@@ -14,12 +14,14 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: MapRoute.page,
-        ),
-        AutoRoute(
-          page: DriveSummaryRoute.page,
-        ),
-        AutoRoute(
-          page: RoutePreviewRoute.page,
+          children: [
+            AutoRoute(
+              page: DriveSummaryRoute.page,
+            ),
+            AutoRoute(
+              page: RoutePreviewRoute.page,
+            ),
+          ],
         ),
       ];
 }
