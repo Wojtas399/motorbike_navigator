@@ -36,3 +36,4 @@ Runner/GeneratedPluginRegistrant.*
 # Additional
 Podfile
 Podfile.lock
+Keys.xcconfig
