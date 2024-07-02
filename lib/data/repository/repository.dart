@@ -11,10 +11,6 @@ abstract class Repository<T extends Entity> {
 
   bool get isRepositoryStateEmpty => _repositoryState$.value.isEmpty == true;
 
-  void setEntities(List<T> entities) {
-    _repositoryState$.add(entities);
-  }
-
   void addEntity(T entity) {
     final bool doesEntityExist = _repositoryState$.value.firstWhereOrNull(
           (element) => element.id == entity.id,
@@ -26,6 +22,21 @@ abstract class Repository<T extends Entity> {
     final List<T> entities = [..._repositoryState$.value];
     entities.add(entity);
     _repositoryState$.add(entities);
+  }
+
+  void addEntities(Iterable<T> entities) {
+    if (entities.isEmpty) {
+      throw '[Repository] List of entities (type $T) to add is empty';
+    }
+    final List<T> updatedEntities = [..._repositoryState$.value];
+    for (final entity in entities) {
+      final bool doesEntityExist = updatedEntities.firstWhereOrNull(
+            (element) => element.id == entity.id,
+          ) !=
+          null;
+      if (!doesEntityExist) updatedEntities.add(entity);
+    }
+    _repositoryState$.add(updatedEntities);
   }
 
   void updateEntity(T entity) {
