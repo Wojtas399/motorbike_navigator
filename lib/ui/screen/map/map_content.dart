@@ -11,6 +11,8 @@ import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
+import '../../cubit/logged_user/logged_user_cubit.dart';
+import '../../cubit/logged_user/logged_user_state.dart';
 import '../../cubit/map/map_cubit.dart';
 import '../../cubit/map/map_state.dart';
 import '../../extensions/context_extensions.dart';
@@ -24,11 +26,16 @@ class MapContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final LoggedUserState loggedUserState = context.select(
+      (LoggedUserCubit cubit) => cubit.state,
+    );
     final MapStatus cubitStatus = context.select(
       (MapCubit cubit) => cubit.state.status,
     );
 
-    return cubitStatus.isLoading ? const _LoadingIndicator() : const _Content();
+    return loggedUserState is LoggedUserStateLoading || cubitStatus.isLoading
+        ? const _LoadingIndicator()
+        : const _Content();
   }
 }
 

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../dependency_injection.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
+import '../../cubit/logged_user/logged_user_cubit.dart';
 import '../../cubit/map/map_cubit.dart';
 import '../drive_summary/drive_summary_screen.dart';
 import 'map_content.dart';
@@ -16,6 +17,9 @@ class MapScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (_) => getIt.get<LoggedUserCubit>()..initialize(),
+          ),
           BlocProvider(
             create: (_) => getIt.get<MapCubit>()..initialize(),
           ),
