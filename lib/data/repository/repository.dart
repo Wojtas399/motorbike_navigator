@@ -7,7 +7,7 @@ abstract class Repository<T extends Entity> {
   final BehaviorSubject<List<T>> _repositoryState$ =
       BehaviorSubject<List<T>>.seeded([]);
 
-  Stream<List<T>?> get repositoryState$ => _repositoryState$.stream;
+  Stream<List<T>> get repositoryState$ => _repositoryState$.stream;
 
   bool get isRepositoryStateEmpty => _repositoryState$.value.isEmpty == true;
 
@@ -26,5 +26,16 @@ abstract class Repository<T extends Entity> {
     final List<T> entities = [..._repositoryState$.value];
     entities.add(entity);
     _repositoryState$.add(entities);
+  }
+
+  void updateEntity(T entity) {
+    final List<T> entities = [..._repositoryState$.value];
+    final int entityIndex = entities.indexWhere(
+      (element) => element.id == entity.id,
+    );
+    if (entityIndex >= 0) {
+      entities[entityIndex] = entity;
+      _repositoryState$.add(entities);
+    }
   }
 }

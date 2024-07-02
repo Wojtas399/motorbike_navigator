@@ -6,7 +6,9 @@ import 'firebase_collections.dart';
 
 @injectable
 class FirebaseUserService {
-  Future<UserDto?> fetchUserById({required String userId}) async {
+  Future<UserDto?> fetchUserById({
+    required String userId,
+  }) async {
     final snapshot = await getUsersRef().doc(userId).get();
     return snapshot.data();
   }
