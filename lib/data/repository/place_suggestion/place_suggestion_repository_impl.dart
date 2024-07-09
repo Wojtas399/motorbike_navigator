@@ -9,8 +9,12 @@ import 'place_suggestion_repository.dart';
 @LazySingleton(as: PlaceSuggestionRepository)
 class PlaceSuggestionRepositoryImpl implements PlaceSuggestionRepository {
   final PlaceSuggestionApiService _placeSuggestionApiService;
+  final PlaceSuggestionMapper _placeSuggestionMapper;
 
-  PlaceSuggestionRepositoryImpl(this._placeSuggestionApiService);
+  PlaceSuggestionRepositoryImpl(
+    this._placeSuggestionApiService,
+    this._placeSuggestionMapper,
+  );
 
   @override
   Future<List<PlaceSuggestion>> searchPlaces({
@@ -22,6 +26,6 @@ class PlaceSuggestionRepositoryImpl implements PlaceSuggestionRepository {
       query: query,
       limit: limit,
     );
-    return placeDtos.map(mapPlaceSuggestionFromDto).toList();
+    return placeDtos.map(_placeSuggestionMapper.mapFromDto).toList();
   }
 }

@@ -4,8 +4,10 @@ import 'package:motorbike_navigator/data/mapper/place_suggestion_mapper.dart';
 import 'package:motorbike_navigator/entity/place_suggestion.dart';
 
 void main() {
+  final mapper = PlaceSuggestionMapper();
+
   test(
-    'mapPlaceSuggestionFromDto, '
+    'mapFromDto, '
     'should map PlaceSuggestionDto object to PlaceSuggestion object',
     () {
       const String id = 'ps1';
@@ -22,7 +24,7 @@ void main() {
         fullAddress: fullAddress,
       );
 
-      final PlaceSuggestion object = mapPlaceSuggestionFromDto(dto);
+      final PlaceSuggestion object = mapper.mapFromDto(dto);
 
       expect(object, expectedObject);
     },
