@@ -28,7 +28,9 @@ class MapScreen extends StatelessWidget {
           ),
         ],
         child: const _DriveCubitListener(
-          child: MapContent(),
+          child: Scaffold(
+            body: MapContent(),
+          ),
         ),
       );
 }

@@ -17,6 +17,7 @@
   "driveAvgSpeed": "Średnia prędkość",
   "driveDeleteConfirmationTitle": "Potwierdzenie usunięcia",
   "driveDeleteConfirmationMessage": "Czy na pewno chcesz usunąć tę aktywność?",
+  "driveSuccessfullySavedDrive": "Pomyślnie zapisano jazdę!",
   "@----------COMMON----------": {},
   "map": "Mapa",
   "saved": "Zapisane",
@@ -27,5 +28,6 @@
   "delete": "Usuń",
   "save": "Zapisz",
   "cancel": "Anuluj",
-  "confirm": "Potwierdź"
+  "confirm": "Potwierdź",
+  "loading": "Ładowanie"
 }

@@ -5,7 +5,7 @@ import '../screen/screens.dart';
 
 part 'app_router.gr.dart';
 
-@injectable
+@Singleton()
 @AutoRouterConfig()
 class AppRouter extends _$AppRouter {
   @override
