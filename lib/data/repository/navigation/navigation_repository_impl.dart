@@ -5,7 +5,7 @@ import '../../../entity/coordinates.dart';
 import '../../../entity/navigation.dart';
 import '../../api_service/navigation_api_service.dart';
 import '../../dto/navigation_dto.dart';
-import '../../mapper/navigation_mapper.dart';
+import '../../mapper/route_mapper.dart';
 import '../repository.dart';
 import 'navigation_repository.dart';
 
@@ -21,8 +21,8 @@ class NavigationRepositoryImpl extends Repository<Navigation>
     required Coordinates startLocation,
     required Coordinates endLocation,
   }) async {
-    final List<Navigation>? repoState = await repositoryState$.first;
-    final Navigation? existingNavigation = repoState?.firstWhereOrNull(
+    final List<Navigation> repoState = await repositoryState$.first;
+    final Navigation? existingNavigation = repoState.firstWhereOrNull(
       (Navigation navigation) =>
           navigation.startLocation == startLocation &&
           navigation.endLocation == endLocation,
@@ -46,10 +46,10 @@ class NavigationRepositoryImpl extends Repository<Navigation>
         long: endLocation.longitude,
       ),
     );
-    final Navigation navigation = mapNavigationFromDto(
+    final Navigation navigation = Navigation(
       startLocation: startLocation,
       endLocation: endLocation,
-      dto: navigationDto,
+      routes: navigationDto.routes.map(mapRouteFromDto).toList(),
     );
     addEntity(navigation);
     return navigation;
