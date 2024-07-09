@@ -14,6 +14,8 @@ import '../../mock/data/mapper/mock_drive_mapper.dart';
 void main() {
   final dbDriveService = MockFirebaseDriveService();
   final driveMapper = MockDriveMapper();
+  final driveCreator = DriveCreator();
+  final driveDtoCreator = DriveDtoCreator();
   late DriveRepositoryImpl repositoryImpl;
 
   setUp(() {
@@ -32,20 +34,20 @@ void main() {
     () async {
       const String userId = 'u1';
       final List<DriveDto> fetchedDriveDtos = [
-        createDriveDto(id: 'd3', userId: userId),
-        createDriveDto(id: 'd4', userId: userId),
+        driveDtoCreator.create(id: 'd3', userId: userId),
+        driveDtoCreator.create(id: 'd4', userId: userId),
       ];
       final List<Drive> fetchedDrives = [
-        createDrive(id: 'd3', userId: userId),
-        createDrive(id: 'd4', userId: userId),
+        driveCreator.create(id: 'd3', userId: userId),
+        driveCreator.create(id: 'd4', userId: userId),
       ];
       final List<Drive> existingDrives = [
-        createDrive(id: 'd1', userId: userId),
-        createDrive(id: 'd2', userId: 'u2'),
-        createDrive(id: 'd5', userId: 'u3'),
+        driveCreator.create(id: 'd1', userId: userId),
+        driveCreator.create(id: 'd2', userId: 'u2'),
+        driveCreator.create(id: 'd5', userId: 'u3'),
       ];
       final List<Drive> expectedDrives = [
-        createDrive(id: 'd1', userId: userId),
+        driveCreator.create(id: 'd1', userId: userId),
         ...fetchedDrives,
       ];
       final List<Drive> expectedRepositoryState = [
@@ -112,8 +114,8 @@ void main() {
         waypoints: waypoints,
       );
       final List<Drive> existingDrives = [
-        createDrive(id: 'd2', userId: userId),
-        createDrive(id: 'd3', userId: 'u2'),
+        driveCreator.create(id: 'd2', userId: userId),
+        driveCreator.create(id: 'd3', userId: 'u2'),
       ];
       final List<Drive> expectedRepoState = [
         ...existingDrives,

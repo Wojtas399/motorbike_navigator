@@ -12,6 +12,8 @@ import '../../mock/data/mapper/mock_place_mapper.dart';
 void main() {
   final placeApiService = MockPlaceApiService();
   final placeMapper = MockPlaceMapper();
+  final placeCreator = PlaceCreator();
+  final placeDtoCreator = PlaceDtoCreator();
   late PlaceRepositoryImpl repositoryImpl;
 
   setUp(() {
@@ -28,11 +30,12 @@ void main() {
     'place already exists in repo, '
     'should return place existing in repo',
     () async {
-      final Place expectedPlace = createPlace(id: 'p1', name: 'place 1');
+      final Place expectedPlace =
+          placeCreator.create(id: 'p1', name: 'place 1');
       final List<Place> existingPlaces = [
         expectedPlace,
-        createPlace(id: 'p2', name: 'place 2'),
-        createPlace(id: 'p3', name: 'place 3'),
+        placeCreator.create(id: 'p2', name: 'place 2'),
+        placeCreator.create(id: 'p3', name: 'place 3'),
       ];
       repositoryImpl.addEntities(existingPlaces);
 
@@ -48,17 +51,17 @@ void main() {
     'should fetch place from db, add it to repo and return it',
     () async {
       const String placeId = 'p1';
-      PlaceDto expectedPlaceDto = createPlaceDto(
+      PlaceDto expectedPlaceDto = placeDtoCreator.create(
         id: placeId,
         name: 'place 1',
       );
-      final Place expectedPlace = createPlace(
+      final Place expectedPlace = placeCreator.create(
         id: placeId,
         name: 'place 1',
       );
       final List<Place> existingPlaces = [
-        createPlace(id: 'p2', name: 'place 2'),
-        createPlace(id: 'p3', name: 'place 3'),
+        placeCreator.create(id: 'p2', name: 'place 2'),
+        placeCreator.create(id: 'p3', name: 'place 3'),
       ];
       placeApiService.mockFetchPlaceById(result: expectedPlaceDto);
       placeMapper.mockMapFromDto(expectedPlace: expectedPlace);

@@ -6,9 +6,8 @@ import '../../../creator/place_dto_creator.dart';
 
 class MockPlaceMapper extends Mock implements PlaceMapper {
   MockPlaceMapper() {
-    registerFallbackValue(
-      createPlaceDto(),
-    );
+    final placeDtoCreator = PlaceDtoCreator();
+    registerFallbackValue(placeDtoCreator.create());
   }
 
   void mockMapFromDto({

@@ -13,6 +13,7 @@ import '../../mock/data/repository/mock_place_repository.dart';
 void main() {
   final placeRepository = MockPlaceRepository();
   final navigationRepository = MockNavigationRepository();
+  final placeCreator = PlaceCreator();
 
   RouteCubit createCubit() => RouteCubit(
         placeRepository,
@@ -128,7 +129,7 @@ void main() {
       when(
         () => placeRepository.getPlaceById('p2'),
       ).thenAnswer(
-        (_) => Future.value(createPlace(
+        (_) => Future.value(placeCreator.create(
           coordinates: const Coordinates(51.2, 19.2),
         )),
       );
@@ -166,7 +167,7 @@ void main() {
       when(
         () => placeRepository.getPlaceById('p1'),
       ).thenAnswer(
-        (_) => Future.value(createPlace(
+        (_) => Future.value(placeCreator.create(
           coordinates: const Coordinates(51.2, 19.2),
         )),
       );
@@ -207,14 +208,14 @@ void main() {
       when(
         () => placeRepository.getPlaceById('p1'),
       ).thenAnswer(
-        (_) => Future.value(createPlace(
+        (_) => Future.value(placeCreator.create(
           coordinates: const Coordinates(50.1, 18.1),
         )),
       );
       when(
         () => placeRepository.getPlaceById('p2'),
       ).thenAnswer(
-        (_) => Future.value(createPlace(
+        (_) => Future.value(placeCreator.create(
           coordinates: const Coordinates(51.2, 19.2),
         )),
       );
@@ -261,14 +262,14 @@ void main() {
       when(
         () => placeRepository.getPlaceById('p1'),
       ).thenAnswer(
-        (_) => Future.value(createPlace(
+        (_) => Future.value(placeCreator.create(
           coordinates: const Coordinates(50.1, 18.1),
         )),
       );
       when(
         () => placeRepository.getPlaceById('p2'),
       ).thenAnswer(
-        (_) => Future.value(createPlace(
+        (_) => Future.value(placeCreator.create(
           coordinates: const Coordinates(51.2, 19.2),
         )),
       );
@@ -319,7 +320,7 @@ void main() {
       when(
         () => placeRepository.getPlaceById('p1'),
       ).thenAnswer(
-        (_) => Future.value(createPlace(
+        (_) => Future.value(placeCreator.create(
           id: 'p1',
           coordinates: const Coordinates(50.1, 18.1),
         )),
@@ -327,7 +328,7 @@ void main() {
       when(
         () => placeRepository.getPlaceById('p2'),
       ).thenAnswer(
-        (_) => Future.value(createPlace(
+        (_) => Future.value(placeCreator.create(
           id: 'p2',
           coordinates: const Coordinates(51.2, 19.2),
         )),
@@ -407,7 +408,7 @@ void main() {
       when(
         () => placeRepository.getPlaceById('p1'),
       ).thenAnswer(
-        (_) => Future.value(createPlace(
+        (_) => Future.value(placeCreator.create(
           id: 'p1',
           coordinates: const Coordinates(50.1, 18.1),
         )),
@@ -415,7 +416,7 @@ void main() {
       when(
         () => placeRepository.getPlaceById('p2'),
       ).thenAnswer(
-        (_) => Future.value(createPlace(
+        (_) => Future.value(placeCreator.create(
           id: 'p2',
           coordinates: const Coordinates(51.2, 19.2),
         )),
