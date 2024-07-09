@@ -42,8 +42,8 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     final List<CoordinatesDto> waypointDtos = waypoints
         .map(
           (waypoint) => CoordinatesDto(
-            lat: waypoint.latitude,
-            long: waypoint.longitude,
+            latitude: waypoint.latitude,
+            longitude: waypoint.longitude,
           ),
         )
         .toList();

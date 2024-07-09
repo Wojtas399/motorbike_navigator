@@ -9,8 +9,8 @@ void main() {
   const int durationInSeconds = 500000;
   const double avgSpeedInKmPerH = 45.3;
   const List<CoordinatesDto> waypoints = [
-    CoordinatesDto(lat: 50, long: 19),
-    CoordinatesDto(lat: 51, long: 20),
+    CoordinatesDto(latitude: 50, longitude: 19),
+    CoordinatesDto(latitude: 51, longitude: 20),
   ];
   final Map<String, Object?> driveJson = {
     'distanceInKm': distanceInKm,

@@ -2,16 +2,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
 
 void main() {
-  const double long = 50.2;
-  const double lat = 51.2;
-  const List<double> coordinatesList = [long, lat];
-  const CoordinatesDto coordinatesDto = CoordinatesDto(lat: lat, long: long);
+  const double latitude = 51.2;
+  const double longitude = 50.2;
+  const Map<String, Object?> coordinatesJson = {
+    'latitude': latitude,
+    'longitude': longitude,
+  };
+  const CoordinatesDto coordinatesDto = CoordinatesDto(
+    latitude: latitude,
+    longitude: longitude,
+  );
 
   test(
     'fromJson, '
-    'should map list of coordinates to CoordinatesDto object',
+    'should map json object to CoordinatesDto object',
     () {
-      final CoordinatesDto dto = CoordinatesDto.fromJson(coordinatesList);
+      final CoordinatesDto dto = CoordinatesDto.fromJson(coordinatesJson);
 
       expect(dto, coordinatesDto);
     },
@@ -19,11 +25,11 @@ void main() {
 
   test(
     'toJson, '
-    'should map CoordinatesDto object to list of coordinates',
+    'should map CoordinatesDto object to json object',
     () {
-      final List<double> list = coordinatesDto.toJson();
+      final Map<String, Object?> json = coordinatesDto.toJson();
 
-      expect(list, coordinatesList);
+      expect(json, coordinatesJson);
     },
   );
 }

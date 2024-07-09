@@ -4,6 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../data/repository/auth/auth_repository.dart';
+import '../../../data/repository/drive/drive_repository.dart';
 import '../../../entity/coordinates.dart';
 import '../../../entity/position.dart';
 import '../../service/location_service.dart';
@@ -14,6 +16,8 @@ import 'drive_state.dart';
 class DriveCubit extends Cubit<DriveState> {
   final LocationService _locationService;
   final MapService _mapService;
+  final AuthRepository _authRepository;
+  final DriveRepository _driveRepository;
   Timer? _timer;
   StreamSubscription<Position?>? _positionListener;
   List<double> _speedsInKmPerH = [];
@@ -21,6 +25,8 @@ class DriveCubit extends Cubit<DriveState> {
   DriveCubit(
     this._locationService,
     this._mapService,
+    this._authRepository,
+    this._driveRepository,
   ) : super(const DriveState());
 
   @override
@@ -48,6 +54,30 @@ class DriveCubit extends Cubit<DriveState> {
     _speedsInKmPerH = [];
     emit(state.copyWith(
       status: DriveStateStatus.finished,
+    ));
+  }
+
+  Future<void> saveDrive() async {
+    if (!state.haveDriveParamsBeenChanged ||
+        state.status != DriveStateStatus.finished) {
+      return;
+    }
+    final String? loggedUserId = await _authRepository.loggedUserId$.first;
+    if (loggedUserId == null) {
+      throw '[DriveCubit] Cannot find logged user';
+    }
+    emit(state.copyWith(
+      status: DriveStateStatus.saving,
+    ));
+    await _driveRepository.addDrive(
+      userId: loggedUserId,
+      distanceInKm: state.distanceInKm,
+      durationInSeconds: state.duration.inSeconds,
+      avgSpeedInKmPerH: state.avgSpeedInKmPerH,
+      waypoints: state.waypoints,
+    );
+    emit(state.copyWith(
+      status: DriveStateStatus.saved,
     ));
   }
 

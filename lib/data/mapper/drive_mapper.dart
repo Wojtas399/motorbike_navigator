@@ -19,8 +19,8 @@ class DriveMapper extends Mapper<Drive, DriveDto> {
         waypoints: dto.waypoints
             .map(
               (coordinates) => Coordinates(
-                coordinates.lat,
-                coordinates.long,
+                coordinates.latitude,
+                coordinates.longitude,
               ),
             )
             .toList(),

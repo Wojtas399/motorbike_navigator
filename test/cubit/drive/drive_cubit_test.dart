@@ -6,17 +6,28 @@ import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/cubit/drive/drive_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/drive/drive_state.dart';
 
+import '../../mock/data/repository/mock_auth_repository.dart';
+import '../../mock/data/repository/mock_drive_repository.dart';
 import '../../mock/ui_service/mock_location_service.dart';
 import '../../mock/ui_service/mock_map_service.dart';
 
 void main() {
   final locationService = MockLocationService();
   final mapService = MockMapService();
-  DriveCubit createCubit() => DriveCubit(locationService, mapService);
+  final authRepository = MockAuthRepository();
+  final driveRepository = MockDriveRepository();
+  DriveCubit createCubit() => DriveCubit(
+        locationService,
+        mapService,
+        authRepository,
+        driveRepository,
+      );
 
   tearDown(() {
     reset(locationService);
     reset(mapService);
+    reset(authRepository);
+    reset(driveRepository);
   });
 
   blocTest(
@@ -167,6 +178,226 @@ void main() {
         status: DriveStateStatus.finished,
       ),
     ],
+  );
+
+  blocTest(
+    'saveDrive, '
+    'drive params are default, '
+    'should do nothing',
+    build: () => createCubit(),
+    act: (cubit) async => await cubit.saveDrive(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'saveDrive, '
+    'drive is not finished, '
+    'should do nothing',
+    build: () => createCubit(),
+    setUp: () {
+      locationService.mockGetPosition(
+        expectedPosition: const Position(
+          coordinates: Coordinates(50, 19),
+          speedInMetersPerSecond: 50,
+        ),
+      );
+      mapService.mockCalculateDistanceInKm(
+        expectedDistance: 10,
+      );
+    },
+    act: (cubit) async {
+      cubit.startDrive(
+        startLocation: const Coordinates(49, 18),
+      );
+      await cubit.saveDrive();
+    },
+    expect: () => [
+      const DriveState(
+        status: DriveStateStatus.ongoing,
+        waypoints: [Coordinates(49, 18)],
+      ),
+      const DriveState(
+        status: DriveStateStatus.ongoing,
+        distanceInKm: 10,
+        speedInKmPerH: 50 * 3.6,
+        avgSpeedInKmPerH: 50 * 3.6,
+        waypoints: [
+          Coordinates(49, 18),
+          Coordinates(50, 19),
+        ],
+      ),
+    ],
+  );
+
+  blocTest(
+    'saveDrive, '
+    'logged user does not exist, '
+    'should throw exception',
+    build: () => createCubit(),
+    setUp: () {
+      locationService.mockGetPosition(
+        expectedPosition: const Position(
+          coordinates: Coordinates(50, 19),
+          speedInMetersPerSecond: 50,
+        ),
+      );
+      mapService.mockCalculateDistanceInKm(
+        expectedDistance: 10,
+      );
+      authRepository.mockGetLoggedUserId();
+    },
+    act: (cubit) async {
+      cubit.startDrive(
+        startLocation: const Coordinates(49, 18),
+      );
+      await Future.delayed(const Duration(seconds: 1));
+      cubit.finishDrive();
+      await cubit.saveDrive();
+    },
+    expect: () => [
+      const DriveState(
+        status: DriveStateStatus.ongoing,
+        waypoints: [Coordinates(49, 18)],
+      ),
+      const DriveState(
+        status: DriveStateStatus.ongoing,
+        distanceInKm: 10,
+        speedInKmPerH: 50 * 3.6,
+        avgSpeedInKmPerH: 50 * 3.6,
+        waypoints: [
+          Coordinates(49, 18),
+          Coordinates(50, 19),
+        ],
+      ),
+      const DriveState(
+        status: DriveStateStatus.ongoing,
+        duration: Duration(seconds: 1),
+        distanceInKm: 10,
+        speedInKmPerH: 50 * 3.6,
+        avgSpeedInKmPerH: 50 * 3.6,
+        waypoints: [
+          Coordinates(49, 18),
+          Coordinates(50, 19),
+        ],
+      ),
+      const DriveState(
+        status: DriveStateStatus.finished,
+        duration: Duration(seconds: 1),
+        distanceInKm: 10,
+        speedInKmPerH: 50 * 3.6,
+        avgSpeedInKmPerH: 50 * 3.6,
+        waypoints: [
+          Coordinates(49, 18),
+          Coordinates(50, 19),
+        ],
+      ),
+    ],
+    errors: () => [
+      '[DriveCubit] Cannot find logged user',
+    ],
+    verify: (_) => verify(() => authRepository.loggedUserId$).called(1),
+  );
+
+  blocTest(
+    'saveDrive, '
+    'should call method from DriveRepository to add new drive',
+    build: () => createCubit(),
+    setUp: () {
+      locationService.mockGetPosition(
+        expectedPosition: const Position(
+          coordinates: Coordinates(50, 19),
+          speedInMetersPerSecond: 50,
+        ),
+      );
+      mapService.mockCalculateDistanceInKm(
+        expectedDistance: 10,
+      );
+      authRepository.mockGetLoggedUserId(expectedLoggedUserId: 'u1');
+      driveRepository.mockAddDrive();
+    },
+    act: (cubit) async {
+      cubit.startDrive(
+        startLocation: const Coordinates(49, 18),
+      );
+      await Future.delayed(const Duration(seconds: 1));
+      cubit.finishDrive();
+      await cubit.saveDrive();
+    },
+    expect: () => [
+      const DriveState(
+        status: DriveStateStatus.ongoing,
+        waypoints: [Coordinates(49, 18)],
+      ),
+      const DriveState(
+        status: DriveStateStatus.ongoing,
+        distanceInKm: 10,
+        speedInKmPerH: 50 * 3.6,
+        avgSpeedInKmPerH: 50 * 3.6,
+        waypoints: [
+          Coordinates(49, 18),
+          Coordinates(50, 19),
+        ],
+      ),
+      const DriveState(
+        status: DriveStateStatus.ongoing,
+        duration: Duration(seconds: 1),
+        distanceInKm: 10,
+        speedInKmPerH: 50 * 3.6,
+        avgSpeedInKmPerH: 50 * 3.6,
+        waypoints: [
+          Coordinates(49, 18),
+          Coordinates(50, 19),
+        ],
+      ),
+      const DriveState(
+        status: DriveStateStatus.finished,
+        duration: Duration(seconds: 1),
+        distanceInKm: 10,
+        speedInKmPerH: 50 * 3.6,
+        avgSpeedInKmPerH: 50 * 3.6,
+        waypoints: [
+          Coordinates(49, 18),
+          Coordinates(50, 19),
+        ],
+      ),
+      const DriveState(
+        status: DriveStateStatus.saving,
+        duration: Duration(seconds: 1),
+        distanceInKm: 10,
+        speedInKmPerH: 50 * 3.6,
+        avgSpeedInKmPerH: 50 * 3.6,
+        waypoints: [
+          Coordinates(49, 18),
+          Coordinates(50, 19),
+        ],
+      ),
+      const DriveState(
+        status: DriveStateStatus.saved,
+        duration: Duration(seconds: 1),
+        distanceInKm: 10,
+        speedInKmPerH: 50 * 3.6,
+        avgSpeedInKmPerH: 50 * 3.6,
+        waypoints: [
+          Coordinates(49, 18),
+          Coordinates(50, 19),
+        ],
+      ),
+    ],
+    verify: (_) {
+      verify(() => authRepository.loggedUserId$).called(1);
+      verify(
+        () => driveRepository.addDrive(
+          userId: 'u1',
+          distanceInKm: 10,
+          durationInSeconds: 1,
+          avgSpeedInKmPerH: 50 * 3.6,
+          waypoints: const [
+            Coordinates(49, 18),
+            Coordinates(50, 19),
+          ],
+        ),
+      ).called(1);
+    },
   );
 
   blocTest(

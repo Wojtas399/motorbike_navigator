@@ -6,7 +6,7 @@ import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
 
 void main() {
-  final DriveMapper mapper = DriveMapper();
+  const DriveMapper mapper = DriveMapper();
 
   test(
     'mapFromDto, '
@@ -22,8 +22,8 @@ void main() {
         Coordinates(51, 19),
       ];
       const List<CoordinatesDto> waypointsDto = [
-        CoordinatesDto(lat: 50, long: 18),
-        CoordinatesDto(lat: 51, long: 19),
+        CoordinatesDto(latitude: 50, longitude: 18),
+        CoordinatesDto(latitude: 51, longitude: 19),
       ];
       const DriveDto driveDto = DriveDto(
         id: id,

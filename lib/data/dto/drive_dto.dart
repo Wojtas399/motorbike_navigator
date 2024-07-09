@@ -17,7 +17,7 @@ class DriveDto with _$DriveDto {
     required double distanceInKm,
     required int durationInSeconds,
     required double avgSpeedInKmPerH,
-    @JsonKey(toJson: _mapWaypointsToListOfDoubles)
+    @JsonKey(toJson: _mapWaypointsToJsons)
     required List<CoordinatesDto> waypoints,
   }) = _DriveDto;
 
@@ -35,7 +35,7 @@ class DriveDto with _$DriveDto {
       );
 }
 
-List<List<double>> _mapWaypointsToListOfDoubles(
+List<Map<String, Object?>> _mapWaypointsToJsons(
   List<CoordinatesDto> waypoints,
 ) =>
     waypoints.map((waypoint) => waypoint.toJson()).toList();
