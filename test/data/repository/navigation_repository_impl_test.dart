@@ -8,13 +8,18 @@ import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/navigation.dart';
 
 import '../../mock/data/api_service/mock_navigation_api_service.dart';
+import '../../mock/data/mapper/mock_route_mapper.dart';
 
 void main() {
   final navigationApiService = MockNavigationApiService();
+  final routeMapper = MockRouteMapper();
   late NavigationRepositoryImpl repositoryImpl;
 
   setUp(() {
-    repositoryImpl = NavigationRepositoryImpl(navigationApiService);
+    repositoryImpl = NavigationRepositoryImpl(
+      navigationApiService,
+      routeMapper,
+    );
   });
 
   test(
@@ -68,6 +73,12 @@ void main() {
         ],
       );
       navigationApiService.mockFetchNavigation(navigationDto: navigationDto);
+      when(
+        () => routeMapper.mapFromDto(navigationDto.routes.first),
+      ).thenReturn(expectedNavigation.routes.first);
+      when(
+        () => routeMapper.mapFromDto(navigationDto.routes.last),
+      ).thenReturn(expectedNavigation.routes.last);
 
       final Navigation? navigation1 =
           await repositoryImpl.loadNavigationByStartAndEndLocations(

@@ -13,8 +13,12 @@ import 'navigation_repository.dart';
 class NavigationRepositoryImpl extends Repository<Navigation>
     implements NavigationRepository {
   final NavigationApiService _navigationApiService;
+  final RouteMapper _routeMapper;
 
-  NavigationRepositoryImpl(this._navigationApiService);
+  NavigationRepositoryImpl(
+    this._navigationApiService,
+    this._routeMapper,
+  );
 
   @override
   Future<Navigation?> loadNavigationByStartAndEndLocations({
@@ -49,7 +53,7 @@ class NavigationRepositoryImpl extends Repository<Navigation>
     final Navigation navigation = Navigation(
       startLocation: startLocation,
       endLocation: endLocation,
-      routes: navigationDto.routes.map(mapRouteFromDto).toList(),
+      routes: navigationDto.routes.map(_routeMapper.mapFromDto).toList(),
     );
     addEntity(navigation);
     return navigation;

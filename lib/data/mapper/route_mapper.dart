@@ -1,16 +1,23 @@
+import 'package:injectable/injectable.dart';
+
 import '../../entity/coordinates.dart';
 import '../../entity/navigation.dart';
 import '../dto/route_dto.dart';
+import 'mapper.dart';
 
-Route mapRouteFromDto(RouteDto routeDto) => Route(
-      durationInSeconds: routeDto.durationInSeconds,
-      distanceInMeters: routeDto.distanceInMeters,
-      waypoints: routeDto.geometry.coordinates
-          .map(
-            (coordinates) => Coordinates(
-              coordinates.lat,
-              coordinates.long,
-            ),
-          )
-          .toList(),
-    );
+@injectable
+class RouteMapper extends Mapper<Route, RouteDto> {
+  @override
+  Route mapFromDto(RouteDto dto) => Route(
+        durationInSeconds: dto.durationInSeconds,
+        distanceInMeters: dto.distanceInMeters,
+        waypoints: dto.geometry.coordinates
+            .map(
+              (coordinates) => Coordinates(
+                coordinates.lat,
+                coordinates.long,
+              ),
+            )
+            .toList(),
+      );
+}

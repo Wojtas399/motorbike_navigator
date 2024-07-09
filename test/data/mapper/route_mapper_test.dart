@@ -6,8 +6,10 @@ import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/navigation.dart';
 
 void main() {
+  final mapper = RouteMapper();
+
   test(
-    'mapRouteFromDto, '
+    'mapFromDto, '
     'should map RouteDto model to Route model',
     () {
       const double durationInSeconds = 333.333;
@@ -31,7 +33,7 @@ void main() {
         ],
       );
 
-      final Route route = mapRouteFromDto(dto);
+      final Route route = mapper.mapFromDto(dto);
 
       expect(route, expectedRoute);
     },
