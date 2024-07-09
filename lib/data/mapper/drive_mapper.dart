@@ -5,6 +5,7 @@ import '../dto/drive_dto.dart';
 
 Drive mapDriveFromDto(DriveDto driveDto) => Drive(
       id: driveDto.id,
+      userId: driveDto.userId,
       distanceInKm: driveDto.distanceInKm,
       durationInSeconds: driveDto.durationInSeconds,
       avgSpeedInKmPerH: driveDto.avgSpeedInKmPerH,
@@ -20,6 +21,7 @@ Drive mapDriveFromDto(DriveDto driveDto) => Drive(
 
 DriveDto mapDriveToDto(Drive drive) => DriveDto(
       id: drive.id,
+      userId: drive.userId,
       distanceInKm: drive.distanceInKm,
       durationInSeconds: drive.durationInSeconds,
       avgSpeedInKmPerH: drive.avgSpeedInKmPerH,

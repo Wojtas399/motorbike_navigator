@@ -23,7 +23,7 @@ void main() {
         createPlace(id: 'p3', name: 'place 3'),
       ];
       final repositoryImpl = PlaceRepositoryImpl(placeApiService);
-      repositoryImpl.setEntities(existingPlaces);
+      repositoryImpl.addEntities(existingPlaces);
 
       final Place? place = await repositoryImpl.getPlaceById('p1');
 
@@ -45,7 +45,7 @@ void main() {
       ];
       placeApiService.mockFetchPlaceById(result: expectedPlaceDto);
       final repositoryImpl = PlaceRepositoryImpl(placeApiService);
-      repositoryImpl.setEntities(existingPlaces);
+      repositoryImpl.addEntities(existingPlaces);
 
       final Place? place = await repositoryImpl.getPlaceById(placeId);
 

@@ -11,15 +11,31 @@ class DriveDto with _$DriveDto {
     @JsonKey(includeFromJson: false, includeToJson: false)
     @Default('')
     String id,
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default('')
+    String userId,
     required double distanceInKm,
     required int durationInSeconds,
     required double avgSpeedInKmPerH,
+    @JsonKey(toJson: _mapWaypointsToListOfDoubles)
     required List<CoordinatesDto> waypoints,
   }) = _DriveDto;
 
   factory DriveDto.fromJson(Map<String, Object?> json) =>
       _$DriveDtoFromJson(json);
 
-  factory DriveDto.fromIdAndJson(String id, Map<String, Object?> json) =>
-      DriveDto.fromJson(json).copyWith(id: id);
+  factory DriveDto.fromFirebaseFirestore({
+    required String driveId,
+    required String userId,
+    required Map<String, Object?> json,
+  }) =>
+      DriveDto.fromJson(json).copyWith(
+        id: driveId,
+        userId: userId,
+      );
 }
+
+List<List<double>> _mapWaypointsToListOfDoubles(
+  List<CoordinatesDto> waypoints,
+) =>
+    waypoints.map((waypoint) => waypoint.toJson()).toList();

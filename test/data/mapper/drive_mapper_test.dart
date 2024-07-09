@@ -7,6 +7,7 @@ import 'package:motorbike_navigator/entity/drive.dart';
 
 void main() {
   const String id = 'd1';
+  const String userId = 'u1';
   const double distanceInKm = 10.21;
   const int durationInSeconds = 50000;
   const double avgSpeedInKmPerH = 15;
@@ -25,6 +26,7 @@ void main() {
     () {
       const DriveDto driveDto = DriveDto(
         id: id,
+        userId: userId,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
@@ -32,6 +34,7 @@ void main() {
       );
       const Drive expectedDrive = Drive(
         id: id,
+        userId: userId,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
@@ -50,6 +53,7 @@ void main() {
     () {
       const Drive drive = Drive(
         id: id,
+        userId: userId,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
@@ -57,6 +61,7 @@ void main() {
       );
       const DriveDto expectedDriveDto = DriveDto(
         id: id,
+        userId: userId,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,

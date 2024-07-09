@@ -2,6 +2,7 @@ import 'coordinates.dart';
 import 'entity.dart';
 
 class Drive extends Entity {
+  final String userId;
   final double distanceInKm;
   final int durationInSeconds;
   final double avgSpeedInKmPerH;
@@ -9,6 +10,7 @@ class Drive extends Entity {
 
   const Drive({
     required super.id,
+    required this.userId,
     required this.distanceInKm,
     required this.durationInSeconds,
     required this.avgSpeedInKmPerH,
@@ -18,6 +20,7 @@ class Drive extends Entity {
   @override
   List<Object?> get props => [
         id,
+        userId,
         distanceInKm,
         durationInSeconds,
         avgSpeedInKmPerH,

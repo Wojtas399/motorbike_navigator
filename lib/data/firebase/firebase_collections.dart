@@ -24,7 +24,11 @@ CollectionReference<DriveDto> getDrivesRef(
           fromFirestore: (snapshot, _) {
             final data = snapshot.data();
             if (data == null) throw 'Drive document data was null';
-            return DriveDto.fromIdAndJson(snapshot.id, data);
+            return DriveDto.fromFirebaseFirestore(
+              driveId: snapshot.id,
+              userId: userId,
+              json: data,
+            );
           },
           toFirestore: (DriveDto dto, _) => dto.toJson(),
         );
