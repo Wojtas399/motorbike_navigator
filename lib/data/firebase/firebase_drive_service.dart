@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 
+import '../dto/coordinates_dto.dart';
 import '../dto/drive_dto.dart';
 import 'firebase_collections.dart';
 
@@ -14,9 +15,18 @@ class FirebaseDriveService {
 
   Future<DriveDto?> addDrive({
     required String userId,
-    required DriveDto driveDto,
+    required double distanceInKm,
+    required int durationInSeconds,
+    required double avgSpeedInKmPerH,
+    required List<CoordinatesDto> waypoints,
   }) async {
-    final docRef = await getDrivesRef(userId).add(driveDto);
+    final driveToAddDto = DriveDto(
+      distanceInKm: distanceInKm,
+      durationInSeconds: durationInSeconds,
+      avgSpeedInKmPerH: avgSpeedInKmPerH,
+      waypoints: waypoints,
+    );
+    final docRef = await getDrivesRef(userId).add(driveToAddDto);
     final snapshot = await docRef.get();
     return snapshot.data();
   }
