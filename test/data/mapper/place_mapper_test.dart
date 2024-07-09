@@ -7,8 +7,10 @@ import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/place.dart';
 
 void main() {
+  final PlaceMapper mapper = PlaceMapper();
+
   test(
-    'mapPlaceFromDto, '
+    'mapFromDto, '
     'should map PlaceDto object to Place object',
     () {
       const String id = 'p1';
@@ -33,7 +35,7 @@ void main() {
         coordinates: Coordinates(latitude, longitude),
       );
 
-      final Place place = mapPlaceFromDto(dto);
+      final Place place = mapper.mapFromDto(dto);
 
       expect(place, expectedPlace);
     },
