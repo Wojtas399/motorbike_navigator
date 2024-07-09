@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:injectable/injectable.dart';
 
 import '../screen/screens.dart';
 
 part 'app_router.gr.dart';
 
+@injectable
 @AutoRouterConfig()
 class AppRouter extends _$AppRouter {
   @override
