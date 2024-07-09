@@ -1,15 +1,24 @@
+import 'package:injectable/injectable.dart';
+
 import '../../entity/user.dart';
 import '../dto/user_dto.dart';
+import 'mapper.dart';
 
-ThemeMode mapThemeModeFromDto(ThemeModeDto themeModeDto) =>
-    switch (themeModeDto) {
-      ThemeModeDto.light => ThemeMode.light,
-      ThemeModeDto.dark => ThemeMode.dark,
-      ThemeModeDto.system => ThemeMode.system,
-    };
+@injectable
+class ThemeModeMapper extends Mapper<ThemeMode, ThemeModeDto> {
+  const ThemeModeMapper();
 
-ThemeModeDto mapThemeModeToDto(ThemeMode themeMode) => switch (themeMode) {
-      ThemeMode.light => ThemeModeDto.light,
-      ThemeMode.dark => ThemeModeDto.dark,
-      ThemeMode.system => ThemeModeDto.system,
-    };
+  @override
+  ThemeMode mapFromDto(ThemeModeDto dto) => switch (dto) {
+        ThemeModeDto.light => ThemeMode.light,
+        ThemeModeDto.dark => ThemeMode.dark,
+        ThemeModeDto.system => ThemeMode.system,
+      };
+
+  @override
+  ThemeModeDto mapToDto(ThemeMode object) => switch (object) {
+        ThemeMode.light => ThemeModeDto.light,
+        ThemeMode.dark => ThemeModeDto.dark,
+        ThemeMode.system => ThemeModeDto.system,
+      };
+}

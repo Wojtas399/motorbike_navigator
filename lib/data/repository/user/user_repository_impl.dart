@@ -12,9 +12,13 @@ import 'user_repository.dart';
 @LazySingleton(as: UserRepository)
 class UserRepositoryImpl extends Repository<User> implements UserRepository {
   final FirebaseUserService _dbUserService;
+  final ThemeModeMapper _themeModeMapper;
+  final UserMapper _userMapper;
 
   UserRepositoryImpl(
     this._dbUserService,
+    this._themeModeMapper,
+    this._userMapper,
   );
 
   @override
@@ -33,10 +37,10 @@ class UserRepositoryImpl extends Repository<User> implements UserRepository {
   }) async {
     final UserDto? addedUserDto = await _dbUserService.addUser(
       userId: userId,
-      themeMode: mapThemeModeToDto(themeMode),
+      themeMode: _themeModeMapper.mapToDto(themeMode),
     );
     if (addedUserDto == null) throw "Added user's data not found";
-    final User addedUser = mapUserFromDto(addedUserDto);
+    final User addedUser = _userMapper.mapFromDto(addedUserDto);
     addEntity(addedUser);
   }
 
@@ -49,17 +53,17 @@ class UserRepositoryImpl extends Repository<User> implements UserRepository {
     if (user == null) return;
     final UserDto? updatedUserDto = await _dbUserService.updateUserThemeMode(
       userId: userId,
-      themeMode: mapThemeModeToDto(themeMode),
+      themeMode: _themeModeMapper.mapToDto(themeMode),
     );
     if (updatedUserDto == null) throw "Updated user's data not found";
-    user = mapUserFromDto(updatedUserDto);
+    user = _userMapper.mapFromDto(updatedUserDto);
     updateEntity(user);
   }
 
   Future<User?> _fetchUserFromDb(String userId) async {
     final UserDto? userDto = await _dbUserService.fetchUserById(userId: userId);
     if (userDto == null) return null;
-    final User user = mapUserFromDto(userDto);
+    final User user = _userMapper.mapFromDto(userDto);
     addEntity(user);
     return user;
   }

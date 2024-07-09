@@ -7,6 +7,8 @@ import 'mapper.dart';
 
 @injectable
 class RouteMapper extends Mapper<Route, RouteDto> {
+  const RouteMapper();
+
   @override
   Route mapFromDto(RouteDto dto) => Route(
         durationInSeconds: dto.durationInSeconds,

@@ -7,6 +7,8 @@ import 'mapper.dart';
 @injectable
 class PlaceSuggestionMapper
     extends Mapper<PlaceSuggestion, PlaceSuggestionDto> {
+  const PlaceSuggestionMapper();
+
   @override
   PlaceSuggestion mapFromDto(PlaceSuggestionDto dto) => PlaceSuggestion(
         id: dto.id,

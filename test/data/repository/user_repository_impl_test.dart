@@ -5,18 +5,28 @@ import 'package:motorbike_navigator/data/repository/user/user_repository_impl.da
 import 'package:motorbike_navigator/entity/user.dart';
 
 import '../../mock/data/firebase/mock_firebase_user_service.dart';
+import '../../mock/data/mapper/mock_theme_mode_mapper.dart';
+import '../../mock/data/mapper/mock_user_mapper.dart';
 
 void main() {
   final dbUserService = MockFirebaseUserService();
+  final themeModeMapper = MockThemeModeMapper();
+  final userMapper = MockUserMapper();
   late UserRepositoryImpl repositoryImpl;
   const String userId = 'u1';
 
   setUp(() {
-    repositoryImpl = UserRepositoryImpl(dbUserService);
+    repositoryImpl = UserRepositoryImpl(
+      dbUserService,
+      themeModeMapper,
+      userMapper,
+    );
   });
 
   tearDown(() {
     reset(dbUserService);
+    reset(themeModeMapper);
+    reset(userMapper);
   });
 
   test(
@@ -34,6 +44,7 @@ void main() {
         themeMode: ThemeMode.light,
       );
       dbUserService.mockFetchUserById(expectedUserDto: expectedUserDto);
+      userMapper.mockMapFromDto(expectedUser: expectedUser);
 
       final Stream<User?> user1$ = repositoryImpl.getUserById(userId: userId);
       final Stream<User?> user2$ = repositoryImpl.getUserById(userId: userId);
@@ -61,7 +72,9 @@ void main() {
         id: userId,
         themeMode: themeMode,
       );
+      themeModeMapper.mockMapToDto(expectedThemeModeDto: themeModeDto);
       dbUserService.mockAddUser(expectedAddedUserDto: addedUserDto);
+      userMapper.mockMapFromDto(expectedUser: addedUser);
 
       await repositoryImpl.addUser(
         userId: userId,
@@ -106,10 +119,16 @@ void main() {
         id: userId,
         themeMode: ThemeModeDto.light,
       );
+      const User existingUser = User(
+        id: userId,
+        themeMode: ThemeMode.light,
+      );
       const ThemeMode newThemeMode = ThemeMode.system;
       const ThemeModeDto newThemeModeDto = ThemeModeDto.system;
       const expectedException = "Updated user's data not found";
       dbUserService.mockFetchUserById(expectedUserDto: existingUserDto);
+      userMapper.mockMapFromDto(expectedUser: existingUser);
+      themeModeMapper.mockMapToDto(expectedThemeModeDto: newThemeModeDto);
       dbUserService.mockUpdateUserThemeMode(expectedUpdatedUserDto: null);
 
       Object? exception;
@@ -153,9 +172,11 @@ void main() {
         themeMode: newThemeModeDto,
       );
       dbUserService.mockFetchUserById(expectedUserDto: existingUserDto);
+      themeModeMapper.mockMapToDto(expectedThemeModeDto: newThemeModeDto);
       dbUserService.mockUpdateUserThemeMode(
         expectedUpdatedUserDto: updatedUserDto,
       );
+      userMapper.mockMapFromDto(expectedUser: updatedUser);
 
       final user$ = repositoryImpl.getUserById(userId: userId);
       await user$.first;

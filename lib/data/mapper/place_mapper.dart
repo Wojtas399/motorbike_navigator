@@ -7,6 +7,8 @@ import 'mapper.dart';
 
 @injectable
 class PlaceMapper extends Mapper<Place, PlaceDto> {
+  const PlaceMapper();
+
   @override
   Place mapFromDto(PlaceDto dto) => Place(
         id: dto.properties.id,

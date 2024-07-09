@@ -3,13 +3,17 @@ import 'package:motorbike_navigator/data/dto/user_dto.dart';
 import 'package:motorbike_navigator/data/mapper/user_mapper.dart';
 import 'package:motorbike_navigator/entity/user.dart';
 
+import '../../mock/data/mapper/mock_theme_mode_mapper.dart';
+
 void main() {
+  final themeModeMapper = MockThemeModeMapper();
+  final mapper = UserMapper(themeModeMapper);
   const String id = 'u1';
   const ThemeMode themeMode = ThemeMode.dark;
   const ThemeModeDto themeModeDto = ThemeModeDto.dark;
 
   test(
-    'mapUserFromDto, '
+    'mapFromDto, '
     'should map UserDto model to User model',
     () {
       const UserDto userDto = UserDto(
@@ -20,15 +24,16 @@ void main() {
         id: id,
         themeMode: themeMode,
       );
+      themeModeMapper.mockMapFromDto(expectedThemeMode: themeMode);
 
-      final User user = mapUserFromDto(userDto);
+      final User user = mapper.mapFromDto(userDto);
 
       expect(user, expectedUser);
     },
   );
 
   test(
-    'mapUserToDto, '
+    'mapToDto, '
     'should map User model to UserDto model',
     () {
       const User user = User(
@@ -39,8 +44,9 @@ void main() {
         id: id,
         themeMode: themeModeDto,
       );
+      themeModeMapper.mockMapToDto(expectedThemeModeDto: themeModeDto);
 
-      final UserDto userDto = mapUserToDto(user);
+      final UserDto userDto = mapper.mapToDto(user);
 
       expect(userDto, expectedUserDto);
     },

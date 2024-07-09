@@ -7,6 +7,8 @@ import 'mapper.dart';
 
 @injectable
 class DriveMapper extends Mapper<Drive, DriveDto> {
+  const DriveMapper();
+
   @override
   Drive mapFromDto(DriveDto dto) => Drive(
         id: dto.id,
