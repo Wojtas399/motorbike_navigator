@@ -30,71 +30,49 @@ void main() {
     "should load all user's drives from db, add them to repo state and emit all "
     'drives with matching user id',
     () async {
-      const String user1Id = 'u1';
-      const String user2Id = 'u2';
-      final List<DriveDto> user1DriveDtos = [
-        createDriveDto(id: 'd10', userId: user1Id),
-        createDriveDto(id: 'd11', userId: user1Id),
+      const String userId = 'u1';
+      final List<DriveDto> fetchedDriveDtos = [
+        createDriveDto(id: 'd3', userId: userId),
+        createDriveDto(id: 'd4', userId: userId),
       ];
-      final List<DriveDto> user2DriveDtos = [
-        createDriveDto(id: 'd20', userId: user2Id),
-        createDriveDto(id: 'd21', userId: user2Id),
+      final List<Drive> fetchedDrives = [
+        createDrive(id: 'd3', userId: userId),
+        createDrive(id: 'd4', userId: userId),
       ];
-      final List<Drive> user1ExpectedDrives = [
-        createDrive(id: 'd10', userId: user1Id),
-        createDrive(id: 'd11', userId: user1Id),
+      final List<Drive> existingDrives = [
+        createDrive(id: 'd1', userId: userId),
+        createDrive(id: 'd2', userId: 'u2'),
+        createDrive(id: 'd5', userId: 'u3'),
       ];
-      final List<Drive> user2ExpectedDrives = [
-        createDrive(id: 'd20', userId: user2Id),
-        createDrive(id: 'd21', userId: user2Id),
+      final List<Drive> expectedDrives = [
+        createDrive(id: 'd1', userId: userId),
+        ...fetchedDrives,
       ];
       final List<Drive> expectedRepositoryState = [
-        createDrive(id: 'd10', userId: user1Id),
-        createDrive(id: 'd11', userId: user1Id),
-        createDrive(id: 'd20', userId: user2Id),
-        createDrive(id: 'd21', userId: user2Id),
+        ...existingDrives,
+        ...fetchedDrives
       ];
-      when(
-        () => dbDriveService.fetchAllUserDrives(userId: user1Id),
-      ).thenAnswer((_) => Future.value(user1DriveDtos));
-      when(
-        () => dbDriveService.fetchAllUserDrives(userId: user2Id),
-      ).thenAnswer((_) => Future.value(user2DriveDtos));
-      when(
-        () => driveMapper.mapFromDto(user1DriveDtos.first),
-      ).thenReturn(user1ExpectedDrives.first);
-      when(
-        () => driveMapper.mapFromDto(user1DriveDtos.last),
-      ).thenReturn(user1ExpectedDrives.last);
-      when(
-        () => driveMapper.mapFromDto(user2DriveDtos.first),
-      ).thenReturn(user2ExpectedDrives.first);
-      when(
-        () => driveMapper.mapFromDto(user2DriveDtos.last),
-      ).thenReturn(user2ExpectedDrives.last);
-
-      final Stream<List<Drive>> allUser1Drives$ =
-          repositoryImpl.getAllUserDrives(
-        userId: user1Id,
+      dbDriveService.mockFetchAllUserDrives(
+        expectedDriveDtos: fetchedDriveDtos,
       );
-      await repositoryImpl.repositoryState$.first;
-      final Stream<List<Drive>> allUser2Drives$ =
-          repositoryImpl.getAllUserDrives(
-        userId: user2Id,
-      );
-      await repositoryImpl.repositoryState$.first;
+      when(
+        () => driveMapper.mapFromDto(fetchedDriveDtos.first),
+      ).thenReturn(fetchedDrives.first);
+      when(
+        () => driveMapper.mapFromDto(fetchedDriveDtos.last),
+      ).thenReturn(fetchedDrives.last);
+      repositoryImpl.addEntities(existingDrives);
 
-      expect(await allUser1Drives$.first, user1ExpectedDrives);
-      expect(await allUser2Drives$.first, user2ExpectedDrives);
+      final Stream<List<Drive>> allUserDrives$ =
+          repositoryImpl.getAllUserDrives(userId: userId);
+
+      expect(await allUserDrives$.first, expectedDrives);
       expect(
         await repositoryImpl.repositoryState$.first,
         expectedRepositoryState,
       );
       verify(
-        () => dbDriveService.fetchAllUserDrives(userId: user1Id),
-      ).called(1);
-      verify(
-        () => dbDriveService.fetchAllUserDrives(userId: user2Id),
+        () => dbDriveService.fetchAllUserDrives(userId: userId),
       ).called(1);
     },
   );
@@ -133,8 +111,17 @@ void main() {
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypoints,
       );
+      final List<Drive> existingDrives = [
+        createDrive(id: 'd2', userId: userId),
+        createDrive(id: 'd3', userId: 'u2'),
+      ];
+      final List<Drive> expectedRepoState = [
+        ...existingDrives,
+        expectedAddedDrive,
+      ];
       dbDriveService.mockAddDrive(expectedAddedDriveDto: addedDriveDto);
       driveMapper.mockMapFromDto(expectedDrive: expectedAddedDrive);
+      repositoryImpl.addEntities(existingDrives);
 
       await repositoryImpl.addDrive(
         userId: userId,
@@ -146,7 +133,7 @@ void main() {
 
       expect(
         await repositoryImpl.repositoryState$.first,
-        [expectedAddedDrive],
+        expectedRepoState,
       );
       verify(
         () => dbDriveService.addDrive(
