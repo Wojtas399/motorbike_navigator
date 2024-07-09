@@ -9,17 +9,20 @@ import 'package:motorbike_navigator/entity/drive.dart';
 import '../../creator/drive_creator.dart';
 import '../../creator/drive_dto_creator.dart';
 import '../../mock/data/firebase/mock_firebase_drive_service.dart';
+import '../../mock/data/mapper/mock_drive_mapper.dart';
 
 void main() {
   final dbDriveService = MockFirebaseDriveService();
+  final driveMapper = MockDriveMapper();
   late DriveRepositoryImpl repositoryImpl;
 
   setUp(() {
-    repositoryImpl = DriveRepositoryImpl(dbDriveService);
+    repositoryImpl = DriveRepositoryImpl(dbDriveService, driveMapper);
   });
 
   tearDown(() {
     reset(dbDriveService);
+    reset(driveMapper);
   });
 
   test(
@@ -57,6 +60,18 @@ void main() {
       when(
         () => dbDriveService.fetchAllUserDrives(userId: user2Id),
       ).thenAnswer((_) => Future.value(user2DriveDtos));
+      when(
+        () => driveMapper.mapFromDto(user1DriveDtos.first),
+      ).thenReturn(user1ExpectedDrives.first);
+      when(
+        () => driveMapper.mapFromDto(user1DriveDtos.last),
+      ).thenReturn(user1ExpectedDrives.last);
+      when(
+        () => driveMapper.mapFromDto(user2DriveDtos.first),
+      ).thenReturn(user2ExpectedDrives.first);
+      when(
+        () => driveMapper.mapFromDto(user2DriveDtos.last),
+      ).thenReturn(user2ExpectedDrives.last);
 
       final Stream<List<Drive>> allUser1Drives$ =
           repositoryImpl.getAllUserDrives(
@@ -119,6 +134,7 @@ void main() {
         waypoints: waypoints,
       );
       dbDriveService.mockAddDrive(expectedAddedDriveDto: addedDriveDto);
+      driveMapper.mockMapFromDto(expectedDrive: expectedAddedDrive);
 
       await repositoryImpl.addDrive(
         userId: userId,
@@ -149,7 +165,6 @@ void main() {
     'method to add drive to db returns null, '
     'should throw exception',
     () async {
-      const String id = 'd1';
       const String userId = 'u1';
       const double distanceInKm = 2.2;
       const int durationInSeconds = 50000;

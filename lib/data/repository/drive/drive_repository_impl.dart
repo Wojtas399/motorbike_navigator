@@ -12,9 +12,11 @@ import 'drive_repository.dart';
 @LazySingleton(as: DriveRepository)
 class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
   final FirebaseDriveService _dbDriveService;
+  final DriveMapper _driveMapper;
 
   DriveRepositoryImpl(
     this._dbDriveService,
+    this._driveMapper,
   );
 
   @override
@@ -55,7 +57,7 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     if (addedDriveDto == null) {
       throw '[DriveRepository] Cannot add new drive to db';
     }
-    final Drive addedDrive = mapDriveFromDto(addedDriveDto);
+    final Drive addedDrive = _driveMapper.mapFromDto(addedDriveDto);
     addEntity(addedDrive);
   }
 
@@ -63,7 +65,7 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     final List<DriveDto> driveDtos =
         await _dbDriveService.fetchAllUserDrives(userId: userId);
     if (driveDtos.isEmpty) return;
-    final List<Drive> drives = driveDtos.map(mapDriveFromDto).toList();
+    final List<Drive> drives = driveDtos.map(_driveMapper.mapFromDto).toList();
     addEntities(drives);
   }
 }
