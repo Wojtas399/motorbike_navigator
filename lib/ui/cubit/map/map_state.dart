@@ -12,6 +12,10 @@ extension MapStatusExtensions on MapStatus {
   bool get isLoading => this == MapStatus.loading;
 }
 
+extension MapFocusModeExtensions on MapFocusMode {
+  bool get isFollowingUserLocation => this == MapFocusMode.followUserLocation;
+}
+
 @freezed
 class MapState with _$MapState {
   const factory MapState({

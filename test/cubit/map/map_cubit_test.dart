@@ -19,21 +19,50 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should get coordinates of current position got form LocationService '
-    'and should assign it to centerLocation and userLocation params',
-    setUp: () => locationService.mockGetPosition(
-      expectedPosition: const Position(
-        coordinates: Coordinates(50.2, 25.4),
-        speedInMetersPerSecond: 0,
-      ),
-    ),
+    'should listen to current location and if focus mode is set to '
+    'followUserLocation should assign listened location to centerLocation and '
+    'userLocation params else should only assign it to userLocation param',
     build: () => createCubit(),
-    act: (cubit) async => await cubit.initialize(),
+    setUp: () {
+      when(
+        locationService.getPosition,
+      ).thenAnswer(
+        (_) => Stream.fromIterable([
+          const Position(
+            coordinates: Coordinates(50, 19),
+            speedInMetersPerSecond: 10,
+          ),
+          const Position(
+            coordinates: Coordinates(51, 20),
+            speedInMetersPerSecond: 11,
+          ),
+        ]),
+      );
+    },
+    act: (cubit) async {
+      cubit.initialize();
+      await cubit.stream.first;
+      cubit.onMapDrag(
+        const Coordinates(50.5, 19.5),
+      );
+    },
     expect: () => [
       const MapState(
         status: MapStatus.completed,
-        centerLocation: Coordinates(50.2, 25.4),
-        userLocation: Coordinates(50.2, 25.4),
+        centerLocation: Coordinates(50, 19),
+        userLocation: Coordinates(50, 19),
+      ),
+      const MapState(
+        status: MapStatus.completed,
+        focusMode: MapFocusMode.free,
+        centerLocation: Coordinates(50.5, 19.5),
+        userLocation: Coordinates(50, 19),
+      ),
+      const MapState(
+        status: MapStatus.completed,
+        focusMode: MapFocusMode.free,
+        centerLocation: Coordinates(50.5, 19.5),
+        userLocation: Coordinates(51, 20),
       ),
     ],
   );

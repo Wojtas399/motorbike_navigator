@@ -128,20 +128,17 @@ class _MapState extends State<_Map> {
         ));
   }
 
-  void _onUserPositionChanged(Coordinates position) {
-    if (context.read<MapCubit>().state.focusMode ==
-        MapFocusMode.followUserLocation) {
-      final bool isInDriveMode =
-          context.read<DriveCubit>().state.status == DriveStateStatus.ongoing;
-      final double centerPositionLatCorrection = isInDriveMode ? -0.012 : 0;
-      _mapController.move(
-        LatLng(
-          position.latitude + centerPositionLatCorrection,
-          position.longitude,
-        ),
-        13,
-      );
-    }
+  void _moveCameraToPosition(Coordinates position) {
+    final bool isInDriveMode =
+        context.read<DriveCubit>().state.status == DriveStateStatus.ongoing;
+    final double centerPositionLatCorrection = isInDriveMode ? -0.012 : 0;
+    _mapController.move(
+      LatLng(
+        position.latitude + centerPositionLatCorrection,
+        position.longitude,
+      ),
+      13,
+    );
   }
 
   @override
@@ -153,14 +150,14 @@ class _MapState extends State<_Map> {
       listeners: [
         BlocListener<MapCubit, MapState>(
           listenWhen: (prevState, currState) =>
-              currState.userLocation != null &&
-              currState.userLocation != prevState.userLocation,
-          listener: (_, state) => _onUserPositionChanged(state.userLocation!),
+              currState.focusMode.isFollowingUserLocation &&
+              prevState.centerLocation != currState.centerLocation,
+          listener: (_, state) => _moveCameraToPosition(state.userLocation!),
         ),
         BlocListener<DriveCubit, DriveState>(
           listenWhen: (prevState, currState) =>
               currState.waypoints.isNotEmpty == true,
-          listener: (_, state) => _onUserPositionChanged(state.waypoints.last),
+          listener: (_, state) => _moveCameraToPosition(state.waypoints.last),
         ),
       ],
       child: FlutterMap(

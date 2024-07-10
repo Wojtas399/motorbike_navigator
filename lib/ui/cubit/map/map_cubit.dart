@@ -19,7 +19,9 @@ class MapCubit extends Cubit<MapState> {
     await for (final currentLocation in currentLocation$) {
       emit(state.copyWith(
         status: MapStatus.completed,
-        centerLocation: state.centerLocation ?? currentLocation,
+        centerLocation: state.focusMode.isFollowingUserLocation
+            ? currentLocation
+            : state.centerLocation,
         userLocation: currentLocation,
       ));
     }
