@@ -86,6 +86,8 @@ void main() {
     () async {
       const String id = 'd1';
       const String userId = 'u1';
+      final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
+      final DateTime endDateTime = DateTime(2024, 7, 10, 10, 30);
       const double distanceInKm = 2.2;
       const int durationInSeconds = 50000;
       const double avgSpeedInKmPerH = 10.2;
@@ -97,17 +99,21 @@ void main() {
         CoordinatesDto(latitude: 50, longitude: 19),
         CoordinatesDto(latitude: 51, longitude: 20),
       ];
-      const DriveDto addedDriveDto = DriveDto(
+      final DriveDto addedDriveDto = DriveDto(
         id: id,
         userId: userId,
+        startDateTime: startDateTime,
+        endDateTime: endDateTime,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypointDtos,
       );
-      const Drive expectedAddedDrive = Drive(
+      final Drive expectedAddedDrive = Drive(
         id: id,
         userId: userId,
+        startDateTime: startDateTime,
+        endDateTime: endDateTime,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
@@ -127,6 +133,8 @@ void main() {
 
       await repositoryImpl.addDrive(
         userId: userId,
+        startDateTime: startDateTime,
+        endDateTime: endDateTime,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
@@ -140,6 +148,8 @@ void main() {
       verify(
         () => dbDriveService.addDrive(
           userId: userId,
+          startDateTime: startDateTime,
+          endDateTime: endDateTime,
           distanceInKm: distanceInKm,
           durationInSeconds: durationInSeconds,
           avgSpeedInKmPerH: avgSpeedInKmPerH,
@@ -155,6 +165,8 @@ void main() {
     'should throw exception',
     () async {
       const String userId = 'u1';
+      final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
+      final DateTime endDateTime = DateTime(2024, 7, 10, 10, 30);
       const double distanceInKm = 2.2;
       const int durationInSeconds = 50000;
       const double avgSpeedInKmPerH = 10.2;
@@ -174,6 +186,8 @@ void main() {
       try {
         await repositoryImpl.addDrive(
           userId: userId,
+          startDateTime: startDateTime,
+          endDateTime: endDateTime,
           distanceInKm: distanceInKm,
           durationInSeconds: durationInSeconds,
           avgSpeedInKmPerH: avgSpeedInKmPerH,
@@ -187,6 +201,8 @@ void main() {
       verify(
         () => dbDriveService.addDrive(
           userId: userId,
+          startDateTime: startDateTime,
+          endDateTime: endDateTime,
           distanceInKm: distanceInKm,
           durationInSeconds: durationInSeconds,
           avgSpeedInKmPerH: avgSpeedInKmPerH,

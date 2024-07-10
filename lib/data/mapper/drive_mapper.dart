@@ -13,6 +13,8 @@ class DriveMapper extends Mapper<Drive, DriveDto> {
   Drive mapFromDto(DriveDto dto) => Drive(
         id: dto.id,
         userId: dto.userId,
+        startDateTime: dto.startDateTime,
+        endDateTime: dto.endDateTime,
         distanceInKm: dto.distanceInKm,
         durationInSeconds: dto.durationInSeconds,
         avgSpeedInKmPerH: dto.avgSpeedInKmPerH,

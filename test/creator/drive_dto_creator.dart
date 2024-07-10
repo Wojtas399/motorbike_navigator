@@ -5,6 +5,8 @@ class DriveDtoCreator {
   DriveDto create({
     String id = '',
     String userId = '',
+    DateTime? startDateTime,
+    DateTime? endDateTime,
     double distanceInKm = 0,
     int durationInSeconds = 0,
     double avgSpeedInKmPerH = 0,
@@ -13,6 +15,8 @@ class DriveDtoCreator {
       DriveDto(
         id: id,
         userId: userId,
+        startDateTime: startDateTime ?? DateTime(2024),
+        endDateTime: endDateTime ?? DateTime(2024, 1, 2),
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,

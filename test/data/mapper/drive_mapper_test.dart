@@ -14,6 +14,8 @@ void main() {
     () {
       const String id = 'd1';
       const String userId = 'u1';
+      final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
+      final DateTime endDateTime = DateTime(2024, 7, 10, 10, 30);
       const double distanceInKm = 10.21;
       const int durationInSeconds = 50000;
       const double avgSpeedInKmPerH = 15;
@@ -25,17 +27,21 @@ void main() {
         CoordinatesDto(latitude: 50, longitude: 18),
         CoordinatesDto(latitude: 51, longitude: 19),
       ];
-      const DriveDto driveDto = DriveDto(
+      final DriveDto driveDto = DriveDto(
         id: id,
         userId: userId,
+        startDateTime: startDateTime,
+        endDateTime: endDateTime,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypointsDto,
       );
-      const Drive expectedDrive = Drive(
+      final Drive expectedDrive = Drive(
         id: id,
         userId: userId,
+        startDateTime: startDateTime,
+        endDateTime: endDateTime,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,

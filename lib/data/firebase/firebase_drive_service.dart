@@ -15,12 +15,16 @@ class FirebaseDriveService {
 
   Future<DriveDto?> addDrive({
     required String userId,
+    required DateTime startDateTime,
+    required DateTime endDateTime,
     required double distanceInKm,
     required int durationInSeconds,
     required double avgSpeedInKmPerH,
     required List<CoordinatesDto> waypoints,
   }) async {
     final driveToAddDto = DriveDto(
+      startDateTime: startDateTime,
+      endDateTime: endDateTime,
       distanceInKm: distanceInKm,
       durationInSeconds: durationInSeconds,
       avgSpeedInKmPerH: avgSpeedInKmPerH,

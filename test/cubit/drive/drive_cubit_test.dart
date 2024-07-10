@@ -388,6 +388,8 @@ void main() {
       verify(
         () => driveRepository.addDrive(
           userId: 'u1',
+          startDateTime: DateTime(2024, 7, 10, 9, 28),
+          endDateTime: DateTime(2024, 7, 10, 10, 30),
           distanceInKm: 10,
           durationInSeconds: 1,
           avgSpeedInKmPerH: 50 * 3.6,

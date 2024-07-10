@@ -34,6 +34,8 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
   @override
   Future<void> addDrive({
     required String userId,
+    required DateTime startDateTime,
+    required DateTime endDateTime,
     required double distanceInKm,
     required int durationInSeconds,
     required double avgSpeedInKmPerH,
@@ -49,6 +51,8 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
         .toList();
     final DriveDto? addedDriveDto = await _dbDriveService.addDrive(
       userId: userId,
+      startDateTime: startDateTime,
+      endDateTime: endDateTime,
       distanceInKm: distanceInKm,
       durationInSeconds: durationInSeconds,
       avgSpeedInKmPerH: avgSpeedInKmPerH,

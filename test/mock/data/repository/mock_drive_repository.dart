@@ -6,6 +6,8 @@ class MockDriveRepository extends Mock implements DriveRepository {
     when(
       () => addDrive(
         userId: any(named: 'userId'),
+        startDateTime: any(named: 'startDateTime'),
+        endDateTime: any(named: 'endDateTime'),
         distanceInKm: any(named: 'distanceInKm'),
         durationInSeconds: any(named: 'durationInSeconds'),
         avgSpeedInKmPerH: any(named: 'avgSpeedInKmPerH'),
