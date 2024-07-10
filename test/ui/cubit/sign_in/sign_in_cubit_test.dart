@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/ui/cubit/sign_in/sign_in_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/sign_in/sign_in_state.dart';
 
-import '../../mock/data/repository/mock_auth_repository.dart';
+import '../../../mock/data/repository/mock_auth_repository.dart';
 
 void main() {
   final authRepository = MockAuthRepository();

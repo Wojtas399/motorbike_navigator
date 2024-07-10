@@ -6,9 +6,9 @@ import 'package:motorbike_navigator/entity/place_suggestion.dart';
 import 'package:motorbike_navigator/ui/cubit/route/route_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/route/route_state.dart';
 
-import '../../creator/place_creator.dart';
-import '../../mock/data/repository/mock_navigation_repository.dart';
-import '../../mock/data/repository/mock_place_repository.dart';
+import '../../../creator/place_creator.dart';
+import '../../../mock/data/repository/mock_navigation_repository.dart';
+import '../../../mock/data/repository/mock_place_repository.dart';
 
 void main() {
   final placeRepository = MockPlaceRepository();

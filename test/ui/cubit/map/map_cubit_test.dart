@@ -6,7 +6,7 @@ import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/cubit/map/map_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/map/map_state.dart';
 
-import '../../mock/ui_service/mock_location_service.dart';
+import '../../../mock/ui_service/mock_location_service.dart';
 
 void main() {
   final locationService = MockLocationService();

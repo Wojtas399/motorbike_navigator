@@ -5,8 +5,8 @@ import 'package:motorbike_navigator/entity/user.dart';
 import 'package:motorbike_navigator/ui/cubit/logged_user/logged_user_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/logged_user/logged_user_state.dart';
 
-import '../../mock/data/repository/mock_auth_repository.dart';
-import '../../mock/data/repository/mock_user_repository.dart';
+import '../../../mock/data/repository/mock_auth_repository.dart';
+import '../../../mock/data/repository/mock_user_repository.dart';
 
 void main() {
   final authRepository = MockAuthRepository();

@@ -5,7 +5,7 @@ import 'package:motorbike_navigator/entity/place_suggestion.dart';
 import 'package:motorbike_navigator/ui/screen/search_form/cubit/search_form_cubit.dart';
 import 'package:motorbike_navigator/ui/screen/search_form/cubit/search_form_state.dart';
 
-import '../../mock/data/repository/mock_place_suggestion_repository.dart';
+import '../../../mock/data/repository/mock_place_suggestion_repository.dart';
 
 void main() {
   final placeSuggestionRepository = MockPlaceSuggestionRepository();

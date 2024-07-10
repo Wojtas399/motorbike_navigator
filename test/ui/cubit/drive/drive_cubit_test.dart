@@ -6,11 +6,11 @@ import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/cubit/drive/drive_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/drive/drive_state.dart';
 
-import '../../mock/data/repository/mock_auth_repository.dart';
-import '../../mock/data/repository/mock_drive_repository.dart';
-import '../../mock/ui_service/mock_date_service.dart';
-import '../../mock/ui_service/mock_location_service.dart';
-import '../../mock/ui_service/mock_map_service.dart';
+import '../../../mock/data/repository/mock_auth_repository.dart';
+import '../../../mock/data/repository/mock_drive_repository.dart';
+import '../../../mock/ui_service/mock_date_service.dart';
+import '../../../mock/ui_service/mock_location_service.dart';
+import '../../../mock/ui_service/mock_map_service.dart';
 
 void main() {
   final locationService = MockLocationService();
