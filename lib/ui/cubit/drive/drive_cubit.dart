@@ -58,7 +58,6 @@ class DriveCubit extends Cubit<DriveState> {
     _speedsInKmPerH = [];
     emit(state.copyWith(
       status: DriveStateStatus.finished,
-      endDateTime: _dateService.getNow(),
     ));
   }
 
@@ -74,7 +73,6 @@ class DriveCubit extends Cubit<DriveState> {
     await _driveRepository.addDrive(
       userId: loggedUserId,
       startDateTime: DateTime(2024, 7, 10, 9, 28),
-      endDateTime: DateTime(2024, 7, 10, 10, 30),
       distanceInKm: state.distanceInKm,
       durationInSeconds: state.duration.inSeconds,
       avgSpeedInKmPerH: state.avgSpeedInKmPerH,

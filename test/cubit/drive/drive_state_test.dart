@@ -8,7 +8,6 @@ void main() {
       const DriveState expectedDefaultState = DriveState(
         status: DriveStateStatus.initial,
         startDatetime: null,
-        endDateTime: null,
         duration: Duration.zero,
         distanceInKm: 0,
         speedInKmPerH: 0,

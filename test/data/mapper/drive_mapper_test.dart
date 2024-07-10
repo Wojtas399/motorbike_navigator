@@ -15,7 +15,6 @@ void main() {
       const String id = 'd1';
       const String userId = 'u1';
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
-      final DateTime endDateTime = DateTime(2024, 7, 10, 10, 30);
       const double distanceInKm = 10.21;
       const int durationInSeconds = 50000;
       const double avgSpeedInKmPerH = 15;
@@ -31,7 +30,6 @@ void main() {
         id: id,
         userId: userId,
         startDateTime: startDateTime,
-        endDateTime: endDateTime,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
@@ -41,7 +39,6 @@ void main() {
         id: id,
         userId: userId,
         startDateTime: startDateTime,
-        endDateTime: endDateTime,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,

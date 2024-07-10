@@ -301,7 +301,6 @@ void main() {
       DriveState(
         status: DriveStateStatus.finished,
         startDatetime: DateTime(2024, 1, 2, 10, 45),
-        endDateTime: DateTime(2024, 1, 2, 10, 45),
         duration: const Duration(seconds: 1),
         distanceInKm: 35,
         speedInKmPerH: 25 * 3.6,
@@ -315,7 +314,7 @@ void main() {
       ),
     ],
     verify: (_) {
-      verify(dateService.getNow).called(2);
+      verify(dateService.getNow).called(1);
       verify(locationService.getPosition).called(1);
       verify(
         () => mapService.calculateDistanceInKm(
@@ -431,7 +430,6 @@ void main() {
       DriveState(
         status: DriveStateStatus.finished,
         startDatetime: DateTime(2024, 1, 2, 10, 45),
-        endDateTime: DateTime(2024, 1, 2, 10, 45),
         duration: const Duration(seconds: 1),
         distanceInKm: 10,
         speedInKmPerH: 50 * 3.6,
@@ -508,7 +506,6 @@ void main() {
       DriveState(
         status: DriveStateStatus.finished,
         startDatetime: DateTime(2024, 1, 2, 10, 45),
-        endDateTime: DateTime(2024, 1, 2, 10, 45),
         duration: const Duration(seconds: 1),
         distanceInKm: 10,
         speedInKmPerH: 50 * 3.6,
@@ -521,7 +518,6 @@ void main() {
       DriveState(
         status: DriveStateStatus.saving,
         startDatetime: DateTime(2024, 1, 2, 10, 45),
-        endDateTime: DateTime(2024, 1, 2, 10, 45),
         duration: const Duration(seconds: 1),
         distanceInKm: 10,
         speedInKmPerH: 50 * 3.6,
@@ -534,7 +530,6 @@ void main() {
       DriveState(
         status: DriveStateStatus.saved,
         startDatetime: DateTime(2024, 1, 2, 10, 45),
-        endDateTime: DateTime(2024, 1, 2, 10, 45),
         duration: const Duration(seconds: 1),
         distanceInKm: 10,
         speedInKmPerH: 50 * 3.6,
@@ -551,7 +546,6 @@ void main() {
         () => driveRepository.addDrive(
           userId: 'u1',
           startDateTime: DateTime(2024, 7, 10, 9, 28),
-          endDateTime: DateTime(2024, 7, 10, 10, 30),
           distanceInKm: 10,
           durationInSeconds: 1,
           avgSpeedInKmPerH: 50 * 3.6,

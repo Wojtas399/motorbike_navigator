@@ -45,6 +45,33 @@ class DriveSummaryData extends StatelessWidget {
               ],
             ),
           ),
+          const Divider(height: 32),
+          IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      LabelLarge('Data rozpoczęcia'),
+                      const GapVertical4(),
+                      TitleLarge('10.07.2024 10:30'),
+                    ],
+                  ),
+                ),
+                const VerticalDivider(),
+                Expanded(
+                  child: Column(
+                    children: [
+                      LabelLarge('Data zakończenia'),
+                      const GapVertical4(),
+                      const _AvgSpeed(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       );
 }

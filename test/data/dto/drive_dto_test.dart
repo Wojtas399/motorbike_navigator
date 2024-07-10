@@ -6,7 +6,6 @@ void main() {
   const String id = 'd1';
   const String userId = 'u1';
   final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
-  final DateTime endDateTime = DateTime(2024, 7, 10, 10, 30);
   const double distanceInKm = 10.22;
   const int durationInSeconds = 500000;
   const double avgSpeedInKmPerH = 45.3;
@@ -16,7 +15,6 @@ void main() {
   ];
   final Map<String, Object?> driveJson = {
     'startDateTime': startDateTime.toIso8601String(),
-    'endDateTime': endDateTime.toIso8601String(),
     'distanceInKm': distanceInKm,
     'durationInSeconds': durationInSeconds,
     'avgSpeedInKmPerH': avgSpeedInKmPerH,
@@ -31,7 +29,6 @@ void main() {
     () {
       final DriveDto expectedDto = DriveDto(
         startDateTime: startDateTime,
-        endDateTime: endDateTime,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
@@ -52,7 +49,6 @@ void main() {
         id: id,
         userId: userId,
         startDateTime: startDateTime,
-        endDateTime: endDateTime,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
@@ -77,7 +73,6 @@ void main() {
         id: id,
         userId: userId,
         startDateTime: startDateTime,
-        endDateTime: endDateTime,
         distanceInKm: distanceInKm,
         durationInSeconds: durationInSeconds,
         avgSpeedInKmPerH: avgSpeedInKmPerH,

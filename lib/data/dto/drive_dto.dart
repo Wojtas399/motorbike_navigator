@@ -15,7 +15,6 @@ class DriveDto with _$DriveDto {
     @Default('')
     String userId,
     required DateTime startDateTime,
-    required DateTime endDateTime,
     required double distanceInKm,
     required int durationInSeconds,
     required double avgSpeedInKmPerH,

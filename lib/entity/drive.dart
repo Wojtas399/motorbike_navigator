@@ -4,7 +4,6 @@ import 'entity.dart';
 class Drive extends Entity {
   final String userId;
   final DateTime startDateTime;
-  final DateTime endDateTime;
   final double distanceInKm;
   final int durationInSeconds;
   final double avgSpeedInKmPerH;
@@ -14,7 +13,6 @@ class Drive extends Entity {
     required super.id,
     required this.userId,
     required this.startDateTime,
-    required this.endDateTime,
     required this.distanceInKm,
     required this.durationInSeconds,
     required this.avgSpeedInKmPerH,
@@ -26,7 +24,6 @@ class Drive extends Entity {
         id,
         userId,
         startDateTime,
-        endDateTime,
         distanceInKm,
         durationInSeconds,
         avgSpeedInKmPerH,
