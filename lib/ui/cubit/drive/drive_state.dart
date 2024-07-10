@@ -12,16 +12,12 @@ class DriveState with _$DriveState {
 
   const factory DriveState({
     @Default(DriveStateStatus.initial) DriveStateStatus status,
+    DateTime? startDatetime,
+    DateTime? endDateTime,
     @Default(Duration.zero) Duration duration,
     @Default(0) double distanceInKm,
     @Default(0) double speedInKmPerH,
     @Default(0) double avgSpeedInKmPerH,
     @Default([]) List<Coordinates> waypoints,
   }) = _DriveState;
-
-  bool get haveDriveParamsBeenChanged =>
-      duration.inSeconds > 0 ||
-      distanceInKm > 0 ||
-      avgSpeedInKmPerH > 0 ||
-      waypoints.isNotEmpty;
 }
