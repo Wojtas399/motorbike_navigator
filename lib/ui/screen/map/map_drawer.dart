@@ -1,12 +1,14 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../../config/app_router.dart';
 import '../../extensions/context_extensions.dart';
 
 class MapDrawer extends StatelessWidget {
   const MapDrawer({super.key});
 
   void _navigateToSavedDrives(BuildContext context) {
-    //TODO: Navigate to saved drives
+    context.pushRoute(const SavedDrivesRoute());
   }
 
   @override
