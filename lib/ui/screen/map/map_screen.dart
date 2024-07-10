@@ -9,6 +9,7 @@ import '../../cubit/logged_user/logged_user_cubit.dart';
 import '../../cubit/map/map_cubit.dart';
 import '../drive_summary/drive_summary_screen.dart';
 import 'map_content.dart';
+import 'map_drawer.dart';
 
 @RoutePage()
 class MapScreen extends StatelessWidget {
@@ -29,7 +30,17 @@ class MapScreen extends StatelessWidget {
         ],
         child: const _DriveCubitListener(
           child: Scaffold(
-            body: MapContent(),
+            drawer: MapDrawer(),
+            body: Stack(
+              children: [
+                MapContent(),
+                Positioned(
+                  left: 16,
+                  top: kToolbarHeight + 24,
+                  child: _MenuButton(),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -60,5 +71,19 @@ class _DriveCubitListener extends StatelessWidget {
             prevState.status != currState.status,
         listener: (context, state) => _onStatusChanged(state.status, context),
         child: child,
+      );
+}
+
+class _MenuButton extends StatelessWidget {
+  const _MenuButton();
+
+  void _onPressed(BuildContext context) {
+    Scaffold.of(context).openDrawer();
+  }
+
+  @override
+  Widget build(BuildContext context) => IconButton.filled(
+        onPressed: () => _onPressed(context),
+        icon: const Icon(Icons.menu),
       );
 }
