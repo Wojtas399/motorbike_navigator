@@ -29,7 +29,7 @@ class DriveSummaryScreen extends StatelessWidget {
                   width: double.infinity,
                   child: DriveSummaryRoute(),
                 ),
-                GapVertical24(),
+                GapVertical8(),
                 DriveSummaryData(),
                 GapVertical24(),
                 _DriveActions(),

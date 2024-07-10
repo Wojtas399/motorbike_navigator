@@ -5,6 +5,7 @@ import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../extensions/context_extensions.dart';
+import '../../extensions/datetime_extensions.dart';
 import '../../extensions/duration_extensions.dart';
 
 class DriveSummaryData extends StatelessWidget {
@@ -12,68 +13,67 @@ class DriveSummaryData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          LabelLarge(context.str.driveDistance),
-          const GapVertical4(),
-          const _Distance(),
-          const GapVertical8(),
-          const Divider(),
-          const GapVertical8(),
-          IntrinsicHeight(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      LabelLarge(context.str.driveDuration),
-                      const GapVertical4(),
-                      const _Duration(),
-                    ],
-                  ),
-                ),
-                const VerticalDivider(),
-                Expanded(
-                  child: Column(
-                    children: [
-                      LabelLarge(context.str.driveAvgSpeed),
-                      const GapVertical4(),
-                      const _AvgSpeed(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          const Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: _StartDateTime(),
           ),
-          const Divider(height: 32),
-          IntrinsicHeight(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      LabelLarge('Data rozpoczęcia'),
-                      const GapVertical4(),
-                      TitleLarge('10.07.2024 10:30'),
-                    ],
-                  ),
+          const GapVertical8(),
+          Column(
+            children: [
+              LabelLarge(context.str.driveDistance),
+              const GapVertical4(),
+              const _Distance(),
+              const GapVertical8(),
+              const Divider(),
+              const GapVertical8(),
+              IntrinsicHeight(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          LabelLarge(context.str.driveDuration),
+                          const GapVertical4(),
+                          const _Duration(),
+                        ],
+                      ),
+                    ),
+                    const VerticalDivider(),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          LabelLarge(context.str.driveAvgSpeed),
+                          const GapVertical4(),
+                          const _AvgSpeed(),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const VerticalDivider(),
-                Expanded(
-                  child: Column(
-                    children: [
-                      LabelLarge('Data zakończenia'),
-                      const GapVertical4(),
-                      const _AvgSpeed(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       );
+}
+
+class _StartDateTime extends StatelessWidget {
+  const _StartDateTime();
+
+  @override
+  Widget build(BuildContext context) {
+    final DateTime? startDateTime = context.select(
+      (DriveCubit cubit) => cubit.state.startDatetime,
+    );
+
+    return LabelMedium(
+      startDateTime == null ? '' : startDateTime.toUIDateWithTimeFormat(),
+      color: context.colorScheme.outline,
+    );
+  }
 }
 
 class _Duration extends StatelessWidget {
