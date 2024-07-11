@@ -12,13 +12,11 @@
   "mapSavedDrives": "Zapisane przejazdy",
   "@----------DRIVE----------": {},
   "driveSummary": "Podsumowanie trasy",
-  "driveDistance": "Dystans",
-  "driveDuration": "Czas trwania",
-  "driveSpeed": "Prędkość",
-  "driveAvgSpeed": "Średnia prędkość",
   "driveDeleteConfirmationTitle": "Potwierdzenie usunięcia",
   "driveDeleteConfirmationMessage": "Czy na pewno chcesz usunąć tę aktywność?",
   "driveSuccessfullySavedDrive": "Pomyślnie zapisano jazdę!",
+  "@----------SAVED_DRIVES----------": {},
+  "savedDrivesScreenTitle": "Zapisane przejazdy",
   "@----------COMMON----------": {},
   "map": "Mapa",
   "saved": "Zapisane",
@@ -30,5 +28,9 @@
   "save": "Zapisz",
   "cancel": "Anuluj",
   "confirm": "Potwierdź",
-  "loading": "Ładowanie"
+  "loading": "Ładowanie",
+  "distance": "Dystans",
+  "duration": "Czas trwania",
+  "speed": "Prędkość",
+  "avgSpeed": "Średnia prędkość"
 }

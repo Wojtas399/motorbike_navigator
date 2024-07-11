@@ -28,6 +28,10 @@ class GapHorizontal16 extends _Gap {
   const GapHorizontal16() : super(horizontal: 16);
 }
 
+class GapHorizontal32 extends _Gap {
+  const GapHorizontal32() : super(horizontal: 32);
+}
+
 class GapVertical24 extends _Gap {
   const GapVertical24() : super(vertical: 24);
 }

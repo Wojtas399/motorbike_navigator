@@ -12,11 +12,13 @@ abstract class _Text extends StatelessWidget {
   final String data;
   final _TextType textType;
   final Color? color;
+  final FontWeight? fontWeight;
 
   const _Text(
     this.data, {
     required this.textType,
     this.color,
+    this.fontWeight,
   });
 
   @override
@@ -34,6 +36,7 @@ abstract class _Text extends StatelessWidget {
       data,
       style: textStyle?.copyWith(
         color: color,
+        fontWeight: fontWeight,
       ),
     );
   }
@@ -54,7 +57,11 @@ class LabelLarge extends _Text {
 }
 
 class BodyMedium extends _Text {
-  const BodyMedium(super.data) : super(textType: _TextType.bodyMedium);
+  const BodyMedium(
+    super.data, {
+    super.color,
+    super.fontWeight,
+  }) : super(textType: _TextType.bodyMedium);
 }
 
 class TitleMedium extends _Text {
@@ -62,5 +69,8 @@ class TitleMedium extends _Text {
 }
 
 class TitleLarge extends _Text {
-  const TitleLarge(super.data) : super(textType: _TextType.titleLarge);
+  const TitleLarge(
+    super.data, {
+    super.fontWeight,
+  }) : super(textType: _TextType.titleLarge);
 }

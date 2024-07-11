@@ -62,7 +62,8 @@ class DriveCubit extends Cubit<DriveState> {
   }
 
   Future<void> saveDrive() async {
-    if (state.status != DriveStateStatus.finished) return;
+    if (state.status != DriveStateStatus.finished ||
+        state.startDatetime == null) return;
     final String? loggedUserId = await _authRepository.loggedUserId$.first;
     if (loggedUserId == null) {
       throw '[DriveCubit] Cannot find logged user';
@@ -72,7 +73,7 @@ class DriveCubit extends Cubit<DriveState> {
     ));
     await _driveRepository.addDrive(
       userId: loggedUserId,
-      startDateTime: DateTime(2024, 7, 10, 9, 28),
+      startDateTime: state.startDatetime!,
       distanceInKm: state.distanceInKm,
       durationInSeconds: state.duration.inSeconds,
       avgSpeedInKmPerH: state.avgSpeedInKmPerH,

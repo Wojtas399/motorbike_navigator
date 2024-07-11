@@ -22,7 +22,7 @@ class DriveSummaryData extends StatelessWidget {
           const GapVertical8(),
           Column(
             children: [
-              LabelLarge(context.str.driveDistance),
+              LabelLarge(context.str.distance),
               const GapVertical4(),
               const _Distance(),
               const GapVertical8(),
@@ -35,7 +35,7 @@ class DriveSummaryData extends StatelessWidget {
                     Expanded(
                       child: Column(
                         children: [
-                          LabelLarge(context.str.driveDuration),
+                          LabelLarge(context.str.duration),
                           const GapVertical4(),
                           const _Duration(),
                         ],
@@ -45,7 +45,7 @@ class DriveSummaryData extends StatelessWidget {
                     Expanded(
                       child: Column(
                         children: [
-                          LabelLarge(context.str.driveAvgSpeed),
+                          LabelLarge(context.str.avgSpeed),
                           const GapVertical4(),
                           const _AvgSpeed(),
                         ],

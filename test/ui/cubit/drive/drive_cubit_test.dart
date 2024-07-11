@@ -372,6 +372,22 @@ void main() {
 
   blocTest(
     'saveDrive, '
+    'startDateTime is null, '
+    'should do nothing',
+    build: () => createCubit(),
+    act: (cubit) async {
+      cubit.finishDrive();
+      await cubit.saveDrive();
+    },
+    expect: () => [
+      const DriveState(
+        status: DriveStateStatus.finished,
+      ),
+    ],
+  );
+
+  blocTest(
+    'saveDrive, '
     'logged user does not exist, '
     'should throw exception',
     build: () => createCubit(),
@@ -545,7 +561,7 @@ void main() {
       verify(
         () => driveRepository.addDrive(
           userId: 'u1',
-          startDateTime: DateTime(2024, 7, 10, 9, 28),
+          startDateTime: DateTime(2024, 1, 2, 10, 45),
           distanceInKm: 10,
           durationInSeconds: 1,
           avgSpeedInKmPerH: 50 * 3.6,
