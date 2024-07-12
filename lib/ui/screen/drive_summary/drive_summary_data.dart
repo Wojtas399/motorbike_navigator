@@ -70,7 +70,9 @@ class _StartDateTime extends StatelessWidget {
     );
 
     return LabelMedium(
-      startDateTime == null ? '' : startDateTime.toUIDateWithTimeFormat(),
+      startDateTime == null
+          ? ''
+          : '${startDateTime.toUIDate()}, ${startDateTime.toUITime()}',
       color: context.colorScheme.outline,
     );
   }

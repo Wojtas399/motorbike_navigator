@@ -2,6 +2,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/data/repository/drive/drive_repository.dart';
 
 class MockDriveRepository extends Mock implements DriveRepository {
+  MockDriveRepository() {
+    registerFallbackValue(
+      const Duration(seconds: 1),
+    );
+  }
+
   void mockAddDrive() {
     when(
       () => addDrive(

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
@@ -6,8 +7,10 @@ import '../../../entity/drive.dart';
 import '../../component/gap.dart';
 import '../../component/map_component.dart';
 import '../../component/text.dart';
+import '../../config/app_router.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
+import '../../extensions/datetime_extensions.dart';
 import '../../extensions/duration_extensions.dart';
 
 class SavedDrivesDriveItem extends StatelessWidget {
@@ -18,32 +21,41 @@ class SavedDrivesDriveItem extends StatelessWidget {
     required this.drive,
   });
 
+  void _onPressed(BuildContext context) {
+    context.pushRoute(
+      RoutePreviewRoute(routeWaypoints: drive.waypoints),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) => Container(
-        color: Colors.white,
-        margin: const EdgeInsets.only(bottom: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-              child: _StartDateTime(
-                startDateTime: drive.startDateTime,
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: () => _onPressed(context),
+        child: Container(
+          color: Colors.white,
+          margin: const EdgeInsets.only(bottom: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+                child: _StartDateTime(
+                  startDateTime: drive.startDateTime,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
-              child: _DriveData(
-                distanceInKm: drive.distanceInKm,
-                duration: drive.duration,
-                avgSpeedInKmPerH: drive.avgSpeedInKmPerH,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                child: _DriveData(
+                  distanceInKm: drive.distanceInKm,
+                  duration: drive.duration,
+                  avgSpeedInKmPerH: drive.avgSpeedInKmPerH,
+                ),
               ),
-            ),
-            _RoutePreview(
-              waypoints: drive.waypoints,
-            ),
-            const GapVertical24(),
-          ],
+              _RoutePreview(
+                waypoints: drive.waypoints,
+              ),
+              const GapVertical24(),
+            ],
+          ),
         ),
       );
 }
@@ -58,12 +70,12 @@ class _StartDateTime extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           TitleLarge(
-            '${startDateTime.day}.0${startDateTime.month}.${startDateTime.year}',
+            startDateTime.toUIDate(),
             fontWeight: FontWeight.bold,
           ),
           const GapHorizontal8(),
           BodyMedium(
-            'godz. ${startDateTime.hour}:${startDateTime.minute}',
+            'godz. ${startDateTime.toUITime()}',
             color: context.colorScheme.outline,
           ),
         ],

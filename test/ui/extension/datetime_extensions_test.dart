@@ -14,21 +14,34 @@ void main() {
   });
 
   test(
-    'toUIDateWithTimeFormat, '
-    'should convert DateTime object to string in format dd.mm.yyyy, hh:mm',
+    'toUIDate, '
+    'should convert DateTime object to string in format dd.mm.yyyy',
     () {
       final DateTime dateTime = DateTime(2024, 10, 5, 14, 25);
-      const String expectedStr = '05.10.2024, 14:25';
+      const String expectedStr = '05.10.2024';
       when(() => numberService.twoDigits(10)).thenReturn('10');
       when(() => numberService.twoDigits(5)).thenReturn('05');
-      when(() => numberService.twoDigits(25)).thenReturn('25');
 
-      final str = dateTime.toUIDateWithTimeFormat();
+      final str = dateTime.toUIDate();
 
       expect(str, expectedStr);
       verify(() => numberService.twoDigits(10)).called(1);
       verify(() => numberService.twoDigits(5)).called(1);
-      verify(() => numberService.twoDigits(25)).called(1);
+    },
+  );
+
+  test(
+    'toUITime, '
+    'should convert DateTime object to string in format h:mm',
+    () {
+      final DateTime dateTime = DateTime(2024, 10, 5, 9, 5);
+      const String expectedStr = '9:05';
+      when(() => numberService.twoDigits(5)).thenReturn('05');
+
+      final str = dateTime.toUITime();
+
+      expect(str, expectedStr);
+      verify(() => numberService.twoDigits(5)).called(1);
     },
   );
 }

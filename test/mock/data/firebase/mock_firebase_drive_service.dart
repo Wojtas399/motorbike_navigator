@@ -3,6 +3,12 @@ import 'package:motorbike_navigator/data/dto/drive_dto.dart';
 import 'package:motorbike_navigator/data/firebase/firebase_drive_service.dart';
 
 class MockFirebaseDriveService extends Mock implements FirebaseDriveService {
+  MockFirebaseDriveService() {
+    registerFallbackValue(
+      const Duration(seconds: 1),
+    );
+  }
+
   void mockFetchAllUserDrives({
     required List<DriveDto> expectedDriveDtos,
   }) {
