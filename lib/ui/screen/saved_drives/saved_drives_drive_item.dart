@@ -144,7 +144,7 @@ class _RoutePreview extends StatelessWidget {
           waypoints.first.toLatLng(),
           waypoints.last.toLatLng(),
         ),
-        padding: const EdgeInsets.all(128),
+        padding: const EdgeInsets.all(64),
       );
     }
 
