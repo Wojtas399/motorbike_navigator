@@ -15,25 +15,49 @@ import 'drive_summary_route.dart';
 class DriveSummaryScreen extends StatelessWidget {
   const DriveSummaryScreen({super.key});
 
+  Future<void> _onPop(
+    bool didPop,
+    BuildContext context,
+  ) async {
+    if (didPop) {
+      return;
+    }
+    final NavigatorState navigator = Navigator.of(context);
+    final bool canLeave = await _askForConfirmationToLeave(context);
+    if (canLeave) {
+      navigator.pop();
+    }
+  }
+
+  Future<bool> _askForConfirmationToLeave(BuildContext context) async =>
+      await getIt.get<DialogService>().askForConfirmation(
+            title: context.str.driveSummaryLeaveConfirmationTitle,
+            message: context.str.driveSummaryLeaveConfirmationMessage,
+          );
+
   @override
   Widget build(BuildContext context) => _DriveCubitListener(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(context.str.driveSummary),
-          ),
-          body: const SafeArea(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 400,
-                  width: double.infinity,
-                  child: DriveSummaryRoute(),
-                ),
-                GapVertical8(),
-                DriveSummaryData(),
-                GapVertical24(),
-                _DriveActions(),
-              ],
+        child: PopScope(
+          canPop: false,
+          onPopInvoked: (bool didPop) => _onPop(didPop, context),
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(context.str.driveSummaryScreenTitle),
+            ),
+            body: const SafeArea(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 400,
+                    width: double.infinity,
+                    child: DriveSummaryRoute(),
+                  ),
+                  GapVertical8(),
+                  DriveSummaryData(),
+                  GapVertical24(),
+                  _DriveActions(),
+                ],
+              ),
             ),
           ),
         ),
@@ -57,7 +81,7 @@ class _DriveCubitListener extends StatelessWidget {
       context.read<DriveCubit>().resetDrive();
       context.maybePop();
       dialogService.showSnackbarMessage(
-        context.str.driveSuccessfullySavedDrive,
+        context.str.driveSummarySuccessfullySavedDrive,
       );
     }
   }
@@ -78,8 +102,8 @@ class _DriveActions extends StatelessWidget {
     final bool deleteConfirmation =
         await _askForConfirmationToDeleteDrive(context);
     if (deleteConfirmation == true && context.mounted) {
-      await context.maybePop();
-      if (context.mounted) context.read<DriveCubit>().resetDrive();
+      Navigator.pop(context);
+      context.read<DriveCubit>().resetDrive();
     }
   }
 
@@ -91,8 +115,8 @@ class _DriveActions extends StatelessWidget {
     BuildContext context,
   ) async =>
       await getIt.get<DialogService>().askForConfirmation(
-            title: context.str.driveDeleteConfirmationTitle,
-            message: context.str.driveDeleteConfirmationMessage,
+            title: context.str.driveSummaryDeleteConfirmationTitle,
+            message: context.str.driveSummaryDeleteConfirmationMessage,
           );
 
   @override
