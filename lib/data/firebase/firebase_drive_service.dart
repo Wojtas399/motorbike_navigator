@@ -17,14 +17,14 @@ class FirebaseDriveService {
     required String userId,
     required DateTime startDateTime,
     required double distanceInKm,
-    required int durationInSeconds,
+    required Duration duration,
     required double avgSpeedInKmPerH,
     required List<CoordinatesDto> waypoints,
   }) async {
     final driveToAddDto = DriveDto(
       startDateTime: startDateTime,
       distanceInKm: distanceInKm,
-      durationInSeconds: durationInSeconds,
+      duration: duration,
       avgSpeedInKmPerH: avgSpeedInKmPerH,
       waypoints: waypoints,
     );

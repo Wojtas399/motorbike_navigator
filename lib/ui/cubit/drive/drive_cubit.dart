@@ -75,7 +75,7 @@ class DriveCubit extends Cubit<DriveState> {
       userId: loggedUserId,
       startDateTime: state.startDatetime!,
       distanceInKm: state.distanceInKm,
-      durationInSeconds: state.duration.inSeconds,
+      duration: state.duration,
       avgSpeedInKmPerH: state.avgSpeedInKmPerH,
       waypoints: state.waypoints,
     );

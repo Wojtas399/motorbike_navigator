@@ -16,7 +16,7 @@ void main() {
       const String userId = 'u1';
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 10.21;
-      const int durationInSeconds = 50000;
+      const Duration duration = Duration(hours: 1, minutes: 20);
       const double avgSpeedInKmPerH = 15;
       const List<Coordinates> waypoints = [
         Coordinates(50, 18),
@@ -31,7 +31,7 @@ void main() {
         userId: userId,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
-        durationInSeconds: durationInSeconds,
+        duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypointsDto,
       );
@@ -40,7 +40,7 @@ void main() {
         userId: userId,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
-        durationInSeconds: durationInSeconds,
+        duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypoints,
       );

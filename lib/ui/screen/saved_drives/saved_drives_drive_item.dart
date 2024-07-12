@@ -8,6 +8,7 @@ import '../../component/map_component.dart';
 import '../../component/text.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
+import '../../extensions/duration_extensions.dart';
 
 class SavedDrivesDriveItem extends StatelessWidget {
   final Drive drive;
@@ -34,7 +35,7 @@ class SavedDrivesDriveItem extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
               child: _DriveData(
                 distanceInKm: drive.distanceInKm,
-                durationInSeconds: drive.durationInSeconds,
+                duration: drive.duration,
                 avgSpeedInKmPerH: drive.avgSpeedInKmPerH,
               ),
             ),
@@ -71,12 +72,12 @@ class _StartDateTime extends StatelessWidget {
 
 class _DriveData extends StatelessWidget {
   final double distanceInKm;
-  final int durationInSeconds;
+  final Duration duration;
   final double avgSpeedInKmPerH;
 
   const _DriveData({
     required this.distanceInKm,
-    required this.durationInSeconds,
+    required this.duration,
     required this.avgSpeedInKmPerH,
   });
 
@@ -90,7 +91,7 @@ class _DriveData extends StatelessWidget {
           const GapHorizontal32(),
           _ValueWithLabel(
             label: context.str.duration,
-            value: '$durationInSeconds s',
+            value: duration.toUIFormat(),
           ),
           const GapHorizontal32(),
           _ValueWithLabel(

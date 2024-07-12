@@ -7,7 +7,7 @@ void main() {
   const String userId = 'u1';
   final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
   const double distanceInKm = 10.22;
-  const int durationInSeconds = 500000;
+  const Duration duration = Duration(hours: 1, minutes: 20);
   const double avgSpeedInKmPerH = 45.3;
   const List<CoordinatesDto> waypoints = [
     CoordinatesDto(latitude: 50, longitude: 19),
@@ -16,7 +16,7 @@ void main() {
   final Map<String, Object?> driveJson = {
     'startDateTime': startDateTime.toIso8601String(),
     'distanceInKm': distanceInKm,
-    'durationInSeconds': durationInSeconds,
+    'duration': duration.inMicroseconds,
     'avgSpeedInKmPerH': avgSpeedInKmPerH,
     'waypoints': [
       ...waypoints.map((waypoiny) => waypoiny.toJson()),
@@ -30,7 +30,7 @@ void main() {
       final DriveDto expectedDto = DriveDto(
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
-        durationInSeconds: durationInSeconds,
+        duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypoints,
       );
@@ -50,7 +50,7 @@ void main() {
         userId: userId,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
-        durationInSeconds: durationInSeconds,
+        duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypoints,
       );
@@ -74,7 +74,7 @@ void main() {
         userId: userId,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
-        durationInSeconds: durationInSeconds,
+        duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypoints,
       );

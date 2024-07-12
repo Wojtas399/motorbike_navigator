@@ -16,7 +16,7 @@ class DriveDto with _$DriveDto {
     String userId,
     required DateTime startDateTime,
     required double distanceInKm,
-    required int durationInSeconds,
+    required Duration duration,
     required double avgSpeedInKmPerH,
     @JsonKey(toJson: _mapWaypointsToJsons)
     required List<CoordinatesDto> waypoints,

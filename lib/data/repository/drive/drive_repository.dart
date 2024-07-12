@@ -10,7 +10,7 @@ abstract interface class DriveRepository {
     required String userId,
     required DateTime startDateTime,
     required double distanceInKm,
-    required int durationInSeconds,
+    required Duration duration,
     required double avgSpeedInKmPerH,
     required List<Coordinates> waypoints,
   });

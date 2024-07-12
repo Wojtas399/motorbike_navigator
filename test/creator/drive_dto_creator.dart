@@ -7,7 +7,7 @@ class DriveDtoCreator {
     String userId = '',
     DateTime? startDateTime,
     double distanceInKm = 0,
-    int durationInSeconds = 0,
+    Duration duration = const Duration(seconds: 0),
     double avgSpeedInKmPerH = 0,
     List<CoordinatesDto> waypoints = const [],
   }) =>
@@ -16,7 +16,7 @@ class DriveDtoCreator {
         userId: userId,
         startDateTime: startDateTime ?? DateTime(2024),
         distanceInKm: distanceInKm,
-        durationInSeconds: durationInSeconds,
+        duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypoints,
       );

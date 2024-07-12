@@ -88,7 +88,7 @@ void main() {
       const String userId = 'u1';
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 2.2;
-      const int durationInSeconds = 50000;
+      const Duration duration = Duration(minutes: 20);
       const double avgSpeedInKmPerH = 10.2;
       const List<Coordinates> waypoints = [
         Coordinates(50, 19),
@@ -103,7 +103,7 @@ void main() {
         userId: userId,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
-        durationInSeconds: durationInSeconds,
+        duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypointDtos,
       );
@@ -112,7 +112,7 @@ void main() {
         userId: userId,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
-        durationInSeconds: durationInSeconds,
+        duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypoints,
       );
@@ -132,7 +132,7 @@ void main() {
         userId: userId,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
-        durationInSeconds: durationInSeconds,
+        duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
         waypoints: waypoints,
       );
@@ -146,7 +146,7 @@ void main() {
           userId: userId,
           startDateTime: startDateTime,
           distanceInKm: distanceInKm,
-          durationInSeconds: durationInSeconds,
+          duration: duration,
           avgSpeedInKmPerH: avgSpeedInKmPerH,
           waypoints: waypointDtos,
         ),
@@ -162,7 +162,7 @@ void main() {
       const String userId = 'u1';
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 2.2;
-      const int durationInSeconds = 50000;
+      const Duration duration = Duration(minutes: 20);
       const double avgSpeedInKmPerH = 10.2;
       const List<Coordinates> waypoints = [
         Coordinates(50, 19),
@@ -182,7 +182,7 @@ void main() {
           userId: userId,
           startDateTime: startDateTime,
           distanceInKm: distanceInKm,
-          durationInSeconds: durationInSeconds,
+          duration: duration,
           avgSpeedInKmPerH: avgSpeedInKmPerH,
           waypoints: waypoints,
         );
@@ -196,7 +196,7 @@ void main() {
           userId: userId,
           startDateTime: startDateTime,
           distanceInKm: distanceInKm,
-          durationInSeconds: durationInSeconds,
+          duration: duration,
           avgSpeedInKmPerH: avgSpeedInKmPerH,
           waypoints: waypointDtos,
         ),

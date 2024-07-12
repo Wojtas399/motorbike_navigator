@@ -8,7 +8,7 @@ class MockDriveRepository extends Mock implements DriveRepository {
         userId: any(named: 'userId'),
         startDateTime: any(named: 'startDateTime'),
         distanceInKm: any(named: 'distanceInKm'),
-        durationInSeconds: any(named: 'durationInSeconds'),
+        duration: any(named: 'duration'),
         avgSpeedInKmPerH: any(named: 'avgSpeedInKmPerH'),
         waypoints: any(named: 'waypoints'),
       ),

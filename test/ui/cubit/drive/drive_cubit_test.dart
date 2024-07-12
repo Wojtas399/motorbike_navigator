@@ -563,7 +563,7 @@ void main() {
           userId: 'u1',
           startDateTime: DateTime(2024, 1, 2, 10, 45),
           distanceInKm: 10,
-          durationInSeconds: 1,
+          duration: const Duration(seconds: 1),
           avgSpeedInKmPerH: 50 * 3.6,
           waypoints: const [
             Coordinates(49, 18),

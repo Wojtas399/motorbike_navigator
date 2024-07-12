@@ -36,7 +36,7 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     required String userId,
     required DateTime startDateTime,
     required double distanceInKm,
-    required int durationInSeconds,
+    required Duration duration,
     required double avgSpeedInKmPerH,
     required List<Coordinates> waypoints,
   }) async {
@@ -52,7 +52,7 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
       userId: userId,
       startDateTime: startDateTime,
       distanceInKm: distanceInKm,
-      durationInSeconds: durationInSeconds,
+      duration: duration,
       avgSpeedInKmPerH: avgSpeedInKmPerH,
       waypoints: waypointDtos,
     );
