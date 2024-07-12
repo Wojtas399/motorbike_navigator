@@ -8,6 +8,7 @@ import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
 import '../../extensions/context_extensions.dart';
 import '../../service/dialog_service.dart';
+import 'drive_summary_actions.dart';
 import 'drive_summary_data.dart';
 import 'drive_summary_route.dart';
 
@@ -55,7 +56,7 @@ class DriveSummaryScreen extends StatelessWidget {
                   GapVertical8(),
                   DriveSummaryData(),
                   GapVertical24(),
-                  _DriveActions(),
+                  DriveSummaryActions(),
                 ],
               ),
             ),
@@ -73,17 +74,25 @@ class _DriveCubitListener extends StatelessWidget {
     DriveStateStatus status,
     BuildContext context,
   ) async {
-    final dialogService = getIt.get<DialogService>();
     if (status == DriveStateStatus.saving) {
-      dialogService.showLoadingDialog();
+      _handleSavingStatus();
     } else if (status == DriveStateStatus.saved) {
-      dialogService.closeLoadingDialog();
-      context.read<DriveCubit>().resetDrive();
-      context.maybePop();
-      dialogService.showSnackbarMessage(
-        context.str.driveSummarySuccessfullySavedDrive,
-      );
+      _handleSavedStatus(context);
     }
+  }
+
+  void _handleSavingStatus() {
+    getIt.get<DialogService>().showLoadingDialog();
+  }
+
+  void _handleSavedStatus(BuildContext context) {
+    final dialogService = getIt.get<DialogService>();
+    dialogService.closeLoadingDialog();
+    context.read<DriveCubit>().resetDrive();
+    context.maybePop();
+    dialogService.showSnackbarMessage(
+      context.str.driveSummarySuccessfullySavedDrive,
+    );
   }
 
   @override
@@ -92,53 +101,5 @@ class _DriveCubitListener extends StatelessWidget {
             prevState.status != currState.status,
         listener: (context, state) => _onStatusChanged(state.status, context),
         child: child,
-      );
-}
-
-class _DriveActions extends StatelessWidget {
-  const _DriveActions();
-
-  Future<void> _onDelete(BuildContext context) async {
-    final bool deleteConfirmation =
-        await _askForConfirmationToDeleteDrive(context);
-    if (deleteConfirmation == true && context.mounted) {
-      Navigator.pop(context);
-      context.read<DriveCubit>().resetDrive();
-    }
-  }
-
-  void _onSave(BuildContext context) {
-    context.read<DriveCubit>().saveDrive();
-  }
-
-  Future<bool> _askForConfirmationToDeleteDrive(
-    BuildContext context,
-  ) async =>
-      await getIt.get<DialogService>().askForConfirmation(
-            title: context.str.driveSummaryDeleteConfirmationTitle,
-            message: context.str.driveSummaryDeleteConfirmationMessage,
-          );
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () => _onDelete(context),
-                child: Text(context.str.delete),
-              ),
-            ),
-            const GapHorizontal16(),
-            Expanded(
-              child: FilledButton(
-                onPressed: () => _onSave(context),
-                child: Text(context.str.save),
-              ),
-            ),
-          ],
-        ),
       );
 }
