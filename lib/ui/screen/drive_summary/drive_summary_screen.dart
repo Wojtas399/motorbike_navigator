@@ -89,7 +89,7 @@ class _DriveCubitListener extends StatelessWidget {
     final dialogService = getIt.get<DialogService>();
     dialogService.closeLoadingDialog();
     context.read<DriveCubit>().resetDrive();
-    context.maybePop();
+    Navigator.pop(context);
     dialogService.showSnackbarMessage(
       context.str.driveSummarySuccessfullySavedDrive,
     );
