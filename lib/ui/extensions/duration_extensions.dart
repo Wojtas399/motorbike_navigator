@@ -3,6 +3,6 @@ extension DurationExtensions on Duration {
     final int minutes = inMinutes % 60;
     final int seconds = inSeconds % 60;
 
-    return '$inHours h $minutes min $seconds s';
+    return '${inHours}h ${minutes}min ${seconds}s';
   }
 }
