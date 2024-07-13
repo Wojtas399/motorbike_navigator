@@ -39,7 +39,8 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should listen to all user drives and should emit them',
+    'should listen to all user drives, sort them by startDateTime in descending '
+    'order and should emit them',
     build: () => createCubit(),
     setUp: () {
       authRepository.mockGetLoggedUserId(expectedLoggedUserId: 'u1');
@@ -48,13 +49,28 @@ void main() {
       ).thenAnswer(
         (_) => Stream.fromIterable([
           [
-            driveCreator.create(id: 'd1'),
-            driveCreator.create(id: 'd2'),
+            driveCreator.create(
+              id: 'd1',
+              startDateTime: DateTime(2024, 7, 13, 10, 30),
+            ),
+            driveCreator.create(
+              id: 'd2',
+              startDateTime: DateTime(2024, 7, 13, 12, 45),
+            ),
           ],
           [
-            driveCreator.create(id: 'd1'),
-            driveCreator.create(id: 'd2'),
-            driveCreator.create(id: 'd3'),
+            driveCreator.create(
+              id: 'd1',
+              startDateTime: DateTime(2024, 7, 13, 10, 30),
+            ),
+            driveCreator.create(
+              id: 'd2',
+              startDateTime: DateTime(2024, 7, 13, 12, 45),
+            ),
+            driveCreator.create(
+              id: 'd3',
+              startDateTime: DateTime(2024, 7, 14, 9, 50),
+            ),
           ],
         ]),
       );
@@ -64,16 +80,31 @@ void main() {
       SavedDrivesState(
         status: SavedDrivesStateStatus.completed,
         drives: [
-          driveCreator.create(id: 'd1'),
-          driveCreator.create(id: 'd2'),
+          driveCreator.create(
+            id: 'd2',
+            startDateTime: DateTime(2024, 7, 13, 12, 45),
+          ),
+          driveCreator.create(
+            id: 'd1',
+            startDateTime: DateTime(2024, 7, 13, 10, 30),
+          ),
         ],
       ),
       SavedDrivesState(
         status: SavedDrivesStateStatus.completed,
         drives: [
-          driveCreator.create(id: 'd1'),
-          driveCreator.create(id: 'd2'),
-          driveCreator.create(id: 'd3'),
+          driveCreator.create(
+            id: 'd3',
+            startDateTime: DateTime(2024, 7, 14, 9, 50),
+          ),
+          driveCreator.create(
+            id: 'd2',
+            startDateTime: DateTime(2024, 7, 13, 12, 45),
+          ),
+          driveCreator.create(
+            id: 'd1',
+            startDateTime: DateTime(2024, 7, 13, 10, 30),
+          ),
         ],
       ),
     ],

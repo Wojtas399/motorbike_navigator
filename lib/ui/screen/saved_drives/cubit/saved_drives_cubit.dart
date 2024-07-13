@@ -20,9 +20,13 @@ class SavedDrivesCubit extends Cubit<SavedDrivesState> {
   Future<void> initialize() async {
     final Stream<List<Drive>> loggedUserDrives$ = _getLoggedUserDrives();
     await for (final loggedUserDrives in loggedUserDrives$) {
+      final List<Drive> sortedDrives = [...loggedUserDrives];
+      sortedDrives.sort(
+        (d1, d2) => d2.startDateTime.compareTo(d1.startDateTime),
+      );
       emit(state.copyWith(
         status: SavedDrivesStateStatus.completed,
-        drives: loggedUserDrives,
+        drives: sortedDrives,
       ));
     }
   }
