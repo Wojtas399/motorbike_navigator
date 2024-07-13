@@ -27,6 +27,7 @@ class DriveSummaryScreen extends StatelessWidget {
     final bool canLeave = await _askForConfirmationToLeave(context);
     if (canLeave) {
       navigator.pop();
+      if (context.mounted) context.read<DriveCubit>().resetDrive();
     }
   }
 

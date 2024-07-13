@@ -29,21 +29,35 @@ class MapScreen extends StatelessWidget {
           ),
         ],
         child: const _DriveCubitListener(
-          child: Scaffold(
-            drawer: MapDrawer(),
-            body: Stack(
-              children: [
-                MapContent(),
-                Positioned(
-                  left: 16,
-                  top: kToolbarHeight + 24,
-                  child: _MenuButton(),
-                ),
-              ],
-            ),
-          ),
+          child: _Content(),
         ),
       );
+}
+
+class _Content extends StatelessWidget {
+  const _Content();
+
+  @override
+  Widget build(BuildContext context) {
+    final DriveStateStatus driveStatus = context.select(
+      (DriveCubit cubit) => cubit.state.status,
+    );
+
+    return Scaffold(
+      drawer: driveStatus.isInitial ? const MapDrawer() : null,
+      body: Stack(
+        children: [
+          const MapContent(),
+          if (driveStatus.isInitial)
+            const Positioned(
+              left: 16,
+              top: kToolbarHeight + 24,
+              child: _MenuButton(),
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 class _DriveCubitListener extends StatelessWidget {

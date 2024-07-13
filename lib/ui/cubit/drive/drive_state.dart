@@ -12,6 +12,10 @@ enum DriveStateStatus {
   saved,
 }
 
+extension DriveStateStatusExtensions on DriveStateStatus {
+  bool get isInitial => this == DriveStateStatus.initial;
+}
+
 @freezed
 class DriveState with _$DriveState {
   const DriveState._();
