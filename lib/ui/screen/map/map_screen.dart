@@ -52,7 +52,7 @@ class _DriveCubitListener extends StatelessWidget {
   const _DriveCubitListener({required this.child});
 
   void _onStatusChanged(DriveStateStatus status, BuildContext context) {
-    if (status == DriveStateStatus.finished) {
+    if (status == DriveStateStatus.paused) {
       Navigator.push(
         context,
         MaterialPageRoute(

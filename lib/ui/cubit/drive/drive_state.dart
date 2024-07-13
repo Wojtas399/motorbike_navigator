@@ -4,7 +4,13 @@ import '../../../entity/coordinates.dart';
 
 part 'drive_state.freezed.dart';
 
-enum DriveStateStatus { initial, ongoing, finished, saving, saved }
+enum DriveStateStatus {
+  initial,
+  ongoing,
+  paused,
+  saving,
+  saved,
+}
 
 @freezed
 class DriveState with _$DriveState {

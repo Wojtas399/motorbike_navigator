@@ -30,11 +30,11 @@ void main() {
         (_) => Stream.fromIterable([
           const Position(
             coordinates: Coordinates(50, 19),
-            speedInMetersPerSecond: 10,
+            speedInKmPerH: 10,
           ),
           const Position(
             coordinates: Coordinates(51, 20),
-            speedInMetersPerSecond: 11,
+            speedInKmPerH: 11,
           ),
         ]),
       );
@@ -117,7 +117,7 @@ void main() {
     setUp: () => locationService.mockGetPosition(
       expectedPosition: const Position(
         coordinates: Coordinates(50.2, 25.4),
-        speedInMetersPerSecond: 0,
+        speedInKmPerH: 0,
       ),
     ),
     act: (cubit) async {

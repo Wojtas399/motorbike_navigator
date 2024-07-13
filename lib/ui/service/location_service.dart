@@ -15,7 +15,7 @@ class LocationService {
       await for (final position in position$) {
         yield Position(
           coordinates: Coordinates(position.latitude, position.longitude),
-          speedInMetersPerSecond: position.speed,
+          speedInKmPerH: position.speed * 3.6,
         );
       }
     }

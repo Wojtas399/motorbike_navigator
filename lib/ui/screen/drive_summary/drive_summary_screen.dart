@@ -74,11 +74,17 @@ class _DriveCubitListener extends StatelessWidget {
     DriveStateStatus status,
     BuildContext context,
   ) async {
-    if (status == DriveStateStatus.saving) {
+    if (status == DriveStateStatus.ongoing) {
+      _handleOngoingStatus(context);
+    } else if (status == DriveStateStatus.saving) {
       _handleSavingStatus();
     } else if (status == DriveStateStatus.saved) {
       _handleSavedStatus(context);
     }
+  }
+
+  void _handleOngoingStatus(BuildContext context) {
+    Navigator.pop(context);
   }
 
   void _handleSavingStatus() {

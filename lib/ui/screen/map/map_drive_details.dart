@@ -53,7 +53,7 @@ class MapDriveDetails extends StatelessWidget {
               ),
             ),
             GapVertical24(),
-            _FinishDriveButton(),
+            _PauseButton(),
           ],
         ),
       );
@@ -133,11 +133,11 @@ class _AvgSpeed extends StatelessWidget {
   }
 }
 
-class _FinishDriveButton extends StatelessWidget {
-  const _FinishDriveButton();
+class _PauseButton extends StatelessWidget {
+  const _PauseButton();
 
   void _onPressed(BuildContext context) {
-    context.read<DriveCubit>().finishDrive();
+    context.read<DriveCubit>().pauseDrive();
   }
 
   @override
@@ -145,7 +145,7 @@ class _FinishDriveButton extends StatelessWidget {
         width: 300,
         child: FilledButton(
           onPressed: () => _onPressed(context),
-          child: const Text('Zakończ'),
+          child: const Text('Zatrzymaj jazdę'),
         ),
       );
 }

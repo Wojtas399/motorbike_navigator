@@ -12,6 +12,7 @@
   "mapSavedDrives": "Zapisane przejazdy",
   "@----------DRIVE_SUMMARY----------": {},
   "driveSummaryScreenTitle": "Podsumowanie trasy",
+  "driveSummaryResumeDrive": "Wznów jazdę",
   "driveSummaryDeleteConfirmationTitle": "Potwierdzenie usunięcia",
   "driveSummaryDeleteConfirmationMessage": "Czy na pewno chcesz usunąć tę aktywność?",
   "driveSummarySuccessfullySavedDrive": "Pomyślnie zapisano jazdę!",

@@ -13,17 +13,41 @@ class DriveSummaryActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const Padding(
         padding: EdgeInsets.all(24),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
           children: [
-            Expanded(
-              child: _DeleteButton(),
-            ),
-            GapHorizontal16(),
-            Expanded(
-              child: _SaveButton(),
+            _ResumeDriveButton(),
+            GapVertical8(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: _DeleteButton(),
+                ),
+                GapHorizontal16(),
+                Expanded(
+                  child: _SaveButton(),
+                ),
+              ],
             ),
           ],
+        ),
+      );
+}
+
+class _ResumeDriveButton extends StatelessWidget {
+  const _ResumeDriveButton();
+
+  void _onPressed(BuildContext context) {
+    context.read<DriveCubit>().resumeDrive();
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        width: double.infinity,
+        child: FilledButton.icon(
+          onPressed: () => _onPressed(context),
+          icon: const Icon(Icons.play_arrow_outlined),
+          label: Text(context.str.driveSummaryResumeDrive),
         ),
       );
 }
@@ -49,9 +73,13 @@ class _DeleteButton extends StatelessWidget {
           );
 
   @override
-  Widget build(BuildContext context) => OutlinedButton(
+  Widget build(BuildContext context) => OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: context.colorScheme.error,
+        ),
         onPressed: () => _onPressed(context),
-        child: Text(context.str.delete),
+        icon: const Icon(Icons.delete_outline),
+        label: Text(context.str.delete),
       );
 }
 
@@ -63,8 +91,9 @@ class _SaveButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => FilledButton(
+  Widget build(BuildContext context) => OutlinedButton.icon(
         onPressed: () => _onPressed(context),
-        child: Text(context.str.save),
+        icon: const Icon(Icons.save_alt_outlined),
+        label: Text(context.str.save),
       );
 }

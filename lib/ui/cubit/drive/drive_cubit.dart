@@ -52,18 +52,29 @@ class DriveCubit extends Cubit<DriveState> {
     _listenPosition();
   }
 
-  void finishDrive() {
+  void pauseDrive() {
     _timer?.cancel();
     _positionListener?.cancel();
-    _speedsInKmPerH = [];
+    _timer = null;
+    _positionListener = null;
     emit(state.copyWith(
-      status: DriveStateStatus.finished,
+      status: DriveStateStatus.paused,
     ));
   }
 
+  void resumeDrive() {
+    emit(state.copyWith(
+      status: DriveStateStatus.ongoing,
+    ));
+    _startTimer();
+    _listenPosition();
+  }
+
   Future<void> saveDrive() async {
-    if (state.status != DriveStateStatus.finished ||
-        state.startDatetime == null) return;
+    if (state.status != DriveStateStatus.paused ||
+        state.startDatetime == null) {
+      return;
+    }
     final String? loggedUserId = await _authRepository.loggedUserId$.first;
     if (loggedUserId == null) {
       throw '[DriveCubit] Cannot find logged user';
@@ -85,14 +96,16 @@ class DriveCubit extends Cubit<DriveState> {
   }
 
   void resetDrive() {
+    _speedsInKmPerH = [];
     emit(const DriveState());
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(
+    _timer ??= Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
         emit(state.copyWith(
+          status: DriveStateStatus.ongoing,
           duration: Duration(seconds: state.duration.inSeconds + 1),
         ));
       },
@@ -100,7 +113,7 @@ class DriveCubit extends Cubit<DriveState> {
   }
 
   void _listenPosition() {
-    _positionListener =
+    _positionListener ??=
         _locationService.getPosition().listen(_onPositionUpdated);
   }
 
@@ -115,10 +128,11 @@ class DriveCubit extends Cubit<DriveState> {
       );
     }
     updatedWaypoints.add(position.coordinates);
-    _speedsInKmPerH.add(position.speedInMetersPerSecond * 3.6);
+    _speedsInKmPerH.add(position.speedInKmPerH);
     emit(state.copyWith(
+      status: DriveStateStatus.ongoing,
       distanceInKm: state.distanceInKm + distanceFromPreviousLocation,
-      speedInKmPerH: position.speedInMetersPerSecond * 3.6,
+      speedInKmPerH: position.speedInKmPerH,
       avgSpeedInKmPerH: _speedsInKmPerH.average,
       waypoints: updatedWaypoints,
     ));

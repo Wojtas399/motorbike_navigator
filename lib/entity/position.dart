@@ -4,13 +4,16 @@ import 'coordinates.dart';
 
 class Position extends Equatable {
   final Coordinates coordinates;
-  final double speedInMetersPerSecond;
+  final double speedInKmPerH;
 
   const Position({
     required this.coordinates,
-    required this.speedInMetersPerSecond,
+    required this.speedInKmPerH,
   });
 
   @override
-  List<Object?> get props => [coordinates, speedInMetersPerSecond];
+  List<Object?> get props => [
+        coordinates,
+        speedInKmPerH,
+      ];
 }
