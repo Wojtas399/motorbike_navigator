@@ -8,6 +8,11 @@ enum SignInStateStatus {
   userIsAlreadySignedIn,
 }
 
+extension SignInStateStatusExtensions on SignInStateStatus {
+  bool get isUserAlreadySignedIn =>
+      this == SignInStateStatus.userIsAlreadySignedIn;
+}
+
 @freezed
 class SignInState with _$SignInState {
   const SignInState._();
@@ -15,7 +20,4 @@ class SignInState with _$SignInState {
   const factory SignInState({
     @Default(SignInStateStatus.loading) SignInStateStatus status,
   }) = _SignInState;
-
-  bool get isUserAlreadySignedIn =>
-      status == SignInStateStatus.userIsAlreadySignedIn;
 }

@@ -51,8 +51,12 @@ class _LoggedUserListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocListener<SignInCubit, SignInState>(
-        listener: (_, state) =>
-            _onAuthStateChanged(state.isUserAlreadySignedIn, context),
+        listenWhen: (prevState, currState) =>
+            prevState.status != currState.status,
+        listener: (_, state) => _onAuthStateChanged(
+          state.status.isUserAlreadySignedIn,
+          context,
+        ),
         child: child,
       );
 }
