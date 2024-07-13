@@ -7,9 +7,9 @@ import '../../../dependency_injection.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../config/app_router.dart';
-import '../../cubit/sign_in/sign_in_cubit.dart';
-import '../../cubit/sign_in/sign_in_state.dart';
 import '../../extensions/context_extensions.dart';
+import 'cubit/sign_in_cubit.dart';
+import 'cubit/sign_in_state.dart';
 
 @RoutePage()
 class SignInScreen extends StatelessWidget {

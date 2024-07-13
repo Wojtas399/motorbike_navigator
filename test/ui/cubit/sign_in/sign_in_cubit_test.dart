@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/ui/cubit/sign_in/sign_in_cubit.dart';
-import 'package:motorbike_navigator/ui/cubit/sign_in/sign_in_state.dart';
+import 'package:motorbike_navigator/ui/screen/sign_in/cubit/sign_in_cubit.dart';
+import 'package:motorbike_navigator/ui/screen/sign_in/cubit/sign_in_state.dart';
 
 import '../../../mock/data/repository/mock_auth_repository.dart';
 
