@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../entity/coordinates.dart';
+import '../../../../entity/coordinates.dart';
 
 part 'map_state.freezed.dart';
 

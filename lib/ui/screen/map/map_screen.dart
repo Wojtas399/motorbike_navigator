@@ -6,8 +6,8 @@ import '../../../dependency_injection.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
 import '../../cubit/logged_user/logged_user_cubit.dart';
-import '../../cubit/map/map_cubit.dart';
 import '../drive_summary/drive_summary_screen.dart';
+import 'cubit/map_cubit.dart';
 import 'map_content.dart';
 import 'map_drawer.dart';
 

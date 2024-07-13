@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/position.dart';
-import 'package:motorbike_navigator/ui/cubit/map/map_cubit.dart';
-import 'package:motorbike_navigator/ui/cubit/map/map_state.dart';
+import 'package:motorbike_navigator/ui/screen/map/cubit/map_cubit.dart';
+import 'package:motorbike_navigator/ui/screen/map/cubit/map_state.dart';
 
 import '../../../mock/ui_service/mock_location_service.dart';
 
