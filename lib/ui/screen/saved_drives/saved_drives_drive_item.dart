@@ -154,12 +154,11 @@ class _RoutePreview extends StatelessWidget {
   Widget build(BuildContext context) {
     CameraFit? cameraFit;
     if (waypoints.toSet().length >= 2) {
-      cameraFit = CameraFit.bounds(
-        bounds: LatLngBounds(
-          waypoints.first.toLatLng(),
-          waypoints.last.toLatLng(),
-        ),
-        padding: const EdgeInsets.all(64),
+      cameraFit = CameraFit.coordinates(
+        coordinates: waypoints
+            .map((Coordinates waypoint) => waypoint.toLatLng())
+            .toList(),
+        padding: const EdgeInsets.all(48),
       );
     }
 

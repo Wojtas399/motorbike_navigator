@@ -23,12 +23,11 @@ class RoutePreviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     CameraFit? initialCameraFit;
     if (routeWaypoints.toSet().length >= 2) {
-      initialCameraFit = CameraFit.bounds(
-        bounds: LatLngBounds(
-          routeWaypoints.first.toLatLng(),
-          routeWaypoints.last.toLatLng(),
-        ),
-        padding: const EdgeInsets.all(128),
+      initialCameraFit = CameraFit.coordinates(
+        coordinates: routeWaypoints
+            .map((Coordinates waypoint) => waypoint.toLatLng())
+            .toList(),
+        padding: const EdgeInsets.all(64),
       );
     }
 

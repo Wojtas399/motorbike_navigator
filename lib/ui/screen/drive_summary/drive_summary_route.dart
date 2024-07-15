@@ -24,12 +24,11 @@ class DriveSummaryRoute extends StatelessWidget {
         context.read<DriveCubit>().state.waypoints;
     CameraFit? cameraFit;
     if (routeWaypoints.toSet().length >= 2) {
-      cameraFit = CameraFit.bounds(
-        bounds: LatLngBounds(
-          routeWaypoints.first.toLatLng(),
-          routeWaypoints.last.toLatLng(),
-        ),
-        padding: const EdgeInsets.all(128),
+      cameraFit = CameraFit.coordinates(
+        coordinates: routeWaypoints
+            .map((Coordinates waypoint) => waypoint.toLatLng())
+            .toList(),
+        padding: const EdgeInsets.all(48),
       );
     }
 
