@@ -5,8 +5,8 @@ import 'package:motorbike_navigator/entity/user.dart';
 
 class MockThemeModeMapper extends Mock implements ThemeModeMapper {
   MockThemeModeMapper() {
-    registerFallbackValue(ThemeMode.system);
-    registerFallbackValue(ThemeModeDto.system);
+    registerFallbackValue(ThemeMode.light);
+    registerFallbackValue(ThemeModeDto.light);
   }
 
   void mockMapFromDto({

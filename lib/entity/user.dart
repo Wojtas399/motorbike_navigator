@@ -15,4 +15,4 @@ class User extends Entity {
       ];
 }
 
-enum ThemeMode { light, dark, system }
+enum ThemeMode { light, dark }

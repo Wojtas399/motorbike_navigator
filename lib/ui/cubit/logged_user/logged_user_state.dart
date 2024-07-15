@@ -1,15 +1,19 @@
-sealed class LoggedUserState {
-  const LoggedUserState();
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../../entity/user.dart';
+
+part 'logged_user_state.freezed.dart';
+
+enum LoggedUserStateStatus { loading, completed }
+
+extension LoggedUserStateStatusExtensions on LoggedUserStateStatus {
+  bool get isLoading => this == LoggedUserStateStatus.loading;
 }
 
-class LoggedUserStateLoading extends LoggedUserState {
-  const LoggedUserStateLoading();
-}
-
-class LoggedUserStateCompleted extends LoggedUserState {
-  const LoggedUserStateCompleted();
-}
-
-class LoggedUserStateLoggedUserDoesNotExist extends LoggedUserState {
-  const LoggedUserStateLoggedUserDoesNotExist();
+@freezed
+class LoggedUserState with _$LoggedUserState {
+  const factory LoggedUserState({
+    @Default(LoggedUserStateStatus.loading) LoggedUserStateStatus status,
+    ThemeMode? themeMode,
+  }) = _LoggedUserState;
 }

@@ -25,7 +25,7 @@ class MapContent extends StatelessWidget {
       (MapCubit cubit) => cubit.state.status,
     );
 
-    return loggedUserState is LoggedUserStateLoading || cubitStatus.isLoading
+    return loggedUserState.status.isLoading || cubitStatus.isLoading
         ? const _LoadingIndicator()
         : const _Content();
   }

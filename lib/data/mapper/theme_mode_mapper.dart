@@ -12,13 +12,11 @@ class ThemeModeMapper extends Mapper<ThemeMode, ThemeModeDto> {
   ThemeMode mapFromDto(ThemeModeDto dto) => switch (dto) {
         ThemeModeDto.light => ThemeMode.light,
         ThemeModeDto.dark => ThemeMode.dark,
-        ThemeModeDto.system => ThemeMode.system,
       };
 
   @override
   ThemeModeDto mapToDto(ThemeMode object) => switch (object) {
         ThemeMode.light => ThemeModeDto.light,
         ThemeMode.dark => ThemeModeDto.dark,
-        ThemeMode.system => ThemeModeDto.system,
       };
 }

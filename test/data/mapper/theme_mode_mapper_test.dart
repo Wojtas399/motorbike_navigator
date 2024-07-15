@@ -33,19 +33,6 @@ void main() {
   );
 
   test(
-    'mapFromDto, '
-    'ThemeModeDto.system should be mapped to ThemeMode.system',
-    () {
-      const ThemeModeDto themeModeDto = ThemeModeDto.system;
-      const ThemeMode expectedThemeMode = ThemeMode.system;
-
-      final ThemeMode themeMode = mapper.mapFromDto(themeModeDto);
-
-      expect(themeMode, expectedThemeMode);
-    },
-  );
-
-  test(
     'mapToDto, '
     'ThemeMode.light should be mapped to ThemeModeDto.light',
     () {
@@ -64,19 +51,6 @@ void main() {
     () {
       const ThemeMode themeMode = ThemeMode.dark;
       const ThemeModeDto expectedThemeModeDto = ThemeModeDto.dark;
-
-      final ThemeModeDto themeModeDto = mapper.mapToDto(themeMode);
-
-      expect(themeModeDto, expectedThemeModeDto);
-    },
-  );
-
-  test(
-    'mapToDto, '
-    'ThemeMode.system should be mapped to ThemeModeDto.system',
-    () {
-      const ThemeMode themeMode = ThemeMode.system;
-      const ThemeModeDto expectedThemeModeDto = ThemeModeDto.system;
 
       final ThemeModeDto themeModeDto = mapper.mapToDto(themeMode);
 

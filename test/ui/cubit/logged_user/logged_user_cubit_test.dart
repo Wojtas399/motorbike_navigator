@@ -22,74 +22,128 @@ void main() {
     reset(userRepository);
   });
 
-  blocTest(
-    'initialize, '
-    'id of logged user is null, '
-    'should emit LoggedUserDoesNotExist status',
-    build: () => createCubit(),
-    setUp: () => authRepository.mockGetLoggedUserId(expectedLoggedUserId: null),
-    act: (cubit) async => await cubit.initialize(),
-    expect: () => [
-      const LoggedUserStateLoggedUserDoesNotExist(),
-    ],
-    verify: (_) => verify(
-      () => authRepository.loggedUserId$,
-    ).called(1),
-  );
+  group(
+    'initialize, ',
+    () {
+      const String loggedUserId = 'u1';
+      const User loggedUser = User(
+        id: loggedUserId,
+        themeMode: ThemeMode.dark,
+      );
 
-  blocTest(
-    'initialize, '
-    'data of logged user exist, '
-    'should emit Completed status',
-    build: () => createCubit(),
-    setUp: () {
-      authRepository.mockGetLoggedUserId(expectedLoggedUserId: 'u1');
-      userRepository.mockGetUserById(
-        expectedUser: const User(id: 'u1', themeMode: ThemeMode.light),
+      blocTest(
+        'should not emit anything if logged user id is null',
+        build: () => createCubit(),
+        setUp: () => authRepository.mockGetLoggedUserId(),
+        act: (cubit) => cubit.initialize(),
+        expect: () => [],
+        verify: (_) => verify(() => authRepository.loggedUserId$).called(1),
+      );
+
+      blocTest(
+        'should call method from UserRepository to add user with theme mode set '
+        'as light',
+        build: () => createCubit(),
+        setUp: () {
+          authRepository.mockGetLoggedUserId(
+            expectedLoggedUserId: loggedUserId,
+          );
+          userRepository.mockGetUserById();
+          userRepository.mockAddUser();
+        },
+        act: (cubit) => cubit.initialize(),
+        expect: () => const [
+          LoggedUserState(
+            status: LoggedUserStateStatus.completed,
+          ),
+        ],
+        verify: (_) {
+          verify(() => authRepository.loggedUserId$).called(1);
+          verify(
+            () => userRepository.getUserById(userId: loggedUserId),
+          ).called(1);
+          verify(
+            () => userRepository.addUser(
+              userId: loggedUserId,
+              themeMode: ThemeMode.light,
+            ),
+          ).called(1);
+        },
+      );
+
+      blocTest(
+        "should emit logged user's theme mode if its data exist",
+        build: () => createCubit(),
+        setUp: () {
+          authRepository.mockGetLoggedUserId(
+            expectedLoggedUserId: loggedUserId,
+          );
+          userRepository.mockGetUserById(expectedUser: loggedUser);
+        },
+        act: (cubit) => cubit.initialize(),
+        expect: () => [
+          LoggedUserState(
+            status: LoggedUserStateStatus.completed,
+            themeMode: loggedUser.themeMode,
+          ),
+        ],
+        verify: (_) {
+          verify(() => authRepository.loggedUserId$).called(1);
+          verify(
+            () => userRepository.getUserById(userId: loggedUserId),
+          ).called(1);
+        },
       );
     },
-    act: (cubit) async => await cubit.initialize(),
-    expect: () => [
-      const LoggedUserStateCompleted(),
-    ],
-    verify: (_) {
-      verify(
-        () => authRepository.loggedUserId$,
-      ).called(1);
-      verify(
-        () => userRepository.getUserById(userId: 'u1'),
-      ).called(1);
-    },
   );
 
-  blocTest(
-    'initialize, '
-    'data of logged user not exist, '
-    'should add user data with light mode set as system and should emit '
-    'Completed status',
-    build: () => createCubit(),
-    setUp: () {
-      authRepository.mockGetLoggedUserId(expectedLoggedUserId: 'u1');
-      userRepository.mockGetUserById(expectedUser: null);
-      userRepository.mockAddUser();
-    },
-    act: (cubit) async => await cubit.initialize(),
-    expect: () => [
-      const LoggedUserStateCompleted(),
-    ],
-    verify: (_) {
-      verify(
-        () => authRepository.loggedUserId$,
-      ).called(1);
-      verify(
-        () => userRepository.getUserById(userId: 'u1'),
-      ).called(1);
-      verify(
-        () => userRepository.addUser(
-          userId: 'u1',
-          themeMode: ThemeMode.system,
-        ),
-      ).called(1);
+  group(
+    'changeThemeMode',
+    () {
+      const String loggedUserId = 'u1';
+      const ThemeMode newThemeMode = ThemeMode.dark;
+      const LoggedUserState stateWithNewThemeMode = LoggedUserState(
+        status: LoggedUserStateStatus.completed,
+        themeMode: newThemeMode,
+      );
+
+      blocTest(
+        'should emit state with new theme mode and then should emit previous '
+        'state if logged user id has not been found',
+        build: () => createCubit(),
+        setUp: () => authRepository.mockGetLoggedUserId(),
+        act: (cubit) => cubit.changeThemeMode(newThemeMode),
+        expect: () => const [
+          stateWithNewThemeMode,
+          LoggedUserState(),
+        ],
+        verify: (_) => verify(() => authRepository.loggedUserId$).called(1),
+      );
+
+      blocTest(
+        'should emit state with new theme mode and should call method from '
+        'UserRepository to update theme mode if logged user id has been found',
+        build: () => createCubit(),
+        setUp: () {
+          authRepository.mockGetLoggedUserId(
+            expectedLoggedUserId: loggedUserId,
+          );
+          userRepository.mockUpdateUserThemeMode();
+        },
+        act: (cubit) => cubit.changeThemeMode(newThemeMode),
+        expect: () => const [
+          stateWithNewThemeMode,
+        ],
+        verify: (_) {
+          verify(() => authRepository.loggedUserId$).called(1);
+          verify(
+            () => userRepository.updateUserThemeMode(
+              userId: loggedUserId,
+              themeMode: newThemeMode,
+            ),
+          ).called(1);
+        },
+      );
     },
   );
 }

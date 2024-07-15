@@ -19,4 +19,4 @@ class UserDto with _$UserDto {
       UserDto.fromJson(json).copyWith(id: id);
 }
 
-enum ThemeModeDto { light, dark, system }
+enum ThemeModeDto { light, dark }

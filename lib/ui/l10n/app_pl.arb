@@ -36,5 +36,6 @@
   "distance": "Dystans",
   "duration": "Czas trwania",
   "speed": "Prędkość",
-  "avgSpeed": "Średnia prędkość"
+  "avgSpeed": "Średnia prędkość",
+  "darkMode": "Ciemny motyw"
 }

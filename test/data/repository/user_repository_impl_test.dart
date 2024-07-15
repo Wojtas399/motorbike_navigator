@@ -123,8 +123,8 @@ void main() {
         id: userId,
         themeMode: ThemeMode.light,
       );
-      const ThemeMode newThemeMode = ThemeMode.system;
-      const ThemeModeDto newThemeModeDto = ThemeModeDto.system;
+      const ThemeMode newThemeMode = ThemeMode.dark;
+      const ThemeModeDto newThemeModeDto = ThemeModeDto.dark;
       const expectedException = "Updated user's data not found";
       dbUserService.mockFetchUserById(expectedUserDto: existingUserDto);
       userMapper.mockMapFromDto(expectedUser: existingUser);
@@ -161,8 +161,8 @@ void main() {
         id: userId,
         themeMode: ThemeModeDto.dark,
       );
-      const ThemeMode newThemeMode = ThemeMode.system;
-      const ThemeModeDto newThemeModeDto = ThemeModeDto.system;
+      const ThemeMode newThemeMode = ThemeMode.light;
+      const ThemeModeDto newThemeModeDto = ThemeModeDto.light;
       const User updatedUser = User(
         id: userId,
         themeMode: newThemeMode,

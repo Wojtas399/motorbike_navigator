@@ -6,7 +6,7 @@ import 'package:motorbike_navigator/entity/user.dart';
 class MockUserMapper extends Mock implements UserMapper {
   MockUserMapper() {
     registerFallbackValue(
-      const UserDto(themeMode: ThemeModeDto.system),
+      const UserDto(themeMode: ThemeModeDto.light),
     );
   }
 
