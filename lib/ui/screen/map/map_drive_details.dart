@@ -143,9 +143,10 @@ class _PauseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
         width: 300,
-        child: FilledButton(
+        child: FilledButton.icon(
           onPressed: () => _onPressed(context),
-          child: const Text('Zatrzymaj jazdę'),
+          icon: const Icon(Icons.stop_circle_outlined),
+          label: Text(context.str.mapStopNavigation),
         ),
       );
 }

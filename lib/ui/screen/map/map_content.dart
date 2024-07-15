@@ -1,12 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 
-import '../../../entity/coordinates.dart';
-import '../../../env.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/drive/drive_cubit.dart';
@@ -14,12 +8,10 @@ import '../../cubit/drive/drive_state.dart';
 import '../../cubit/logged_user/logged_user_cubit.dart';
 import '../../cubit/logged_user/logged_user_state.dart';
 import '../../extensions/context_extensions.dart';
-import '../../extensions/coordinates_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 import 'map_drive_details.dart';
-import 'map_marker_layer.dart';
-import 'map_polyline_layer.dart';
+import 'map_map_view.dart';
 
 class MapContent extends StatelessWidget {
   const MapContent({super.key});
@@ -66,7 +58,7 @@ class _Content extends StatelessWidget {
 
     return Stack(
       children: [
-        const _Map(),
+        const MapMapView(),
         if (driveStatus == DriveStateStatus.initial)
           const Positioned(
             bottom: 24,
@@ -91,91 +83,22 @@ class _Content extends StatelessWidget {
   }
 }
 
-class _Map extends StatefulWidget {
-  const _Map();
+class _StartRideButton extends StatelessWidget {
+  const _StartRideButton();
 
-  @override
-  State<StatefulWidget> createState() => _MapState();
-}
-
-class _MapState extends State<_Map> {
-  late final MapController _mapController;
-  StreamSubscription? _mapListener;
-
-  @override
-  void initState() {
-    _mapController = MapController();
-    _mapListener = _mapController.mapEventStream.listen(
-      (MapEvent event) {
-        if (event.source == MapEventSource.onDrag) {
-          _onDragMap(event.camera.center);
-        }
-      },
-    );
-    super.initState();
+  void _onPressed(BuildContext context) {
+    context.read<DriveCubit>().startDrive(
+          startLocation: context.read<MapCubit>().state.userLocation,
+        );
+    context.read<MapCubit>().followUserLocation();
   }
 
   @override
-  void dispose() {
-    _mapListener?.cancel();
-    super.dispose();
-  }
-
-  void _onDragMap(LatLng newCenterPosition) {
-    context.read<MapCubit>().onMapDrag(Coordinates(
-          newCenterPosition.latitude,
-          newCenterPosition.longitude,
-        ));
-  }
-
-  void _moveCameraToPosition(Coordinates position) {
-    final bool isInDriveMode =
-        context.read<DriveCubit>().state.status == DriveStateStatus.ongoing;
-    final double centerPositionLatCorrection = isInDriveMode ? -0.012 : 0;
-    _mapController.move(
-      LatLng(
-        position.latitude + centerPositionLatCorrection,
-        position.longitude,
-      ),
-      13,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final Coordinates? centerLocation =
-        context.read<MapCubit>().state.centerLocation;
-
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<MapCubit, MapState>(
-          listenWhen: (prevState, currState) =>
-              currState.focusMode.isFollowingUserLocation &&
-              prevState.centerLocation != currState.centerLocation,
-          listener: (_, state) => _moveCameraToPosition(state.userLocation!),
-        ),
-        BlocListener<DriveCubit, DriveState>(
-          listenWhen: (prevState, currState) =>
-              currState.waypoints.isNotEmpty == true,
-          listener: (_, state) => _moveCameraToPosition(state.waypoints.last),
-        ),
-      ],
-      child: FlutterMap(
-        mapController: _mapController,
-        options: MapOptions(
-          initialCenter: centerLocation?.toLatLng() ??
-              const LatLng(52.23178179122954, 21.006002101026827),
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: Env.mapboxTemplateUrl,
-          ),
-          const MapPolylineLayer(),
-          const MapMarkerLayer(),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => FilledButton.icon(
+        onPressed: () => _onPressed(context),
+        icon: const Icon(Icons.navigation),
+        label: Text(context.str.mapStartNavigation),
+      );
 }
 
 class _FollowUserLocationButton extends StatelessWidget {
@@ -189,22 +112,5 @@ class _FollowUserLocationButton extends StatelessWidget {
   Widget build(BuildContext context) => FloatingActionButton(
         onPressed: () => _onPressed(context),
         child: const Icon(Icons.near_me),
-      );
-}
-
-class _StartRideButton extends StatelessWidget {
-  const _StartRideButton();
-
-  void _onPressed(BuildContext context) {
-    context.read<DriveCubit>().startDrive(
-          startLocation: context.read<MapCubit>().state.userLocation,
-        );
-  }
-
-  @override
-  Widget build(BuildContext context) => FilledButton.icon(
-        onPressed: () => _onPressed(context),
-        icon: const Icon(Icons.navigation),
-        label: const Text('Rozpocznij jazdę'),
       );
 }

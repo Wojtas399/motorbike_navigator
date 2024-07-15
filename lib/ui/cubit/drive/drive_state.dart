@@ -14,6 +14,8 @@ enum DriveStateStatus {
 
 extension DriveStateStatusExtensions on DriveStateStatus {
   bool get isInitial => this == DriveStateStatus.initial;
+
+  bool get isOngoing => this == DriveStateStatus.ongoing;
 }
 
 @freezed
