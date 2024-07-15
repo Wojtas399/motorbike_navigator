@@ -15,10 +15,6 @@ class RoutePreviewScreen extends StatelessWidget {
     required this.routeWaypoints,
   });
 
-  void _onCloseButtonPressed(BuildContext context) {
-    context.maybePop();
-  }
-
   @override
   Widget build(BuildContext context) {
     CameraFit? initialCameraFit;
@@ -35,10 +31,7 @@ class RoutePreviewScreen extends StatelessWidget {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: IconButton.filledTonal(
-          onPressed: () => _onCloseButtonPressed(context),
-          icon: const Icon(Icons.close),
-        ),
+        leading: const _CloseButton(),
       ),
       body: MapComponent(
         initialCenter: routeWaypoints.first,
@@ -47,4 +40,20 @@ class RoutePreviewScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class _CloseButton extends StatelessWidget {
+  const _CloseButton();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: IconButton.filled(
+          onPressed: context.maybePop,
+          icon: const Icon(
+            Icons.close,
+            color: Colors.white,
+          ),
+        ),
+      );
 }
