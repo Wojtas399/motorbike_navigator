@@ -52,6 +52,7 @@ class SavedDrivesDriveItem extends StatelessWidget {
               ),
               _RoutePreview(
                 waypoints: drive.waypoints,
+                onTap: () => _onPressed(context),
               ),
               const GapVertical24(),
             ],
@@ -142,9 +143,11 @@ class _ValueWithLabel extends StatelessWidget {
 
 class _RoutePreview extends StatelessWidget {
   final List<Coordinates> waypoints;
+  final VoidCallback onTap;
 
   const _RoutePreview({
     required this.waypoints,
+    required this.onTap,
   });
 
   @override
@@ -167,6 +170,7 @@ class _RoutePreview extends StatelessWidget {
         initialCenter: waypoints.first,
         initialCameraFit: cameraFit,
         routeWaypoints: waypoints,
+        onTap: onTap,
       ),
     );
   }
