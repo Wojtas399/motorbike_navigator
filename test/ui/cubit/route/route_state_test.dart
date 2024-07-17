@@ -14,7 +14,7 @@ void main() {
     'default state',
     () {
       const expectedDefaultState = RouteState(
-        status: RouteStateStatus.infill,
+        status: RouteStateStatus.initial,
         startPlaceSuggestion: null,
         destinationSuggestion: null,
         route: null,

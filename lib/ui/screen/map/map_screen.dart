@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/single_child_widget.dart';
 
 import '../../../dependency_injection.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
 import '../../cubit/route/route_cubit.dart';
+import '../../cubit/route/route_state.dart';
 import '../drive_summary/drive_summary_screen.dart';
 import 'cubit/map_cubit.dart';
 import 'map_content.dart';
@@ -28,8 +30,12 @@ class MapScreen extends StatelessWidget {
             create: (_) => getIt.get<RouteCubit>(),
           ),
         ],
-        child: const _DriveCubitListener(
-          child: _Content(),
+        child: MultiBlocListener(
+          listeners: const [
+            _DriveCubitListener(),
+            _RouteCubitListener(),
+          ],
+          child: const _Content(),
         ),
       );
 }
@@ -60,30 +66,59 @@ class _Content extends StatelessWidget {
   }
 }
 
-class _DriveCubitListener extends StatelessWidget {
-  final Widget child;
-
-  const _DriveCubitListener({required this.child});
+class _DriveCubitListener extends SingleChildStatelessWidget {
+  const _DriveCubitListener();
 
   void _onStatusChanged(DriveStateStatus status, BuildContext context) {
     if (status == DriveStateStatus.paused) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => BlocProvider.value(
-            value: context.read<DriveCubit>(),
-            child: const DriveSummaryScreen(),
-          ),
+      _navigateToDriveSummary(context);
+    }
+  }
+
+  void _navigateToDriveSummary(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BlocProvider.value(
+          value: context.read<DriveCubit>(),
+          child: const DriveSummaryScreen(),
         ),
+      ),
+    );
+  }
+
+  @override
+  Widget buildWithChild(BuildContext context, Widget? child) =>
+      BlocListener<DriveCubit, DriveState>(
+        listenWhen: (prevState, currState) =>
+            prevState.status != currState.status,
+        listener: (context, state) => _onStatusChanged(state.status, context),
+        child: child,
       );
+}
+
+class _RouteCubitListener extends SingleChildStatelessWidget {
+  const _RouteCubitListener();
+
+  void _onStatusChanged(RouteStateStatus status, BuildContext context) {
+    if (status == RouteStateStatus.routeNotFound) {
+      //TODO: Show message dialog
     }
   }
 
   @override
-  Widget build(BuildContext context) => BlocListener<DriveCubit, DriveState>(
-        listenWhen: (prevState, currState) =>
+  Widget buildWithChild(BuildContext context, Widget? child) =>
+      BlocListener<RouteCubit, RouteState>(
+        listenWhen: (
+          RouteState prevState,
+          RouteState currState,
+        ) =>
             prevState.status != currState.status,
-        listener: (context, state) => _onStatusChanged(state.status, context),
+        listener: (
+          BuildContext context,
+          RouteState state,
+        ) =>
+            _onStatusChanged(state.status, context),
         child: child,
       );
 }

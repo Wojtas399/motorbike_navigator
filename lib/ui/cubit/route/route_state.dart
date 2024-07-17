@@ -5,12 +5,18 @@ import '../../../../entity/place_suggestion.dart';
 
 part 'route_state.freezed.dart';
 
-enum RouteStateStatus { infill, searching }
+enum RouteStateStatus {
+  initial,
+  infill,
+  searching,
+  routeFound,
+  routeNotFound,
+}
 
 @freezed
 class RouteState with _$RouteState {
   const factory RouteState({
-    @Default(RouteStateStatus.infill) RouteStateStatus status,
+    @Default(RouteStateStatus.initial) RouteStateStatus status,
     PlaceSuggestion? startPlaceSuggestion,
     PlaceSuggestion? destinationSuggestion,
     Route? route,

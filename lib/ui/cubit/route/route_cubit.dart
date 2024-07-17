@@ -20,18 +20,21 @@ class RouteCubit extends Cubit<RouteState> {
 
   void onStartPlaceSuggestionChanged(PlaceSuggestion startPlaceSuggestion) {
     emit(state.copyWith(
+      status: RouteStateStatus.infill,
       startPlaceSuggestion: startPlaceSuggestion,
     ));
   }
 
   void onDestinationSuggestionChanged(PlaceSuggestion destinationSuggestion) {
     emit(state.copyWith(
+      status: RouteStateStatus.infill,
       destinationSuggestion: destinationSuggestion,
     ));
   }
 
   void swapPlaceSuggestions() {
     emit(state.copyWith(
+      status: RouteStateStatus.infill,
       startPlaceSuggestion: state.destinationSuggestion,
       destinationSuggestion: state.startPlaceSuggestion,
     ));
@@ -40,6 +43,9 @@ class RouteCubit extends Cubit<RouteState> {
   Future<void> loadNavigation() async {
     if (state.startPlaceSuggestion == null ||
         state.destinationSuggestion == null) return;
+    emit(state.copyWith(
+      status: RouteStateStatus.searching,
+    ));
     final Place? startPlace =
         await _placeRepository.getPlaceById(state.startPlaceSuggestion!.id);
     final Place? destination =
@@ -52,7 +58,12 @@ class RouteCubit extends Cubit<RouteState> {
     );
     if (navigation != null && navigation.routes.isNotEmpty) {
       emit(state.copyWith(
+        status: RouteStateStatus.routeFound,
         route: navigation.routes.first,
+      ));
+    } else {
+      emit(state.copyWith(
+        status: RouteStateStatus.routeNotFound,
       ));
     }
   }
