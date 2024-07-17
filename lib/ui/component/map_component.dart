@@ -5,6 +5,8 @@ import '../../entity/coordinates.dart';
 import '../../env.dart';
 import '../extensions/context_extensions.dart';
 import '../extensions/coordinates_extensions.dart';
+import 'end_route_icon_component.dart';
+import 'start_route_icon_component.dart';
 
 class MapComponent extends StatelessWidget {
   final Coordinates initialCenter;
@@ -87,39 +89,13 @@ class _MarkerLayer extends StatelessWidget {
           if (routeWaypoints?.isNotEmpty == true) ...[
             Marker(
               point: routeWaypoints!.first.toLatLng(),
-              child: const _StartRouteMarker(),
+              child: const StartRouteIcon(),
             ),
             Marker(
               point: routeWaypoints!.last.toLatLng(),
-              child: const _EndRouteMarker(),
+              child: const EndRouteIcon(),
             ),
           ],
         ],
-      );
-}
-
-class _StartRouteMarker extends StatelessWidget {
-  const _StartRouteMarker();
-
-  @override
-  Widget build(BuildContext context) => Transform.translate(
-        offset: const Offset(0, -8),
-        child: const Icon(
-          Icons.location_on,
-          color: Colors.blue,
-        ),
-      );
-}
-
-class _EndRouteMarker extends StatelessWidget {
-  const _EndRouteMarker();
-
-  @override
-  Widget build(BuildContext context) => Transform.translate(
-        offset: const Offset(4, -8),
-        child: const Icon(
-          Icons.flag,
-          color: Colors.red,
-        ),
       );
 }
