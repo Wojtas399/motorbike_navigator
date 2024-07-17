@@ -33,6 +33,16 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
+  @override
+  void initState() {
+    final String? startPlaceSuggestionName =
+        context.read<RouteCubit>().state.startPlaceSuggestion?.name;
+    if (startPlaceSuggestionName != null) {
+      _controller.text = startPlaceSuggestionName;
+    }
+    super.initState();
+  }
+
   Future<void> _onTap(BuildContext context) async {
     _focusNode.unfocus();
     final PlaceSuggestion? startPlaceSuggestion = await Navigator.push(
@@ -78,6 +88,16 @@ class _DestinationTextField extends StatefulWidget {
 class _DestinationTextFieldState extends State<_DestinationTextField> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    final String? destinationSuggestionName =
+        context.read<RouteCubit>().state.destinationSuggestion?.name;
+    if (destinationSuggestionName != null) {
+      _controller.text = destinationSuggestionName;
+    }
+    super.initState();
+  }
 
   Future<void> _onTap(BuildContext context) async {
     _focusNode.unfocus();
