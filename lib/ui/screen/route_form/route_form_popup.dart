@@ -4,77 +4,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../component/gap.dart';
 import '../../cubit/route/route_cubit.dart';
 import '../../extensions/context_extensions.dart';
+import 'route_form_action_buttons.dart';
 import 'route_form_text_fields.dart';
 
-class RouteFormPopup extends StatefulWidget {
+class RouteFormPopup extends StatelessWidget {
   const RouteFormPopup({super.key});
 
   @override
-  State<StatefulWidget> createState() => _State();
-}
-
-class _State extends State<RouteFormPopup> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _positionAnimation;
-
-  @override
-  void initState() {
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 250),
-    );
-    _positionAnimation = Tween<double>(begin: -350, end: 0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInCubic,
-      ),
-    );
-    _animationController.forward();
-    super.initState();
-  }
-
-  Future<void> _onSubmit() async {
-    await context.read<RouteCubit>().loadNavigation();
-  }
-
-  void _onClose() {
-    _animationController.reverse().whenComplete(
-      () {
-        context.read<RouteCubit>().reset();
-        // context.read<MapCubit>().closeRouteSelection();
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _animationController,
-        builder: (_, __) => Transform.translate(
-          offset: Offset(0, _positionAnimation.value),
-          child: _BodyContainer(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+  Widget build(BuildContext context) => const _BodyContainer(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                const Row(
-                  children: [
-                    _RouteIcons(),
-                    GapHorizontal16(),
-                    Expanded(
-                      child: RouteFormTextFields(),
-                    ),
-                    GapHorizontal8(),
-                    _SwapPlaceSuggestionsButton(),
-                  ],
+                GapHorizontal8(),
+                _RouteIcons(),
+                GapHorizontal16(),
+                Expanded(
+                  child: RouteFormTextFields(),
                 ),
-                const GapVertical16(),
-                _FormActionButtons(
-                  onSubmitButtonPressed: _onSubmit,
-                  onCloseButtonPressed: _onClose,
-                ),
+                GapHorizontal8(),
+                _SwapPlaceSuggestionsButton(),
               ],
             ),
-          ),
+            GapVertical16(),
+            RouteFormActionButtons(),
+          ],
         ),
       );
 }
@@ -88,20 +44,13 @@ class _BodyContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.fromLTRB(24, kToolbarHeight + 16, 16, 24),
+        padding: const EdgeInsets.fromLTRB(16, 32, 16, 64),
         decoration: BoxDecoration(
           color: context.colorScheme.surface,
           borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(32),
-            bottomRight: Radius.circular(32),
+            topLeft: Radius.circular(32),
+            topRight: Radius.circular(32),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              offset: const Offset(0, -2),
-              blurRadius: 20,
-            ),
-          ],
         ),
         child: child,
       );
@@ -141,38 +90,6 @@ class _SwapPlaceSuggestionsButton extends StatelessWidget {
         icon: const Icon(
           Icons.swap_vert,
           size: 32,
-        ),
-      );
-}
-
-class _FormActionButtons extends StatelessWidget {
-  final VoidCallback onSubmitButtonPressed;
-  final VoidCallback onCloseButtonPressed;
-
-  const _FormActionButtons({
-    required this.onSubmitButtonPressed,
-    required this.onCloseButtonPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: onCloseButtonPressed,
-                child: Text(context.str.close),
-              ),
-            ),
-            const GapHorizontal16(),
-            Expanded(
-              child: FilledButton(
-                onPressed: onSubmitButtonPressed,
-                child: Text(context.str.mapSearchRoute),
-              ),
-            ),
-          ],
         ),
       );
 }

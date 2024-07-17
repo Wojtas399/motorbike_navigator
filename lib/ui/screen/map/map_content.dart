@@ -7,7 +7,9 @@ import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
 import '../../cubit/logged_user/logged_user_cubit.dart';
 import '../../cubit/logged_user/logged_user_state.dart';
+import '../../cubit/route/route_cubit.dart';
 import '../../extensions/context_extensions.dart';
+import '../route_form/route_form_popup.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 import 'map_drive_details.dart';
@@ -76,7 +78,13 @@ class _Content extends StatelessWidget {
         Positioned(
           bottom: driveStatus == DriveStateStatus.ongoing ? 280 : 88,
           right: 24,
-          child: const _FollowUserLocationButton(),
+          child: const Column(
+            children: [
+              _FollowUserLocationButton(),
+              GapVertical16(),
+              _RouteFormButton(),
+            ],
+          ),
         ),
       ],
     );
@@ -110,7 +118,29 @@ class _FollowUserLocationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FloatingActionButton(
+        heroTag: null,
         onPressed: () => _onPressed(context),
         child: const Icon(Icons.near_me),
+      );
+}
+
+class _RouteFormButton extends StatelessWidget {
+  const _RouteFormButton();
+
+  void _onPressed(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => BlocProvider.value(
+        value: context.read<RouteCubit>(),
+        child: const RouteFormPopup(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => FloatingActionButton(
+        heroTag: null,
+        onPressed: () => _onPressed(context),
+        child: const Icon(Icons.route),
       );
 }
