@@ -7,9 +7,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../entity/coordinates.dart';
+import '../../../entity/user.dart' as user;
 import '../../../env.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
+import '../../cubit/logged_user/logged_user_cubit.dart';
 import '../../extensions/coordinates_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
@@ -100,14 +102,29 @@ class _State extends State<MapMapView> {
           initialCenter: initialCenterLocation?.toLatLng() ??
               const LatLng(52.23178179122954, 21.006002101026827),
         ),
-        children: [
-          TileLayer(
-            urlTemplate: Env.mapboxTemplateUrl,
-          ),
-          const MapPolylineLayer(),
-          const MapMarkerLayer(),
+        children: const [
+          _TileLayer(),
+          MapPolylineLayer(),
+          MapMarkerLayer(),
         ],
       ),
+    );
+  }
+}
+
+class _TileLayer extends StatelessWidget {
+  const _TileLayer();
+
+  @override
+  Widget build(BuildContext context) {
+    final user.ThemeMode? themeMode = context.select(
+      (LoggedUserCubit cubit) => cubit.state.themeMode,
+    );
+
+    return TileLayer(
+      urlTemplate: Env.mapboxTemplateUrl,
+      tileBuilder:
+          themeMode == user.ThemeMode.dark ? darkModeTileBuilder : null,
     );
   }
 }

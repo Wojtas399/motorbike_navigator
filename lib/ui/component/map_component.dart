@@ -12,6 +12,7 @@ class MapComponent extends StatelessWidget {
   final CameraFit? initialCameraFit;
   final bool disableMovement;
   final VoidCallback? onTap;
+  final bool isDarkMode;
 
   const MapComponent({
     super.key,
@@ -23,6 +24,7 @@ class MapComponent extends StatelessWidget {
     this.initialCameraFit,
     this.disableMovement = false,
     this.onTap,
+    this.isDarkMode = false,
   });
 
   @override
@@ -40,6 +42,7 @@ class MapComponent extends StatelessWidget {
         children: [
           TileLayer(
             urlTemplate: Env.mapboxTemplateUrl,
+            tileBuilder: isDarkMode ? darkModeTileBuilder : null,
           ),
           _PolylineLayer(
             routeWaypoints: routeWaypoints,
