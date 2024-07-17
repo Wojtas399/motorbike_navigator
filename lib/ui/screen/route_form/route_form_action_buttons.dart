@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../component/gap.dart';
 import '../../cubit/route/route_cubit.dart';
+import '../../cubit/route/route_state.dart';
 import '../../extensions/context_extensions.dart';
 
 class RouteFormActionButtons extends StatelessWidget {
@@ -40,8 +41,28 @@ class _SearchRouteButton extends StatelessWidget {
   const _SearchRouteButton();
 
   @override
-  Widget build(BuildContext context) => FilledButton(
-        onPressed: context.read<RouteCubit>().loadNavigation,
-        child: Text(context.str.mapSearchRoute),
-      );
+  Widget build(BuildContext context) {
+    final RouteStateStatus routeStatus = context.select(
+      (RouteCubit cubit) => cubit.state.status,
+    );
+
+    return FilledButton(
+      onPressed: routeStatus == RouteStateStatus.searching
+          ? null
+          : context.read<RouteCubit>().loadNavigation,
+      style: FilledButton.styleFrom(
+        disabledBackgroundColor: context.colorScheme.primary,
+      ),
+      child: routeStatus == RouteStateStatus.searching
+          ? SizedBox(
+              height: 16,
+              width: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: context.colorScheme.primaryContainer,
+              ),
+            )
+          : Text(context.str.mapSearchRoute),
+    );
+  }
 }

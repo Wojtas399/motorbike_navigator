@@ -106,13 +106,7 @@ class _RouteCubitListener extends SingleChildStatelessWidget {
     RouteStateStatus status,
     BuildContext context,
   ) async {
-    final dialogService = getIt.get<DialogService>();
-    if (status == RouteStateStatus.searching) {
-      dialogService.showLoadingDialog();
-    } else if (status == RouteStateStatus.routeFound) {
-      dialogService.closeLoadingDialog();
-    } else if (status == RouteStateStatus.routeNotFound) {
-      dialogService.closeLoadingDialog();
+    if (status == RouteStateStatus.routeNotFound) {
       await getIt.get<DialogService>().showMessageDialog(
             title: context.str.routeFormNoRouteFoundTitle,
             message: context.str.routeFormNoRouteFoundMessage,
