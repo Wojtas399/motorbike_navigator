@@ -14,38 +14,20 @@ void main() {
   final authRepository = MockAuthRepository();
   final driveRepository = MockDriveRepository();
   final driveCreator = DriveCreator();
-  late SavedDrivesCubit cubit;
 
-  setUp(() {
-    cubit = SavedDrivesCubit(
-      authRepository,
-      driveRepository,
-    );
-  });
+  SavedDrivesCubit createCubit() => SavedDrivesCubit(
+        authRepository,
+        driveRepository,
+      );
 
   tearDown(() {
     reset(authRepository);
     reset(driveRepository);
   });
 
-  blocTest(
-    'initialize, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => SavedDrivesCubit(
-      authRepository,
-      driveRepository,
-    ),
-    setUp: () => authRepository.mockGetLoggedUserId(expectedLoggedUserId: null),
-    act: (cubit) => cubit.initialize(),
-    expect: () => [],
-  );
-
-  test(
-    'initialize, '
-    'should listen to all user drives, sort them by startDateTime in descending '
-    'order and should emit them',
-    () async {
+  group(
+    'initialize, ',
+    () {
       const String loggedUserId = 'u1';
       final List<Drive> drives1 = [
         driveCreator.create(
@@ -64,41 +46,60 @@ void main() {
           startDateTime: DateTime(2024, 7, 14, 9, 50),
         ),
       ];
-      final List<SavedDrivesState> expectedEmittedStates = [
-        SavedDrivesState(
-          status: SavedDrivesStateStatus.completed,
-          drives: [
-            drives1.last,
-            drives1.first,
-          ],
-        ),
-        SavedDrivesState(
-          status: SavedDrivesStateStatus.completed,
-          drives: [
-            drives2.last,
-            drives2[1],
-            drives2.first,
-          ],
-        ),
-      ];
       final drivesStream$ = BehaviorSubject<List<Drive>>();
-      authRepository.mockGetLoggedUserId(expectedLoggedUserId: loggedUserId);
-      when(
-        () => driveRepository.getAllUserDrives(userId: loggedUserId),
-      ).thenAnswer((_) => drivesStream$.stream);
-      final List<SavedDrivesState> emittedStates = [];
+      SavedDrivesState? state;
 
-      cubit.initialize();
-      drivesStream$.add(drives1);
-      emittedStates.add(await cubit.stream.first);
-      drivesStream$.add(drives2);
-      emittedStates.add(await cubit.stream.first);
+      blocTest(
+        'should do nothing if logged user does not exist',
+        build: () => createCubit(),
+        setUp: () => authRepository.mockGetLoggedUserId(
+          expectedLoggedUserId: null,
+        ),
+        act: (cubit) => cubit.initialize(),
+        expect: () => [],
+      );
 
-      expect(emittedStates, expectedEmittedStates);
-      verify(() => authRepository.loggedUserId$).called(1);
-      verify(
-        () => driveRepository.getAllUserDrives(userId: 'u1'),
-      ).called(1);
+      blocTest(
+        'should listen to all user drives, sort them by startDateTime in '
+        'descending order and should emit them',
+        build: () => createCubit(),
+        setUp: () {
+          authRepository.mockGetLoggedUserId(
+            expectedLoggedUserId: loggedUserId,
+          );
+          when(
+            () => driveRepository.getAllUserDrives(userId: loggedUserId),
+          ).thenAnswer((_) => drivesStream$.stream);
+        },
+        act: (cubit) async {
+          cubit.initialize();
+          drivesStream$.add(drives1);
+          await cubit.stream.first;
+          drivesStream$.add(drives2);
+        },
+        expect: () => [
+          state = SavedDrivesState(
+            status: SavedDrivesStateStatus.completed,
+            drives: [
+              drives1.last,
+              drives1.first,
+            ],
+          ),
+          state = state?.copyWith(
+            drives: [
+              drives2.last,
+              drives2[1],
+              drives2.first,
+            ],
+          ),
+        ],
+        verify: (_) {
+          verify(() => authRepository.loggedUserId$).called(1);
+          verify(
+            () => driveRepository.getAllUserDrives(userId: 'u1'),
+          ).called(1);
+        },
+      );
     },
   );
 }
