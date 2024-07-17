@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 
 import '../component/confirmation_dialog_component.dart';
 import '../component/loading_dialog_component.dart';
+import '../component/message_dialog_component.dart';
 import '../config/app_router.dart';
 
 @Singleton()
@@ -33,6 +34,18 @@ class DialogService {
         ),
       );
     }
+  }
+
+  Future<void> showMessageDialog({
+    required String title,
+    required String message,
+  }) async {
+    await _showAlertDialog(
+      MessageDialog(
+        title: title,
+        message: message,
+      ),
+    );
   }
 
   Future<bool> askForConfirmation({
