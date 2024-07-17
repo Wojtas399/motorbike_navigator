@@ -8,6 +8,8 @@ import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
 import '../../cubit/route/route_cubit.dart';
 import '../../cubit/route/route_state.dart';
+import '../../extensions/context_extensions.dart';
+import '../../service/dialog_service.dart';
 import '../drive_summary/drive_summary_screen.dart';
 import 'cubit/map_cubit.dart';
 import 'map_content.dart';
@@ -100,9 +102,22 @@ class _DriveCubitListener extends SingleChildStatelessWidget {
 class _RouteCubitListener extends SingleChildStatelessWidget {
   const _RouteCubitListener();
 
-  void _onStatusChanged(RouteStateStatus status, BuildContext context) {
-    if (status == RouteStateStatus.routeNotFound) {
-      //TODO: Show message dialog
+  Future<void> _onStatusChanged(
+    RouteStateStatus status,
+    BuildContext context,
+  ) async {
+    final dialogService = getIt.get<DialogService>();
+    if (status == RouteStateStatus.searching) {
+      dialogService.showLoadingDialog();
+    } else if (status == RouteStateStatus.routeFound) {
+      dialogService.closeLoadingDialog();
+      context.maybePop();
+    } else if (status == RouteStateStatus.routeNotFound) {
+      dialogService.closeLoadingDialog();
+      await getIt.get<DialogService>().showMessageDialog(
+            title: context.str.routeFormNoRouteFoundTitle,
+            message: context.str.routeFormNoRouteFoundMessage,
+          );
     }
   }
 

@@ -39,14 +39,9 @@ class _CancelButton extends StatelessWidget {
 class _SearchRouteButton extends StatelessWidget {
   const _SearchRouteButton();
 
-  Future<void> _onPressed(BuildContext context) async {
-    await context.read<RouteCubit>().loadNavigation();
-    if (context.mounted) context.maybePop();
-  }
-
   @override
   Widget build(BuildContext context) => FilledButton(
-        onPressed: () => _onPressed(context),
+        onPressed: context.read<RouteCubit>().loadNavigation,
         child: Text(context.str.mapSearchRoute),
       );
 }
