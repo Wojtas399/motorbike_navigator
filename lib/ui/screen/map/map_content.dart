@@ -128,8 +128,10 @@ class _RouteFormButton extends StatelessWidget {
   const _RouteFormButton();
 
   void _onPressed(BuildContext context) {
-    showModalBottomSheet(
+    showBottomSheet(
       context: context,
+      elevation: 4.0,
+      enableDrag: false,
       builder: (_) => BlocProvider.value(
         value: context.read<RouteCubit>(),
         child: const RouteFormPopup(),

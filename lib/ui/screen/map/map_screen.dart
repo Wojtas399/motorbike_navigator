@@ -111,7 +111,6 @@ class _RouteCubitListener extends SingleChildStatelessWidget {
       dialogService.showLoadingDialog();
     } else if (status == RouteStateStatus.routeFound) {
       dialogService.closeLoadingDialog();
-      context.maybePop();
     } else if (status == RouteStateStatus.routeNotFound) {
       dialogService.closeLoadingDialog();
       await getIt.get<DialogService>().showMessageDialog(

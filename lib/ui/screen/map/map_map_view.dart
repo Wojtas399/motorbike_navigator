@@ -94,7 +94,7 @@ class _State extends State<MapMapView> {
         coordinates: waypoints
             .map((Coordinates waypoint) => waypoint.toLatLng())
             .toList(),
-        padding: const EdgeInsets.all(128),
+        padding: const EdgeInsets.fromLTRB(128, 104, 128, 296),
       );
       _mapController.fitCamera(cameraFit);
     }
