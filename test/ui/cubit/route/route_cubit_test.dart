@@ -156,31 +156,39 @@ void main() {
       RouteState? state;
 
       blocTest(
-        'should finish method call if startPlaceSuggestion is null',
+        'should emit status set as formNotCompleted if startPlaceSuggestion '
+        'param is null',
         build: () => createCubit(),
         act: (cubit) async {
           cubit.onDestinationSuggestionChanged(destinationSuggestion);
           await cubit.loadNavigation();
         },
         expect: () => [
-          const RouteState(
+          state = const RouteState(
             status: RouteStateStatus.infill,
             destinationSuggestion: destinationSuggestion,
+          ),
+          state = state?.copyWith(
+            status: RouteStateStatus.formNotCompleted,
           ),
         ],
       );
 
       blocTest(
-        'should finish method call if destinationSuggestion is null',
+        'should emit status set as formNotCompleted if destinationSuggestion '
+        'param is null',
         build: () => createCubit(),
         act: (cubit) async {
           cubit.onStartPlaceSuggestionChanged(startPlaceSuggestion);
           await cubit.loadNavigation();
         },
         expect: () => [
-          const RouteState(
+          state = const RouteState(
             status: RouteStateStatus.infill,
             startPlaceSuggestion: startPlaceSuggestion,
+          ),
+          state = state?.copyWith(
+            status: RouteStateStatus.formNotCompleted,
           ),
         ],
       );

@@ -8,6 +8,7 @@ part 'route_state.freezed.dart';
 enum RouteStateStatus {
   initial,
   infill,
+  formNotCompleted,
   searching,
   routeFound,
   routeNotFound,

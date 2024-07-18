@@ -42,7 +42,12 @@ class RouteCubit extends Cubit<RouteState> {
 
   Future<void> loadNavigation() async {
     if (state.startPlaceSuggestion == null ||
-        state.destinationSuggestion == null) return;
+        state.destinationSuggestion == null) {
+      emit(state.copyWith(
+        status: RouteStateStatus.formNotCompleted,
+      ));
+      return;
+    }
     emit(state.copyWith(
       status: RouteStateStatus.searching,
     ));
