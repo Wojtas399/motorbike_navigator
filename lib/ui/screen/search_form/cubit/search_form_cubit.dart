@@ -29,6 +29,7 @@ class SearchFormCubit extends Cubit<SearchFormState> {
 
   void resetPlaceSuggestions() {
     emit(state.copyWith(
+      searchQuery: '',
       placeSuggestions: null,
     ));
   }
