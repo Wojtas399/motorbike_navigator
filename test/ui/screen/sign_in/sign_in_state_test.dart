@@ -15,39 +15,68 @@ void main() {
     },
   );
 
-  test(
-    'status.isUserAlreadySignedIn, '
-    'should be true if status is set as userIsAlreadySignedIn',
+  group(
+    'status.isUserAlreadySignedIn, ',
     () {
-      const SignInState state = SignInState(
-        status: SignInStateStatus.userIsAlreadySignedIn,
+      test(
+        'should be true if status is set as userIsAlreadySignedIn',
+        () {
+          const SignInState state = SignInState(
+            status: SignInStateStatus.userIsAlreadySignedIn,
+          );
+
+          expect(state.status.isUserAlreadySignedIn, true);
+        },
       );
 
-      expect(state.status.isUserAlreadySignedIn, true);
+      test(
+        'should be false if status is set as loading',
+        () {
+          const SignInState state = SignInState(
+            status: SignInStateStatus.loading,
+          );
+
+          expect(state.status.isUserAlreadySignedIn, false);
+        },
+      );
+
+      test(
+        'should be false if status is set as completed',
+        () {
+          const SignInState state = SignInState(
+            status: SignInStateStatus.completed,
+          );
+
+          expect(state.status.isUserAlreadySignedIn, false);
+        },
+      );
     },
   );
 
-  test(
-    'status.isUserAlreadySignedIn, '
-    'should be false if status is set as loading',
+  group(
+    'copyWith status, ',
     () {
-      const SignInState state = SignInState(
-        status: SignInStateStatus.loading,
+      const SignInStateStatus expectedStatus =
+          SignInStateStatus.userIsAlreadySignedIn;
+      SignInState state = const SignInState();
+
+      test(
+        'should update status if new value has been passed, ',
+        () {
+          state = state.copyWith(status: expectedStatus);
+
+          expect(state.status, expectedStatus);
+        },
       );
 
-      expect(state.status.isUserAlreadySignedIn, false);
-    },
-  );
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
 
-  test(
-    'status.isUserAlreadySignedIn, '
-    'should be false if status is set as completed',
-    () {
-      const SignInState state = SignInState(
-        status: SignInStateStatus.completed,
+          expect(state.status, expectedStatus);
+        },
       );
-
-      expect(state.status.isUserAlreadySignedIn, false);
     },
   );
 }

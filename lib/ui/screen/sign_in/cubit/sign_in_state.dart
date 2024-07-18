@@ -15,8 +15,6 @@ extension SignInStateStatusExtensions on SignInStateStatus {
 
 @freezed
 class SignInState with _$SignInState {
-  const SignInState._();
-
   const factory SignInState({
     @Default(SignInStateStatus.loading) SignInStateStatus status,
   }) = _SignInState;
