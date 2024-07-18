@@ -4,12 +4,6 @@ import 'package:motorbike_navigator/entity/place_suggestion.dart';
 import 'package:motorbike_navigator/ui/cubit/route/route_state.dart';
 
 void main() {
-  late RouteState state;
-
-  setUp(() {
-    state = const RouteState();
-  });
-
   test(
     'default state',
     () {
@@ -26,83 +20,146 @@ void main() {
     },
   );
 
-  test(
-    'copyWith status, '
-    'should update status if new value has been passed and should copy current '
-    'value if new value has not been passed',
+  group(
+    'copyWith status, ',
     () {
       const RouteStateStatus expectedStatus = RouteStateStatus.searching;
       RouteState state = const RouteState();
 
-      state = state.copyWith(status: expectedStatus);
-      final state2 = state.copyWith();
+      test(
+        'should update status if new value has been passed, ',
+        () {
+          state = state.copyWith(status: expectedStatus);
 
-      expect(state.status, expectedStatus);
-      expect(state2.status, expectedStatus);
+          expect(state.status, expectedStatus);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.status, expectedStatus);
+        },
+      );
     },
   );
 
-  test(
-    'copyWith startPlaceSuggestion, '
-    'should update startPlaceSuggestion if new value has been passed, '
-    'should copy current value if new value has not been passed and '
-    'should set null if passed value is null',
+  group(
+    'copyWith startPlaceSuggestion, ',
     () {
       const PlaceSuggestion expectedPlaceSuggestion = PlaceSuggestion(
         id: 'p1',
         name: 'place suggestion',
       );
+      RouteState state = const RouteState();
 
-      state = state.copyWith(startPlaceSuggestion: expectedPlaceSuggestion);
-      final state2 = state.copyWith();
-      final state3 = state.copyWith(startPlaceSuggestion: null);
+      test(
+        'should update startPlaceSuggestion if new value has been passed, ',
+        () {
+          state = state.copyWith(startPlaceSuggestion: expectedPlaceSuggestion);
 
-      expect(state.startPlaceSuggestion, expectedPlaceSuggestion);
-      expect(state2.startPlaceSuggestion, expectedPlaceSuggestion);
-      expect(state3.startPlaceSuggestion, null);
+          expect(state.startPlaceSuggestion, expectedPlaceSuggestion);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.startPlaceSuggestion, expectedPlaceSuggestion);
+        },
+      );
+
+      test(
+        'should set startPlaceSuggestion as null if passed value is null',
+        () {
+          state = state.copyWith(startPlaceSuggestion: null);
+
+          expect(state.startPlaceSuggestion, null);
+        },
+      );
     },
   );
 
-  test(
-    'copyWith destinationSuggestion, '
-    'should update destinationSuggestion if new value has been passed, '
-    'should copy current value if new value has not been passed and '
-    'should set null if passed value is null',
+  group(
+    'copyWith destinationSuggestion, ',
     () {
       const PlaceSuggestion expectedPlaceSuggestion = PlaceSuggestion(
         id: 'p1',
         name: 'place suggestion',
       );
+      RouteState state = const RouteState();
 
-      state = state.copyWith(destinationSuggestion: expectedPlaceSuggestion);
-      final state2 = state.copyWith();
-      final state3 = state.copyWith(destinationSuggestion: null);
+      test(
+        'should update destinationSuggestion if new value has been passed, ',
+        () {
+          state = state.copyWith(
+            destinationSuggestion: expectedPlaceSuggestion,
+          );
 
-      expect(state.destinationSuggestion, expectedPlaceSuggestion);
-      expect(state2.destinationSuggestion, expectedPlaceSuggestion);
-      expect(state3.destinationSuggestion, null);
+          expect(state.destinationSuggestion, expectedPlaceSuggestion);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.destinationSuggestion, expectedPlaceSuggestion);
+        },
+      );
+
+      test(
+        'should set startPlaceSuggestion as null if passed value is null',
+        () {
+          state = state.copyWith(destinationSuggestion: null);
+
+          expect(state.destinationSuggestion, null);
+        },
+      );
     },
   );
 
-  test(
-    'copyWith route, '
-    'should update route if new value has been passed, '
-    'should copy current value if new value has not been passed and '
-    'should set null if passed value is null',
+  group(
+    'copyWith route, ',
     () {
       const Route expectedRoute = Route(
         durationInSeconds: 10000,
         distanceInMeters: 1000,
         waypoints: [],
       );
+      RouteState state = const RouteState();
 
-      state = state.copyWith(route: expectedRoute);
-      final state2 = state.copyWith();
-      final state3 = state.copyWith(route: null);
+      test(
+        'should update route if new value has been passed, ',
+        () {
+          state = state.copyWith(route: expectedRoute);
 
-      expect(state.route, expectedRoute);
-      expect(state2.route, expectedRoute);
-      expect(state3.route, null);
+          expect(state.route, expectedRoute);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.route, expectedRoute);
+        },
+      );
+
+      test(
+        'should set startPlaceSuggestion as null if passed value is null',
+        () {
+          state = state.copyWith(route: null);
+
+          expect(state.route, null);
+        },
+      );
     },
   );
 }
