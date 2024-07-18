@@ -43,7 +43,7 @@ void main() {
 
   test(
     'fromFirebaseFirestore, '
-    'should map json object to DriveDto object with new id and userId values',
+    'should map json object to DriveDto object with changed id and userId values',
     () {
       final DriveDto expectedDto = DriveDto(
         id: id,
@@ -67,7 +67,7 @@ void main() {
 
   test(
     'toJson, '
-    'should map DriveDto object to json object without including id and userId',
+    'should map DriveDto object to json object without id and userId keys',
     () {
       final DriveDto driveDto = DriveDto(
         id: id,

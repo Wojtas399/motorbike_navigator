@@ -8,7 +8,10 @@ CollectionReference<UserDto> getUsersRef() =>
           fromFirestore: (snapshot, _) {
             final data = snapshot.data();
             if (data == null) throw 'User document data was null';
-            return UserDto.fromIdAndJson(snapshot.id, data);
+            return UserDto.fromFirebaseFirestore(
+              id: snapshot.id,
+              json: data,
+            );
           },
           toFirestore: (UserDto dto, _) => dto.toJson(),
         );
