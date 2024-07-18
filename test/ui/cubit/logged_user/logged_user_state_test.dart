@@ -17,63 +17,91 @@ void main() {
     },
   );
 
-  test(
-    'status.isLoading, '
-    'should be true if status is set as loading',
+  group(
+    'status.isLoading, ',
     () {
-      const state = LoggedUserState(
-        status: LoggedUserStateStatus.loading,
+      test(
+        'should be true if status is set as loading',
+        () {
+          const state = LoggedUserState(
+            status: LoggedUserStateStatus.loading,
+          );
+
+          expect(state.status.isLoading, true);
+        },
       );
 
-      expect(state.status.isLoading, true);
+      test(
+        'should be false if status is set as completed',
+        () {
+          const state = LoggedUserState(
+            status: LoggedUserStateStatus.completed,
+          );
+
+          expect(state.status.isLoading, false);
+        },
+      );
     },
   );
 
-  test(
-    'status.isLoading, '
-    'should be false if status is set as completed',
+  group(
+    'copyWith status, ',
     () {
-      const state = LoggedUserState(
-        status: LoggedUserStateStatus.completed,
-      );
-
-      expect(state.status.isLoading, false);
-    },
-  );
-
-  test(
-    'copyWith status, '
-    'should update status if new value has been passed, '
-    'should copy current value if new value has not been passed',
-    () {
-      const LoggedUserStateStatus expectedStatus =
-          LoggedUserStateStatus.completed;
+      const expectedStatus = LoggedUserStateStatus.completed;
       LoggedUserState state = const LoggedUserState();
 
-      state = state.copyWith(status: expectedStatus);
-      final state2 = state.copyWith();
+      test(
+        'should update status if new value has been passed',
+        () {
+          state = state.copyWith(status: expectedStatus);
 
-      expect(state.status, expectedStatus);
-      expect(state2.status, expectedStatus);
+          expect(state.status, expectedStatus);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.status, expectedStatus);
+        },
+      );
     },
   );
 
-  test(
-    'copyWith themeMode, '
-    'should update themeMode if new value has been passed, '
-    'should copy current value if new value has not been passed, '
-    'should set themeMode as null if passed value is null',
+  group(
+    'copyWith themeMode, ',
     () {
       const ThemeMode expectedThemeMode = ThemeMode.dark;
       LoggedUserState state = const LoggedUserState();
 
-      state = state.copyWith(themeMode: expectedThemeMode);
-      final state2 = state.copyWith();
-      final state3 = state2.copyWith(themeMode: null);
+      test(
+        'should update startDateTime if new value has been passed',
+        () {
+          state = state.copyWith(themeMode: expectedThemeMode);
 
-      expect(state.themeMode, expectedThemeMode);
-      expect(state2.themeMode, expectedThemeMode);
-      expect(state3.themeMode, null);
+          expect(state.themeMode, expectedThemeMode);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.themeMode, expectedThemeMode);
+        },
+      );
+
+      test(
+        'should set startDateTime as null if passed value is null',
+        () {
+          state = state.copyWith(themeMode: null);
+
+          expect(state.themeMode, null);
+        },
+      );
     },
   );
 }
