@@ -136,7 +136,7 @@ void main() {
         endLocation: destination.coordinates,
         routes: const [
           Route(
-            durationInSeconds: 333.333,
+            duration: Duration(minutes: 10),
             distanceInMeters: 1000.1,
             waypoints: [
               Coordinates(50.25, 18.25),
@@ -144,7 +144,7 @@ void main() {
             ],
           ),
           Route(
-            durationInSeconds: 222.222,
+            duration: Duration(minutes: 20),
             distanceInMeters: 2000.2,
             waypoints: [
               Coordinates(50.25, 18.25),
@@ -449,7 +449,7 @@ void main() {
         endLocation: destination.coordinates,
         routes: const [
           Route(
-            durationInSeconds: 333.333,
+            duration: Duration(minutes: 10),
             distanceInMeters: 1000.1,
             waypoints: [
               Coordinates(50.25, 18.25),

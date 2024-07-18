@@ -6,7 +6,7 @@ import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/navigation.dart';
 
 void main() {
-  final mapper = RouteMapper();
+  const mapper = RouteMapper();
 
   test(
     'mapFromDto, '
@@ -25,7 +25,7 @@ void main() {
         ),
       );
       const Route expectedRoute = Route(
-        durationInSeconds: durationInSeconds,
+        duration: Duration(seconds: 333),
         distanceInMeters: distanceInMeters,
         waypoints: [
           Coordinates(18.2, 50.2),

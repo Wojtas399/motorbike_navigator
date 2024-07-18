@@ -128,7 +128,7 @@ void main() {
     'copyWith route, ',
     () {
       const Route expectedRoute = Route(
-        durationInSeconds: 10000,
+        duration: Duration(minutes: 10),
         distanceInMeters: 1000,
         waypoints: [],
       );

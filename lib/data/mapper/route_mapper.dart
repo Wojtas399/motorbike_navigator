@@ -11,7 +11,7 @@ class RouteMapper extends Mapper<Route, RouteDto> {
 
   @override
   Route mapFromDto(RouteDto dto) => Route(
-        durationInSeconds: dto.durationInSeconds,
+        duration: Duration(seconds: dto.durationInSeconds.toInt()),
         distanceInMeters: dto.distanceInMeters,
         waypoints: dto.geometry.coordinates
             .map(
