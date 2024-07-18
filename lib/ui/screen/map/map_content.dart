@@ -23,7 +23,7 @@ class MapContent extends StatelessWidget {
     final LoggedUserState loggedUserState = context.select(
       (LoggedUserCubit cubit) => cubit.state,
     );
-    final MapStatus cubitStatus = context.select(
+    final MapStateStatus cubitStatus = context.select(
       (MapCubit cubit) => cubit.state.status,
     );
 

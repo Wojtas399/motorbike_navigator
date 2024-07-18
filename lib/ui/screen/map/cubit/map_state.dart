@@ -4,12 +4,12 @@ import '../../../../entity/coordinates.dart';
 
 part 'map_state.freezed.dart';
 
-enum MapStatus { loading, completed }
+enum MapStateStatus { loading, completed }
 
 enum MapFocusMode { free, followUserLocation }
 
-extension MapStatusExtensions on MapStatus {
-  bool get isLoading => this == MapStatus.loading;
+extension MapStateStatusExtensions on MapStateStatus {
+  bool get isLoading => this == MapStateStatus.loading;
 }
 
 extension MapFocusModeExtensions on MapFocusMode {
@@ -19,7 +19,7 @@ extension MapFocusModeExtensions on MapFocusMode {
 @freezed
 class MapState with _$MapState {
   const factory MapState({
-    @Default(MapStatus.loading) MapStatus status,
+    @Default(MapStateStatus.loading) MapStateStatus status,
     @Default(MapFocusMode.followUserLocation) MapFocusMode focusMode,
     Coordinates? centerLocation,
     Coordinates? userLocation,

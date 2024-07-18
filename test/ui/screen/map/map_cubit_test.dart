@@ -49,7 +49,7 @@ void main() {
         },
         expect: () => [
           state = MapState(
-            status: MapStatus.completed,
+            status: MapStateStatus.completed,
             centerLocation: positions.first.coordinates,
             userLocation: positions.first.coordinates,
           ),
@@ -72,7 +72,7 @@ void main() {
         act: (cubit) async => await cubit.initialize(),
         expect: () => [
           const MapState(
-            status: MapStatus.completed,
+            status: MapStateStatus.completed,
           ),
         ],
       );
@@ -90,7 +90,7 @@ void main() {
         act: (cubit) => cubit.onMapDrag(locationOnDrag),
         expect: () => [
           const MapState(
-            status: MapStatus.completed,
+            status: MapStateStatus.completed,
             focusMode: MapFocusMode.free,
             centerLocation: locationOnDrag,
           ),
@@ -130,7 +130,7 @@ void main() {
         },
         expect: () => [
           state = MapState(
-            status: MapStatus.completed,
+            status: MapStateStatus.completed,
             centerLocation: position.coordinates,
             userLocation: position.coordinates,
           ),

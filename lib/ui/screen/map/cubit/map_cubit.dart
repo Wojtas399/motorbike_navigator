@@ -18,7 +18,7 @@ class MapCubit extends Cubit<MapState> {
     final currentLocation$ = _getCurrentLocation();
     await for (final currentLocation in currentLocation$) {
       emit(state.copyWith(
-        status: MapStatus.completed,
+        status: MapStateStatus.completed,
         centerLocation: state.focusMode.isFollowingUserLocation
             ? currentLocation
             : state.centerLocation,
@@ -29,7 +29,7 @@ class MapCubit extends Cubit<MapState> {
 
   void onMapDrag(Coordinates newCenterLocation) {
     emit(state.copyWith(
-      status: MapStatus.completed,
+      status: MapStateStatus.completed,
       focusMode: MapFocusMode.free,
       centerLocation: newCenterLocation,
     ));
