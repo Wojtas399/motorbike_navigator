@@ -40,5 +40,6 @@
   "duration": "Czas trwania",
   "speed": "Prędkość",
   "avgSpeed": "Średnia prędkość",
-  "darkMode": "Ciemny motyw"
+  "darkMode": "Ciemny motyw",
+  "requiredField": "To pole jest wymagane"
 }

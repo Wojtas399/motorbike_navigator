@@ -32,6 +32,7 @@ class _StartPlaceTextField extends StatefulWidget {
 class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  String? _errorText;
 
   @override
   void initState() {
@@ -41,6 +42,26 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
       _controller.text = startPlaceSuggestionName;
     }
     super.initState();
+  }
+
+  void _handleRouteStatusChange(
+    RouteStateStatus status,
+    PlaceSuggestion? startPlaceSuggestion,
+  ) {
+    if (status == RouteStateStatus.formNotCompleted &&
+        startPlaceSuggestion == null) {
+      setState(() {
+        _errorText = context.str.requiredField;
+      });
+    } else if (_errorText != null) {
+      setState(() {
+        _errorText = null;
+      });
+    }
+  }
+
+  void _handleStartPlaceSuggestionChange(PlaceSuggestion? suggestion) {
+    _controller.text = suggestion?.name ?? '';
   }
 
   Future<void> _onTap(BuildContext context) async {
@@ -59,23 +80,25 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
     }
   }
 
-  void _onStartPlaceSuggestionChanged(PlaceSuggestion? startPlaceSuggestion) {
-    _controller.text = startPlaceSuggestion?.name ?? '';
-  }
-
   @override
-  Widget build(BuildContext context) => BlocListener<RouteCubit, RouteState>(
-        listenWhen: (prevState, currState) =>
-            prevState.startPlaceSuggestion != currState.startPlaceSuggestion,
-        listener: (_, state) =>
-            _onStartPlaceSuggestionChanged(state.startPlaceSuggestion),
-        child: _CustomTextField(
-          hintText: context.str.mapSelectStartPlace,
-          controller: _controller,
-          focusNode: _focusNode,
-          onTap: () => _onTap(context),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final RouteStateStatus routeStatus = context.select(
+      (RouteCubit cubit) => cubit.state.status,
+    );
+    final PlaceSuggestion? startPlaceSuggestion = context.select(
+      (RouteCubit cubit) => cubit.state.startPlaceSuggestion,
+    );
+    _handleRouteStatusChange(routeStatus, startPlaceSuggestion);
+    _handleStartPlaceSuggestionChange(startPlaceSuggestion);
+
+    return _CustomTextField(
+      hintText: context.str.mapSelectStartPlace,
+      errorText: _errorText,
+      controller: _controller,
+      focusNode: _focusNode,
+      onTap: () => _onTap(context),
+    );
+  }
 }
 
 class _DestinationTextField extends StatefulWidget {
@@ -88,6 +111,7 @@ class _DestinationTextField extends StatefulWidget {
 class _DestinationTextFieldState extends State<_DestinationTextField> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  String? _errorText;
 
   @override
   void initState() {
@@ -97,6 +121,26 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
       _controller.text = destinationSuggestionName;
     }
     super.initState();
+  }
+
+  void _handleRouteStatusChange(
+    RouteStateStatus status,
+    PlaceSuggestion? destinationSuggestion,
+  ) {
+    if (status == RouteStateStatus.formNotCompleted &&
+        destinationSuggestion == null) {
+      setState(() {
+        _errorText = context.str.requiredField;
+      });
+    } else if (_errorText != null) {
+      setState(() {
+        _errorText = null;
+      });
+    }
+  }
+
+  void _handleDestinationSuggestionChange(PlaceSuggestion? suggestion) {
+    _controller.text = suggestion?.name ?? '';
   }
 
   Future<void> _onTap(BuildContext context) async {
@@ -115,33 +159,37 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
     }
   }
 
-  void _onDestinationSuggestionChanged(PlaceSuggestion? destinationSuggestion) {
-    _controller.text = destinationSuggestion?.name ?? '';
-  }
-
   @override
-  Widget build(BuildContext context) => BlocListener<RouteCubit, RouteState>(
-        listenWhen: (prevState, currState) =>
-            prevState.destinationSuggestion != currState.destinationSuggestion,
-        listener: (_, state) =>
-            _onDestinationSuggestionChanged(state.destinationSuggestion),
-        child: _CustomTextField(
-          hintText: context.str.mapSelectDestination,
-          controller: _controller,
-          focusNode: _focusNode,
-          onTap: () => _onTap(context),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final RouteStateStatus routeStatus = context.select(
+      (RouteCubit cubit) => cubit.state.status,
+    );
+    final PlaceSuggestion? destinationSuggestion = context.select(
+      (RouteCubit cubit) => cubit.state.destinationSuggestion,
+    );
+    _handleRouteStatusChange(routeStatus, destinationSuggestion);
+    _handleDestinationSuggestionChange(destinationSuggestion);
+
+    return _CustomTextField(
+      hintText: context.str.mapSelectDestination,
+      errorText: _errorText,
+      controller: _controller,
+      focusNode: _focusNode,
+      onTap: () => _onTap(context),
+    );
+  }
 }
 
 class _CustomTextField extends StatelessWidget {
   final String hintText;
+  final String? errorText;
   final TextEditingController controller;
   final FocusNode focusNode;
   final VoidCallback onTap;
 
   const _CustomTextField({
     required this.hintText,
+    this.errorText,
     required this.controller,
     required this.focusNode,
     required this.onTap,
@@ -153,6 +201,7 @@ class _CustomTextField extends StatelessWidget {
           border: const OutlineInputBorder(),
           hintText: context.str.mapSelectDestination,
           contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+          errorText: errorText,
         ),
         controller: controller,
         focusNode: focusNode,
