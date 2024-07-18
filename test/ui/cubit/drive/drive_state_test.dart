@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/ui/cubit/drive/drive_state.dart';
 
 void main() {
@@ -21,103 +22,296 @@ void main() {
     },
   );
 
-  test(
-    'status.isInitial, '
-    'should be true if status param is set as initial',
+  group(
+    'status.isInitial, ',
     () {
-      const DriveState state = DriveState(status: DriveStateStatus.initial);
+      test(
+        'should be true if status param is set as initial',
+        () {
+          const DriveState state = DriveState(status: DriveStateStatus.initial);
 
-      expect(state.status.isInitial, true);
+          expect(state.status.isInitial, true);
+        },
+      );
+
+      test(
+        'should be false if status param is set as ongoing',
+        () {
+          const DriveState state = DriveState(status: DriveStateStatus.ongoing);
+
+          expect(state.status.isInitial, false);
+        },
+      );
+
+      test(
+        'should be false if status param is set as paused',
+        () {
+          const DriveState state = DriveState(status: DriveStateStatus.paused);
+
+          expect(state.status.isInitial, false);
+        },
+      );
+
+      test(
+        'should be false if status param is set as saving',
+        () {
+          const DriveState state = DriveState(status: DriveStateStatus.saving);
+
+          expect(state.status.isInitial, false);
+        },
+      );
+
+      test(
+        'should be false if status param is set as saved',
+        () {
+          const DriveState state = DriveState(status: DriveStateStatus.saved);
+
+          expect(state.status.isInitial, false);
+        },
+      );
     },
   );
 
-  test(
-    'status.isInitial, '
-    'should be false if status param is set as ongoing',
+  group(
+    'status.isOngoing, ',
     () {
-      const DriveState state = DriveState(status: DriveStateStatus.ongoing);
+      test(
+        'should be true if status param is set as ongoing',
+        () {
+          const DriveState state = DriveState(status: DriveStateStatus.ongoing);
 
-      expect(state.status.isInitial, false);
+          expect(state.status.isOngoing, true);
+        },
+      );
+
+      test(
+        'should be false if status param is set as initial',
+        () {
+          const DriveState state = DriveState(status: DriveStateStatus.initial);
+
+          expect(state.status.isOngoing, false);
+        },
+      );
+
+      test(
+        'should be false if status param is set as paused',
+        () {
+          const DriveState state = DriveState(status: DriveStateStatus.paused);
+
+          expect(state.status.isOngoing, false);
+        },
+      );
+
+      test(
+        'should be false if status param is set as saving',
+        () {
+          const DriveState state = DriveState(status: DriveStateStatus.saving);
+
+          expect(state.status.isOngoing, false);
+        },
+      );
+
+      test(
+        'should be false if status param is set as saved',
+        () {
+          const DriveState state = DriveState(status: DriveStateStatus.saved);
+
+          expect(state.status.isOngoing, false);
+        },
+      );
     },
   );
 
-  test(
-    'status.isInitial, '
-    'should be false if status param is set as paused',
+  group(
+    'copyWith status, ',
     () {
-      const DriveState state = DriveState(status: DriveStateStatus.paused);
+      const DriveStateStatus expectedStatus = DriveStateStatus.saving;
+      DriveState state = const DriveState();
 
-      expect(state.status.isInitial, false);
+      test(
+        'should update status if new value has been passed, ',
+        () {
+          state = state.copyWith(status: expectedStatus);
+
+          expect(state.status, expectedStatus);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.status, expectedStatus);
+        },
+      );
     },
   );
 
-  test(
-    'status.isInitial, '
-    'should be false if status param is set as saving',
+  group(
+    'copyWith startDateTime, ',
     () {
-      const DriveState state = DriveState(status: DriveStateStatus.saving);
+      final DateTime expectedStartDateTime = DateTime(2024, 07, 18);
+      DriveState state = const DriveState();
 
-      expect(state.status.isInitial, false);
+      test(
+        'should update startDateTime if new value has been passed',
+        () {
+          state = state.copyWith(startDatetime: expectedStartDateTime);
+
+          expect(state.startDatetime, expectedStartDateTime);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.startDatetime, expectedStartDateTime);
+        },
+      );
+
+      test(
+        'should set startDateTime as null if passed value is null',
+        () {
+          state = state.copyWith(startDatetime: null);
+
+          expect(state.startDatetime, null);
+        },
+      );
     },
   );
 
-  test(
-    'status.isInitial, '
-    'should be false if status param is set as saved',
+  group(
+    'copyWith duration, ',
     () {
-      const DriveState state = DriveState(status: DriveStateStatus.saved);
+      const Duration expectedDuration = Duration(seconds: 5);
+      DriveState state = const DriveState();
 
-      expect(state.status.isInitial, false);
+      test(
+        'should update duration if new value has been passed, ',
+        () {
+          state = state.copyWith(duration: expectedDuration);
+
+          expect(state.duration, expectedDuration);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.duration, expectedDuration);
+        },
+      );
     },
   );
 
-  test(
-    'status.isOngoing, '
-    'should be true if status param is set as ongoing',
+  group(
+    'copyWith distanceInKm, ',
     () {
-      const DriveState state = DriveState(status: DriveStateStatus.ongoing);
+      const double expectedDistanceInKm = 10.2;
+      DriveState state = const DriveState();
 
-      expect(state.status.isOngoing, true);
+      test(
+        'should update distanceInKm if new value has been passed, ',
+        () {
+          state = state.copyWith(distanceInKm: expectedDistanceInKm);
+
+          expect(state.distanceInKm, expectedDistanceInKm);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.distanceInKm, expectedDistanceInKm);
+        },
+      );
     },
   );
 
-  test(
-    'status.isOngoing, '
-    'should be false if status param is set as initial',
+  group(
+    'copyWith speedInKmPerH, ',
     () {
-      const DriveState state = DriveState(status: DriveStateStatus.initial);
+      const double expectedSpeedInKmPerH = 92.8;
+      DriveState state = const DriveState();
 
-      expect(state.status.isOngoing, false);
+      test(
+        'should update speedInKmPerH if new value has been passed, ',
+        () {
+          state = state.copyWith(speedInKmPerH: expectedSpeedInKmPerH);
+
+          expect(state.speedInKmPerH, expectedSpeedInKmPerH);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.speedInKmPerH, expectedSpeedInKmPerH);
+        },
+      );
     },
   );
 
-  test(
-    'status.isOngoing, '
-    'should be false if status param is set as paused',
+  group(
+    'copyWith avgSpeedInKmPerH, ',
     () {
-      const DriveState state = DriveState(status: DriveStateStatus.paused);
+      const double expectedAvgSpeedInKmPerH = 92.8;
+      DriveState state = const DriveState();
 
-      expect(state.status.isOngoing, false);
+      test(
+        'should update avgSpeedInKmPerH if new value has been passed, ',
+        () {
+          state = state.copyWith(avgSpeedInKmPerH: expectedAvgSpeedInKmPerH);
+
+          expect(state.avgSpeedInKmPerH, expectedAvgSpeedInKmPerH);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.avgSpeedInKmPerH, expectedAvgSpeedInKmPerH);
+        },
+      );
     },
   );
 
-  test(
-    'status.isOngoing, '
-    'should be false if status param is set as saving',
+  group(
+    'copyWith waypoints, ',
     () {
-      const DriveState state = DriveState(status: DriveStateStatus.saving);
+      const List<Coordinates> expectedWaypoints = [
+        Coordinates(50, 12.3),
+      ];
+      DriveState state = const DriveState();
 
-      expect(state.status.isOngoing, false);
-    },
-  );
+      test(
+        'should update waypoints if new value has been passed, ',
+        () {
+          state = state.copyWith(waypoints: expectedWaypoints);
 
-  test(
-    'status.isOngoing, '
-    'should be false if status param is set as saved',
-    () {
-      const DriveState state = DriveState(status: DriveStateStatus.saved);
+          expect(state.waypoints, expectedWaypoints);
+        },
+      );
 
-      expect(state.status.isOngoing, false);
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.waypoints, expectedWaypoints);
+        },
+      );
     },
   );
 }
