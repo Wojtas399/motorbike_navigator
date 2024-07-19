@@ -30,9 +30,14 @@ class RouteFormActionButtons extends StatelessWidget {
 class _CancelButton extends StatelessWidget {
   const _CancelButton();
 
+  void _onPressed(BuildContext context) {
+    context.read<RouteCubit>().reset();
+    context.maybePop();
+  }
+
   @override
   Widget build(BuildContext context) => OutlinedButton(
-        onPressed: context.maybePop,
+        onPressed: () => _onPressed(context),
         child: Text(context.str.cancel),
       );
 }

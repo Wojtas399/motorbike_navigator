@@ -7,7 +7,7 @@ import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/place.dart';
 
 void main() {
-  final PlaceMapper mapper = PlaceMapper();
+  const PlaceMapper mapper = PlaceMapper();
 
   test(
     'mapFromDto, '

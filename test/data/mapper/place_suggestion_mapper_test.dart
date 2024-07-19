@@ -4,7 +4,7 @@ import 'package:motorbike_navigator/data/mapper/place_suggestion_mapper.dart';
 import 'package:motorbike_navigator/entity/place_suggestion.dart';
 
 void main() {
-  final mapper = PlaceSuggestionMapper();
+  const mapper = PlaceSuggestionMapper();
 
   test(
     'mapFromDto, '
