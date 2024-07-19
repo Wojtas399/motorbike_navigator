@@ -73,6 +73,13 @@ class RouteCubit extends Cubit<RouteState> {
     }
   }
 
+  void resetRoute() {
+    emit(state.copyWith(
+      status: RouteStateStatus.infill,
+      route: null,
+    ));
+  }
+
   void reset() {
     emit(const RouteState());
   }

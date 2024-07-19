@@ -432,6 +432,79 @@ void main() {
   );
 
   group(
+    'resetRoute, ',
+    () {
+      const startPlaceSuggestion = PlaceSuggestion(id: 'p1', name: 'place 1');
+      const destinationSuggestion = PlaceSuggestion(id: 'p2', name: 'place 2');
+      final startPlace = placeCreator.create(
+        id: startPlaceSuggestion.id,
+        coordinates: const Coordinates(50.1, 18.1),
+      );
+      final destination = placeCreator.create(
+        id: destinationSuggestion.id,
+        coordinates: const Coordinates(51.2, 19.2),
+      );
+      final navigation = Navigation(
+        startLocation: startPlace.coordinates,
+        endLocation: destination.coordinates,
+        routes: const [
+          Route(
+            duration: Duration(minutes: 10),
+            distanceInMeters: 1000.1,
+            waypoints: [
+              Coordinates(50.25, 18.25),
+              Coordinates(50.5, 18.5),
+            ],
+          ),
+        ],
+      );
+      RouteState? state;
+
+      blocTest(
+        'should status as infill and route as null',
+        build: () => createCubit(),
+        setUp: () {
+          when(
+            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
+          ).thenAnswer((_) => Future.value(startPlace));
+          when(
+            () => placeRepository.getPlaceById(destinationSuggestion.id),
+          ).thenAnswer((_) => Future.value(destination));
+          navigationRepository.mockLoadNavigationByStartAndEndLocations(
+            navigation: navigation,
+          );
+        },
+        act: (cubit) async {
+          cubit.onStartPlaceSuggestionChanged(startPlaceSuggestion);
+          cubit.onDestinationSuggestionChanged(destinationSuggestion);
+          await cubit.loadNavigation();
+          cubit.resetRoute();
+        },
+        expect: () => [
+          state = const RouteState(
+            status: RouteStateStatus.infill,
+            startPlaceSuggestion: startPlaceSuggestion,
+          ),
+          state = state?.copyWith(
+            destinationSuggestion: destinationSuggestion,
+          ),
+          state = state?.copyWith(
+            status: RouteStateStatus.searching,
+          ),
+          state = state?.copyWith(
+            status: RouteStateStatus.routeFound,
+            route: navigation.routes.first,
+          ),
+          state = state?.copyWith(
+            status: RouteStateStatus.infill,
+            route: null,
+          ),
+        ],
+      );
+    },
+  );
+
+  group(
     'reset, ',
     () {
       const startPlaceSuggestion = PlaceSuggestion(id: 'p1', name: 'place 1');

@@ -130,7 +130,6 @@ class _RouteFormButton extends StatelessWidget {
   void _onPressed(BuildContext context) {
     showBottomSheet(
       context: context,
-      elevation: 4.0,
       enableDrag: false,
       builder: (_) => BlocProvider.value(
         value: context.read<RouteCubit>(),

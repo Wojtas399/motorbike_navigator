@@ -61,7 +61,8 @@ class _State extends State<MapMapView> {
   }
 
   bool _canEmitRouteCubitChange(RouteState prevState, RouteState currState) =>
-      currState.status == RouteStateStatus.routeFound;
+      currState.status == RouteStateStatus.routeFound ||
+      (currState.route == null && currState.route != prevState.route);
 
   void _onDragMap(LatLng newCenterPosition) {
     context.read<MapCubit>().onMapDrag(Coordinates(
@@ -70,15 +71,18 @@ class _State extends State<MapMapView> {
         ));
   }
 
-  void _moveCameraToPosition(Coordinates position) {
-    if (context.read<MapCubit>().state.focusMode.isFollowingUserLocation) {
+  void _moveCameraToUserLocation() {
+    final mapCubit = context.read<MapCubit>();
+    final userLocation = mapCubit.state.userLocation;
+    final mapFocusMode = mapCubit.state.focusMode;
+    if (userLocation != null && mapFocusMode.isFollowingUserLocation) {
       final bool isInDriveMode =
           context.read<DriveCubit>().state.status.isOngoing;
       final double centerPositionLatCorrection = isInDriveMode ? -0.012 : 0;
       _mapController.move(
         LatLng(
-          position.latitude + centerPositionLatCorrection,
-          position.longitude,
+          userLocation.latitude + centerPositionLatCorrection,
+          userLocation.longitude,
         ),
         13,
       );
@@ -94,7 +98,7 @@ class _State extends State<MapMapView> {
         coordinates: waypoints
             .map((Coordinates waypoint) => waypoint.toLatLng())
             .toList(),
-        padding: const EdgeInsets.fromLTRB(128, 104, 128, 296),
+        padding: const EdgeInsets.fromLTRB(128, 104, 128, 336),
       );
       _mapController.fitCamera(cameraFit);
     }
@@ -109,19 +113,17 @@ class _State extends State<MapMapView> {
       listeners: [
         BlocListener<MapCubit, MapState>(
           listenWhen: _canEmitMapCubitChange,
-          listener: (_, MapState state) =>
-              _moveCameraToPosition(state.userLocation!),
+          listener: (_, __) => _moveCameraToUserLocation(),
         ),
         BlocListener<DriveCubit, DriveState>(
           listenWhen: _canEmitDriveCubitChange,
-          listener: (_, DriveState state) =>
-              _moveCameraToPosition(state.waypoints.last),
+          listener: (_, __) => _moveCameraToUserLocation(),
         ),
         BlocListener<RouteCubit, RouteState>(
           listenWhen: _canEmitRouteCubitChange,
-          listener: (_, RouteState state) => _adjustCameraToRoute(
-            state.route!.waypoints,
-          ),
+          listener: (_, RouteState state) => state.route != null
+              ? _adjustCameraToRoute(state.route!.waypoints)
+              : _moveCameraToUserLocation(),
         ),
       ],
       child: FlutterMap(

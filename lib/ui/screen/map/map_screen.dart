@@ -108,11 +108,18 @@ class _RouteCubitListener extends SingleChildStatelessWidget {
     BuildContext context,
   ) async {
     if (status == RouteStateStatus.routeFound) {
-      Navigator.pop(context);
       showBottomSheet(
         context: context,
-        builder: (_) => BlocProvider.value(
-          value: context.read<RouteCubit>(),
+        enableDrag: false,
+        builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(
+              value: context.read<RouteCubit>(),
+            ),
+            BlocProvider.value(
+              value: context.read<MapCubit>(),
+            ),
+          ],
           child: const MapRouteInfo(),
         ),
       );

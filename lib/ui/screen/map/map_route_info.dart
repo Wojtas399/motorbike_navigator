@@ -6,6 +6,8 @@ import '../../component/text.dart';
 import '../../cubit/route/route_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/duration_extensions.dart';
+import '../route_form/route_form_popup.dart';
+import 'cubit/map_cubit.dart';
 
 class MapRouteInfo extends StatelessWidget {
   const MapRouteInfo({super.key});
@@ -23,7 +25,17 @@ class MapRouteInfo extends StatelessWidget {
             GapVertical8(),
             _EstimatedDuration(),
             GapVertical32(),
-            _StartNavigationButton(),
+            Row(
+              children: [
+                Expanded(
+                  child: _CancelButton(),
+                ),
+                GapHorizontal16(),
+                Expanded(
+                  child: _StartNavigationButton(),
+                ),
+              ],
+            ),
           ],
         ),
       );
@@ -143,14 +155,35 @@ class _StartNavigationButton extends StatelessWidget {
   const _StartNavigationButton();
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-        width: double.infinity,
-        child: FilledButton.icon(
-          onPressed: () {
-            //TODO
-          },
-          icon: const Icon(Icons.navigation),
-          label: Text(context.str.routeInfoNavigate),
-        ),
+  Widget build(BuildContext context) => FilledButton.icon(
+        onPressed: () {
+          //TODO
+        },
+        icon: const Icon(Icons.navigation_outlined),
+        label: Text(context.str.routeInfoNavigate),
+      );
+}
+
+class _CancelButton extends StatelessWidget {
+  const _CancelButton();
+
+  void _onPressed(BuildContext context) {
+    context.read<RouteCubit>().resetRoute();
+    context.read<MapCubit>().followUserLocation();
+    showBottomSheet(
+      context: context,
+      enableDrag: false,
+      builder: (_) => BlocProvider.value(
+        value: context.read<RouteCubit>(),
+        child: const RouteFormPopup(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => OutlinedButton.icon(
+        onPressed: () => _onPressed(context),
+        icon: const Icon(Icons.cancel_outlined),
+        label: Text(context.str.cancel),
       );
 }
