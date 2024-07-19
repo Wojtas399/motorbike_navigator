@@ -47,3 +47,7 @@ class GapVertical8 extends _Gap {
 class GapVertical4 extends _Gap {
   const GapVertical4() : super(vertical: 4);
 }
+
+class GapVertical32 extends _Gap {
+  const GapVertical32() : super(vertical: 32);
+}

@@ -14,6 +14,7 @@ import '../drive_summary/drive_summary_screen.dart';
 import 'cubit/map_cubit.dart';
 import 'map_content.dart';
 import 'map_drawer.dart';
+import 'map_route_info.dart';
 
 @RoutePage()
 class MapScreen extends StatelessWidget {
@@ -32,13 +33,7 @@ class MapScreen extends StatelessWidget {
             create: (_) => getIt.get<RouteCubit>(),
           ),
         ],
-        child: MultiBlocListener(
-          listeners: const [
-            _DriveCubitListener(),
-            _RouteCubitListener(),
-          ],
-          child: const _Content(),
-        ),
+        child: const _Content(),
       );
 }
 
@@ -53,16 +48,22 @@ class _Content extends StatelessWidget {
 
     return Scaffold(
       drawer: driveStatus.isInitial ? const MapDrawer() : null,
-      body: Stack(
-        children: [
-          const MapContent(),
-          if (driveStatus.isInitial)
-            const Positioned(
-              left: 16,
-              top: kToolbarHeight + 24,
-              child: _MenuButton(),
-            ),
+      body: MultiBlocListener(
+        listeners: const [
+          _DriveCubitListener(),
+          _RouteCubitListener(),
         ],
+        child: Stack(
+          children: [
+            const MapContent(),
+            if (driveStatus.isInitial)
+              const Positioned(
+                left: 16,
+                top: kToolbarHeight + 24,
+                child: _MenuButton(),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -106,7 +107,16 @@ class _RouteCubitListener extends SingleChildStatelessWidget {
     RouteStateStatus status,
     BuildContext context,
   ) async {
-    if (status == RouteStateStatus.routeNotFound) {
+    if (status == RouteStateStatus.routeFound) {
+      Navigator.pop(context);
+      showBottomSheet(
+        context: context,
+        builder: (_) => BlocProvider.value(
+          value: context.read<RouteCubit>(),
+          child: const MapRouteInfo(),
+        ),
+      );
+    } else if (status == RouteStateStatus.routeNotFound) {
       await getIt.get<DialogService>().showMessageDialog(
             title: context.str.routeFormNoRouteFoundTitle,
             message: context.str.routeFormNoRouteFoundMessage,
@@ -122,10 +132,7 @@ class _RouteCubitListener extends SingleChildStatelessWidget {
           RouteState currState,
         ) =>
             prevState.status != currState.status,
-        listener: (
-          BuildContext context,
-          RouteState state,
-        ) =>
+        listener: (_, RouteState state) =>
             _onStatusChanged(state.status, context),
         child: child,
       );
