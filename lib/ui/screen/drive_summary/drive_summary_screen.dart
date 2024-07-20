@@ -7,6 +7,8 @@ import '../../component/gap.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../service/dialog_service.dart';
+import '../map/cubit/map_cubit.dart';
+import '../map/cubit/map_state.dart';
 import 'drive_summary_actions.dart';
 import 'drive_summary_data.dart';
 import 'drive_summary_route.dart';
@@ -26,7 +28,10 @@ class DriveSummaryScreen extends StatelessWidget {
     final bool canLeave = await _askForConfirmationToLeave(context);
     if (canLeave) {
       navigator.pop();
-      if (context.mounted) context.read<DriveCubit>().resetDrive();
+      if (context.mounted) {
+        context.read<DriveCubit>().resetDrive();
+        context.read<MapCubit>().changeMode(MapMode.basic);
+      }
     }
   }
 

@@ -6,6 +6,7 @@ import '../../component/text.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/datetime_extensions.dart';
+import '../../extensions/double_extensions.dart';
 import '../../extensions/duration_extensions.dart';
 
 class DriveSummaryData extends StatelessWidget {
@@ -88,7 +89,7 @@ class _Distance extends StatelessWidget {
 
     return _ValueWithLabel(
       label: context.str.distance,
-      value: '${distanceInKm.toStringAsFixed(2)} km',
+      value: distanceInKm.toDistanceFormat(),
     );
   }
 }
@@ -104,7 +105,7 @@ class _AvgSpeed extends StatelessWidget {
 
     return _ValueWithLabel(
       label: context.str.avgSpeed,
-      value: '${avgSpeed.toStringAsFixed(2)} km/h',
+      value: avgSpeed.toSpeedFormat(),
     );
   }
 }

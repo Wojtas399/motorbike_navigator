@@ -5,6 +5,7 @@ import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/route/route_cubit.dart';
 import '../../extensions/context_extensions.dart';
+import '../../extensions/double_extensions.dart';
 import '../../extensions/duration_extensions.dart';
 import '../route_form/route_form_popup.dart';
 import 'cubit/map_cubit.dart';
@@ -106,7 +107,7 @@ class _Distance extends StatelessWidget {
 
     return _ValueWithLabel(
       label: context.str.distance,
-      value: '${distanceInKm.toStringAsFixed(2)} km',
+      value: distanceInKm.toDistanceFormat(),
     );
   }
 }
