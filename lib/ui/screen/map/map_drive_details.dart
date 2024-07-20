@@ -22,14 +22,8 @@ class MapDriveDetails extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                        LabelLarge('Czas'),
-                        GapVertical4(),
                         _Duration(),
-                        GapVertical8(),
-                        Divider(),
-                        GapVertical8(),
-                        LabelLarge('Prędkość'),
-                        GapVertical4(),
+                        Divider(height: 32),
                         _Speed(),
                       ],
                     ),
@@ -38,14 +32,8 @@ class MapDriveDetails extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                        LabelLarge('Dystans'),
-                        GapVertical4(),
                         _Distance(),
-                        GapVertical8(),
-                        Divider(),
-                        GapVertical8(),
-                        LabelLarge('Śr. prędkość'),
-                        GapVertical4(),
+                        Divider(height: 32),
                         _AvgSpeed(),
                       ],
                     ),
@@ -91,20 +79,10 @@ class _Duration extends StatelessWidget {
       (DriveCubit cubit) => cubit.state.duration,
     );
 
-    return TitleLarge(duration.toUIFormat());
-  }
-}
-
-class _Distance extends StatelessWidget {
-  const _Distance();
-
-  @override
-  Widget build(BuildContext context) {
-    final double distanceInKm = context.select(
-      (DriveCubit cubit) => cubit.state.distanceInKm,
+    return _ValueWithLabel(
+      label: context.str.duration,
+      value: duration.toUIFormat(),
     );
-
-    return TitleLarge('${distanceInKm.toStringAsFixed(2)} km');
   }
 }
 
@@ -117,7 +95,26 @@ class _Speed extends StatelessWidget {
       (DriveCubit cubit) => cubit.state.speedInKmPerH,
     );
 
-    return TitleLarge('${speed.toStringAsFixed(2)} km/h');
+    return _ValueWithLabel(
+      label: context.str.speed,
+      value: '${speed.toStringAsFixed(2)} km/h',
+    );
+  }
+}
+
+class _Distance extends StatelessWidget {
+  const _Distance();
+
+  @override
+  Widget build(BuildContext context) {
+    final double distanceInKm = context.select(
+      (DriveCubit cubit) => cubit.state.distanceInKm,
+    );
+
+    return _ValueWithLabel(
+      label: context.str.distance,
+      value: '${distanceInKm.toStringAsFixed(2)} km',
+    );
   }
 }
 
@@ -130,7 +127,10 @@ class _AvgSpeed extends StatelessWidget {
       (DriveCubit cubit) => cubit.state.avgSpeedInKmPerH,
     );
 
-    return TitleLarge('${avgSpeed.toStringAsFixed(2)} km/h');
+    return _ValueWithLabel(
+      label: context.str.avgSpeed,
+      value: '${avgSpeed.toStringAsFixed(2)} km/h',
+    );
   }
 }
 
@@ -149,5 +149,24 @@ class _PauseButton extends StatelessWidget {
           icon: const Icon(Icons.stop_circle_outlined),
           label: Text(context.str.mapStopNavigation),
         ),
+      );
+}
+
+class _ValueWithLabel extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _ValueWithLabel({
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          LabelLarge(label),
+          const GapVertical4(),
+          TitleLarge(value),
+        ],
       );
 }
