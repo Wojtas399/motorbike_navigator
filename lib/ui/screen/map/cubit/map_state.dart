@@ -6,10 +6,18 @@ part 'map_state.freezed.dart';
 
 enum MapStateStatus { loading, completed }
 
+enum MapMode { basic, selectingRoute, drive }
+
 enum MapFocusMode { free, followUserLocation }
 
 extension MapStateStatusExtensions on MapStateStatus {
   bool get isLoading => this == MapStateStatus.loading;
+}
+
+extension MapModeExtensions on MapMode {
+  bool get isBasic => this == MapMode.basic;
+
+  bool get isDrive => this == MapMode.drive;
 }
 
 extension MapFocusModeExtensions on MapFocusMode {
@@ -20,6 +28,7 @@ extension MapFocusModeExtensions on MapFocusMode {
 class MapState with _$MapState {
   const factory MapState({
     @Default(MapStateStatus.loading) MapStateStatus status,
+    @Default(MapMode.basic) MapMode mode,
     @Default(MapFocusMode.followUserLocation) MapFocusMode focusMode,
     Coordinates? centerLocation,
     Coordinates? userLocation,

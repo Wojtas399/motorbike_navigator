@@ -146,4 +146,17 @@ void main() {
       );
     },
   );
+
+  blocTest(
+    'changeMode, '
+    'should update mode in state',
+    build: () => createCubit(),
+    act: (cubit) => cubit.changeMode(MapMode.selectingRoute),
+    expect: () => [
+      const MapState(
+        status: MapStateStatus.completed,
+        mode: MapMode.selectingRoute,
+      ),
+    ],
+  );
 }

@@ -43,6 +43,13 @@ class MapCubit extends Cubit<MapState> {
     ));
   }
 
+  void changeMode(MapMode newMode) {
+    emit(state.copyWith(
+      status: MapStateStatus.completed,
+      mode: newMode,
+    ));
+  }
+
   Stream<Coordinates?> _getCurrentLocation() =>
       _locationService.getPosition().map(
             (Position? position) => position?.coordinates,

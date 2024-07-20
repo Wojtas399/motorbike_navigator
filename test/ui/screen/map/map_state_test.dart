@@ -8,6 +8,7 @@ void main() {
     () {
       const MapState expectedState = MapState(
         status: MapStateStatus.loading,
+        mode: MapMode.basic,
         centerLocation: null,
         userLocation: null,
       );
@@ -36,6 +37,70 @@ void main() {
           const MapState state = MapState(status: MapStateStatus.completed);
 
           expect(state.status.isLoading, false);
+        },
+      );
+    },
+  );
+
+  group(
+    'mode.isBasic, ',
+    () {
+      test(
+        'should be true if mode is set as basic',
+        () {
+          const MapState state = MapState(mode: MapMode.basic);
+
+          expect(state.mode.isBasic, true);
+        },
+      );
+
+      test(
+        'should be false if mode is set as selectingRoute',
+        () {
+          const MapState state = MapState(mode: MapMode.selectingRoute);
+
+          expect(state.mode.isBasic, false);
+        },
+      );
+
+      test(
+        'should be false if mode is set as drive',
+        () {
+          const MapState state = MapState(mode: MapMode.drive);
+
+          expect(state.mode.isBasic, false);
+        },
+      );
+    },
+  );
+
+  group(
+    'mode.isDrive, ',
+    () {
+      test(
+        'should be true if mode is set as drive',
+        () {
+          const MapState state = MapState(mode: MapMode.drive);
+
+          expect(state.mode.isDrive, true);
+        },
+      );
+
+      test(
+        'should be false if mode is set as selectingRoute',
+        () {
+          const MapState state = MapState(mode: MapMode.selectingRoute);
+
+          expect(state.mode.isDrive, false);
+        },
+      );
+
+      test(
+        'should be false if mode is set as basic',
+        () {
+          const MapState state = MapState(mode: MapMode.basic);
+
+          expect(state.mode.isDrive, false);
         },
       );
     },
@@ -89,6 +154,32 @@ void main() {
           state = state.copyWith();
 
           expect(state.status, expectedStatus);
+        },
+      );
+    },
+  );
+
+  group(
+    'copyWith mode, ',
+    () {
+      const MapMode expectedMode = MapMode.drive;
+      MapState state = const MapState();
+
+      test(
+        'should update mode if new value has been passed, ',
+        () {
+          state = state.copyWith(mode: expectedMode);
+
+          expect(state.mode, expectedMode);
+        },
+      );
+
+      test(
+        'should copy current value if new value has not been passed',
+        () {
+          state = state.copyWith();
+
+          expect(state.mode, expectedMode);
         },
       );
     },
