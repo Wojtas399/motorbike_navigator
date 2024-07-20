@@ -6,6 +6,8 @@ import '../../component/gap.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../service/dialog_service.dart';
+import '../map/cubit/map_cubit.dart';
+import '../map/cubit/map_state.dart';
 
 class DriveSummaryActions extends StatelessWidget {
   const DriveSummaryActions({super.key});
@@ -39,6 +41,7 @@ class _ResumeDriveButton extends StatelessWidget {
 
   void _onPressed(BuildContext context) {
     context.read<DriveCubit>().resumeDrive();
+    Navigator.pop(context);
   }
 
   @override
@@ -61,6 +64,7 @@ class _DeleteButton extends StatelessWidget {
     if (deleteConfirmation == true && context.mounted) {
       Navigator.pop(context);
       context.read<DriveCubit>().resetDrive();
+      context.read<MapCubit>().changeMode(MapMode.basic);
     }
   }
 

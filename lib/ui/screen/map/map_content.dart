@@ -4,15 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/drive/drive_cubit.dart';
-import '../../cubit/drive/drive_state.dart';
 import '../../cubit/logged_user/logged_user_cubit.dart';
 import '../../cubit/logged_user/logged_user_state.dart';
-import '../../cubit/route/route_cubit.dart';
 import '../../extensions/context_extensions.dart';
-import '../route_form/route_form_popup.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
-import 'map_drive_details.dart';
 import 'map_map_view.dart';
 
 class MapContent extends StatelessWidget {
@@ -54,35 +50,28 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DriveStateStatus driveStatus = context.select(
-      (DriveCubit cubit) => cubit.state.status,
+    final MapMode mapMode = context.select(
+      (MapCubit cubit) => cubit.state.mode,
     );
 
     return Stack(
       children: [
         const MapMapView(),
-        if (driveStatus == DriveStateStatus.initial)
+        if (mapMode.isBasic)
           const Positioned(
             bottom: 24,
             left: 24,
             right: 24,
             child: _StartRideButton(),
           ),
-        if (driveStatus == DriveStateStatus.ongoing)
-          const Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: MapDriveDetails(),
-          ),
         Positioned(
-          bottom: driveStatus == DriveStateStatus.ongoing ? 280 : 88,
+          bottom: mapMode.isDrive ? 280 : 88,
           right: 24,
-          child: const Column(
+          child: Column(
             children: [
-              _FollowUserLocationButton(),
-              GapVertical16(),
-              _RouteFormButton(),
+              const _FollowUserLocationButton(),
+              const GapVertical16(),
+              if (mapMode.isBasic) const _RouteFormButton(),
             ],
           ),
         ),
@@ -95,10 +84,12 @@ class _StartRideButton extends StatelessWidget {
   const _StartRideButton();
 
   void _onPressed(BuildContext context) {
+    final mapCubit = context.read<MapCubit>();
     context.read<DriveCubit>().startDrive(
-          startLocation: context.read<MapCubit>().state.userLocation,
+          startLocation: mapCubit.state.userLocation,
         );
-    context.read<MapCubit>().followUserLocation();
+    mapCubit.followUserLocation();
+    mapCubit.changeMode(MapMode.drive);
   }
 
   @override
@@ -128,14 +119,7 @@ class _RouteFormButton extends StatelessWidget {
   const _RouteFormButton();
 
   void _onPressed(BuildContext context) {
-    showBottomSheet(
-      context: context,
-      enableDrag: false,
-      builder: (_) => BlocProvider.value(
-        value: context.read<RouteCubit>(),
-        child: const RouteFormPopup(),
-      ),
-    );
+    context.read<MapCubit>().changeMode(MapMode.selectingRoute);
   }
 
   @override

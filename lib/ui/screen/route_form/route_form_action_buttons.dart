@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,6 +5,8 @@ import '../../component/gap.dart';
 import '../../cubit/route/route_cubit.dart';
 import '../../cubit/route/route_state.dart';
 import '../../extensions/context_extensions.dart';
+import '../map/cubit/map_cubit.dart';
+import '../map/cubit/map_state.dart';
 
 class RouteFormActionButtons extends StatelessWidget {
   const RouteFormActionButtons({super.key});
@@ -32,7 +33,7 @@ class _CancelButton extends StatelessWidget {
 
   void _onPressed(BuildContext context) {
     context.read<RouteCubit>().reset();
-    context.maybePop();
+    context.read<MapCubit>().changeMode(MapMode.basic);
   }
 
   @override

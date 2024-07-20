@@ -1,24 +1,32 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/single_child_widget.dart';
 
 import '../../../dependency_injection.dart';
 import '../../cubit/drive/drive_cubit.dart';
-import '../../cubit/drive/drive_state.dart';
 import '../../cubit/route/route_cubit.dart';
-import '../../cubit/route/route_state.dart';
-import '../../extensions/context_extensions.dart';
-import '../../service/dialog_service.dart';
-import '../drive_summary/drive_summary_screen.dart';
 import 'cubit/map_cubit.dart';
+import 'cubit/map_state.dart';
 import 'map_content.dart';
 import 'map_drawer.dart';
-import 'map_route_info.dart';
+import 'map_drive_cubit_listener.dart';
+import 'map_mode_listener.dart';
+import 'map_route_cubit_listener.dart';
 
 @RoutePage()
 class MapScreen extends StatelessWidget {
   const MapScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) => const _BlocProviders(
+        child: _Content(),
+      );
+}
+
+class _BlocProviders extends StatelessWidget {
+  final Widget child;
+
+  const _BlocProviders({required this.child});
 
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
@@ -33,7 +41,7 @@ class MapScreen extends StatelessWidget {
             create: (_) => getIt.get<RouteCubit>(),
           ),
         ],
-        child: const _Content(),
+        child: child,
       );
 }
 
@@ -42,21 +50,22 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DriveStateStatus driveStatus = context.select(
-      (DriveCubit cubit) => cubit.state.status,
+    final MapMode mapMode = context.select(
+      (MapCubit cubit) => cubit.state.mode,
     );
 
     return Scaffold(
-      drawer: driveStatus.isInitial ? const MapDrawer() : null,
+      drawer: mapMode.isBasic ? const MapDrawer() : null,
       body: MultiBlocListener(
         listeners: const [
-          _DriveCubitListener(),
-          _RouteCubitListener(),
+          MapModeListener(),
+          MapDriveCubitListener(),
+          MapRouteCubitListener(),
         ],
         child: Stack(
           children: [
             const MapContent(),
-            if (driveStatus.isInitial)
+            if (mapMode.isBasic)
               const Positioned(
                 left: 16,
                 top: kToolbarHeight + 24,
@@ -67,82 +76,6 @@ class _Content extends StatelessWidget {
       ),
     );
   }
-}
-
-class _DriveCubitListener extends SingleChildStatelessWidget {
-  const _DriveCubitListener();
-
-  void _onStatusChanged(DriveStateStatus status, BuildContext context) {
-    if (status == DriveStateStatus.paused) {
-      _navigateToDriveSummary(context);
-    }
-  }
-
-  void _navigateToDriveSummary(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => BlocProvider.value(
-          value: context.read<DriveCubit>(),
-          child: const DriveSummaryScreen(),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget buildWithChild(BuildContext context, Widget? child) =>
-      BlocListener<DriveCubit, DriveState>(
-        listenWhen: (prevState, currState) =>
-            prevState.status != currState.status,
-        listener: (context, state) => _onStatusChanged(state.status, context),
-        child: child,
-      );
-}
-
-class _RouteCubitListener extends SingleChildStatelessWidget {
-  const _RouteCubitListener();
-
-  Future<void> _onStatusChanged(
-    RouteStateStatus status,
-    BuildContext context,
-  ) async {
-    if (status == RouteStateStatus.routeFound) {
-      showBottomSheet(
-        context: context,
-        enableDrag: false,
-        builder: (_) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(
-              value: context.read<RouteCubit>(),
-            ),
-            BlocProvider.value(
-              value: context.read<MapCubit>(),
-            ),
-          ],
-          child: const MapRouteInfo(),
-        ),
-      );
-    } else if (status == RouteStateStatus.routeNotFound) {
-      await getIt.get<DialogService>().showMessageDialog(
-            title: context.str.routeFormNoRouteFoundTitle,
-            message: context.str.routeFormNoRouteFoundMessage,
-          );
-    }
-  }
-
-  @override
-  Widget buildWithChild(BuildContext context, Widget? child) =>
-      BlocListener<RouteCubit, RouteState>(
-        listenWhen: (
-          RouteState prevState,
-          RouteState currState,
-        ) =>
-            prevState.status != currState.status,
-        listener: (_, RouteState state) =>
-            _onStatusChanged(state.status, context),
-        child: child,
-      );
 }
 
 class _MenuButton extends StatelessWidget {

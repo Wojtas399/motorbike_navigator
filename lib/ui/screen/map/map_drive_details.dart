@@ -13,6 +13,7 @@ class MapDriveDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const _Body(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             IntrinsicHeight(
               child: Row(
@@ -66,7 +67,7 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+        padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
         decoration: BoxDecoration(
           color: context.colorScheme.surface,
           boxShadow: [
