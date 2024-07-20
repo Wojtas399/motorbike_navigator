@@ -12,44 +12,27 @@ class DriveSummaryData extends StatelessWidget {
   const DriveSummaryData({super.key});
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) => const Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(right: 16),
             child: _StartDateTime(),
           ),
-          const GapVertical8(),
+          GapVertical8(),
           Column(
             children: [
-              LabelLarge(context.str.distance),
-              const GapVertical4(),
-              const _Distance(),
-              const GapVertical8(),
-              const Divider(),
-              const GapVertical8(),
+              _Distance(),
+              Divider(height: 32),
               IntrinsicHeight(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Column(
-                        children: [
-                          LabelLarge(context.str.duration),
-                          const GapVertical4(),
-                          const _Duration(),
-                        ],
-                      ),
+                      child: _Duration(),
                     ),
-                    const VerticalDivider(),
+                    VerticalDivider(),
                     Expanded(
-                      child: Column(
-                        children: [
-                          LabelLarge(context.str.avgSpeed),
-                          const GapVertical4(),
-                          const _AvgSpeed(),
-                        ],
-                      ),
+                      child: _AvgSpeed(),
                     ),
                   ],
                 ),
@@ -87,7 +70,10 @@ class _Duration extends StatelessWidget {
       (DriveCubit cubit) => cubit.state.duration,
     );
 
-    return TitleLarge(duration.toUIFormat());
+    return _ValueWithLabel(
+      label: context.str.duration,
+      value: duration.toUIFormat(),
+    );
   }
 }
 
@@ -100,7 +86,10 @@ class _Distance extends StatelessWidget {
       (DriveCubit cubit) => cubit.state.distanceInKm,
     );
 
-    return TitleLarge('${distanceInKm.toStringAsFixed(2)} km');
+    return _ValueWithLabel(
+      label: context.str.distance,
+      value: '${distanceInKm.toStringAsFixed(2)} km',
+    );
   }
 }
 
@@ -113,6 +102,28 @@ class _AvgSpeed extends StatelessWidget {
       (DriveCubit cubit) => cubit.state.avgSpeedInKmPerH,
     );
 
-    return TitleLarge('${avgSpeed.toStringAsFixed(2)} km/h');
+    return _ValueWithLabel(
+      label: context.str.avgSpeed,
+      value: '${avgSpeed.toStringAsFixed(2)} km/h',
+    );
   }
+}
+
+class _ValueWithLabel extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _ValueWithLabel({
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          LabelLarge(label),
+          const GapVertical4(),
+          TitleLarge(value),
+        ],
+      );
 }
