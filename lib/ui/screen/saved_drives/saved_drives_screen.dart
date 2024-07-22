@@ -37,7 +37,9 @@ class _Body extends StatelessWidget {
     );
 
     return switch (cubitStatus) {
-      SavedDrivesStateStatus.loading => const CircularProgressIndicator(),
+      SavedDrivesStateStatus.loading => const Center(
+          child: CircularProgressIndicator(),
+        ),
       SavedDrivesStateStatus.completed => const _ListOfDrives(),
     };
   }
