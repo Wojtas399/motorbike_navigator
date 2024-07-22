@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../entity/place_suggestion.dart';
+import '../../../entity/map_point.dart';
 import '../../animation/slide_left_page_route_animation.dart';
 import '../../component/gap.dart';
 import '../../cubit/route/route_cubit.dart';
@@ -67,22 +67,28 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
     _controller.text = startPlace?.toUIName(context) ?? '';
   }
 
-  Future<void> _onTap(BuildContext context) async {
+  Future<void> _onTap() async {
     _focusNode.unfocus();
-    final PlaceSuggestion? startPlaceSuggestion = await Navigator.push(
+    final RoutePlace? currentStartPoint =
+        context.read<RouteCubit>().state.startPlace;
+    final MapPoint? startPlacePoint = await Navigator.push(
       context,
       SlideLeftPageRouteAnimation(
-        page: SearchForm(query: _controller.text),
+        page: SearchForm(
+          query: currentStartPoint is UserLocationRoutePlace
+              ? null
+              : _controller.text,
+        ),
       ),
     );
-    if (startPlaceSuggestion != null && context.mounted) {
+    if (startPlacePoint is SelectedPlacePoint && mounted) {
       context.read<RouteCubit>().onStartPlaceChanged(
             SelectedRoutePlace(
-              id: startPlaceSuggestion.id,
-              name: startPlaceSuggestion.name,
+              id: startPlacePoint.id,
+              name: startPlacePoint.name,
             ),
           );
-      _controller.text = startPlaceSuggestion.name;
+      _controller.text = startPlacePoint.name;
     }
   }
 
@@ -102,7 +108,7 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
       errorText: _errorText,
       controller: _controller,
       focusNode: _focusNode,
-      onTap: () => _onTap(context),
+      onTap: _onTap,
     );
   }
 }
@@ -153,21 +159,27 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
   }
 
   Future<void> _onTap(BuildContext context) async {
+    final RoutePlace? currentDestination =
+        context.read<RouteCubit>().state.destination;
     _focusNode.unfocus();
-    final PlaceSuggestion? destinationSuggestion = await Navigator.push(
+    final MapPoint? destinationPoint = await Navigator.push(
       context,
       SlideLeftPageRouteAnimation(
-        page: SearchForm(query: _controller.text),
+        page: SearchForm(
+          query: currentDestination is UserLocationRoutePlace
+              ? null
+              : _controller.text,
+        ),
       ),
     );
-    if (destinationSuggestion != null && context.mounted) {
+    if (destinationPoint is SelectedPlacePoint && context.mounted) {
       context.read<RouteCubit>().onDestinationChanged(
             SelectedRoutePlace(
-              id: destinationSuggestion.id,
-              name: destinationSuggestion.name,
+              id: destinationPoint.id,
+              name: destinationPoint.name,
             ),
           );
-      _controller.text = destinationSuggestion.name;
+      _controller.text = destinationPoint.name;
     }
   }
 

@@ -8,7 +8,7 @@ import 'search_form_search_container.dart';
 import 'search_form_suggested_places.dart';
 
 class SearchForm extends StatelessWidget {
-  final String query;
+  final String? query;
 
   const SearchForm({super.key, required this.query});
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../entity/map_point.dart';
 import '../../../entity/place_suggestion.dart';
 import '../../extensions/context_extensions.dart';
 import 'cubit/search_form_cubit.dart';
@@ -20,6 +21,8 @@ class SearchFormSuggestedPlaces extends StatelessWidget {
           ...ListTile.divideTiles(
             color: context.colorScheme.outline.withOpacity(0.25),
             tiles: [
+              if (suggestedPlaces == null || suggestedPlaces.isEmpty == true)
+                const _UserLocationItem(),
               ...?suggestedPlaces?.map((place) => _SuggestedPlaceItem(place)),
             ],
           ),
@@ -29,6 +32,21 @@ class SearchFormSuggestedPlaces extends StatelessWidget {
   }
 }
 
+class _UserLocationItem extends StatelessWidget {
+  const _UserLocationItem();
+
+  void _onPressed(BuildContext context) {
+    Navigator.pop(context, const UserLocationPoint());
+  }
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+        title: Text(context.str.yourLocalization),
+        leading: const Icon(Icons.near_me),
+        onTap: () => _onPressed(context),
+      );
+}
+
 class _SuggestedPlaceItem extends StatelessWidget {
   final PlaceSuggestion place;
 
@@ -36,7 +54,13 @@ class _SuggestedPlaceItem extends StatelessWidget {
 
   void _onPlacePressed(BuildContext context) {
     FocusScope.of(context).unfocus();
-    Navigator.pop(context, place);
+    Navigator.pop(
+      context,
+      SelectedPlacePoint(
+        id: place.id,
+        name: place.name,
+      ),
+    );
   }
 
   @override

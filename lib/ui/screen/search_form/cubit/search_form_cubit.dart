@@ -13,8 +13,10 @@ class SearchFormCubit extends Cubit<SearchFormState> {
     this._placeSuggestionRepository,
   ) : super(const SearchFormState());
 
-  Future<void> initialize(String query) async {
-    await _loadPlaceSuggestions(query);
+  Future<void> initialize(String? query) async {
+    if (query != null) {
+      await _loadPlaceSuggestions(query);
+    }
   }
 
   void onSearchQueryChanged(String query) {

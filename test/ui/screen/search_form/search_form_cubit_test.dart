@@ -27,6 +27,13 @@ void main() {
       SearchFormState? state;
 
       blocTest(
+        'should do nothing if given param is null',
+        build: () => createCubit(),
+        act: (cubit) async => await cubit.initialize(null),
+        expect: () => [],
+      );
+
+      blocTest(
         'should do nothing if given param is empty string',
         build: () => createCubit(),
         act: (cubit) async => await cubit.initialize(''),
