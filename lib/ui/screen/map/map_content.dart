@@ -108,11 +108,21 @@ class _FollowUserLocationButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => FloatingActionButton(
-        heroTag: null,
-        onPressed: () => _onPressed(context),
-        child: const Icon(Icons.near_me),
-      );
+  Widget build(BuildContext context) {
+    final MapFocusMode focusMode = context.select(
+      (MapCubit cubit) => cubit.state.focusMode,
+    );
+
+    return FloatingActionButton(
+      heroTag: null,
+      onPressed: () => _onPressed(context),
+      child: Icon(
+        focusMode == MapFocusMode.followUserLocation
+            ? Icons.near_me
+            : Icons.near_me_outlined,
+      ),
+    );
+  }
 }
 
 class _RouteFormButton extends StatelessWidget {
