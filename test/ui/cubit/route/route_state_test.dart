@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:motorbike_navigator/entity/map_point.dart';
-import 'package:motorbike_navigator/entity/navigation.dart';
+import 'package:motorbike_navigator/entity/route_suggestions.dart';
 import 'package:motorbike_navigator/ui/cubit/route/route_state.dart';
 
 void main() {

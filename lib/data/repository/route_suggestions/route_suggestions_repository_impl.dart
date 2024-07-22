@@ -2,40 +2,41 @@ import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../entity/coordinates.dart';
-import '../../../entity/navigation.dart';
+import '../../../entity/route_suggestions.dart';
 import '../../api_service/navigation_api_service.dart';
 import '../../dto/navigation_dto.dart';
 import '../../mapper/route_mapper.dart';
 import '../repository.dart';
-import 'navigation_repository.dart';
+import 'route_suggestions_repository.dart';
 
-@LazySingleton(as: NavigationRepository)
-class NavigationRepositoryImpl extends Repository<Navigation>
-    implements NavigationRepository {
+@LazySingleton(as: RouteSuggestionsRepository)
+class RouteSuggestionsRepositoryImpl extends Repository<RouteSuggestions>
+    implements RouteSuggestionsRepository {
   final NavigationApiService _navigationApiService;
   final RouteMapper _routeMapper;
 
-  NavigationRepositoryImpl(
+  RouteSuggestionsRepositoryImpl(
     this._navigationApiService,
     this._routeMapper,
   );
 
   @override
-  Future<Navigation?> loadNavigationByStartAndEndLocations({
+  Future<RouteSuggestions?> loadRouteSuggestionsByStartAndEndLocations({
     required Coordinates startLocation,
     required Coordinates endLocation,
   }) async {
-    final List<Navigation> repoState = await repositoryState$.first;
-    final Navigation? existingNavigation = repoState.firstWhereOrNull(
-      (Navigation navigation) =>
-          navigation.startLocation == startLocation &&
-          navigation.endLocation == endLocation,
+    final List<RouteSuggestions> repoState = await repositoryState$.first;
+    final RouteSuggestions? existingRouteSuggestions =
+        repoState.firstWhereOrNull(
+      (RouteSuggestions routeSuggestions) =>
+          routeSuggestions.startLocation == startLocation &&
+          routeSuggestions.endLocation == endLocation,
     );
-    return existingNavigation ??
-        await _fetchNavigationFromDb(startLocation, endLocation);
+    return existingRouteSuggestions ??
+        await _fetchRouteSuggestionsFromDb(startLocation, endLocation);
   }
 
-  Future<Navigation> _fetchNavigationFromDb(
+  Future<RouteSuggestions> _fetchRouteSuggestionsFromDb(
     Coordinates startLocation,
     Coordinates endLocation,
   ) async {
@@ -50,12 +51,12 @@ class NavigationRepositoryImpl extends Repository<Navigation>
         long: endLocation.longitude,
       ),
     );
-    final Navigation navigation = Navigation(
+    final RouteSuggestions routeSuggestions = RouteSuggestions(
       startLocation: startLocation,
       endLocation: endLocation,
       routes: navigationDto.routes.map(_routeMapper.mapFromDto).toList(),
     );
-    addEntity(navigation);
-    return navigation;
+    addEntity(routeSuggestions);
+    return routeSuggestions;
   }
 }

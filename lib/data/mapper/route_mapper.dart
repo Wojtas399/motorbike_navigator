@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 
 import '../../entity/coordinates.dart';
-import '../../entity/navigation.dart';
+import '../../entity/route_suggestions.dart';
 import '../dto/route_dto.dart';
 import 'mapper.dart';
 

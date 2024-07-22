@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../data/repository/navigation/navigation_repository.dart';
 import '../../../../data/repository/place/place_repository.dart';
+import '../../../data/repository/route_suggestions/route_suggestions_repository.dart';
 import '../../../entity/coordinates.dart';
 import '../../../entity/map_point.dart';
-import '../../../entity/navigation.dart';
+import '../../../entity/route_suggestions.dart';
 import '../../service/location_service.dart';
 import 'route_state.dart';
 
@@ -13,12 +13,12 @@ import 'route_state.dart';
 class RouteCubit extends Cubit<RouteState> {
   final LocationService _locationService;
   final PlaceRepository _placeRepository;
-  final NavigationRepository _navigationRepository;
+  final RouteSuggestionsRepository _routeSuggestionsRepository;
 
   RouteCubit(
     this._locationService,
     this._placeRepository,
-    this._navigationRepository,
+    this._routeSuggestionsRepository,
   ) : super(const RouteState());
 
   void onStartPointChanged(MapPoint startPoint) {
@@ -59,15 +59,15 @@ class RouteCubit extends Cubit<RouteState> {
     final Coordinates? endLocation =
         await _loadPointCoordinates(state.endPoint!);
     if (startLocation == null || endLocation == null) return;
-    final Navigation? navigation =
-        await _navigationRepository.loadNavigationByStartAndEndLocations(
+    final RouteSuggestions? routeSuggestions = await _routeSuggestionsRepository
+        .loadRouteSuggestionsByStartAndEndLocations(
       startLocation: startLocation,
       endLocation: endLocation,
     );
-    if (navigation != null && navigation.routes.isNotEmpty) {
+    if (routeSuggestions != null && routeSuggestions.routes.isNotEmpty) {
       emit(state.copyWith(
         status: RouteStateStatus.routeFound,
-        route: navigation.routes.first,
+        route: routeSuggestions.routes.first,
       ));
     } else {
       emit(state.copyWith(

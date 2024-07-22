@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../entity/navigation.dart';
+import '../../../../entity/route_suggestions.dart';
 import '../../../entity/map_point.dart';
 
 part 'route_state.freezed.dart';

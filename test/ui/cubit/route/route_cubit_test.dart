@@ -3,31 +3,32 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/map_point.dart';
-import 'package:motorbike_navigator/entity/navigation.dart';
+import 'package:motorbike_navigator/entity/route_suggestions.dart';
 import 'package:motorbike_navigator/ui/cubit/route/route_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/route/route_state.dart';
 
 import '../../../creator/place_creator.dart';
-import '../../../mock/data/repository/mock_navigation_repository.dart';
 import '../../../mock/data/repository/mock_place_repository.dart';
+import '../../../mock/data/repository/mock_route_suggestions_repository.dart';
 import '../../../mock/ui_service/mock_location_service.dart';
 
 void main() {
   final locationService = MockLocationService();
   final placeRepository = MockPlaceRepository();
-  final navigationRepository = MockNavigationRepository();
+  final routeSuggestionsRepository = MockRouteSuggestionsRepository();
   final placeCreator = PlaceCreator();
 
   RouteCubit createCubit() => RouteCubit(
         locationService,
         placeRepository,
-        navigationRepository,
+        routeSuggestionsRepository,
       );
 
   tearDown(
     () {
       reset(locationService);
       reset(placeRepository);
+      reset(routeSuggestionsRepository);
     },
   );
 
@@ -113,7 +114,7 @@ void main() {
       const endPoint = SelectedPlacePoint(id: 'p2', name: 'place 2');
       const startLocation = Coordinates(50.1, 18.1);
       const endLocation = Coordinates(51.2, 19.2);
-      final navigation = Navigation(
+      final routeSuggestions = RouteSuggestions(
         startLocation: startLocation,
         endLocation: endLocation,
         routes: const [
@@ -247,7 +248,7 @@ void main() {
       );
 
       blocTest(
-        'should emit routeNotFound status if navigation has not been found',
+        'should emit routeNotFound status if route suggestions have not been found',
         build: () => createCubit(),
         setUp: () {
           locationService.mockLoadLocation(
@@ -256,8 +257,9 @@ void main() {
           placeRepository.mockGetPlaceById(
             result: placeCreator.create(coordinates: endLocation),
           );
-          navigationRepository.mockLoadNavigationByStartAndEndLocations(
-            navigation: null,
+          routeSuggestionsRepository
+              .mockLoadRouteSuggestionsByStartAndEndLocations(
+            expectedRouteSuggestions: null,
           );
         },
         act: (cubit) async {
@@ -282,7 +284,8 @@ void main() {
             () => placeRepository.getPlaceById(endPoint.id),
           ).called(1);
           verify(
-            () => navigationRepository.loadNavigationByStartAndEndLocations(
+            () => routeSuggestionsRepository
+                .loadRouteSuggestionsByStartAndEndLocations(
               startLocation: startLocation,
               endLocation: endLocation,
             ),
@@ -291,8 +294,7 @@ void main() {
       );
 
       blocTest(
-        'should emit routeNotFound status if found navigation does not contain '
-        'any routes',
+        'should emit routeNotFound status if found list of routes is empty',
         build: () => createCubit(),
         setUp: () {
           locationService.mockLoadLocation(
@@ -301,8 +303,9 @@ void main() {
           placeRepository.mockGetPlaceById(
             result: placeCreator.create(coordinates: endLocation),
           );
-          navigationRepository.mockLoadNavigationByStartAndEndLocations(
-            navigation: Navigation(
+          routeSuggestionsRepository
+              .mockLoadRouteSuggestionsByStartAndEndLocations(
+            expectedRouteSuggestions: RouteSuggestions(
               startLocation: startLocation,
               endLocation: endLocation,
               routes: const [],
@@ -331,7 +334,8 @@ void main() {
             () => placeRepository.getPlaceById(endPoint.id),
           ).called(1);
           verify(
-            () => navigationRepository.loadNavigationByStartAndEndLocations(
+            () => routeSuggestionsRepository
+                .loadRouteSuggestionsByStartAndEndLocations(
               startLocation: startLocation,
               endLocation: endLocation,
             ),
@@ -351,8 +355,9 @@ void main() {
           placeRepository.mockGetPlaceById(
             result: placeCreator.create(coordinates: endLocation),
           );
-          navigationRepository.mockLoadNavigationByStartAndEndLocations(
-            navigation: navigation,
+          routeSuggestionsRepository
+              .mockLoadRouteSuggestionsByStartAndEndLocations(
+            expectedRouteSuggestions: routeSuggestions,
           );
         },
         act: (cubit) async {
@@ -369,7 +374,7 @@ void main() {
           ),
           state = state?.copyWith(
             status: RouteStateStatus.routeFound,
-            route: navigation.routes.first,
+            route: routeSuggestions.routes.first,
           ),
         ],
         verify: (_) {
@@ -378,7 +383,8 @@ void main() {
             () => placeRepository.getPlaceById(endPoint.id),
           ).called(1);
           verify(
-            () => navigationRepository.loadNavigationByStartAndEndLocations(
+            () => routeSuggestionsRepository
+                .loadRouteSuggestionsByStartAndEndLocations(
               startLocation: startLocation,
               endLocation: endLocation,
             ),
@@ -394,7 +400,7 @@ void main() {
       const endPoint = SelectedPlacePoint(id: 'p2', name: 'place 2');
       const startLocation = Coordinates(50.1, 18.1);
       const endLocation = Coordinates(51.2, 19.2);
-      final navigation = Navigation(
+      final routeSuggestions = RouteSuggestions(
         startLocation: startLocation,
         endLocation: endLocation,
         routes: const [
@@ -420,8 +426,9 @@ void main() {
           placeRepository.mockGetPlaceById(
             result: placeCreator.create(coordinates: endLocation),
           );
-          navigationRepository.mockLoadNavigationByStartAndEndLocations(
-            navigation: navigation,
+          routeSuggestionsRepository
+              .mockLoadRouteSuggestionsByStartAndEndLocations(
+            expectedRouteSuggestions: routeSuggestions,
           );
         },
         act: (cubit) async {
@@ -439,7 +446,7 @@ void main() {
           ),
           state = state?.copyWith(
             status: RouteStateStatus.routeFound,
-            route: navigation.routes.first,
+            route: routeSuggestions.routes.first,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.infill,
@@ -456,7 +463,7 @@ void main() {
       const endPoint = SelectedPlacePoint(id: 'p2', name: 'place 2');
       const startLocation = Coordinates(50.1, 18.1);
       const endLocation = Coordinates(51.2, 19.2);
-      final navigation = Navigation(
+      final routeSuggestions = RouteSuggestions(
         startLocation: startLocation,
         endLocation: endLocation,
         routes: const [
@@ -482,8 +489,9 @@ void main() {
           placeRepository.mockGetPlaceById(
             result: placeCreator.create(coordinates: endLocation),
           );
-          navigationRepository.mockLoadNavigationByStartAndEndLocations(
-            navigation: navigation,
+          routeSuggestionsRepository
+              .mockLoadRouteSuggestionsByStartAndEndLocations(
+            expectedRouteSuggestions: routeSuggestions,
           );
         },
         act: (cubit) async {
@@ -501,7 +509,7 @@ void main() {
           ),
           state = state?.copyWith(
             status: RouteStateStatus.routeFound,
-            route: navigation.routes.first,
+            route: routeSuggestions.routes.first,
           ),
           const RouteState(),
         ],

@@ -3,7 +3,7 @@ import 'package:motorbike_navigator/data/dto/route_dto.dart';
 import 'package:motorbike_navigator/data/dto/route_geometry_dto.dart';
 import 'package:motorbike_navigator/data/mapper/route_mapper.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
-import 'package:motorbike_navigator/entity/navigation.dart';
+import 'package:motorbike_navigator/entity/route_suggestions.dart';
 
 void main() {
   const mapper = RouteMapper();

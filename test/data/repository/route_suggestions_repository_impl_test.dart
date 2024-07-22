@@ -3,9 +3,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/data/dto/navigation_dto.dart';
 import 'package:motorbike_navigator/data/dto/route_dto.dart';
 import 'package:motorbike_navigator/data/dto/route_geometry_dto.dart';
-import 'package:motorbike_navigator/data/repository/navigation/navigation_repository_impl.dart';
+import 'package:motorbike_navigator/data/repository/route_suggestions/route_suggestions_repository_impl.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
-import 'package:motorbike_navigator/entity/navigation.dart';
+import 'package:motorbike_navigator/entity/route_suggestions.dart';
 
 import '../../mock/data/api_service/mock_navigation_api_service.dart';
 import '../../mock/data/mapper/mock_route_mapper.dart';
@@ -13,20 +13,20 @@ import '../../mock/data/mapper/mock_route_mapper.dart';
 void main() {
   final navigationApiService = MockNavigationApiService();
   final routeMapper = MockRouteMapper();
-  late NavigationRepositoryImpl repositoryImpl;
+  late RouteSuggestionsRepositoryImpl repositoryImpl;
 
   setUp(() {
-    repositoryImpl = NavigationRepositoryImpl(
+    repositoryImpl = RouteSuggestionsRepositoryImpl(
       navigationApiService,
       routeMapper,
     );
   });
 
   test(
-    'loadNavigationByStartAndEndLocations, '
-    'should load navigation from db, add it to repo state and return it id '
-    'navigation does not exist in repo state, '
-    'should only return navigation if it already exists in repo state',
+    'loadRouteSuggestionsByStartAndEndLocations, '
+    'should load route suggestions from db, add it to repo state and return if '
+    'route suggestions do not exist in repo state, '
+    'should only return route suggestions if they already exists in repo state',
     () async {
       const Coordinates startLocation = Coordinates(50.1, 18.1);
       const Coordinates endLocation = Coordinates(50.2, 18.2);
@@ -52,7 +52,7 @@ void main() {
           ),
         ],
       );
-      final Navigation expectedNavigation = Navigation(
+      final RouteSuggestions expectedRouteSuggestions = RouteSuggestions(
         startLocation: startLocation,
         endLocation: endLocation,
         routes: const [
@@ -75,24 +75,24 @@ void main() {
       navigationApiService.mockFetchNavigation(navigationDto: navigationDto);
       when(
         () => routeMapper.mapFromDto(navigationDto.routes.first),
-      ).thenReturn(expectedNavigation.routes.first);
+      ).thenReturn(expectedRouteSuggestions.routes.first);
       when(
         () => routeMapper.mapFromDto(navigationDto.routes.last),
-      ).thenReturn(expectedNavigation.routes.last);
+      ).thenReturn(expectedRouteSuggestions.routes.last);
 
-      final Navigation? navigation1 =
-          await repositoryImpl.loadNavigationByStartAndEndLocations(
+      final RouteSuggestions? routeSuggestions1 =
+          await repositoryImpl.loadRouteSuggestionsByStartAndEndLocations(
         startLocation: startLocation,
         endLocation: endLocation,
       );
-      final Navigation? navigation2 =
-          await repositoryImpl.loadNavigationByStartAndEndLocations(
+      final RouteSuggestions? routeSuggestions2 =
+          await repositoryImpl.loadRouteSuggestionsByStartAndEndLocations(
         startLocation: startLocation,
         endLocation: endLocation,
       );
 
-      expect(navigation1, expectedNavigation);
-      expect(navigation2, expectedNavigation);
+      expect(routeSuggestions1, expectedRouteSuggestions);
+      expect(routeSuggestions2, expectedRouteSuggestions);
       verify(
         () => navigationApiService.fetchNavigation(
           startLocation: (

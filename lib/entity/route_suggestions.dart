@@ -3,12 +3,12 @@ import 'package:equatable/equatable.dart';
 import 'coordinates.dart';
 import 'entity.dart';
 
-class Navigation extends Entity {
+class RouteSuggestions extends Entity {
   final Coordinates startLocation;
   final Coordinates endLocation;
   final List<Route> routes;
 
-  Navigation({
+  RouteSuggestions({
     required this.startLocation,
     required this.endLocation,
     required this.routes,
