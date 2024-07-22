@@ -21,6 +21,16 @@ class LocationService {
     }
   }
 
+  Future<Coordinates?> loadLocation() async {
+    final hasPermission = await _handleLocationPermission();
+    if (!hasPermission) return null;
+    final currentPosition = await geolocator.Geolocator.getCurrentPosition();
+    return Coordinates(
+      currentPosition.latitude,
+      currentPosition.longitude,
+    );
+  }
+
   Stream<geolocator.Position> _getPositionStream() =>
       geolocator.Geolocator.getPositionStream(
         locationSettings: const geolocator.LocationSettings(
