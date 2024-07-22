@@ -76,9 +76,8 @@ class _State extends State<MapMapView> {
     final userLocation = mapCubit.state.userLocation;
     final mapFocusMode = mapCubit.state.focusMode;
     if (userLocation != null && mapFocusMode.isFollowingUserLocation) {
-      final bool isInDriveMode =
-          context.read<DriveCubit>().state.status.isOngoing;
-      final double centerPositionLatCorrection = isInDriveMode ? -0.012 : 0;
+      final double centerPositionLatCorrection =
+          mapCubit.state.mode.isDrive ? -0.012 : 0;
       _mapController.move(
         LatLng(
           userLocation.latitude + centerPositionLatCorrection,
