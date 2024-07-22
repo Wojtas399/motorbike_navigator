@@ -7,6 +7,7 @@ import '../../component/gap.dart';
 import '../../cubit/route/route_cubit.dart';
 import '../../cubit/route/route_state.dart';
 import '../../extensions/context_extensions.dart';
+import '../../extensions/route_place_extensions.dart';
 import '../search_form/search_form.dart';
 
 class RouteFormTextFields extends StatelessWidget {
@@ -36,13 +37,15 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
 
   @override
   void initState() {
-    final RoutePlace? startPlace = context.read<RouteCubit>().state.startPlace;
-    if (startPlace is UserLocationRoutePlace) {
-      _controller.text = 'Twoja lokalizacja';
-    } else if (startPlace is SelectedRoutePlace) {
-      _controller.text = startPlace.name;
-    }
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _setInitialValue(),
+    );
+  }
+
+  void _setInitialValue() {
+    final RoutePlace? startPlace = context.read<RouteCubit>().state.startPlace;
+    _controller.text = startPlace?.toUIName(context) ?? '';
   }
 
   void _handleRouteStatusChange(
@@ -61,13 +64,7 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
   }
 
   void _handleStartPlaceChange(RoutePlace? startPlace) {
-    if (startPlace is UserLocationRoutePlace) {
-      _controller.text = 'Twoja lokalizacja';
-    } else if (startPlace is SelectedRoutePlace) {
-      _controller.text = startPlace.name;
-    } else if (startPlace == null) {
-      _controller.text = '';
-    }
+    _controller.text = startPlace?.toUIName(context) ?? '';
   }
 
   Future<void> _onTap(BuildContext context) async {
@@ -124,14 +121,16 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
 
   @override
   void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _setInitialValue(),
+    );
+  }
+
+  void _setInitialValue() {
     final RoutePlace? destination =
         context.read<RouteCubit>().state.destination;
-    if (destination is UserLocationRoutePlace) {
-      _controller.text = 'Twoja lokalizacja';
-    } else if (destination is SelectedRoutePlace) {
-      _controller.text = destination.name;
-    }
-    super.initState();
+    _controller.text = destination?.toUIName(context) ?? '';
   }
 
   void _handleRouteStatusChange(
@@ -150,13 +149,7 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
   }
 
   void _handleDestinationChange(RoutePlace? destination) {
-    if (destination is UserLocationRoutePlace) {
-      _controller.text = 'Twoja lokalizacja';
-    } else if (destination is SelectedRoutePlace) {
-      _controller.text = destination.name;
-    } else if (destination == null) {
-      _controller.text = '';
-    }
+    _controller.text = destination?.toUIName(context) ?? '';
   }
 
   Future<void> _onTap(BuildContext context) async {

@@ -30,8 +30,7 @@
   "savedDrivesScreenTitle": "Zapisane przejazdy",
   "@----------COMMON----------": {},
   "map": "Mapa",
-  "saved": "Zapisane",
-  "settings": "Ustawienia",
+  "yourLocalization": "Twoja lokalizacja",
   "mapLoading": "Ładowanie mapy...",
   "mapSearch": "Szukaj...",
   "close": "Zamknij",
@@ -45,5 +44,6 @@
   "speed": "Prędkość",
   "avgSpeed": "Średnia prędkość",
   "darkMode": "Ciemny motyw",
-  "requiredField": "To pole jest wymagane"
+  "requiredField": "To pole jest wymagane",
+  "unknown": "Nieznane"
 }
