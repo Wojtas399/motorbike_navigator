@@ -12,16 +12,8 @@ enum DriveStateStatus {
   saved,
 }
 
-extension DriveStateStatusExtensions on DriveStateStatus {
-  bool get isInitial => this == DriveStateStatus.initial;
-
-  bool get isOngoing => this == DriveStateStatus.ongoing;
-}
-
 @freezed
 class DriveState with _$DriveState {
-  const DriveState._();
-
   const factory DriveState({
     @Default(DriveStateStatus.initial) DriveStateStatus status,
     DateTime? startDatetime,
