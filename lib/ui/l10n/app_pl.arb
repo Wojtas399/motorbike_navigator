@@ -19,6 +19,8 @@
   "driveSummaryLeaveConfirmationTitle": "Czy na pewno chcesz wyjść?",
   "driveSummaryLeaveConfirmationMessage": "Opuszczenie tego ekranu bez zapisywania spowoduje utracenie danych dotyczących przejazdu.",
   "@----------ROUTE_FORM----------": {},
+  "routeFormTheSameStartAndEndPointsTitle": "Błąd wybranych punktów",
+  "routeFormTheSameStartAndEndPointsMessage": "Punkty startowy i końcowy nie mogą być takie same!",
   "routeFormNoRouteFoundTitle": "Brak dostępnej trasy",
   "routeFormNoRouteFoundMessage": "Niestety nie udało się znaleźć żadnej trasy dla podanego punktu startowego i końcowego.",
   "@----------ROUTE_INFO----------": {},

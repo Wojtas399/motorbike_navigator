@@ -15,6 +15,8 @@ class MapRouteCubitListener extends SingleChildStatelessWidget {
 
   void _onStatusChanged(RouteStateStatus status, BuildContext context) {
     switch (status) {
+      case RouteStateStatus.pointsMustBeDifferent:
+        _handlePointsMustBeDifferentStatus(context);
       case RouteStateStatus.routeFound:
         _handleRouteFoundStatus(context);
       case RouteStateStatus.routeNotFound:
@@ -23,12 +25,19 @@ class MapRouteCubitListener extends SingleChildStatelessWidget {
     }
   }
 
+  void _handlePointsMustBeDifferentStatus(BuildContext context) {
+    getIt.get<DialogService>().showMessageDialog(
+          title: context.str.routeFormTheSameStartAndEndPointsTitle,
+          message: context.str.routeFormTheSameStartAndEndPointsMessage,
+        );
+  }
+
   void _handleRouteFoundStatus(BuildContext context) {
     context.read<MapCubit>().changeMode(MapMode.routePreview);
   }
 
-  Future<void> _handleRouteNotFoundStatus(BuildContext context) async {
-    await getIt.get<DialogService>().showMessageDialog(
+  void _handleRouteNotFoundStatus(BuildContext context) {
+    getIt.get<DialogService>().showMessageDialog(
           title: context.str.routeFormNoRouteFoundTitle,
           message: context.str.routeFormNoRouteFoundMessage,
         );
