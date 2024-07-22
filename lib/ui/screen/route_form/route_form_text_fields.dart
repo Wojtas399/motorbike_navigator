@@ -36,20 +36,20 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
 
   @override
   void initState() {
-    final String? startPlaceSuggestionName =
-        context.read<RouteCubit>().state.startPlaceSuggestion?.name;
-    if (startPlaceSuggestionName != null) {
-      _controller.text = startPlaceSuggestionName;
+    final RoutePlace? startPlace = context.read<RouteCubit>().state.startPlace;
+    if (startPlace is UserLocationRoutePlace) {
+      _controller.text = 'Twoja lokalizacja';
+    } else if (startPlace is SelectedRoutePlace) {
+      _controller.text = startPlace.name;
     }
     super.initState();
   }
 
   void _handleRouteStatusChange(
     RouteStateStatus status,
-    PlaceSuggestion? startPlaceSuggestion,
+    RoutePlace? startPlace,
   ) {
-    if (status == RouteStateStatus.formNotCompleted &&
-        startPlaceSuggestion == null) {
+    if (status == RouteStateStatus.formNotCompleted && startPlace == null) {
       setState(() {
         _errorText = context.str.requiredField;
       });
@@ -60,8 +60,14 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
     }
   }
 
-  void _handleStartPlaceSuggestionChange(PlaceSuggestion? suggestion) {
-    _controller.text = suggestion?.name ?? '';
+  void _handleStartPlaceChange(RoutePlace? startPlace) {
+    if (startPlace is UserLocationRoutePlace) {
+      _controller.text = 'Twoja lokalizacja';
+    } else if (startPlace is SelectedRoutePlace) {
+      _controller.text = startPlace.name;
+    } else if (startPlace == null) {
+      _controller.text = '';
+    }
   }
 
   Future<void> _onTap(BuildContext context) async {
@@ -73,9 +79,12 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
       ),
     );
     if (startPlaceSuggestion != null && context.mounted) {
-      context
-          .read<RouteCubit>()
-          .onStartPlaceSuggestionChanged(startPlaceSuggestion);
+      context.read<RouteCubit>().onStartPlaceChanged(
+            SelectedRoutePlace(
+              id: startPlaceSuggestion.id,
+              name: startPlaceSuggestion.name,
+            ),
+          );
       _controller.text = startPlaceSuggestion.name;
     }
   }
@@ -85,11 +94,11 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
     final RouteStateStatus routeStatus = context.select(
       (RouteCubit cubit) => cubit.state.status,
     );
-    final PlaceSuggestion? startPlaceSuggestion = context.select(
-      (RouteCubit cubit) => cubit.state.startPlaceSuggestion,
+    final RoutePlace? startPlace = context.select(
+      (RouteCubit cubit) => cubit.state.startPlace,
     );
-    _handleRouteStatusChange(routeStatus, startPlaceSuggestion);
-    _handleStartPlaceSuggestionChange(startPlaceSuggestion);
+    _handleRouteStatusChange(routeStatus, startPlace);
+    _handleStartPlaceChange(startPlace);
 
     return _CustomTextField(
       hintText: context.str.mapSelectStartPlace,
@@ -115,20 +124,21 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
 
   @override
   void initState() {
-    final String? destinationSuggestionName =
-        context.read<RouteCubit>().state.destinationSuggestion?.name;
-    if (destinationSuggestionName != null) {
-      _controller.text = destinationSuggestionName;
+    final RoutePlace? destination =
+        context.read<RouteCubit>().state.destination;
+    if (destination is UserLocationRoutePlace) {
+      _controller.text = 'Twoja lokalizacja';
+    } else if (destination is SelectedRoutePlace) {
+      _controller.text = destination.name;
     }
     super.initState();
   }
 
   void _handleRouteStatusChange(
     RouteStateStatus status,
-    PlaceSuggestion? destinationSuggestion,
+    RoutePlace? destination,
   ) {
-    if (status == RouteStateStatus.formNotCompleted &&
-        destinationSuggestion == null) {
+    if (status == RouteStateStatus.formNotCompleted && destination == null) {
       setState(() {
         _errorText = context.str.requiredField;
       });
@@ -139,8 +149,14 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
     }
   }
 
-  void _handleDestinationSuggestionChange(PlaceSuggestion? suggestion) {
-    _controller.text = suggestion?.name ?? '';
+  void _handleDestinationChange(RoutePlace? destination) {
+    if (destination is UserLocationRoutePlace) {
+      _controller.text = 'Twoja lokalizacja';
+    } else if (destination is SelectedRoutePlace) {
+      _controller.text = destination.name;
+    } else if (destination == null) {
+      _controller.text = '';
+    }
   }
 
   Future<void> _onTap(BuildContext context) async {
@@ -152,9 +168,12 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
       ),
     );
     if (destinationSuggestion != null && context.mounted) {
-      context
-          .read<RouteCubit>()
-          .onDestinationSuggestionChanged(destinationSuggestion);
+      context.read<RouteCubit>().onDestinationChanged(
+            SelectedRoutePlace(
+              id: destinationSuggestion.id,
+              name: destinationSuggestion.name,
+            ),
+          );
       _controller.text = destinationSuggestion.name;
     }
   }
@@ -164,11 +183,11 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
     final RouteStateStatus routeStatus = context.select(
       (RouteCubit cubit) => cubit.state.status,
     );
-    final PlaceSuggestion? destinationSuggestion = context.select(
-      (RouteCubit cubit) => cubit.state.destinationSuggestion,
+    final RoutePlace? destination = context.select(
+      (RouteCubit cubit) => cubit.state.destination,
     );
-    _handleRouteStatusChange(routeStatus, destinationSuggestion);
-    _handleDestinationSuggestionChange(destinationSuggestion);
+    _handleRouteStatusChange(routeStatus, destination);
+    _handleDestinationChange(destination);
 
     return _CustomTextField(
       hintText: context.str.mapSelectDestination,

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/route/route_cubit.dart';
+import '../../cubit/route/route_state.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/double_extensions.dart';
 import '../../extensions/duration_extensions.dart';
@@ -68,9 +69,15 @@ class _StartPlace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? startPlaceName = context.select(
-      (RouteCubit cubit) => cubit.state.startPlaceSuggestion?.name,
+    final RoutePlace? startPlace = context.select(
+      (RouteCubit cubit) => cubit.state.startPlace,
     );
+    String? startPlaceName;
+    if (startPlace is UserLocationRoutePlace) {
+      startPlaceName = 'Twoja lokalizacja';
+    } else if (startPlace is SelectedRoutePlace) {
+      startPlaceName = startPlace.name;
+    }
 
     return _ValueWithLabel(
       label: context.str.routeInfoStartPlace,
@@ -84,9 +91,15 @@ class _Destination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? destinationName = context.select(
-      (RouteCubit cubit) => cubit.state.destinationSuggestion?.name,
+    final RoutePlace? destination = context.select(
+      (RouteCubit cubit) => cubit.state.destination,
     );
+    String? destinationName;
+    if (destination is UserLocationRoutePlace) {
+      destinationName = 'Twoja lokalizacja';
+    } else if (destination is SelectedRoutePlace) {
+      destinationName = destination.name;
+    }
 
     return _ValueWithLabel(
       label: context.str.routeInfoDestination,

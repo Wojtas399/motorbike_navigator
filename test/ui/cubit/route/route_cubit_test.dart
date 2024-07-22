@@ -3,42 +3,50 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/navigation.dart';
-import 'package:motorbike_navigator/entity/place_suggestion.dart';
+import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/cubit/route/route_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/route/route_state.dart';
 
 import '../../../creator/place_creator.dart';
 import '../../../mock/data/repository/mock_navigation_repository.dart';
 import '../../../mock/data/repository/mock_place_repository.dart';
+import '../../../mock/ui_service/mock_location_service.dart';
 
 void main() {
+  final locationService = MockLocationService();
   final placeRepository = MockPlaceRepository();
   final navigationRepository = MockNavigationRepository();
   final placeCreator = PlaceCreator();
 
   RouteCubit createCubit() => RouteCubit(
+        locationService,
         placeRepository,
         navigationRepository,
       );
 
-  group(
-    'onStartPlaceSuggestionChanged, ',
+  tearDown(
     () {
-      const expectedPlaceSuggestion = PlaceSuggestion(
+      reset(locationService);
+      reset(placeRepository);
+    },
+  );
+
+  group(
+    'onStartPlaceChanged, ',
+    () {
+      const RoutePlace expectedStartPlace = SelectedRoutePlace(
         id: 'p1',
-        name: 'place suggestion',
+        name: 'place 1',
       );
 
       blocTest(
-        'should update startPlaceSuggestion and should set status as infill',
+        'should update startPlace and should set status as infill',
         build: () => createCubit(),
-        act: (cubit) => cubit.onStartPlaceSuggestionChanged(
-          expectedPlaceSuggestion,
-        ),
+        act: (cubit) => cubit.onStartPlaceChanged(expectedStartPlace),
         expect: () => [
           const RouteState(
             status: RouteStateStatus.infill,
-            startPlaceSuggestion: expectedPlaceSuggestion,
+            startPlace: expectedStartPlace,
           ),
         ],
       );
@@ -46,23 +54,21 @@ void main() {
   );
 
   group(
-    'onDestinationSuggestionChanged, ',
+    'onDestinationChanged, ',
     () {
-      const expectedPlaceSuggestion = PlaceSuggestion(
+      const RoutePlace expectedDestination = SelectedRoutePlace(
         id: 'p1',
         name: 'place suggestion',
       );
 
       blocTest(
-        'should update destinationSuggestion and should set status as infill',
+        'should update destination and should set status as infill',
         build: () => createCubit(),
-        act: (cubit) => cubit.onDestinationSuggestionChanged(
-          expectedPlaceSuggestion,
-        ),
+        act: (cubit) => cubit.onDestinationChanged(expectedDestination),
         expect: () => [
           const RouteState(
             status: RouteStateStatus.infill,
-            destinationSuggestion: expectedPlaceSuggestion,
+            destination: expectedDestination,
           ),
         ],
       );
@@ -72,46 +78,28 @@ void main() {
   group(
     'swapPlaceSuggestions, ',
     () {
-      const startPlaceSuggestion = PlaceSuggestion(
-        id: 'p1',
-        name: 'start place',
-      );
-      const destinationSuggestion = PlaceSuggestion(
+      const RoutePlace defaultStartPlace = UserLocationRoutePlace();
+      const RoutePlace destination = SelectedRoutePlace(
         id: 'p2',
         name: 'destination',
       );
       RouteState? state;
 
       blocTest(
-        'should swap values of startPlaceSuggestion and destinationSuggestion',
+        'should swap values of startPlace and destination',
         build: () => createCubit(),
         act: (cubit) {
-          cubit.onStartPlaceSuggestionChanged(startPlaceSuggestion);
-          cubit.onDestinationSuggestionChanged(destinationSuggestion);
+          cubit.onDestinationChanged(destination);
           cubit.swapPlaceSuggestions();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            startPlaceSuggestion: startPlaceSuggestion,
+            destination: destination,
           ),
           state = state?.copyWith(
-            destinationSuggestion: destinationSuggestion,
-          ),
-          state = state?.copyWith(
-            startPlaceSuggestion: destinationSuggestion,
-            destinationSuggestion: startPlaceSuggestion,
-          ),
-        ],
-      );
-
-      blocTest(
-        'should set status as infill',
-        build: () => createCubit(),
-        act: (cubit) => cubit.swapPlaceSuggestions(),
-        expect: () => [
-          const RouteState(
-            status: RouteStateStatus.infill,
+            startPlace: destination,
+            destination: defaultStartPlace,
           ),
         ],
       );
@@ -121,19 +109,17 @@ void main() {
   group(
     'loadNavigation, ',
     () {
-      const startPlaceSuggestion = PlaceSuggestion(id: 'p1', name: 'place 1');
-      const destinationSuggestion = PlaceSuggestion(id: 'p2', name: 'place 2');
-      final startPlace = placeCreator.create(
-        id: startPlaceSuggestion.id,
-        coordinates: const Coordinates(50.1, 18.1),
+      const startPlace = UserLocationRoutePlace();
+      const destination = SelectedRoutePlace(id: 'p2', name: 'place 2');
+      const startLocation = Coordinates(50.1, 18.1);
+      const Position currentPosition = Position(
+        coordinates: startLocation,
+        speedInKmPerH: 20.2,
       );
-      final destination = placeCreator.create(
-        id: destinationSuggestion.id,
-        coordinates: const Coordinates(51.2, 19.2),
-      );
+      const endLocation = Coordinates(51.2, 19.2);
       final navigation = Navigation(
-        startLocation: startPlace.coordinates,
-        endLocation: destination.coordinates,
+        startLocation: startLocation,
+        endLocation: endLocation,
         routes: const [
           Route(
             duration: Duration(minutes: 10),
@@ -156,17 +142,28 @@ void main() {
       RouteState? state;
 
       blocTest(
-        'should emit status set as formNotCompleted if startPlaceSuggestion '
-        'param is null',
+        'should emit status set as formNotCompleted if destination is null',
+        build: () => createCubit(),
+        act: (cubit) async => await cubit.loadNavigation(),
+        expect: () => [
+          state = const RouteState(
+            status: RouteStateStatus.formNotCompleted,
+          ),
+        ],
+      );
+
+      blocTest(
+        'should emit status set as formNotCompleted if startPlace is null',
         build: () => createCubit(),
         act: (cubit) async {
-          cubit.onDestinationSuggestionChanged(destinationSuggestion);
+          cubit.swapPlaceSuggestions();
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            destinationSuggestion: destinationSuggestion,
+            startPlace: null,
+            destination: startPlace,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.formNotCompleted,
@@ -175,129 +172,87 @@ void main() {
       );
 
       blocTest(
-        'should emit status set as formNotCompleted if destinationSuggestion '
-        'param is null',
-        build: () => createCubit(),
-        act: (cubit) async {
-          cubit.onStartPlaceSuggestionChanged(startPlaceSuggestion);
-          await cubit.loadNavigation();
-        },
-        expect: () => [
-          state = const RouteState(
-            status: RouteStateStatus.infill,
-            startPlaceSuggestion: startPlaceSuggestion,
-          ),
-          state = state?.copyWith(
-            status: RouteStateStatus.formNotCompleted,
-          ),
-        ],
-      );
-
-      blocTest(
-        'should finish method call if start place has not been found in '
-        'PlaceRepository',
+        'should finish method call if location of start place has not been found',
         build: () => createCubit(),
         setUp: () {
-          when(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).thenAnswer((_) => Future.value(null));
-          when(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
-          ).thenAnswer((_) => Future.value(destination));
+          locationService.mockGetPosition();
+          placeRepository.mockGetPlaceById(
+            result: placeCreator.create(coordinates: endLocation),
+          );
         },
         act: (cubit) async {
-          cubit.onStartPlaceSuggestionChanged(startPlaceSuggestion);
-          cubit.onDestinationSuggestionChanged(destinationSuggestion);
+          cubit.onDestinationChanged(destination);
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            startPlaceSuggestion: startPlaceSuggestion,
-          ),
-          state = state?.copyWith(
-            destinationSuggestion: destinationSuggestion,
+            destination: destination,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
           ),
         ],
         verify: (_) {
+          verify(locationService.getPosition).called(1);
           verify(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).called(1);
-          verify(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
+            () => placeRepository.getPlaceById(destination.id),
           ).called(1);
         },
       );
 
       blocTest(
-        'should finish method call if destination has not been found in '
-        'PlaceRepository',
+        'should finish method call if location of destination has not been found',
         build: () => createCubit(),
         setUp: () {
-          when(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).thenAnswer((_) => Future.value(startPlace));
-          when(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
-          ).thenAnswer((_) => Future.value(null));
+          locationService.mockGetPosition(
+            expectedPosition: currentPosition,
+          );
+          placeRepository.mockGetPlaceById();
         },
         act: (cubit) async {
-          cubit.onStartPlaceSuggestionChanged(startPlaceSuggestion);
-          cubit.onDestinationSuggestionChanged(destinationSuggestion);
+          cubit.onDestinationChanged(destination);
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            startPlaceSuggestion: startPlaceSuggestion,
-          ),
-          state = state?.copyWith(
-            destinationSuggestion: destinationSuggestion,
+            destination: destination,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
           ),
         ],
         verify: (_) {
+          verify(locationService.getPosition).called(1);
           verify(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).called(1);
-          verify(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
+            () => placeRepository.getPlaceById(destination.id),
           ).called(1);
         },
       );
 
       blocTest(
-        'should emit routeNotFound status if navigation has not been found in '
-        'NavigationRepository',
+        'should emit routeNotFound status if navigation has not been found',
         build: () => createCubit(),
         setUp: () {
-          when(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).thenAnswer((_) => Future.value(startPlace));
-          when(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
-          ).thenAnswer((_) => Future.value(destination));
+          locationService.mockGetPosition(
+            expectedPosition: currentPosition,
+          );
+          placeRepository.mockGetPlaceById(
+            result: placeCreator.create(coordinates: endLocation),
+          );
           navigationRepository.mockLoadNavigationByStartAndEndLocations(
             navigation: null,
           );
         },
         act: (cubit) async {
-          cubit.onStartPlaceSuggestionChanged(startPlaceSuggestion);
-          cubit.onDestinationSuggestionChanged(destinationSuggestion);
+          cubit.onDestinationChanged(destination);
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            startPlaceSuggestion: startPlaceSuggestion,
-          ),
-          state = state?.copyWith(
-            destinationSuggestion: destinationSuggestion,
+            destination: destination,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
@@ -307,16 +262,14 @@ void main() {
           ),
         ],
         verify: (_) {
+          verify(locationService.getPosition).called(1);
           verify(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).called(1);
-          verify(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
+            () => placeRepository.getPlaceById(destination.id),
           ).called(1);
           verify(
             () => navigationRepository.loadNavigationByStartAndEndLocations(
-              startLocation: startPlace.coordinates,
-              endLocation: destination.coordinates,
+              startLocation: startLocation,
+              endLocation: endLocation,
             ),
           ).called(1);
         },
@@ -327,32 +280,28 @@ void main() {
         'any routes',
         build: () => createCubit(),
         setUp: () {
-          when(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).thenAnswer((_) => Future.value(startPlace));
-          when(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
-          ).thenAnswer((_) => Future.value(destination));
+          locationService.mockGetPosition(
+            expectedPosition: currentPosition,
+          );
+          placeRepository.mockGetPlaceById(
+            result: placeCreator.create(coordinates: endLocation),
+          );
           navigationRepository.mockLoadNavigationByStartAndEndLocations(
             navigation: Navigation(
-              startLocation: startPlace.coordinates,
-              endLocation: destination.coordinates,
+              startLocation: startLocation,
+              endLocation: endLocation,
               routes: const [],
             ),
           );
         },
         act: (cubit) async {
-          cubit.onStartPlaceSuggestionChanged(startPlaceSuggestion);
-          cubit.onDestinationSuggestionChanged(destinationSuggestion);
+          cubit.onDestinationChanged(destination);
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            startPlaceSuggestion: startPlaceSuggestion,
-          ),
-          state = state?.copyWith(
-            destinationSuggestion: destinationSuggestion,
+            destination: destination,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
@@ -362,16 +311,14 @@ void main() {
           ),
         ],
         verify: (_) {
+          verify(locationService.getPosition).called(1);
           verify(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).called(1);
-          verify(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
+            () => placeRepository.getPlaceById(destination.id),
           ).called(1);
           verify(
             () => navigationRepository.loadNavigationByStartAndEndLocations(
-              startLocation: startPlace.coordinates,
-              endLocation: destination.coordinates,
+              startLocation: startLocation,
+              endLocation: endLocation,
             ),
           ).called(1);
         },
@@ -379,31 +326,28 @@ void main() {
 
       blocTest(
         'should load coordinates of start and destination places, should load '
-        'routes between these two locations and should emit first of the routes',
+        'routes between these two locations and should emit first of the found '
+        'routes',
         build: () => createCubit(),
         setUp: () {
-          when(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).thenAnswer((_) => Future.value(startPlace));
-          when(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
-          ).thenAnswer((_) => Future.value(destination));
+          locationService.mockGetPosition(
+            expectedPosition: currentPosition,
+          );
+          placeRepository.mockGetPlaceById(
+            result: placeCreator.create(coordinates: endLocation),
+          );
           navigationRepository.mockLoadNavigationByStartAndEndLocations(
             navigation: navigation,
           );
         },
         act: (cubit) async {
-          cubit.onStartPlaceSuggestionChanged(startPlaceSuggestion);
-          cubit.onDestinationSuggestionChanged(destinationSuggestion);
+          cubit.onDestinationChanged(destination);
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            startPlaceSuggestion: startPlaceSuggestion,
-          ),
-          state = state?.copyWith(
-            destinationSuggestion: destinationSuggestion,
+            destination: destination,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
@@ -414,16 +358,14 @@ void main() {
           ),
         ],
         verify: (_) {
+          verify(locationService.getPosition).called(1);
           verify(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).called(1);
-          verify(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
+            () => placeRepository.getPlaceById(destination.id),
           ).called(1);
           verify(
             () => navigationRepository.loadNavigationByStartAndEndLocations(
-              startLocation: startPlace.coordinates,
-              endLocation: destination.coordinates,
+              startLocation: startLocation,
+              endLocation: endLocation,
             ),
           ).called(1);
         },
@@ -434,19 +376,16 @@ void main() {
   group(
     'resetRoute, ',
     () {
-      const startPlaceSuggestion = PlaceSuggestion(id: 'p1', name: 'place 1');
-      const destinationSuggestion = PlaceSuggestion(id: 'p2', name: 'place 2');
-      final startPlace = placeCreator.create(
-        id: startPlaceSuggestion.id,
-        coordinates: const Coordinates(50.1, 18.1),
+      const destination = SelectedRoutePlace(id: 'p2', name: 'place 2');
+      const startLocation = Coordinates(50.1, 18.1);
+      const Position currentPosition = Position(
+        coordinates: startLocation,
+        speedInKmPerH: 20.2,
       );
-      final destination = placeCreator.create(
-        id: destinationSuggestion.id,
-        coordinates: const Coordinates(51.2, 19.2),
-      );
+      const endLocation = Coordinates(51.2, 19.2);
       final navigation = Navigation(
-        startLocation: startPlace.coordinates,
-        endLocation: destination.coordinates,
+        startLocation: startLocation,
+        endLocation: endLocation,
         routes: const [
           Route(
             duration: Duration(minutes: 10),
@@ -461,32 +400,28 @@ void main() {
       RouteState? state;
 
       blocTest(
-        'should status as infill and route as null',
+        'should set status as infill and route as null',
         build: () => createCubit(),
         setUp: () {
-          when(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).thenAnswer((_) => Future.value(startPlace));
-          when(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
-          ).thenAnswer((_) => Future.value(destination));
+          locationService.mockGetPosition(
+            expectedPosition: currentPosition,
+          );
+          placeRepository.mockGetPlaceById(
+            result: placeCreator.create(coordinates: endLocation),
+          );
           navigationRepository.mockLoadNavigationByStartAndEndLocations(
             navigation: navigation,
           );
         },
         act: (cubit) async {
-          cubit.onStartPlaceSuggestionChanged(startPlaceSuggestion);
-          cubit.onDestinationSuggestionChanged(destinationSuggestion);
+          cubit.onDestinationChanged(destination);
           await cubit.loadNavigation();
           cubit.resetRoute();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            startPlaceSuggestion: startPlaceSuggestion,
-          ),
-          state = state?.copyWith(
-            destinationSuggestion: destinationSuggestion,
+            destination: destination,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
@@ -507,19 +442,16 @@ void main() {
   group(
     'reset, ',
     () {
-      const startPlaceSuggestion = PlaceSuggestion(id: 'p1', name: 'place 1');
-      const destinationSuggestion = PlaceSuggestion(id: 'p2', name: 'place 2');
-      final startPlace = placeCreator.create(
-        id: startPlaceSuggestion.id,
-        coordinates: const Coordinates(50.1, 18.1),
+      const destination = SelectedRoutePlace(id: 'p2', name: 'place 2');
+      const startLocation = Coordinates(50.1, 18.1);
+      const Position currentPosition = Position(
+        coordinates: startLocation,
+        speedInKmPerH: 20.2,
       );
-      final destination = placeCreator.create(
-        id: destinationSuggestion.id,
-        coordinates: const Coordinates(51.2, 19.2),
-      );
+      const endLocation = Coordinates(51.2, 19.2);
       final navigation = Navigation(
-        startLocation: startPlace.coordinates,
-        endLocation: destination.coordinates,
+        startLocation: startLocation,
+        endLocation: endLocation,
         routes: const [
           Route(
             duration: Duration(minutes: 10),
@@ -537,29 +469,25 @@ void main() {
         'should set default state',
         build: () => createCubit(),
         setUp: () {
-          when(
-            () => placeRepository.getPlaceById(startPlaceSuggestion.id),
-          ).thenAnswer((_) => Future.value(startPlace));
-          when(
-            () => placeRepository.getPlaceById(destinationSuggestion.id),
-          ).thenAnswer((_) => Future.value(destination));
+          locationService.mockGetPosition(
+            expectedPosition: currentPosition,
+          );
+          placeRepository.mockGetPlaceById(
+            result: placeCreator.create(coordinates: endLocation),
+          );
           navigationRepository.mockLoadNavigationByStartAndEndLocations(
             navigation: navigation,
           );
         },
         act: (cubit) async {
-          cubit.onStartPlaceSuggestionChanged(startPlaceSuggestion);
-          cubit.onDestinationSuggestionChanged(destinationSuggestion);
+          cubit.onDestinationChanged(destination);
           await cubit.loadNavigation();
           cubit.reset();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            startPlaceSuggestion: startPlaceSuggestion,
-          ),
-          state = state?.copyWith(
-            destinationSuggestion: destinationSuggestion,
+            destination: destination,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
