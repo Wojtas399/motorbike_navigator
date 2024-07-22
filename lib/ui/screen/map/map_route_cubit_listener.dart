@@ -8,7 +8,7 @@ import '../../cubit/route/route_state.dart';
 import '../../extensions/context_extensions.dart';
 import '../../service/dialog_service.dart';
 import 'cubit/map_cubit.dart';
-import 'map_route_info.dart';
+import 'cubit/map_state.dart';
 
 class MapRouteCubitListener extends SingleChildStatelessWidget {
   const MapRouteCubitListener({super.key});
@@ -24,21 +24,7 @@ class MapRouteCubitListener extends SingleChildStatelessWidget {
   }
 
   void _handleRouteFoundStatus(BuildContext context) {
-    showBottomSheet(
-      context: context,
-      enableDrag: false,
-      builder: (_) => MultiBlocProvider(
-        providers: [
-          BlocProvider.value(
-            value: context.read<RouteCubit>(),
-          ),
-          BlocProvider.value(
-            value: context.read<MapCubit>(),
-          ),
-        ],
-        child: const MapRouteInfo(),
-      ),
-    );
+    context.read<MapCubit>().changeMode(MapMode.routePreview);
   }
 
   Future<void> _handleRouteNotFoundStatus(BuildContext context) async {

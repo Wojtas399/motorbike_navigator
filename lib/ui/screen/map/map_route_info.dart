@@ -7,8 +7,8 @@ import '../../cubit/route/route_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/double_extensions.dart';
 import '../../extensions/duration_extensions.dart';
-import '../route_form/route_form_popup.dart';
 import 'cubit/map_cubit.dart';
+import 'cubit/map_state.dart';
 
 class MapRouteInfo extends StatelessWidget {
   const MapRouteInfo({super.key});
@@ -170,15 +170,9 @@ class _CancelButton extends StatelessWidget {
 
   void _onPressed(BuildContext context) {
     context.read<RouteCubit>().resetRoute();
-    context.read<MapCubit>().followUserLocation();
-    showBottomSheet(
-      context: context,
-      enableDrag: false,
-      builder: (_) => BlocProvider.value(
-        value: context.read<RouteCubit>(),
-        child: const RouteFormPopup(),
-      ),
-    );
+    final mapCubit = context.read<MapCubit>();
+    mapCubit.followUserLocation();
+    mapCubit.changeMode(MapMode.selectingRoute);
   }
 
   @override

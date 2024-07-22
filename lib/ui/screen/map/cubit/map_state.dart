@@ -6,7 +6,7 @@ part 'map_state.freezed.dart';
 
 enum MapStateStatus { loading, completed }
 
-enum MapMode { basic, selectingRoute, drive }
+enum MapMode { basic, drive, selectingRoute, routePreview }
 
 enum MapFocusMode { free, followUserLocation }
 

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -9,8 +8,6 @@ import 'package:latlong2/latlong.dart';
 import '../../../entity/coordinates.dart';
 import '../../../entity/user.dart' as user;
 import '../../../env.dart';
-import '../../cubit/drive/drive_cubit.dart';
-import '../../cubit/drive/drive_state.dart';
 import '../../cubit/logged_user/logged_user_cubit.dart';
 import '../../cubit/route/route_cubit.dart';
 import '../../cubit/route/route_state.dart';
@@ -54,12 +51,6 @@ class _State extends State<MapMapView> {
       currState.focusMode.isFollowingUserLocation &&
       prevState.centerLocation != currState.centerLocation;
 
-  bool _canEmitDriveCubitChange(DriveState prevState, DriveState currState) {
-    final Function eq = const ListEquality().equals;
-    return currState.waypoints.isNotEmpty == true &&
-        !eq(prevState.waypoints, currState.waypoints);
-  }
-
   bool _canEmitRouteCubitChange(RouteState prevState, RouteState currState) =>
       currState.status == RouteStateStatus.routeFound ||
       (currState.route == null && currState.route != prevState.route);
@@ -71,7 +62,7 @@ class _State extends State<MapMapView> {
         ));
   }
 
-  void _moveCameraToUserLocation() {
+  void _handleCenterLocationChange() {
     final mapCubit = context.read<MapCubit>();
     final userLocation = mapCubit.state.userLocation;
     final mapFocusMode = mapCubit.state.focusMode;
@@ -85,6 +76,13 @@ class _State extends State<MapMapView> {
         ),
         13,
       );
+    }
+  }
+
+  void _handleRouteStateChange(BuildContext context, RouteState state) {
+    if (state.route != null) {
+      context.read<MapCubit>().stopFollowingUserLocation();
+      _adjustCameraToRoute(state.route!.waypoints);
     }
   }
 
@@ -112,17 +110,11 @@ class _State extends State<MapMapView> {
       listeners: [
         BlocListener<MapCubit, MapState>(
           listenWhen: _canEmitMapCubitChange,
-          listener: (_, __) => _moveCameraToUserLocation(),
-        ),
-        BlocListener<DriveCubit, DriveState>(
-          listenWhen: _canEmitDriveCubitChange,
-          listener: (_, __) => _moveCameraToUserLocation(),
+          listener: (_, __) => _handleCenterLocationChange(),
         ),
         BlocListener<RouteCubit, RouteState>(
           listenWhen: _canEmitRouteCubitChange,
-          listener: (_, RouteState state) => state.route != null
-              ? _adjustCameraToRoute(state.route!.waypoints)
-              : _moveCameraToUserLocation(),
+          listener: _handleRouteStateChange,
         ),
       ],
       child: FlutterMap(
