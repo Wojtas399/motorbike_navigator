@@ -35,6 +35,12 @@ class MapCubit extends Cubit<MapState> {
     ));
   }
 
+  void stopFollowingUserLocation() {
+    emit(state.copyWith(
+      focusMode: MapFocusMode.free,
+    ));
+  }
+
   void followUserLocation() {
     if (state.userLocation == null) return;
     emit(state.copyWith(

@@ -99,6 +99,18 @@ void main() {
     },
   );
 
+  blocTest(
+    'stopFollowingUserLocation, '
+    'should change focusMode to free',
+    build: () => createCubit(),
+    act: (cubit) => cubit.stopFollowingUserLocation(),
+    expect: () => [
+      const MapState(
+        focusMode: MapFocusMode.free,
+      ),
+    ],
+  );
+
   group(
     'followUserLocation, ',
     () {
