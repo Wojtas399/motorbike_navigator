@@ -25,7 +25,7 @@ class RouteFormPopup extends StatelessWidget {
                   child: RouteFormTextFields(),
                 ),
                 GapHorizontal8(),
-                _SwapPlaceSuggestionsButton(),
+                _SwapPointsButton(),
               ],
             ),
             GapVertical16(),
@@ -77,16 +77,12 @@ class _RouteIcons extends StatelessWidget {
       );
 }
 
-class _SwapPlaceSuggestionsButton extends StatelessWidget {
-  const _SwapPlaceSuggestionsButton();
-
-  void _onPressed(BuildContext context) {
-    context.read<RouteCubit>().swapPlaceSuggestions();
-  }
+class _SwapPointsButton extends StatelessWidget {
+  const _SwapPointsButton();
 
   @override
   Widget build(BuildContext context) => IconButton(
-        onPressed: () => _onPressed(context),
+        onPressed: context.read<RouteCubit>().swapPoints,
         icon: const Icon(
           Icons.swap_vert,
           size: 32,

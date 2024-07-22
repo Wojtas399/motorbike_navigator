@@ -7,7 +7,7 @@ import '../../component/gap.dart';
 import '../../cubit/route/route_cubit.dart';
 import '../../cubit/route/route_state.dart';
 import '../../extensions/context_extensions.dart';
-import '../../extensions/route_place_extensions.dart';
+import '../../extensions/map_point_extensions.dart';
 import '../search_form/search_form.dart';
 
 class RouteFormTextFields extends StatelessWidget {
@@ -16,21 +16,21 @@ class RouteFormTextFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const Column(
         children: [
-          _StartPlaceTextField(),
+          _StartPointTextField(),
           GapVertical16(),
-          _DestinationTextField(),
+          _EndPointTextField(),
         ],
       );
 }
 
-class _StartPlaceTextField extends StatefulWidget {
-  const _StartPlaceTextField();
+class _StartPointTextField extends StatefulWidget {
+  const _StartPointTextField();
 
   @override
-  State<StatefulWidget> createState() => _StartPlaceTextFieldState();
+  State<StatefulWidget> createState() => _StartPointTextFieldState();
 }
 
-class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
+class _StartPointTextFieldState extends State<_StartPointTextField> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   String? _errorText;
@@ -44,15 +44,15 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
   }
 
   void _setInitialValue() {
-    final RoutePlace? startPlace = context.read<RouteCubit>().state.startPlace;
-    _controller.text = startPlace?.toUIName(context) ?? '';
+    final MapPoint? startPoint = context.read<RouteCubit>().state.startPoint;
+    _controller.text = startPoint?.toUIName(context) ?? '';
   }
 
   void _handleRouteStatusChange(
     RouteStateStatus status,
-    RoutePlace? startPlace,
+    MapPoint? startPoint,
   ) {
-    if (status == RouteStateStatus.formNotCompleted && startPlace == null) {
+    if (status == RouteStateStatus.formNotCompleted && startPoint == null) {
       setState(() {
         _errorText = context.str.requiredField;
       });
@@ -63,32 +63,26 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
     }
   }
 
-  void _handleStartPlaceChange(RoutePlace? startPlace) {
-    _controller.text = startPlace?.toUIName(context) ?? '';
+  void _handleStartPointChange(MapPoint? startPoint) {
+    _controller.text = startPoint?.toUIName(context) ?? '';
   }
 
   Future<void> _onTap() async {
     _focusNode.unfocus();
-    final RoutePlace? currentStartPoint =
-        context.read<RouteCubit>().state.startPlace;
-    final MapPoint? startPlacePoint = await Navigator.push(
+    final MapPoint? currentStartPoint =
+        context.read<RouteCubit>().state.startPoint;
+    final MapPoint? newStartPoint = await Navigator.push(
       context,
       SlideLeftPageRouteAnimation(
         page: SearchForm(
-          query: currentStartPoint is UserLocationRoutePlace
-              ? null
-              : _controller.text,
+          query:
+              currentStartPoint is UserLocationPoint ? null : _controller.text,
         ),
       ),
     );
-    if (startPlacePoint is SelectedPlacePoint && mounted) {
-      context.read<RouteCubit>().onStartPlaceChanged(
-            SelectedRoutePlace(
-              id: startPlacePoint.id,
-              name: startPlacePoint.name,
-            ),
-          );
-      _controller.text = startPlacePoint.name;
+    if (newStartPoint != null && mounted) {
+      context.read<RouteCubit>().onStartPointChanged(newStartPoint);
+      _controller.text = newStartPoint.toUIName(context);
     }
   }
 
@@ -97,11 +91,11 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
     final RouteStateStatus routeStatus = context.select(
       (RouteCubit cubit) => cubit.state.status,
     );
-    final RoutePlace? startPlace = context.select(
-      (RouteCubit cubit) => cubit.state.startPlace,
+    final MapPoint? startPoint = context.select(
+      (RouteCubit cubit) => cubit.state.startPoint,
     );
-    _handleRouteStatusChange(routeStatus, startPlace);
-    _handleStartPlaceChange(startPlace);
+    _handleRouteStatusChange(routeStatus, startPoint);
+    _handleStartPointChange(startPoint);
 
     return _CustomTextField(
       hintText: context.str.mapSelectStartPlace,
@@ -113,14 +107,14 @@ class _StartPlaceTextFieldState extends State<_StartPlaceTextField> {
   }
 }
 
-class _DestinationTextField extends StatefulWidget {
-  const _DestinationTextField();
+class _EndPointTextField extends StatefulWidget {
+  const _EndPointTextField();
 
   @override
-  State<StatefulWidget> createState() => _DestinationTextFieldState();
+  State<StatefulWidget> createState() => _EndPointTextFieldState();
 }
 
-class _DestinationTextFieldState extends State<_DestinationTextField> {
+class _EndPointTextFieldState extends State<_EndPointTextField> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   String? _errorText;
@@ -134,14 +128,13 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
   }
 
   void _setInitialValue() {
-    final RoutePlace? destination =
-        context.read<RouteCubit>().state.destination;
-    _controller.text = destination?.toUIName(context) ?? '';
+    final MapPoint? endPoint = context.read<RouteCubit>().state.endPoint;
+    _controller.text = endPoint?.toUIName(context) ?? '';
   }
 
   void _handleRouteStatusChange(
     RouteStateStatus status,
-    RoutePlace? destination,
+    MapPoint? destination,
   ) {
     if (status == RouteStateStatus.formNotCompleted && destination == null) {
       setState(() {
@@ -154,32 +147,24 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
     }
   }
 
-  void _handleDestinationChange(RoutePlace? destination) {
-    _controller.text = destination?.toUIName(context) ?? '';
+  void _handleEndPointChange(MapPoint? endPoint) {
+    _controller.text = endPoint?.toUIName(context) ?? '';
   }
 
   Future<void> _onTap(BuildContext context) async {
-    final RoutePlace? currentDestination =
-        context.read<RouteCubit>().state.destination;
+    final MapPoint? currentEndPoint = context.read<RouteCubit>().state.endPoint;
     _focusNode.unfocus();
-    final MapPoint? destinationPoint = await Navigator.push(
+    final MapPoint? newEndPoint = await Navigator.push(
       context,
       SlideLeftPageRouteAnimation(
         page: SearchForm(
-          query: currentDestination is UserLocationRoutePlace
-              ? null
-              : _controller.text,
+          query: currentEndPoint is UserLocationPoint ? null : _controller.text,
         ),
       ),
     );
-    if (destinationPoint is SelectedPlacePoint && context.mounted) {
-      context.read<RouteCubit>().onDestinationChanged(
-            SelectedRoutePlace(
-              id: destinationPoint.id,
-              name: destinationPoint.name,
-            ),
-          );
-      _controller.text = destinationPoint.name;
+    if (newEndPoint != null && context.mounted) {
+      context.read<RouteCubit>().onEndPointChanged(newEndPoint);
+      _controller.text = newEndPoint.toUIName(context);
     }
   }
 
@@ -188,11 +173,11 @@ class _DestinationTextFieldState extends State<_DestinationTextField> {
     final RouteStateStatus routeStatus = context.select(
       (RouteCubit cubit) => cubit.state.status,
     );
-    final RoutePlace? destination = context.select(
-      (RouteCubit cubit) => cubit.state.destination,
+    final MapPoint? endPoint = context.select(
+      (RouteCubit cubit) => cubit.state.endPoint,
     );
-    _handleRouteStatusChange(routeStatus, destination);
-    _handleDestinationChange(destination);
+    _handleRouteStatusChange(routeStatus, endPoint);
+    _handleEndPointChange(endPoint);
 
     return _CustomTextField(
       hintText: context.str.mapSelectDestination,

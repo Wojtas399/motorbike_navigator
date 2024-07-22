@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
+import 'package:motorbike_navigator/entity/map_point.dart';
 import 'package:motorbike_navigator/entity/navigation.dart';
-import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/cubit/route/route_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/route/route_state.dart';
 
@@ -32,21 +32,21 @@ void main() {
   );
 
   group(
-    'onStartPlaceChanged, ',
+    'onStartPointChanged, ',
     () {
-      const RoutePlace expectedStartPlace = SelectedRoutePlace(
+      const MapPoint expectedStartPoint = SelectedPlacePoint(
         id: 'p1',
         name: 'place 1',
       );
 
       blocTest(
-        'should update startPlace and should set status as infill',
+        'should update startPoint and should set status as infill',
         build: () => createCubit(),
-        act: (cubit) => cubit.onStartPlaceChanged(expectedStartPlace),
+        act: (cubit) => cubit.onStartPointChanged(expectedStartPoint),
         expect: () => [
           const RouteState(
             status: RouteStateStatus.infill,
-            startPlace: expectedStartPlace,
+            startPoint: expectedStartPoint,
           ),
         ],
       );
@@ -54,21 +54,21 @@ void main() {
   );
 
   group(
-    'onDestinationChanged, ',
+    'onEndPointChanged, ',
     () {
-      const RoutePlace expectedDestination = SelectedRoutePlace(
+      const MapPoint expectedEndPoint = SelectedPlacePoint(
         id: 'p1',
         name: 'place suggestion',
       );
 
       blocTest(
-        'should update destination and should set status as infill',
+        'should update endPoint and should set status as infill',
         build: () => createCubit(),
-        act: (cubit) => cubit.onDestinationChanged(expectedDestination),
+        act: (cubit) => cubit.onEndPointChanged(expectedEndPoint),
         expect: () => [
           const RouteState(
             status: RouteStateStatus.infill,
-            destination: expectedDestination,
+            endPoint: expectedEndPoint,
           ),
         ],
       );
@@ -76,30 +76,30 @@ void main() {
   );
 
   group(
-    'swapPlaceSuggestions, ',
+    'swapPoints, ',
     () {
-      const RoutePlace defaultStartPlace = UserLocationRoutePlace();
-      const RoutePlace destination = SelectedRoutePlace(
+      const MapPoint defaultStartPoint = UserLocationPoint();
+      const MapPoint endPoint = SelectedPlacePoint(
         id: 'p2',
         name: 'destination',
       );
       RouteState? state;
 
       blocTest(
-        'should swap values of startPlace and destination',
+        'should swap values of startPoint and endPoint',
         build: () => createCubit(),
         act: (cubit) {
-          cubit.onDestinationChanged(destination);
-          cubit.swapPlaceSuggestions();
+          cubit.onEndPointChanged(endPoint);
+          cubit.swapPoints();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            destination: destination,
+            endPoint: endPoint,
           ),
           state = state?.copyWith(
-            startPlace: destination,
-            destination: defaultStartPlace,
+            startPoint: endPoint,
+            endPoint: defaultStartPoint,
           ),
         ],
       );
@@ -109,13 +109,9 @@ void main() {
   group(
     'loadNavigation, ',
     () {
-      const startPlace = UserLocationRoutePlace();
-      const destination = SelectedRoutePlace(id: 'p2', name: 'place 2');
+      const startPoint = UserLocationPoint();
+      const endPoint = SelectedPlacePoint(id: 'p2', name: 'place 2');
       const startLocation = Coordinates(50.1, 18.1);
-      const Position currentPosition = Position(
-        coordinates: startLocation,
-        speedInKmPerH: 20.2,
-      );
       const endLocation = Coordinates(51.2, 19.2);
       final navigation = Navigation(
         startLocation: startLocation,
@@ -142,7 +138,7 @@ void main() {
       RouteState? state;
 
       blocTest(
-        'should emit status set as formNotCompleted if destination is null',
+        'should emit status set as formNotCompleted if endPoint is null',
         build: () => createCubit(),
         act: (cubit) async => await cubit.loadNavigation(),
         expect: () => [
@@ -153,17 +149,17 @@ void main() {
       );
 
       blocTest(
-        'should emit status set as formNotCompleted if startPlace is null',
+        'should emit status set as formNotCompleted if startPoint is null',
         build: () => createCubit(),
         act: (cubit) async {
-          cubit.swapPlaceSuggestions();
+          cubit.swapPoints();
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            startPlace: null,
-            destination: startPlace,
+            startPoint: null,
+            endPoint: startPoint,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.formNotCompleted,
@@ -172,61 +168,80 @@ void main() {
       );
 
       blocTest(
-        'should finish method call if location of start place has not been found',
+        'should emit status set as pointsMustBeDifferent if start and end '
+        'points are the same',
+        build: () => createCubit(),
+        act: (cubit) async {
+          cubit.onEndPointChanged(startPoint);
+          await cubit.loadNavigation();
+        },
+        expect: () => [
+          state = const RouteState(
+            status: RouteStateStatus.infill,
+            endPoint: startPoint,
+          ),
+          state = state?.copyWith(
+            status: RouteStateStatus.pointsMustBeDifferent,
+          ),
+        ],
+      );
+
+      blocTest(
+        'should finish method call if location of start point has not been found',
         build: () => createCubit(),
         setUp: () {
-          locationService.mockGetPosition();
+          locationService.mockLoadLocation();
           placeRepository.mockGetPlaceById(
             result: placeCreator.create(coordinates: endLocation),
           );
         },
         act: (cubit) async {
-          cubit.onDestinationChanged(destination);
+          cubit.onEndPointChanged(endPoint);
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            destination: destination,
+            endPoint: endPoint,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
           ),
         ],
         verify: (_) {
-          verify(locationService.getPosition).called(1);
+          verify(locationService.loadLocation).called(1);
           verify(
-            () => placeRepository.getPlaceById(destination.id),
+            () => placeRepository.getPlaceById(endPoint.id),
           ).called(1);
         },
       );
 
       blocTest(
-        'should finish method call if location of destination has not been found',
+        'should finish method call if location of end point has not been found',
         build: () => createCubit(),
         setUp: () {
-          locationService.mockGetPosition(
-            expectedPosition: currentPosition,
+          locationService.mockLoadLocation(
+            expectedLocation: startLocation,
           );
           placeRepository.mockGetPlaceById();
         },
         act: (cubit) async {
-          cubit.onDestinationChanged(destination);
+          cubit.onEndPointChanged(endPoint);
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            destination: destination,
+            endPoint: endPoint,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
           ),
         ],
         verify: (_) {
-          verify(locationService.getPosition).called(1);
+          verify(locationService.loadLocation).called(1);
           verify(
-            () => placeRepository.getPlaceById(destination.id),
+            () => placeRepository.getPlaceById(endPoint.id),
           ).called(1);
         },
       );
@@ -235,8 +250,8 @@ void main() {
         'should emit routeNotFound status if navigation has not been found',
         build: () => createCubit(),
         setUp: () {
-          locationService.mockGetPosition(
-            expectedPosition: currentPosition,
+          locationService.mockLoadLocation(
+            expectedLocation: startLocation,
           );
           placeRepository.mockGetPlaceById(
             result: placeCreator.create(coordinates: endLocation),
@@ -246,13 +261,13 @@ void main() {
           );
         },
         act: (cubit) async {
-          cubit.onDestinationChanged(destination);
+          cubit.onEndPointChanged(endPoint);
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            destination: destination,
+            endPoint: endPoint,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
@@ -262,9 +277,9 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(locationService.getPosition).called(1);
+          verify(locationService.loadLocation).called(1);
           verify(
-            () => placeRepository.getPlaceById(destination.id),
+            () => placeRepository.getPlaceById(endPoint.id),
           ).called(1);
           verify(
             () => navigationRepository.loadNavigationByStartAndEndLocations(
@@ -280,8 +295,8 @@ void main() {
         'any routes',
         build: () => createCubit(),
         setUp: () {
-          locationService.mockGetPosition(
-            expectedPosition: currentPosition,
+          locationService.mockLoadLocation(
+            expectedLocation: startLocation,
           );
           placeRepository.mockGetPlaceById(
             result: placeCreator.create(coordinates: endLocation),
@@ -295,13 +310,13 @@ void main() {
           );
         },
         act: (cubit) async {
-          cubit.onDestinationChanged(destination);
+          cubit.onEndPointChanged(endPoint);
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            destination: destination,
+            endPoint: endPoint,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
@@ -311,9 +326,9 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(locationService.getPosition).called(1);
+          verify(locationService.loadLocation).called(1);
           verify(
-            () => placeRepository.getPlaceById(destination.id),
+            () => placeRepository.getPlaceById(endPoint.id),
           ).called(1);
           verify(
             () => navigationRepository.loadNavigationByStartAndEndLocations(
@@ -325,13 +340,13 @@ void main() {
       );
 
       blocTest(
-        'should load coordinates of start and destination places, should load '
+        'should load coordinates of start and end points, should load '
         'routes between these two locations and should emit first of the found '
         'routes',
         build: () => createCubit(),
         setUp: () {
-          locationService.mockGetPosition(
-            expectedPosition: currentPosition,
+          locationService.mockLoadLocation(
+            expectedLocation: startLocation,
           );
           placeRepository.mockGetPlaceById(
             result: placeCreator.create(coordinates: endLocation),
@@ -341,13 +356,13 @@ void main() {
           );
         },
         act: (cubit) async {
-          cubit.onDestinationChanged(destination);
+          cubit.onEndPointChanged(endPoint);
           await cubit.loadNavigation();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            destination: destination,
+            endPoint: endPoint,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
@@ -358,9 +373,9 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(locationService.getPosition).called(1);
+          verify(locationService.loadLocation).called(1);
           verify(
-            () => placeRepository.getPlaceById(destination.id),
+            () => placeRepository.getPlaceById(endPoint.id),
           ).called(1);
           verify(
             () => navigationRepository.loadNavigationByStartAndEndLocations(
@@ -376,12 +391,8 @@ void main() {
   group(
     'resetRoute, ',
     () {
-      const destination = SelectedRoutePlace(id: 'p2', name: 'place 2');
+      const endPoint = SelectedPlacePoint(id: 'p2', name: 'place 2');
       const startLocation = Coordinates(50.1, 18.1);
-      const Position currentPosition = Position(
-        coordinates: startLocation,
-        speedInKmPerH: 20.2,
-      );
       const endLocation = Coordinates(51.2, 19.2);
       final navigation = Navigation(
         startLocation: startLocation,
@@ -403,8 +414,8 @@ void main() {
         'should set status as infill and route as null',
         build: () => createCubit(),
         setUp: () {
-          locationService.mockGetPosition(
-            expectedPosition: currentPosition,
+          locationService.mockLoadLocation(
+            expectedLocation: startLocation,
           );
           placeRepository.mockGetPlaceById(
             result: placeCreator.create(coordinates: endLocation),
@@ -414,14 +425,14 @@ void main() {
           );
         },
         act: (cubit) async {
-          cubit.onDestinationChanged(destination);
+          cubit.onEndPointChanged(endPoint);
           await cubit.loadNavigation();
           cubit.resetRoute();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            destination: destination,
+            endPoint: endPoint,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,
@@ -442,12 +453,8 @@ void main() {
   group(
     'reset, ',
     () {
-      const destination = SelectedRoutePlace(id: 'p2', name: 'place 2');
+      const endPoint = SelectedPlacePoint(id: 'p2', name: 'place 2');
       const startLocation = Coordinates(50.1, 18.1);
-      const Position currentPosition = Position(
-        coordinates: startLocation,
-        speedInKmPerH: 20.2,
-      );
       const endLocation = Coordinates(51.2, 19.2);
       final navigation = Navigation(
         startLocation: startLocation,
@@ -469,8 +476,8 @@ void main() {
         'should set default state',
         build: () => createCubit(),
         setUp: () {
-          locationService.mockGetPosition(
-            expectedPosition: currentPosition,
+          locationService.mockLoadLocation(
+            expectedLocation: startLocation,
           );
           placeRepository.mockGetPlaceById(
             result: placeCreator.create(coordinates: endLocation),
@@ -480,14 +487,14 @@ void main() {
           );
         },
         act: (cubit) async {
-          cubit.onDestinationChanged(destination);
+          cubit.onEndPointChanged(endPoint);
           await cubit.loadNavigation();
           cubit.reset();
         },
         expect: () => [
           state = const RouteState(
             status: RouteStateStatus.infill,
-            destination: destination,
+            endPoint: endPoint,
           ),
           state = state?.copyWith(
             status: RouteStateStatus.searching,

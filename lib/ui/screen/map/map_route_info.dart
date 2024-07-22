@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../entity/map_point.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/route/route_cubit.dart';
-import '../../cubit/route/route_state.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/double_extensions.dart';
 import '../../extensions/duration_extensions.dart';
-import '../../extensions/route_place_extensions.dart';
+import '../../extensions/map_point_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 
@@ -20,9 +20,9 @@ class MapRouteInfo extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _StartPlace(),
+            _StartPoint(),
             GapVertical8(),
-            _Destination(),
+            _EndPoint(),
             GapVertical8(),
             _Distance(),
             GapVertical8(),
@@ -65,36 +65,34 @@ class _BodyContainer extends StatelessWidget {
       );
 }
 
-class _StartPlace extends StatelessWidget {
-  const _StartPlace();
+class _StartPoint extends StatelessWidget {
+  const _StartPoint();
 
   @override
   Widget build(BuildContext context) {
-    final RoutePlace? startPlace = context.select(
-      (RouteCubit cubit) => cubit.state.startPlace,
+    final MapPoint? startPoint = context.select(
+      (RouteCubit cubit) => cubit.state.startPoint,
     );
-    final String? startPlaceName = startPlace?.toUIName(context);
 
     return _ValueWithLabel(
       label: context.str.routeInfoStartPlace,
-      value: '$startPlaceName',
+      value: '${startPoint?.toUIName(context)}',
     );
   }
 }
 
-class _Destination extends StatelessWidget {
-  const _Destination();
+class _EndPoint extends StatelessWidget {
+  const _EndPoint();
 
   @override
   Widget build(BuildContext context) {
-    final RoutePlace? destination = context.select(
-      (RouteCubit cubit) => cubit.state.destination,
+    final MapPoint? endPoint = context.select(
+      (RouteCubit cubit) => cubit.state.endPoint,
     );
-    final String? destinationName = destination?.toUIName(context);
 
     return _ValueWithLabel(
       label: context.str.routeInfoDestination,
-      value: '$destinationName',
+      value: '${endPoint?.toUIName(context)}',
     );
   }
 }

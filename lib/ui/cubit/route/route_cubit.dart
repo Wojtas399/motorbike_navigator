@@ -4,8 +4,8 @@ import 'package:injectable/injectable.dart';
 import '../../../../data/repository/navigation/navigation_repository.dart';
 import '../../../../data/repository/place/place_repository.dart';
 import '../../../entity/coordinates.dart';
+import '../../../entity/map_point.dart';
 import '../../../entity/navigation.dart';
-import '../../../entity/position.dart';
 import '../../service/location_service.dart';
 import 'route_state.dart';
 
@@ -21,32 +21,33 @@ class RouteCubit extends Cubit<RouteState> {
     this._navigationRepository,
   ) : super(const RouteState());
 
-  void onStartPlaceChanged(RoutePlace routePlace) {
+  void onStartPointChanged(MapPoint startPoint) {
     emit(state.copyWith(
       status: RouteStateStatus.infill,
-      startPlace: routePlace,
+      startPoint: startPoint,
     ));
   }
 
-  void onDestinationChanged(RoutePlace destination) {
+  void onEndPointChanged(MapPoint endPoint) {
     emit(state.copyWith(
       status: RouteStateStatus.infill,
-      destination: destination,
+      endPoint: endPoint,
     ));
   }
 
-  void swapPlaceSuggestions() {
+  void swapPoints() {
     emit(state.copyWith(
       status: RouteStateStatus.infill,
-      startPlace: state.destination,
-      destination: state.startPlace,
+      startPoint: state.endPoint,
+      endPoint: state.startPoint,
     ));
   }
 
   Future<void> loadNavigation() async {
-    if (state.startPlace == null || state.destination == null) {
+    final RouteStateStatus? errorStatus = _getErrorStatusIfPointsAreInvalid();
+    if (errorStatus != null) {
       emit(state.copyWith(
-        status: RouteStateStatus.formNotCompleted,
+        status: errorStatus,
       ));
       return;
     }
@@ -54,9 +55,9 @@ class RouteCubit extends Cubit<RouteState> {
       status: RouteStateStatus.searching,
     ));
     final Coordinates? startLocation =
-        await _loadRoutePlaceCoordinates(state.startPlace!);
+        await _loadPointCoordinates(state.startPoint!);
     final Coordinates? endLocation =
-        await _loadRoutePlaceCoordinates(state.destination!);
+        await _loadPointCoordinates(state.endPoint!);
     if (startLocation == null || endLocation == null) return;
     final Navigation? navigation =
         await _navigationRepository.loadNavigationByStartAndEndLocations(
@@ -86,17 +87,21 @@ class RouteCubit extends Cubit<RouteState> {
     emit(const RouteState());
   }
 
-  Future<Coordinates?> _loadRoutePlaceCoordinates(RoutePlace place) async {
-    if (place is UserLocationRoutePlace) {
-      return await _loadCurrentLocation();
-    } else if (place is SelectedRoutePlace) {
-      return (await _placeRepository.getPlaceById(place.id))?.coordinates;
+  RouteStateStatus? _getErrorStatusIfPointsAreInvalid() {
+    if (state.startPoint == null || state.endPoint == null) {
+      return RouteStateStatus.formNotCompleted;
+    } else if (state.startPoint == state.endPoint) {
+      return RouteStateStatus.pointsMustBeDifferent;
     }
     return null;
   }
 
-  Future<Coordinates?> _loadCurrentLocation() async => await _locationService
-      .getPosition()
-      .map((Position? position) => position?.coordinates)
-      .first;
+  Future<Coordinates?> _loadPointCoordinates(MapPoint point) async {
+    if (point is UserLocationPoint) {
+      return await _locationService.loadLocation();
+    } else if (point is SelectedPlacePoint) {
+      return (await _placeRepository.getPlaceById(point.id))?.coordinates;
+    }
+    return null;
+  }
 }

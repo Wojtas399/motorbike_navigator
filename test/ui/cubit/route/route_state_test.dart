@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:motorbike_navigator/entity/map_point.dart';
 import 'package:motorbike_navigator/entity/navigation.dart';
 import 'package:motorbike_navigator/ui/cubit/route/route_state.dart';
 
@@ -8,8 +9,8 @@ void main() {
     () {
       const expectedDefaultState = RouteState(
         status: RouteStateStatus.initial,
-        startPlace: UserLocationRoutePlace(),
-        destination: null,
+        startPoint: UserLocationPoint(),
+        endPoint: null,
         route: null,
       );
 
@@ -46,20 +47,20 @@ void main() {
   );
 
   group(
-    'copyWith startPlace, ',
+    'copyWith startPoint, ',
     () {
-      const RoutePlace expectedStartPlace = SelectedRoutePlace(
+      const MapPoint expectedStartPoint = SelectedPlacePoint(
         id: 'p1',
         name: 'place suggestion',
       );
       RouteState state = const RouteState();
 
       test(
-        'should update startPlace if new value has been passed, ',
+        'should update startPoint if new value has been passed, ',
         () {
-          state = state.copyWith(startPlace: expectedStartPlace);
+          state = state.copyWith(startPoint: expectedStartPoint);
 
-          expect(state.startPlace, expectedStartPlace);
+          expect(state.startPoint, expectedStartPoint);
         },
       );
 
@@ -68,38 +69,38 @@ void main() {
         () {
           state = state.copyWith();
 
-          expect(state.startPlace, expectedStartPlace);
+          expect(state.startPoint, expectedStartPoint);
         },
       );
 
       test(
-        'should set startPlace as null if passed value is null',
+        'should set startPoint as null if passed value is null',
         () {
-          state = state.copyWith(startPlace: null);
+          state = state.copyWith(startPoint: null);
 
-          expect(state.startPlace, null);
+          expect(state.startPoint, null);
         },
       );
     },
   );
 
   group(
-    'copyWith destinationSuggestion, ',
+    'copyWith endPoint, ',
     () {
-      const RoutePlace expectedDestination = SelectedRoutePlace(
+      const MapPoint expectedEndPoint = SelectedPlacePoint(
         id: 'p1',
         name: 'place suggestion',
       );
       RouteState state = const RouteState();
 
       test(
-        'should update destination if new value has been passed, ',
+        'should update endPoint if new value has been passed, ',
         () {
           state = state.copyWith(
-            destination: expectedDestination,
+            endPoint: expectedEndPoint,
           );
 
-          expect(state.destination, expectedDestination);
+          expect(state.endPoint, expectedEndPoint);
         },
       );
 
@@ -108,16 +109,16 @@ void main() {
         () {
           state = state.copyWith();
 
-          expect(state.destination, expectedDestination);
+          expect(state.endPoint, expectedEndPoint);
         },
       );
 
       test(
-        'should set destination as null if passed value is null',
+        'should set endPoint as null if passed value is null',
         () {
-          state = state.copyWith(destination: null);
+          state = state.copyWith(endPoint: null);
 
-          expect(state.destination, null);
+          expect(state.endPoint, null);
         },
       );
     },
