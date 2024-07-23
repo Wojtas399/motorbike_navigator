@@ -67,11 +67,10 @@ class _Content extends StatelessWidget {
         Positioned(
           bottom: mapMode.isDrive ? 280 : 88,
           right: 24,
-          child: Column(
+          child: const Column(
             children: [
-              const _FollowUserLocationButton(),
-              const GapVertical16(),
-              if (mapMode.isBasic) const _RouteFormButton(),
+              _FollowUserLocationButton(),
+              GapVertical16(),
             ],
           ),
         ),
@@ -123,19 +122,4 @@ class _FollowUserLocationButton extends StatelessWidget {
       ),
     );
   }
-}
-
-class _RouteFormButton extends StatelessWidget {
-  const _RouteFormButton();
-
-  void _onPressed(BuildContext context) {
-    context.read<MapCubit>().changeMode(MapMode.selectingRoute);
-  }
-
-  @override
-  Widget build(BuildContext context) => FloatingActionButton(
-        heroTag: null,
-        onPressed: () => _onPressed(context),
-        child: const Icon(Icons.route),
-      );
 }
