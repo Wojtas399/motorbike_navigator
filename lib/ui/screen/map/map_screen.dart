@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
 import '../../cubit/drive/drive_cubit.dart';
-import '../../cubit/route/route_cubit.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 import 'map_content.dart';
@@ -35,9 +34,6 @@ class _BlocProviders extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => getIt.get<DriveCubit>(),
-          ),
-          BlocProvider(
-            create: (_) => getIt.get<RouteCubit>(),
           ),
         ],
         child: child,
