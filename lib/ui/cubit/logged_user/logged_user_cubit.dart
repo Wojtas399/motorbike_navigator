@@ -43,8 +43,13 @@ class LoggedUserCubit extends Cubit<LoggedUserState> {
         .listen(_handleListenedParams);
   }
 
-  Future<void> changeThemeMode(ThemeMode newThemeMode) async {
+  Future<void> switchThemeMode() async {
     final LoggedUserState prevState = state;
+    final ThemeMode newThemeMode = switch (state.themeMode) {
+      null => ThemeMode.light,
+      ThemeMode.light => ThemeMode.dark,
+      ThemeMode.dark => ThemeMode.light,
+    };
     emit(state.copyWith(
       status: LoggedUserStateStatus.completed,
       themeMode: newThemeMode,

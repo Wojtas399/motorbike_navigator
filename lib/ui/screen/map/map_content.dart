@@ -65,7 +65,7 @@ class _Content extends StatelessWidget {
             child: _StartRideButton(),
           ),
         Positioned(
-          bottom: mapMode.isDrive ? 280 : 88,
+          bottom: mapMode.isDrive ? 420 : 88,
           right: 24,
           child: const Column(
             children: [
