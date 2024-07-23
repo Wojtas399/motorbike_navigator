@@ -11,7 +11,6 @@ import 'map_content.dart';
 import 'map_drawer.dart';
 import 'map_drive_cubit_listener.dart';
 import 'map_mode_listener.dart';
-import 'map_route_cubit_listener.dart';
 
 @RoutePage()
 class MapScreen extends StatelessWidget {
@@ -60,7 +59,6 @@ class _Content extends StatelessWidget {
         listeners: const [
           MapModeListener(),
           MapDriveCubitListener(),
-          MapRouteCubitListener(),
         ],
         child: Stack(
           children: [
