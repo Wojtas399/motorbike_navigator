@@ -16,32 +16,11 @@ class MapDriveDetails extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            IntrinsicHeight(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        _Duration(),
-                        Divider(height: 32),
-                        _Speed(),
-                      ],
-                    ),
-                  ),
-                  VerticalDivider(),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        _Distance(),
-                        Divider(height: 32),
-                        _AvgSpeed(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _Duration(),
+            Divider(height: 32),
+            _Distance(),
+            Divider(height: 32),
+            _Speed(),
             GapVertical24(),
             _PauseButton(),
           ],
@@ -119,22 +98,6 @@ class _Distance extends StatelessWidget {
   }
 }
 
-class _AvgSpeed extends StatelessWidget {
-  const _AvgSpeed();
-
-  @override
-  Widget build(BuildContext context) {
-    final double avgSpeed = context.select(
-      (DriveCubit cubit) => cubit.state.avgSpeedInKmPerH,
-    );
-
-    return _ValueWithLabel(
-      label: context.str.avgSpeed,
-      value: avgSpeed.toSpeedFormat(),
-    );
-  }
-}
-
 class _PauseButton extends StatelessWidget {
   const _PauseButton();
 
@@ -144,11 +107,19 @@ class _PauseButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        width: 300,
+        width: double.infinity,
+        height: 56,
         child: FilledButton.icon(
           onPressed: () => _onPressed(context),
-          icon: const Icon(Icons.stop_circle_outlined),
-          label: Text(context.str.mapStopNavigation),
+          icon: const Icon(
+            Icons.stop_circle_outlined,
+            size: 32,
+          ),
+          label: TitleLarge(
+            context.str.mapStopNavigation,
+            color: Theme.of(context).canvasColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       );
 }
@@ -165,9 +136,15 @@ class _ValueWithLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          LabelLarge(label),
+          TitleLarge(
+            label,
+            color: context.colorScheme.outline,
+          ),
           const GapVertical4(),
-          TitleLarge(value),
+          HeadlineLarge(
+            value,
+            fontWeight: FontWeight.bold,
+          )
         ],
       );
 }

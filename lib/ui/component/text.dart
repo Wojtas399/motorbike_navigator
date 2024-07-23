@@ -6,6 +6,7 @@ enum _TextType {
   bodyMedium,
   titleMedium,
   titleLarge,
+  headlineLarge,
 }
 
 abstract class _Text extends StatelessWidget {
@@ -30,6 +31,7 @@ abstract class _Text extends StatelessWidget {
       _TextType.titleMedium => textTheme.titleMedium,
       _TextType.bodyMedium => textTheme.bodyMedium,
       _TextType.titleLarge => textTheme.titleLarge,
+      _TextType.headlineLarge => textTheme.headlineLarge,
     };
 
     return Text(
@@ -72,5 +74,13 @@ class TitleLarge extends _Text {
   const TitleLarge(
     super.data, {
     super.fontWeight,
+    super.color,
   }) : super(textType: _TextType.titleLarge);
+}
+
+class HeadlineLarge extends _Text {
+  const HeadlineLarge(
+    super.data, {
+    super.fontWeight,
+  }) : super(textType: _TextType.headlineLarge);
 }
