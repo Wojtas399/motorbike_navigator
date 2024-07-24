@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../component/gap.dart';
-import '../../component/text.dart';
+import '../../../entity/user.dart' as user;
 import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/logged_user/logged_user_cubit.dart';
-import '../../cubit/logged_user/logged_user_state.dart';
 import '../../extensions/context_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
@@ -16,40 +14,6 @@ class MapContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LoggedUserState loggedUserState = context.select(
-      (LoggedUserCubit cubit) => cubit.state,
-    );
-    final MapStateStatus cubitStatus = context.select(
-      (MapCubit cubit) => cubit.state.status,
-    );
-
-    return loggedUserState.status.isLoading || cubitStatus.isLoading
-        ? const _LoadingIndicator()
-        : const _Content();
-  }
-}
-
-class _LoadingIndicator extends StatelessWidget {
-  const _LoadingIndicator();
-
-  @override
-  Widget build(BuildContext context) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TitleMedium(context.str.mapLoading),
-            const GapVertical24(),
-            const CircularProgressIndicator(),
-          ],
-        ),
-      );
-}
-
-class _Content extends StatelessWidget {
-  const _Content();
-
-  @override
-  Widget build(BuildContext context) {
     final MapMode mapMode = context.select(
       (MapCubit cubit) => cubit.state.mode,
     );
@@ -57,25 +21,62 @@ class _Content extends StatelessWidget {
     return Stack(
       children: [
         const MapMapView(),
-        if (mapMode.isBasic)
+        const Positioned(
+          top: kToolbarHeight + 16,
+          right: 16,
+          child: _DarkModeButton(),
+        ),
+        Positioned(
+          bottom: mapMode.isDrive ? 420 : 88,
+          right: 24,
+          child: const _FollowUserLocationButton(),
+        ),
+        if (mapMode.isBasic) ...[
+          const Positioned(
+            left: 16,
+            top: kToolbarHeight + 16,
+            child: _MenuButton(),
+          ),
           const Positioned(
             bottom: 24,
             left: 24,
             right: 24,
             child: _StartRideButton(),
           ),
-        Positioned(
-          bottom: mapMode.isDrive ? 420 : 88,
-          right: 24,
-          child: const Column(
-            children: [
-              _FollowUserLocationButton(),
-              GapVertical16(),
-            ],
-          ),
-        ),
+        ]
       ],
     );
+  }
+}
+
+class _MenuButton extends StatelessWidget {
+  const _MenuButton();
+
+  @override
+  Widget build(BuildContext context) => IconButton.filledTonal(
+        onPressed: Scaffold.of(context).openDrawer,
+        icon: const Icon(Icons.menu),
+      );
+}
+
+class _DarkModeButton extends StatelessWidget {
+  const _DarkModeButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final user.ThemeMode? themeMode = context.select(
+      (LoggedUserCubit cubit) => cubit.state.themeMode,
+    );
+
+    return themeMode != null
+        ? IconButton.filledTonal(
+            icon: switch (themeMode) {
+              user.ThemeMode.light => const Icon(Icons.dark_mode),
+              user.ThemeMode.dark => const Icon(Icons.light_mode),
+            },
+            onPressed: context.read<LoggedUserCubit>().switchThemeMode,
+          )
+        : const CircularProgressIndicator();
   }
 }
 

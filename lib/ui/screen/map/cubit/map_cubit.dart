@@ -15,6 +15,7 @@ class MapCubit extends Cubit<MapState> {
   ) : super(const MapState());
 
   Future<void> initialize() async {
+    await Future.delayed(const Duration(seconds: 3));
     final currentLocation$ = _getCurrentLocation();
     await for (final currentLocation in currentLocation$) {
       emit(state.copyWith(
