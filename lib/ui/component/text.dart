@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../extensions/context_extensions.dart';
+
 enum _TextType {
   labelMedium,
   labelLarge,
@@ -24,7 +26,7 @@ abstract class _Text extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final textTheme = context.theme.textTheme;
     final textStyle = switch (textType) {
       _TextType.labelMedium => textTheme.labelMedium,
       _TextType.labelLarge => textTheme.labelLarge,

@@ -7,6 +7,7 @@ import '../../../entity/coordinates.dart';
 import '../../../entity/user.dart' as user;
 import '../../component/map_component.dart';
 import '../../cubit/logged_user/logged_user_cubit.dart';
+import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 
 @RoutePage()
@@ -41,7 +42,7 @@ class _CloseButton extends StatelessWidget {
           onPressed: context.maybePop,
           icon: Icon(
             Icons.close,
-            color: Theme.of(context).canvasColor,
+            color: context.theme.canvasColor,
           ),
         ),
       );
