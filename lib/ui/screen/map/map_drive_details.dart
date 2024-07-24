@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../component/big_filled_button_component.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/drive/drive_cubit.dart';
@@ -106,21 +107,10 @@ class _PauseButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-        width: double.infinity,
-        height: 56,
-        child: FilledButton.icon(
-          onPressed: () => _onPressed(context),
-          icon: const Icon(
-            Icons.stop_circle_outlined,
-            size: 32,
-          ),
-          label: TitleLarge(
-            context.str.mapStopNavigation,
-            color: Theme.of(context).canvasColor,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+  Widget build(BuildContext context) => BigFilledButton(
+        onPressed: () => _onPressed(context),
+        icon: Icons.stop_circle_outlined,
+        label: context.str.mapStopNavigation,
       );
 }
 

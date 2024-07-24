@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../entity/user.dart' as user;
+import '../../component/big_filled_button_component.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/logged_user/logged_user_cubit.dart';
 import '../../extensions/context_extensions.dart';
@@ -21,29 +22,35 @@ class MapContent extends StatelessWidget {
     return Stack(
       children: [
         const MapMapView(),
-        const Positioned(
-          top: kToolbarHeight + 16,
-          right: 16,
-          child: _DarkModeButton(),
-        ),
-        Positioned(
-          bottom: mapMode.isDrive ? 420 : 88,
-          right: 24,
-          child: const _FollowUserLocationButton(),
-        ),
-        if (mapMode.isBasic) ...[
-          const Positioned(
-            left: 16,
-            top: kToolbarHeight + 16,
-            child: _MenuButton(),
+        SafeArea(
+          child: Stack(
+            children: [
+              const Positioned(
+                top: 16,
+                right: 16,
+                child: _DarkModeButton(),
+              ),
+              Positioned(
+                bottom: mapMode.isDrive ? 406 : 104,
+                right: 24,
+                child: const _FollowUserLocationButton(),
+              ),
+              if (mapMode.isBasic) ...[
+                const Positioned(
+                  left: 16,
+                  top: 16,
+                  child: _MenuButton(),
+                ),
+                const Positioned(
+                  bottom: 24,
+                  left: 24,
+                  right: 24,
+                  child: _StartRideButton(),
+                ),
+              ],
+            ],
           ),
-          const Positioned(
-            bottom: 24,
-            left: 24,
-            right: 24,
-            child: _StartRideButton(),
-          ),
-        ]
+        ),
       ],
     );
   }
@@ -93,10 +100,10 @@ class _StartRideButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => FilledButton.icon(
+  Widget build(BuildContext context) => BigFilledButton(
         onPressed: () => _onPressed(context),
-        icon: const Icon(Icons.navigation),
-        label: Text(context.str.mapStartNavigation),
+        icon: Icons.navigation,
+        label: context.str.mapStartNavigation,
       );
 }
 
