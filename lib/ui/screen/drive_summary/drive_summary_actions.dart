@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
+import '../../component/big_filled_button_component.dart';
 import '../../component/gap.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../extensions/context_extensions.dart';
@@ -45,13 +46,10 @@ class _ResumeDriveButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-        width: double.infinity,
-        child: FilledButton.icon(
-          onPressed: () => _onPressed(context),
-          icon: const Icon(Icons.play_arrow_outlined),
-          label: Text(context.str.driveSummaryResumeDrive),
-        ),
+  Widget build(BuildContext context) => BigFilledButton(
+        onPressed: () => _onPressed(context),
+        icon: Icons.play_arrow_outlined,
+        label: context.str.driveSummaryResumeDrive,
       );
 }
 
