@@ -11,6 +11,10 @@ class MapDrawer extends StatelessWidget {
     context.pushRoute(const SavedDrivesRoute());
   }
 
+  void _navigateToStats(BuildContext context) {
+    context.pushRoute(const StatsRoute());
+  }
+
   @override
   Widget build(BuildContext context) => Drawer(
         child: SafeArea(
@@ -19,9 +23,14 @@ class MapDrawer extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  title: Text(context.str.mapSavedDrives),
-                  leading: const Icon(Icons.bookmark_outline),
+                  title: Text(context.str.savedDrivesScreenTitle),
+                  leading: const Icon(Icons.bookmark),
                   onTap: () => _navigateToSavedDrives(context),
+                ),
+                ListTile(
+                  title: Text(context.str.statsScreenTitle),
+                  leading: const Icon(Icons.bar_chart_outlined),
+                  onTap: () => _navigateToStats(context),
                 ),
               ],
             ),

@@ -26,5 +26,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: SavedDrivesRoute.page,
         ),
+        AutoRoute(
+          page: StatsRoute.page,
+        ),
       ];
 }

@@ -6,3 +6,4 @@ export 'map/map_screen.dart';
 export 'route_preview/route_preview_screen.dart';
 export 'saved_drives/saved_drives_screen.dart';
 export 'sign_in/sign_in_screen.dart';
+export 'stats/stats_screen.dart';
