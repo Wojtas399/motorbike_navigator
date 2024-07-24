@@ -5,20 +5,20 @@ void main() {
   final dateService = DateService();
 
   group(
-    'isDateFromRange, ',
+    'isDateTimeFromRange, ',
     () {
-      final DateTime firstDateOfRange = DateTime(2024, 07, 22, 12, 30);
-      final DateTime lastDateOfRange = DateTime(2024, 07, 28, 15, 44);
+      final DateTime firstDateTimeOfRange = DateTime(2024, 07, 22, 12, 30);
+      final DateTime lastDateTimeOfRange = DateTime(2024, 07, 28, 15, 44);
 
       test(
         'should return false if date is before first date of range',
         () {
           final DateTime date = DateTime(2024, 07, 22, 12, 15);
 
-          final bool answer = dateService.isDateFromRange(
+          final bool answer = dateService.isDateTimeFromRange(
             date: date,
-            firstDateOfRange: firstDateOfRange,
-            lastDateOfRange: lastDateOfRange,
+            firstDateTimeOfRange: firstDateTimeOfRange,
+            lastDateTimeOfRange: lastDateTimeOfRange,
           );
 
           expect(answer, false);
@@ -30,10 +30,10 @@ void main() {
         () {
           final DateTime date = DateTime(2024, 07, 28, 15, 44, 1);
 
-          final bool answer = dateService.isDateFromRange(
+          final bool answer = dateService.isDateTimeFromRange(
             date: date,
-            firstDateOfRange: firstDateOfRange,
-            lastDateOfRange: lastDateOfRange,
+            firstDateTimeOfRange: firstDateTimeOfRange,
+            lastDateTimeOfRange: lastDateTimeOfRange,
           );
 
           expect(answer, false);
@@ -43,12 +43,12 @@ void main() {
       test(
         'should return true if date is equal to first date of range',
         () {
-          final DateTime date = firstDateOfRange;
+          final DateTime date = firstDateTimeOfRange;
 
-          final bool answer = dateService.isDateFromRange(
+          final bool answer = dateService.isDateTimeFromRange(
             date: date,
-            firstDateOfRange: firstDateOfRange,
-            lastDateOfRange: lastDateOfRange,
+            firstDateTimeOfRange: firstDateTimeOfRange,
+            lastDateTimeOfRange: lastDateTimeOfRange,
           );
 
           expect(answer, true);
@@ -58,12 +58,12 @@ void main() {
       test(
         'should return true if date is equal to last date of range',
         () {
-          final DateTime date = lastDateOfRange;
+          final DateTime date = lastDateTimeOfRange;
 
-          final bool answer = dateService.isDateFromRange(
+          final bool answer = dateService.isDateTimeFromRange(
             date: date,
-            firstDateOfRange: firstDateOfRange,
-            lastDateOfRange: lastDateOfRange,
+            firstDateTimeOfRange: firstDateTimeOfRange,
+            lastDateTimeOfRange: lastDateTimeOfRange,
           );
 
           expect(answer, true);
@@ -76,10 +76,10 @@ void main() {
         () {
           final DateTime date = DateTime(2024, 07, 22, 12, 30, 1);
 
-          final bool answer = dateService.isDateFromRange(
+          final bool answer = dateService.isDateTimeFromRange(
             date: date,
-            firstDateOfRange: firstDateOfRange,
-            lastDateOfRange: lastDateOfRange,
+            firstDateTimeOfRange: firstDateTimeOfRange,
+            lastDateTimeOfRange: lastDateTimeOfRange,
           );
 
           expect(answer, true);

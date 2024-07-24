@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../entity/coordinates.dart';
 import '../../../entity/drive.dart';
+import '../../../ui/service/date_service.dart';
 import '../../dto/coordinates_dto.dart';
 import '../../dto/drive_dto.dart';
 import '../../firebase/firebase_drive_service.dart';
@@ -13,10 +14,12 @@ import 'drive_repository.dart';
 class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
   final FirebaseDriveService _dbDriveService;
   final DriveMapper _driveMapper;
+  final DateService _dateService;
 
   DriveRepositoryImpl(
     this._dbDriveService,
     this._driveMapper,
+    this._dateService,
   );
 
   @override
@@ -27,6 +30,33 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     await for (final drives in repositoryState$) {
       final List<Drive> userDrives =
           drives.where((drive) => drive.userId == userId).toList();
+      yield userDrives;
+    }
+  }
+
+  @override
+  Stream<List<Drive>> getAllUserDrivesFromDateRange({
+    required String userId,
+    required DateTime firstDateTimeOfRange,
+    required DateTime lastDateTimeOfRange,
+  }) async* {
+    await _fetchAllUserDrivesFromDateRange(
+      userId,
+      firstDateTimeOfRange,
+      lastDateTimeOfRange,
+    );
+    await for (final drives in repositoryState$) {
+      final List<Drive> userDrives = drives
+          .where(
+            (Drive drive) =>
+                drive.userId == userId &&
+                _dateService.isDateTimeFromRange(
+                  date: drive.startDateTime,
+                  firstDateTimeOfRange: firstDateTimeOfRange,
+                  lastDateTimeOfRange: lastDateTimeOfRange,
+                ),
+          )
+          .toList();
       yield userDrives;
     }
   }
@@ -66,6 +96,22 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
   Future<void> _fetchAllUserDrives(String userId) async {
     final List<DriveDto> driveDtos =
         await _dbDriveService.fetchAllUserDrives(userId: userId);
+    if (driveDtos.isEmpty) return;
+    final List<Drive> drives = driveDtos.map(_driveMapper.mapFromDto).toList();
+    addEntities(drives);
+  }
+
+  Future<void> _fetchAllUserDrivesFromDateRange(
+    String userId,
+    DateTime firstDateTimeOfRange,
+    DateTime lastDateTimeOfRange,
+  ) async {
+    final List<DriveDto> driveDtos =
+        await _dbDriveService.fetchAllUserDrivesFromDateRange(
+      userId: userId,
+      firstDateTimeOfRange: firstDateTimeOfRange,
+      lastDateTimeOfRange: lastDateTimeOfRange,
+    );
     if (driveDtos.isEmpty) return;
     final List<Drive> drives = driveDtos.map(_driveMapper.mapFromDto).toList();
     addEntities(drives);

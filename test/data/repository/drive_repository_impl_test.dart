@@ -10,21 +10,28 @@ import '../../creator/drive_creator.dart';
 import '../../creator/drive_dto_creator.dart';
 import '../../mock/data/firebase/mock_firebase_drive_service.dart';
 import '../../mock/data/mapper/mock_drive_mapper.dart';
+import '../../mock/ui_service/mock_date_service.dart';
 
 void main() {
   final dbDriveService = MockFirebaseDriveService();
   final driveMapper = MockDriveMapper();
+  final dateService = MockDateService();
   final driveCreator = DriveCreator();
   final driveDtoCreator = DriveDtoCreator();
   late DriveRepositoryImpl repositoryImpl;
 
   setUp(() {
-    repositoryImpl = DriveRepositoryImpl(dbDriveService, driveMapper);
+    repositoryImpl = DriveRepositoryImpl(
+      dbDriveService,
+      driveMapper,
+      dateService,
+    );
   });
 
   tearDown(() {
     reset(dbDriveService);
     reset(driveMapper);
+    reset(dateService);
   });
 
   test(
@@ -47,7 +54,7 @@ void main() {
         driveCreator.create(id: 'd5', userId: 'u3'),
       ];
       final List<Drive> expectedDrives = [
-        driveCreator.create(id: 'd1', userId: userId),
+        existingDrives.first,
         ...fetchedDrives,
       ];
       final List<Drive> expectedRepositoryState = [
@@ -75,6 +82,121 @@ void main() {
       );
       verify(
         () => dbDriveService.fetchAllUserDrives(userId: userId),
+      ).called(1);
+    },
+  );
+
+  test(
+    'getAllUserDrivesFromDateRange, '
+    "should load from db all user's drives which startDateTime is from given "
+    'date range, add them to repo state and should emit all drives with '
+    'matching user id and startDateTime',
+    () async {
+      const String userId = 'u1';
+      final DateTime firstDateTimeOfRange = DateTime(2024, 7, 22);
+      final DateTime lastDateTimeOfRange = DateTime(2024, 7, 28);
+      final List<DriveDto> fetchedDriveDtos = [
+        driveDtoCreator.create(
+          id: 'd3',
+          userId: userId,
+          startDateTime: DateTime(2024, 7, 23),
+        ),
+        driveDtoCreator.create(
+          id: 'd4',
+          userId: userId,
+          startDateTime: DateTime(2024, 7, 25),
+        ),
+      ];
+      final List<Drive> fetchedDrives = [
+        driveCreator.create(
+          id: 'd3',
+          userId: userId,
+          startDateTime: DateTime(2024, 7, 23),
+        ),
+        driveCreator.create(
+          id: 'd4',
+          userId: userId,
+          startDateTime: DateTime(2024, 7, 25),
+        ),
+      ];
+      final List<Drive> existingDrives = [
+        driveCreator.create(
+          id: 'd1',
+          userId: userId,
+          startDateTime: DateTime(2024, 7, 27),
+        ),
+        driveCreator.create(id: 'd2', userId: 'u2'),
+        driveCreator.create(
+          id: 'd5',
+          userId: userId,
+          startDateTime: DateTime(2024, 7, 29),
+        ),
+      ];
+      final List<Drive> expectedDrives = [
+        existingDrives.first,
+        ...fetchedDrives,
+      ];
+      final List<Drive> expectedRepositoryState = [
+        ...existingDrives,
+        ...fetchedDrives
+      ];
+      dbDriveService.mockFetchAllUserDrivesFromDateRange(
+        expectedDriveDtos: fetchedDriveDtos,
+      );
+      when(
+        () => driveMapper.mapFromDto(fetchedDriveDtos.first),
+      ).thenReturn(fetchedDrives.first);
+      when(
+        () => driveMapper.mapFromDto(fetchedDriveDtos.last),
+      ).thenReturn(fetchedDrives.last);
+      when(
+        () => dateService.isDateTimeFromRange(
+          date: fetchedDrives.first.startDateTime,
+          firstDateTimeOfRange: firstDateTimeOfRange,
+          lastDateTimeOfRange: lastDateTimeOfRange,
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.isDateTimeFromRange(
+          date: fetchedDrives.last.startDateTime,
+          firstDateTimeOfRange: firstDateTimeOfRange,
+          lastDateTimeOfRange: lastDateTimeOfRange,
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.isDateTimeFromRange(
+          date: existingDrives.first.startDateTime,
+          firstDateTimeOfRange: firstDateTimeOfRange,
+          lastDateTimeOfRange: lastDateTimeOfRange,
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.isDateTimeFromRange(
+          date: existingDrives.last.startDateTime,
+          firstDateTimeOfRange: firstDateTimeOfRange,
+          lastDateTimeOfRange: lastDateTimeOfRange,
+        ),
+      ).thenReturn(false);
+      repositoryImpl.addEntities(existingDrives);
+
+      final Stream<List<Drive>> allUserDrives$ =
+          repositoryImpl.getAllUserDrivesFromDateRange(
+        userId: userId,
+        firstDateTimeOfRange: firstDateTimeOfRange,
+        lastDateTimeOfRange: lastDateTimeOfRange,
+      );
+
+      expect(await allUserDrives$.first, expectedDrives);
+      expect(
+        await repositoryImpl.repositoryState$.first,
+        expectedRepositoryState,
+      );
+      verify(
+        () => dbDriveService.fetchAllUserDrivesFromDateRange(
+          userId: userId,
+          firstDateTimeOfRange: firstDateTimeOfRange,
+          lastDateTimeOfRange: lastDateTimeOfRange,
+        ),
       ).called(1);
     },
   );

@@ -13,6 +13,24 @@ class FirebaseDriveService {
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
+  Future<List<DriveDto>> fetchAllUserDrivesFromDateRange({
+    required String userId,
+    required DateTime firstDateTimeOfRange,
+    required DateTime lastDateTimeOfRange,
+  }) async {
+    final snapshot = await getDrivesRef(userId)
+        .where(
+          'startDateTime',
+          isGreaterThanOrEqualTo: firstDateTimeOfRange.toIso8601String(),
+        )
+        .where(
+          'startDateTime',
+          isLessThanOrEqualTo: lastDateTimeOfRange.toIso8601String(),
+        )
+        .get();
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
   Future<DriveDto?> addDrive({
     required String userId,
     required DateTime startDateTime,

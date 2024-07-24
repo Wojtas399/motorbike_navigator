@@ -4,17 +4,17 @@ import 'package:injectable/injectable.dart';
 class DateService {
   DateTime getNow() => DateTime.now();
 
-  bool isDateFromRange({
+  bool isDateTimeFromRange({
     required DateTime date,
-    required DateTime firstDateOfRange,
-    required DateTime lastDateOfRange,
+    required DateTime firstDateTimeOfRange,
+    required DateTime lastDateTimeOfRange,
   }) {
     final bool isGreaterOrEqualToFirstDateOfRange =
-        date.isAfter(firstDateOfRange) ||
-            date.isAtSameMomentAs(firstDateOfRange);
+        date.isAfter(firstDateTimeOfRange) ||
+            date.isAtSameMomentAs(firstDateTimeOfRange);
     final bool isLowerOrEqualToLastDateOfRange =
-        date.isBefore(lastDateOfRange) ||
-            date.isAtSameMomentAs(lastDateOfRange);
+        date.isBefore(lastDateTimeOfRange) ||
+            date.isAtSameMomentAs(lastDateTimeOfRange);
     return isGreaterOrEqualToFirstDateOfRange &&
         isLowerOrEqualToLastDateOfRange;
   }
