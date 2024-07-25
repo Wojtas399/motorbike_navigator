@@ -10,12 +10,12 @@ import '../../creator/drive_creator.dart';
 import '../../creator/drive_dto_creator.dart';
 import '../../mock/data/firebase/mock_firebase_drive_service.dart';
 import '../../mock/data/mapper/mock_drive_mapper.dart';
-import '../../mock/ui_service/mock_date_time_service.dart';
+import '../../mock/ui_service/mock_date_service.dart';
 
 void main() {
   final dbDriveService = MockFirebaseDriveService();
   final driveMapper = MockDriveMapper();
-  final dateTimeService = MockDateTimeService();
+  final dateService = MockDateService();
   final driveCreator = DriveCreator();
   final driveDtoCreator = DriveDtoCreator();
   late DriveRepositoryImpl repositoryImpl;
@@ -24,14 +24,14 @@ void main() {
     repositoryImpl = DriveRepositoryImpl(
       dbDriveService,
       driveMapper,
-      dateTimeService,
+      dateService,
     );
   });
 
   tearDown(() {
     reset(dbDriveService);
     reset(driveMapper);
-    reset(dateTimeService);
+    reset(dateService);
   });
 
   test(
@@ -87,14 +87,14 @@ void main() {
   );
 
   test(
-    'getAllUserDrivesFromDateRange, '
-    "should load from db all user's drives which startDateTime is from given "
+    'getUserDrivesFromDateRange, '
+    "should load from db user's drives which startDateTime is from given "
     'date range, add them to repo state and should emit all drives with '
     'matching user id and startDateTime',
     () async {
       const String userId = 'u1';
-      final DateTime firstDateTimeOfRange = DateTime(2024, 7, 22);
-      final DateTime lastDateTimeOfRange = DateTime(2024, 7, 28);
+      final DateTime firstDateOfRange = DateTime(2024, 7, 22);
+      final DateTime lastDateOfRange = DateTime(2024, 7, 28);
       final List<DriveDto> fetchedDriveDtos = [
         driveDtoCreator.create(
           id: 'd3',
@@ -150,40 +150,40 @@ void main() {
         () => driveMapper.mapFromDto(fetchedDriveDtos.last),
       ).thenReturn(fetchedDrives.last);
       when(
-        () => dateTimeService.isDateTimeFromRange(
+        () => dateService.isDateFromRange(
           date: fetchedDrives.first.startDateTime,
-          firstDateTimeOfRange: firstDateTimeOfRange,
-          lastDateTimeOfRange: lastDateTimeOfRange,
+          firstDateOfRange: firstDateOfRange,
+          lastDateOfRange: lastDateOfRange,
         ),
       ).thenReturn(true);
       when(
-        () => dateTimeService.isDateTimeFromRange(
+        () => dateService.isDateFromRange(
           date: fetchedDrives.last.startDateTime,
-          firstDateTimeOfRange: firstDateTimeOfRange,
-          lastDateTimeOfRange: lastDateTimeOfRange,
+          firstDateOfRange: firstDateOfRange,
+          lastDateOfRange: lastDateOfRange,
         ),
       ).thenReturn(true);
       when(
-        () => dateTimeService.isDateTimeFromRange(
+        () => dateService.isDateFromRange(
           date: existingDrives.first.startDateTime,
-          firstDateTimeOfRange: firstDateTimeOfRange,
-          lastDateTimeOfRange: lastDateTimeOfRange,
+          firstDateOfRange: firstDateOfRange,
+          lastDateOfRange: lastDateOfRange,
         ),
       ).thenReturn(true);
       when(
-        () => dateTimeService.isDateTimeFromRange(
+        () => dateService.isDateFromRange(
           date: existingDrives.last.startDateTime,
-          firstDateTimeOfRange: firstDateTimeOfRange,
-          lastDateTimeOfRange: lastDateTimeOfRange,
+          firstDateOfRange: firstDateOfRange,
+          lastDateOfRange: lastDateOfRange,
         ),
       ).thenReturn(false);
       repositoryImpl.addEntities(existingDrives);
 
       final Stream<List<Drive>> allUserDrives$ =
-          repositoryImpl.getAllUserDrivesFromDateRange(
+          repositoryImpl.getUserDrivesFromDateRange(
         userId: userId,
-        firstDateTimeOfRange: firstDateTimeOfRange,
-        lastDateTimeOfRange: lastDateTimeOfRange,
+        firstDateOfRange: firstDateOfRange,
+        lastDateOfRange: lastDateOfRange,
       );
 
       expect(await allUserDrives$.first, expectedDrives);
@@ -194,8 +194,8 @@ void main() {
       verify(
         () => dbDriveService.fetchAllUserDrivesFromDateRange(
           userId: userId,
-          firstDateTimeOfRange: firstDateTimeOfRange,
-          lastDateTimeOfRange: lastDateTimeOfRange,
+          firstDateOfRange: firstDateOfRange,
+          lastDateOfRange: lastDateOfRange,
         ),
       ).called(1);
     },

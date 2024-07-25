@@ -25,8 +25,8 @@ class MockFirebaseDriveService extends Mock implements FirebaseDriveService {
     when(
       () => fetchAllUserDrivesFromDateRange(
         userId: any(named: 'userId'),
-        firstDateTimeOfRange: any(named: 'firstDateTimeOfRange'),
-        lastDateTimeOfRange: any(named: 'lastDateTimeOfRange'),
+        firstDateOfRange: any(named: 'firstDateOfRange'),
+        lastDateOfRange: any(named: 'lastDateOfRange'),
       ),
     ).thenAnswer((_) => Future.value(expectedDriveDtos));
   }

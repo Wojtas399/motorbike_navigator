@@ -6,10 +6,10 @@ abstract interface class DriveRepository {
     required String userId,
   });
 
-  Stream<List<Drive>> getAllUserDrivesFromDateRange({
+  Stream<List<Drive>> getUserDrivesFromDateRange({
     required String userId,
-    required DateTime firstDateTimeOfRange,
-    required DateTime lastDateTimeOfRange,
+    required DateTime firstDateOfRange,
+    required DateTime lastDateOfRange,
   });
 
   Future<void> addDrive({

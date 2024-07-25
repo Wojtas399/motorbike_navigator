@@ -8,7 +8,7 @@ import '../../../data/repository/auth/auth_repository.dart';
 import '../../../data/repository/drive/drive_repository.dart';
 import '../../../entity/coordinates.dart';
 import '../../../entity/position.dart';
-import '../../service/date_time_service.dart';
+import '../../service/date_service.dart';
 import '../../service/location_service.dart';
 import '../../service/map_service.dart';
 import 'drive_state.dart';
@@ -19,7 +19,7 @@ class DriveCubit extends Cubit<DriveState> {
   final MapService _mapService;
   final AuthRepository _authRepository;
   final DriveRepository _driveRepository;
-  final DateTimeService _dateTimeService;
+  final DateService _dateService;
   Timer? _timer;
   StreamSubscription<Position?>? _positionListener;
   List<double> _speedsInKmPerH = [];
@@ -29,7 +29,7 @@ class DriveCubit extends Cubit<DriveState> {
     this._mapService,
     this._authRepository,
     this._driveRepository,
-    this._dateTimeService,
+    this._dateService,
   ) : super(const DriveState());
 
   @override
@@ -45,7 +45,7 @@ class DriveCubit extends Cubit<DriveState> {
     if (startLocation == null) return;
     emit(state.copyWith(
       status: DriveStateStatus.ongoing,
-      startDatetime: _dateTimeService.getNow(),
+      startDatetime: _dateService.getNow(),
       waypoints: [startLocation],
     ));
     _startTimer();
