@@ -4,30 +4,27 @@ import 'package:injectable/injectable.dart';
 class DateTimeService {
   DateTime getNow() => DateTime.now();
 
-  DateTime getFirstDateTimeOfTheWeekWhichIncludesDateTime(DateTime dateTime) {
-    final firstDateTimeOfTheWeek = dateTime.subtract(
-      Duration(days: dateTime.weekday - 1),
-    );
-    return DateTime(
-      firstDateTimeOfTheWeek.year,
-      firstDateTimeOfTheWeek.month,
-      firstDateTimeOfTheWeek.day,
-    );
-  }
+  DateTime getFirstDateTimeOfTheWeek(DateTime dateTime) => DateTime(
+        dateTime.year,
+        dateTime.month,
+        dateTime.day - (dateTime.weekday - 1),
+      );
 
-  DateTime getLastDateTimeOfTheWeekWhichIncludedsDateTime(DateTime dateTime) {
-    final lastDateTimeOfTheWeek = dateTime.add(
-      Duration(days: DateTime.daysPerWeek - dateTime.weekday),
-    );
-    return DateTime(
-      lastDateTimeOfTheWeek.year,
-      lastDateTimeOfTheWeek.month,
-      lastDateTimeOfTheWeek.day,
-      23,
-      59,
-      59,
-    );
-  }
+  DateTime getLastDateTimeOfTheWeek(DateTime dateTime) => DateTime(
+        dateTime.year,
+        dateTime.month,
+        dateTime.day + (DateTime.daysPerWeek - dateTime.weekday) + 1,
+      ).subtract(
+        const Duration(milliseconds: 1),
+      );
+
+  DateTime getFirstDateTimeOfTheMonth(DateTime dateTime) =>
+      DateTime(dateTime.year, dateTime.month);
+
+  DateTime getLastDateTimeOfTheMonth(DateTime dateTime) =>
+      DateTime(dateTime.year, dateTime.month + 1).subtract(
+        const Duration(milliseconds: 1),
+      );
 
   bool isDateTimeFromRange({
     required DateTime date,

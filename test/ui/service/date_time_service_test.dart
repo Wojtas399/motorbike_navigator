@@ -5,30 +5,60 @@ void main() {
   final dateTimeService = DateTimeService();
 
   test(
-    'getFirstDateTimeOfTheWeekWhichIncludesDateTime, '
-    'should return first date of the week which include given dateTime',
+    'getFirstDateTimeOfTheWeek, '
+    'should return first dateTime of the week which includes given dateTime',
     () {
-      final DateTime dateTime = DateTime(2024, 7, 25, 12, 30);
-      final DateTime expectedFirstDateTimeOfTheWeek = DateTime(2024, 7, 22);
+      final dateTime = DateTime(2024, 7, 25, 12, 30);
+      final expectedFirstDateTimeOfTheWeek = DateTime(2024, 7, 22);
 
-      final firstDateTimeOfTheWeek = dateTimeService
-          .getFirstDateTimeOfTheWeekWhichIncludesDateTime(dateTime);
+      final firstDateTimeOfTheWeek =
+          dateTimeService.getFirstDateTimeOfTheWeek(dateTime);
 
       expect(firstDateTimeOfTheWeek, expectedFirstDateTimeOfTheWeek);
     },
   );
 
   test(
-    'getLastDateTimeOfTheWeekWhichIncludedsDateTime, ',
+    'getLastDateTimeOfTheWeek, '
+    'should return last dateTime of the week which includes given dateTime',
     () {
-      final DateTime dateTime = DateTime(2024, 7, 25, 12, 30);
-      final DateTime expectedLastDateTimeOfTheWeek =
-          DateTime(2024, 7, 28, 23, 59, 59);
+      final dateTime = DateTime(2024, 7, 25, 12, 30);
+      final expectedLastDateTimeOfTheWeek =
+          DateTime(2024, 7, 28, 23, 59, 59, 999);
 
-      final lastDateTimeOfTheWeek = dateTimeService
-          .getLastDateTimeOfTheWeekWhichIncludedsDateTime(dateTime);
+      final lastDateTimeOfTheWeek =
+          dateTimeService.getLastDateTimeOfTheWeek(dateTime);
 
       expect(lastDateTimeOfTheWeek, expectedLastDateTimeOfTheWeek);
+    },
+  );
+
+  test(
+    'getFirstDateTimeOfTheMonth, '
+    'should return first dateTime of the month which includes given dateTime',
+    () {
+      final dateTime = DateTime(2024, 7, 25, 12, 30);
+      final expectedFirstDateTimeOfTheMonth = DateTime(2024, 7);
+
+      final firstDateTimeOfTheMonth =
+          dateTimeService.getFirstDateTimeOfTheMonth(dateTime);
+
+      expect(firstDateTimeOfTheMonth, expectedFirstDateTimeOfTheMonth);
+    },
+  );
+
+  test(
+    'getLastDateTimeOfTheMonth, '
+    'should return last dateTime of the month which includes given dateTime',
+    () {
+      final dateTime = DateTime(2024, 7, 25, 12, 30);
+      final expectedLastDateTimeOfTheMonth =
+          DateTime(2024, 7, 31, 23, 59, 59, 999);
+
+      final lastDateTimeOfTheMonth =
+          dateTimeService.getLastDateTimeOfTheMonth(dateTime);
+
+      expect(lastDateTimeOfTheMonth, expectedLastDateTimeOfTheMonth);
     },
   );
 
