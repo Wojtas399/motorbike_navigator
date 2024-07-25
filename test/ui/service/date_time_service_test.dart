@@ -174,4 +174,57 @@ void main() {
       );
     },
   );
+
+  group(
+    'areDatesEqual, ',
+    () {
+      test(
+        'should return true if year, month and day are the same',
+        () {
+          final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
+          final DateTime date2 = DateTime(2024, 7, 25, 10, 10);
+
+          final bool answer = dateTimeService.areDatesEqual(date1, date2);
+
+          expect(answer, true);
+        },
+      );
+
+      test(
+        'should return false if year and month are the same but day is different',
+        () {
+          final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
+          final DateTime date2 = DateTime(2024, 7, 24, 10, 10);
+
+          final bool answer = dateTimeService.areDatesEqual(date1, date2);
+
+          expect(answer, false);
+        },
+      );
+
+      test(
+        'should return false if year and day are the same but month is different',
+        () {
+          final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
+          final DateTime date2 = DateTime(2024, 8, 25, 10, 10);
+
+          final bool answer = dateTimeService.areDatesEqual(date1, date2);
+
+          expect(answer, false);
+        },
+      );
+
+      test(
+        'should return false if month and day are the same but year is different',
+        () {
+          final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
+          final DateTime date2 = DateTime(2022, 7, 25, 10, 10);
+
+          final bool answer = dateTimeService.areDatesEqual(date1, date2);
+
+          expect(answer, false);
+        },
+      );
+    },
+  );
 }
