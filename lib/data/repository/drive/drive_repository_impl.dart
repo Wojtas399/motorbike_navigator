@@ -2,7 +2,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../entity/coordinates.dart';
 import '../../../entity/drive.dart';
-import '../../../ui/service/date_service.dart';
+import '../../../ui/service/date_time_service.dart';
 import '../../dto/coordinates_dto.dart';
 import '../../dto/drive_dto.dart';
 import '../../firebase/firebase_drive_service.dart';
@@ -14,12 +14,12 @@ import 'drive_repository.dart';
 class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
   final FirebaseDriveService _dbDriveService;
   final DriveMapper _driveMapper;
-  final DateService _dateService;
+  final DateTimeService _dateTimeService;
 
   DriveRepositoryImpl(
     this._dbDriveService,
     this._driveMapper,
-    this._dateService,
+    this._dateTimeService,
   );
 
   @override
@@ -50,7 +50,7 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
           .where(
             (Drive drive) =>
                 drive.userId == userId &&
-                _dateService.isDateTimeFromRange(
+                _dateTimeService.isDateTimeFromRange(
                   date: drive.startDateTime,
                   firstDateTimeOfRange: firstDateTimeOfRange,
                   lastDateTimeOfRange: lastDateTimeOfRange,

@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 
 @injectable
-class DateService {
+class DateTimeService {
   DateTime getNow() => DateTime.now();
 
   DateTime getFirstDateTimeOfTheWeekWhichIncludesDateTime(DateTime dateTime) {

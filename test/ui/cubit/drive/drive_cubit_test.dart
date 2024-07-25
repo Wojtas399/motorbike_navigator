@@ -10,7 +10,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../mock/data/repository/mock_auth_repository.dart';
 import '../../../mock/data/repository/mock_drive_repository.dart';
-import '../../../mock/ui_service/mock_date_service.dart';
+import '../../../mock/ui_service/mock_date_time_service.dart';
 import '../../../mock/ui_service/mock_location_service.dart';
 import '../../../mock/ui_service/mock_map_service.dart';
 
@@ -19,7 +19,7 @@ void main() {
   final mapService = MockMapService();
   final authRepository = MockAuthRepository();
   final driveRepository = MockDriveRepository();
-  final dateService = MockDateService();
+  final dateTimeService = MockDateTimeService();
   final DateTime now = DateTime(2024, 1, 2, 10, 45);
   const Coordinates startLocation = Coordinates(50, 18);
 
@@ -28,11 +28,11 @@ void main() {
         mapService,
         authRepository,
         driveRepository,
-        dateService,
+        dateTimeService,
       );
 
   setUp(() {
-    dateService.mockGetNow(expectedNow: now);
+    dateTimeService.mockGetNow(expectedNow: now);
   });
 
   tearDown(() {
@@ -40,7 +40,7 @@ void main() {
     reset(mapService);
     reset(authRepository);
     reset(driveRepository);
-    reset(dateService);
+    reset(dateTimeService);
   });
 
   group(

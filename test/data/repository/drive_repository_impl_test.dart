@@ -10,12 +10,12 @@ import '../../creator/drive_creator.dart';
 import '../../creator/drive_dto_creator.dart';
 import '../../mock/data/firebase/mock_firebase_drive_service.dart';
 import '../../mock/data/mapper/mock_drive_mapper.dart';
-import '../../mock/ui_service/mock_date_service.dart';
+import '../../mock/ui_service/mock_date_time_service.dart';
 
 void main() {
   final dbDriveService = MockFirebaseDriveService();
   final driveMapper = MockDriveMapper();
-  final dateService = MockDateService();
+  final dateTimeService = MockDateTimeService();
   final driveCreator = DriveCreator();
   final driveDtoCreator = DriveDtoCreator();
   late DriveRepositoryImpl repositoryImpl;
@@ -24,14 +24,14 @@ void main() {
     repositoryImpl = DriveRepositoryImpl(
       dbDriveService,
       driveMapper,
-      dateService,
+      dateTimeService,
     );
   });
 
   tearDown(() {
     reset(dbDriveService);
     reset(driveMapper);
-    reset(dateService);
+    reset(dateTimeService);
   });
 
   test(
@@ -150,28 +150,28 @@ void main() {
         () => driveMapper.mapFromDto(fetchedDriveDtos.last),
       ).thenReturn(fetchedDrives.last);
       when(
-        () => dateService.isDateTimeFromRange(
+        () => dateTimeService.isDateTimeFromRange(
           date: fetchedDrives.first.startDateTime,
           firstDateTimeOfRange: firstDateTimeOfRange,
           lastDateTimeOfRange: lastDateTimeOfRange,
         ),
       ).thenReturn(true);
       when(
-        () => dateService.isDateTimeFromRange(
+        () => dateTimeService.isDateTimeFromRange(
           date: fetchedDrives.last.startDateTime,
           firstDateTimeOfRange: firstDateTimeOfRange,
           lastDateTimeOfRange: lastDateTimeOfRange,
         ),
       ).thenReturn(true);
       when(
-        () => dateService.isDateTimeFromRange(
+        () => dateTimeService.isDateTimeFromRange(
           date: existingDrives.first.startDateTime,
           firstDateTimeOfRange: firstDateTimeOfRange,
           lastDateTimeOfRange: lastDateTimeOfRange,
         ),
       ).thenReturn(true);
       when(
-        () => dateService.isDateTimeFromRange(
+        () => dateTimeService.isDateTimeFromRange(
           date: existingDrives.last.startDateTime,
           firstDateTimeOfRange: firstDateTimeOfRange,
           lastDateTimeOfRange: lastDateTimeOfRange,

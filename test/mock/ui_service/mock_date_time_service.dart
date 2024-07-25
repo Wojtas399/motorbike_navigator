@@ -1,7 +1,7 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/ui/service/date_service.dart';
+import 'package:motorbike_navigator/ui/service/date_time_service.dart';
 
-class MockDateService extends Mock implements DateService {
+class MockDateTimeService extends Mock implements DateTimeService {
   void mockGetNow({
     required DateTime expectedNow,
   }) {

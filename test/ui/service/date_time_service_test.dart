@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/ui/service/date_service.dart';
+import 'package:motorbike_navigator/ui/service/date_time_service.dart';
 
 void main() {
-  final dateService = DateService();
+  final dateTimeService = DateTimeService();
 
   test(
     'getFirstDateTimeOfTheWeekWhichIncludesDateTime, '
@@ -11,8 +11,8 @@ void main() {
       final DateTime dateTime = DateTime(2024, 7, 25, 12, 30);
       final DateTime expectedFirstDateTimeOfTheWeek = DateTime(2024, 7, 22);
 
-      final firstDateTimeOfTheWeek =
-          dateService.getFirstDateTimeOfTheWeekWhichIncludesDateTime(dateTime);
+      final firstDateTimeOfTheWeek = dateTimeService
+          .getFirstDateTimeOfTheWeekWhichIncludesDateTime(dateTime);
 
       expect(firstDateTimeOfTheWeek, expectedFirstDateTimeOfTheWeek);
     },
@@ -25,8 +25,8 @@ void main() {
       final DateTime expectedLastDateTimeOfTheWeek =
           DateTime(2024, 7, 28, 23, 59, 59);
 
-      final lastDateTimeOfTheWeek =
-          dateService.getLastDateTimeOfTheWeekWhichIncludedsDateTime(dateTime);
+      final lastDateTimeOfTheWeek = dateTimeService
+          .getLastDateTimeOfTheWeekWhichIncludedsDateTime(dateTime);
 
       expect(lastDateTimeOfTheWeek, expectedLastDateTimeOfTheWeek);
     },
@@ -43,7 +43,7 @@ void main() {
         () {
           final DateTime date = DateTime(2024, 07, 22, 12, 15);
 
-          final bool answer = dateService.isDateTimeFromRange(
+          final bool answer = dateTimeService.isDateTimeFromRange(
             date: date,
             firstDateTimeOfRange: firstDateTimeOfRange,
             lastDateTimeOfRange: lastDateTimeOfRange,
@@ -58,7 +58,7 @@ void main() {
         () {
           final DateTime date = DateTime(2024, 07, 28, 15, 44, 1);
 
-          final bool answer = dateService.isDateTimeFromRange(
+          final bool answer = dateTimeService.isDateTimeFromRange(
             date: date,
             firstDateTimeOfRange: firstDateTimeOfRange,
             lastDateTimeOfRange: lastDateTimeOfRange,
@@ -73,7 +73,7 @@ void main() {
         () {
           final DateTime date = firstDateTimeOfRange;
 
-          final bool answer = dateService.isDateTimeFromRange(
+          final bool answer = dateTimeService.isDateTimeFromRange(
             date: date,
             firstDateTimeOfRange: firstDateTimeOfRange,
             lastDateTimeOfRange: lastDateTimeOfRange,
@@ -88,7 +88,7 @@ void main() {
         () {
           final DateTime date = lastDateTimeOfRange;
 
-          final bool answer = dateService.isDateTimeFromRange(
+          final bool answer = dateTimeService.isDateTimeFromRange(
             date: date,
             firstDateTimeOfRange: firstDateTimeOfRange,
             lastDateTimeOfRange: lastDateTimeOfRange,
@@ -104,7 +104,7 @@ void main() {
         () {
           final DateTime date = DateTime(2024, 07, 22, 12, 30, 1);
 
-          final bool answer = dateService.isDateTimeFromRange(
+          final bool answer = dateTimeService.isDateTimeFromRange(
             date: date,
             firstDateTimeOfRange: firstDateTimeOfRange,
             lastDateTimeOfRange: lastDateTimeOfRange,
