@@ -62,6 +62,35 @@ void main() {
     },
   );
 
+  test(
+    'getFirstDateTimeOfTheYear, '
+    'should return first dateTime of the year which includes given dateTime',
+    () {
+      final dateTime = DateTime(2024, 7, 25, 12, 30);
+      final expectedFirstDateTimeOfTheYear = DateTime(2024);
+
+      final firstDateTimeOfTheYear =
+          dateTimeService.getFirstDateTimeOfTheYear(dateTime);
+
+      expect(firstDateTimeOfTheYear, expectedFirstDateTimeOfTheYear);
+    },
+  );
+
+  test(
+    'getLastDateTimeOfTheYear, '
+    'should return last dateTime of the year which includes given dateTime',
+    () {
+      final dateTime = DateTime(2024, 7, 25, 12, 30);
+      final expectedLastDateTimeOfTheYear =
+          DateTime(2024, 12, 31, 23, 59, 59, 999);
+
+      final lastDateTimeOfTheYear =
+          dateTimeService.getLastDateTimeOfTheYear(dateTime);
+
+      expect(lastDateTimeOfTheYear, expectedLastDateTimeOfTheYear);
+    },
+  );
+
   group(
     'isDateTimeFromRange, ',
     () {

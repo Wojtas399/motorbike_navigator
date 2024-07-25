@@ -26,6 +26,14 @@ class DateTimeService {
         const Duration(milliseconds: 1),
       );
 
+  DateTime getFirstDateTimeOfTheYear(DateTime dateTime) =>
+      DateTime(dateTime.year);
+
+  DateTime getLastDateTimeOfTheYear(DateTime dateTime) =>
+      DateTime(dateTime.year + 1).subtract(
+        const Duration(milliseconds: 1),
+      );
+
   bool isDateTimeFromRange({
     required DateTime date,
     required DateTime firstDateTimeOfRange,
