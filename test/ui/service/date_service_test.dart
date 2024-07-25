@@ -4,6 +4,34 @@ import 'package:motorbike_navigator/ui/service/date_service.dart';
 void main() {
   final dateService = DateService();
 
+  test(
+    'getFirstDateTimeOfTheWeekWhichIncludesDateTime, '
+    'should return first date of the week which include given dateTime',
+    () {
+      final DateTime dateTime = DateTime(2024, 7, 25, 12, 30);
+      final DateTime expectedFirstDateTimeOfTheWeek = DateTime(2024, 7, 22);
+
+      final firstDateTimeOfTheWeek =
+          dateService.getFirstDateTimeOfTheWeekWhichIncludesDateTime(dateTime);
+
+      expect(firstDateTimeOfTheWeek, expectedFirstDateTimeOfTheWeek);
+    },
+  );
+
+  test(
+    'getLastDateTimeOfTheWeekWhichIncludedsDateTime, ',
+    () {
+      final DateTime dateTime = DateTime(2024, 7, 25, 12, 30);
+      final DateTime expectedLastDateTimeOfTheWeek =
+          DateTime(2024, 7, 28, 23, 59, 59);
+
+      final lastDateTimeOfTheWeek =
+          dateService.getLastDateTimeOfTheWeekWhichIncludedsDateTime(dateTime);
+
+      expect(lastDateTimeOfTheWeek, expectedLastDateTimeOfTheWeek);
+    },
+  );
+
   group(
     'isDateTimeFromRange, ',
     () {
