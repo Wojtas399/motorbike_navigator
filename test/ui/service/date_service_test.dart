@@ -170,7 +170,7 @@ void main() {
     'areDatesEqual, ',
     () {
       test(
-        'should return true if year, month and day are the same',
+        'should return true if years, months and days are the same',
         () {
           final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
           final DateTime date2 = DateTime(2024, 7, 25, 10, 10);
@@ -182,7 +182,7 @@ void main() {
       );
 
       test(
-        'should return false if year and month are the same but day is different',
+        'should return false if years and months are the same but days are different',
         () {
           final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
           final DateTime date2 = DateTime(2024, 7, 24, 10, 10);
@@ -194,7 +194,7 @@ void main() {
       );
 
       test(
-        'should return false if year and day are the same but month is different',
+        'should return false if years and days are the same but months are different',
         () {
           final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
           final DateTime date2 = DateTime(2024, 8, 25, 10, 10);
@@ -206,12 +206,53 @@ void main() {
       );
 
       test(
-        'should return false if month and day are the same but year is different',
+        'should return false if months and days are the same but years are different',
         () {
           final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
           final DateTime date2 = DateTime(2022, 7, 25, 10, 10);
 
           final bool answer = dateService.areDatesEqual(date1, date2);
+
+          expect(answer, false);
+        },
+      );
+    },
+  );
+
+  group(
+    'areMonthsEqual, ',
+    () {
+      test(
+        'should return true if years and months are the same',
+        () {
+          final DateTime date1 = DateTime(2024, 7, 25);
+          final DateTime date2 = DateTime(2024, 7, 24);
+
+          final bool answer = dateService.areMonthsEqual(date1, date2);
+
+          expect(answer, true);
+        },
+      );
+
+      test(
+        'should return false if years are the same but months are different',
+        () {
+          final DateTime date1 = DateTime(2024, 7, 25);
+          final DateTime date2 = DateTime(2024, 6, 25);
+
+          final bool answer = dateService.areMonthsEqual(date1, date2);
+
+          expect(answer, false);
+        },
+      );
+
+      test(
+        'should return false if months are the same by years are different',
+        () {
+          final DateTime date1 = DateTime(2024, 7, 25);
+          final DateTime date2 = DateTime(2025, 7, 25);
+
+          final bool answer = dateService.areMonthsEqual(date1, date2);
 
           expect(answer, false);
         },
