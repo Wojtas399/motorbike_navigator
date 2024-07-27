@@ -61,4 +61,12 @@ class MockDateService extends Mock implements DateService {
   }) {
     when(() => areDatesEqual(any(), any())).thenReturn(expectedAnswer);
   }
+
+  void mockAreMonthsEqual({
+    required bool expectedAnswer,
+  }) {
+    when(
+      () => areMonthsEqual(any(), any()),
+    ).thenReturn(expectedAnswer);
+  }
 }
