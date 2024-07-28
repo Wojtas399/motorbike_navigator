@@ -31,7 +31,7 @@ void main() {
   });
 
   group(
-    'initialize, ',
+    'onDateRangeChanged, ',
     () {
       const String loggedUserId = 'u1';
       final WeeklyDateRange weeklyDateRange = WeeklyDateRange(
@@ -241,7 +241,7 @@ void main() {
         'should finish method call if logged user id is null',
         build: () => createCubit(),
         setUp: () => authRepository.mockGetLoggedUserId(),
-        act: (cubit) => cubit.initialize(dateRange: weeklyDateRange),
+        act: (cubit) => cubit.onDateRangeChanged(dateRange: weeklyDateRange),
         expect: () => [],
         verify: (_) => verify(() => authRepository.loggedUserId$).called(1),
       );
@@ -264,6 +264,9 @@ void main() {
               lastDateOfRange: weeklyDateRange.lastDateOfRange,
             ),
           ).thenAnswer((_) => weeklyDrives$.stream);
+          dateService.mockCalculateNumberOfDaysBetweenDatesInclusively(
+            expectedNumberOfDays: 7,
+          );
           dateService.mockAreDatesEqual(expectedAnswer: false);
           when(
             () => dateService.areDatesEqual(
@@ -285,7 +288,7 @@ void main() {
           ).thenReturn(true);
         },
         act: (cubit) async {
-          cubit.initialize(dateRange: weeklyDateRange);
+          cubit.onDateRangeChanged(dateRange: weeklyDateRange);
           await cubit.stream.first;
           weeklyDrives$.add(weeklyDrives2);
         },
@@ -313,6 +316,12 @@ void main() {
               lastDateOfRange: weeklyDateRange.lastDateOfRange,
             ),
           ).called(1);
+          verify(
+            () => dateService.calculateNumberOfDaysBetweenDatesInclusively(
+              weeklyDateRange.firstDateOfRange,
+              weeklyDateRange.lastDateOfRange,
+            ),
+          ).called(2);
         },
       );
 
@@ -334,6 +343,9 @@ void main() {
               lastDateOfRange: monthlyDateRange.lastDateOfRange,
             ),
           ).thenAnswer((_) => monthlyDrives$.stream);
+          dateService.mockCalculateNumberOfDaysBetweenDatesInclusively(
+            expectedNumberOfDays: 31,
+          );
           dateService.mockAreDatesEqual(expectedAnswer: false);
           when(
             () => dateService.areDatesEqual(
@@ -367,7 +379,7 @@ void main() {
           ).thenReturn(true);
         },
         act: (cubit) async {
-          cubit.initialize(dateRange: monthlyDateRange);
+          cubit.onDateRangeChanged(dateRange: monthlyDateRange);
           await cubit.stream.first;
           monthlyDrives$.add(monthlyDrives2);
         },
@@ -395,6 +407,12 @@ void main() {
               lastDateOfRange: monthlyDateRange.lastDateOfRange,
             ),
           ).called(1);
+          verify(
+            () => dateService.calculateNumberOfDaysBetweenDatesInclusively(
+              monthlyDateRange.firstDateOfRange,
+              monthlyDateRange.lastDateOfRange,
+            ),
+          ).called(2);
         },
       );
 
@@ -461,7 +479,7 @@ void main() {
           ).thenReturn(true);
         },
         act: (cubit) async {
-          cubit.initialize(dateRange: yearlyDateRange);
+          cubit.onDateRangeChanged(dateRange: yearlyDateRange);
           await cubit.stream.first;
           yearlyDrives$.add(yearlyDrives2);
         },

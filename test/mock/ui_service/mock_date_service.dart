@@ -69,4 +69,15 @@ class MockDateService extends Mock implements DateService {
       () => areMonthsEqual(any(), any()),
     ).thenReturn(expectedAnswer);
   }
+
+  void mockCalculateNumberOfDaysBetweenDatesInclusively({
+    required int expectedNumberOfDays,
+  }) {
+    when(
+      () => calculateNumberOfDaysBetweenDatesInclusively(
+        any(),
+        any(),
+      ),
+    ).thenReturn(expectedNumberOfDays);
+  }
 }

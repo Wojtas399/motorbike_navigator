@@ -30,9 +30,10 @@ class StatsCubit extends Cubit<StatsState> {
     return super.close();
   }
 
-  void initialize({
+  void onDateRangeChanged({
     required DateRange dateRange,
   }) {
+    _drivesListener?.cancel();
     _drivesListener = _authRepository.loggedUserId$
         .whereNotNull()
         .switchMap(
@@ -64,8 +65,10 @@ class StatsCubit extends Cubit<StatsState> {
           _createMileageBarsForEachDayInDateRange(dateRange, drives),
         MonthlyDateRange() =>
           _createMileageBarsForEachDayInDateRange(dateRange, drives),
-        YearlyDateRange() =>
-          _createMileageBarsForEachMonthInDateRange(dateRange, drives),
+        YearlyDateRange() => _createMileageBarsForEachMonthInAYear(
+            dateRange.firstDateOfRange.year,
+            drives,
+          ),
       };
 
   double _calculateTotalDrivesMileage(Iterable<Drive> drives) =>
@@ -89,7 +92,10 @@ class StatsCubit extends Cubit<StatsState> {
     List<Drive> drives,
   ) =>
       List.generate(
-        (dateRange.lastDateOfRange.day - dateRange.firstDateOfRange.day) + 1,
+        _dateService.calculateNumberOfDaysBetweenDatesInclusively(
+          dateRange.firstDateOfRange,
+          dateRange.lastDateOfRange,
+        ),
         (int itemIndex) {
           final DateTime date = dateRange.firstDateOfRange.add(
             Duration(days: itemIndex),
@@ -109,18 +115,14 @@ class StatsCubit extends Cubit<StatsState> {
         },
       );
 
-  List<MileageBar> _createMileageBarsForEachMonthInDateRange(
-    DateRange dateRange,
+  List<MileageBar> _createMileageBarsForEachMonthInAYear(
+    int year,
     List<Drive> drives,
   ) =>
       List.generate(
-        (dateRange.lastDateOfRange.month - dateRange.firstDateOfRange.month) +
-            1,
+        12,
         (int itemIndex) {
-          final DateTime date = DateTime(
-            dateRange.firstDateOfRange.year,
-            dateRange.firstDateOfRange.month + itemIndex,
-          );
+          final DateTime date = DateTime(year, itemIndex + 1);
           final Iterable<Drive> drivesStartedInMonth = drives.where(
             (Drive drive) => _dateService.areMonthsEqual(
               drive.startDateTime,
