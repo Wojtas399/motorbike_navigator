@@ -15,6 +15,67 @@ void main() {
   });
 
   group(
+    'isCurrentDateRange, ',
+    () {
+      final DateTime now = DateTime(2024, 7, 28);
+      final DateRange dateRange1 = WeeklyDateRange(
+        firstDateOfRange: DateTime(2024, 7, 22),
+        lastDateOfRange: DateTime(2024, 7, 28),
+      );
+      final DateRange dateRange2 = WeeklyDateRange(
+        firstDateOfRange: DateTime(2024, 7, 15),
+        lastDateOfRange: DateTime(2024, 7, 21),
+      );
+
+      blocTest(
+        'should return false if date range is null',
+        build: () => createCubit(),
+        verify: (cubit) {
+          expect(cubit.isCurrentDateRange, false);
+        },
+      );
+
+      blocTest(
+        'should return true if now dateTime is included within date range',
+        build: () => createCubit(),
+        setUp: () {
+          dateService.mockGetNow(expectedNow: now);
+          dateService.mockGetFirstDateOfTheWeek(
+            expectedFirstDateOfTheWeek: dateRange1.firstDateOfRange,
+          );
+          dateService.mockGetLastDateOfTheWeek(
+            expectedLastDateOfTheWeek: dateRange1.lastDateOfRange,
+          );
+          dateService.mockIsDateFromRange(expectedAnswer: true);
+        },
+        act: (cubit) => cubit.initializeWeeklyDateRange(),
+        verify: (cubit) {
+          expect(cubit.isCurrentDateRange, true);
+        },
+      );
+
+      blocTest(
+        'should return false if now dateTime is not included within date range',
+        build: () => createCubit(),
+        setUp: () {
+          dateService.mockGetNow(expectedNow: now);
+          dateService.mockGetFirstDateOfTheWeek(
+            expectedFirstDateOfTheWeek: dateRange2.firstDateOfRange,
+          );
+          dateService.mockGetLastDateOfTheWeek(
+            expectedLastDateOfTheWeek: dateRange2.lastDateOfRange,
+          );
+          dateService.mockIsDateFromRange(expectedAnswer: false);
+        },
+        act: (cubit) => cubit.initializeWeeklyDateRange(),
+        verify: (cubit) {
+          expect(cubit.isCurrentDateRange, false);
+        },
+      );
+    },
+  );
+
+  group(
     'initializeWeeklyDateRange, ',
     () {
       final DateTime now = DateTime(2024, 7, 26);

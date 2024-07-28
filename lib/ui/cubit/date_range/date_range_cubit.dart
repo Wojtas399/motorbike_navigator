@@ -12,6 +12,16 @@ class DateRangeCubit extends Cubit<DateRange?> {
     this._dateService,
   ) : super(null);
 
+  bool get isCurrentDateRange {
+    if (state == null) return false;
+    final now = _dateService.getNow();
+    return _dateService.isDateFromRange(
+      date: now,
+      firstDateOfRange: state!.firstDateOfRange,
+      lastDateOfRange: state!.lastDateOfRange,
+    );
+  }
+
   void initializeWeeklyDateRange() {
     final DateTime now = _dateService.getNow();
     final DateTime firstDateOfTheWeek = _dateService.getFirstDateOfTheWeek(now);

@@ -56,6 +56,18 @@ class MockDateService extends Mock implements DateService {
     ).thenReturn(expectedLastDateOfTheYear);
   }
 
+  void mockIsDateFromRange({
+    required bool expectedAnswer,
+  }) {
+    when(
+      () => isDateFromRange(
+        date: any(named: 'date'),
+        firstDateOfRange: any(named: 'firstDateOfRange'),
+        lastDateOfRange: any(named: 'lastDateOfRange'),
+      ),
+    ).thenReturn(expectedAnswer);
+  }
+
   void mockAreDatesEqual({
     required bool expectedAnswer,
   }) {
