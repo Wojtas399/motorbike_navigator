@@ -51,4 +51,10 @@ class DateService {
 
   bool areMonthsEqual(DateTime date1, DateTime date2) =>
       date1.year == date2.year && date1.month == date2.month;
+
+  int calculateNumberOfDaysBetweenDatesInclusively(DateTime from, DateTime to) {
+    final correctedFrom = DateTime(from.year, from.month, from.day);
+    final correctedTo = DateTime(to.year, to.month, to.day, 23, 59);
+    return (correctedTo.difference(correctedFrom).inHours / 24).round();
+  }
 }

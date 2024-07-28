@@ -259,4 +259,39 @@ void main() {
       );
     },
   );
+
+  group(
+    'calculateNumberOfDaysBetweenDatesInclusively, ',
+    () {
+      test(
+        'should return number of days between two dates from the same month '
+        '(given dates also count)',
+        () {
+          final DateTime from = DateTime(2024, 7, 22);
+          final DateTime to = DateTime(2024, 7, 28);
+          const int expectedNumberOfDays = 7;
+
+          final int numberOfDays = dateService
+              .calculateNumberOfDaysBetweenDatesInclusively(from, to);
+
+          expect(numberOfDays, expectedNumberOfDays);
+        },
+      );
+
+      test(
+        'should return number of days between two dates from different months '
+        '(given dates also count)',
+        () {
+          final DateTime from = DateTime(2024, 7, 22);
+          final DateTime to = DateTime(2024, 8, 4);
+          const int expectedNumberOfDays = 14;
+
+          final int numberOfDays = dateService
+              .calculateNumberOfDaysBetweenDatesInclusively(from, to);
+
+          expect(numberOfDays, expectedNumberOfDays);
+        },
+      );
+    },
+  );
 }
