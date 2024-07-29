@@ -51,14 +51,17 @@ void main() {
         Position(
           coordinates: Coordinates(50.1, 18.1),
           speedInKmPerH: 15,
+          altitude: 100.22,
         ),
         Position(
           coordinates: Coordinates(51.2, 19.2),
           speedInKmPerH: 20,
+          altitude: 101.22,
         ),
         Position(
           coordinates: Coordinates(52.3, 20.3),
           speedInKmPerH: 25,
+          altitude: 102.22,
         ),
       ];
       const double firstDistanceBetweenPositions = 5;
@@ -172,10 +175,12 @@ void main() {
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50.1, 18.1),
+          altitude: 100.22,
           speedInKmPerH: 15,
         ),
         Position(
           coordinates: Coordinates(51.2, 19.2),
+          altitude: 101.22,
           speedInKmPerH: 20,
         ),
       ];
@@ -239,14 +244,17 @@ void main() {
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50.1, 18.1),
+          altitude: 100.22,
           speedInKmPerH: 15,
         ),
         Position(
           coordinates: Coordinates(51.2, 19.2),
+          altitude: 101.22,
           speedInKmPerH: 20,
         ),
         Position(
           coordinates: Coordinates(52.2, 20.2),
+          altitude: 102.22,
           speedInKmPerH: 11.2,
         ),
       ];
@@ -342,6 +350,7 @@ void main() {
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50.1, 18.1),
+          altitude: 100.22,
           speedInKmPerH: 15,
         ),
       ];
