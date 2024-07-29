@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../component/gap.dart';
 import 'stats_date_range_selection.dart';
+import 'stats_detailed_data.dart';
 import 'stats_mileage_column_chart.dart';
 
 class StatsContent extends StatelessWidget {
@@ -19,6 +20,8 @@ class StatsContent extends StatelessWidget {
               StatsDateRangeSelection(),
               GapVertical24(),
               StatsMileageColumnChart(),
+              GapVertical24(),
+              StatsDetailedData(),
             ],
           ),
         ),
