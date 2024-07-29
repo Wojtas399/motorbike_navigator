@@ -6,6 +6,6 @@ extension DurationExtensions on Duration {
     if (inHours > 0) durationStr = '${inHours}h';
     if (minutes > 0) durationStr += ' ${minutes}m';
     if (seconds > 0) durationStr += ' ${seconds}s';
-    return durationStr;
+    return durationStr.isNotEmpty ? durationStr : '0s';
   }
 }
