@@ -13,22 +13,16 @@ class StatsDateRangeSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const Column(
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _PreviousDateRangeButton(),
-                _DateRange(),
-                _NextDateRangeButton(),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _PreviousDateRangeButton(),
+              _DateRange(),
+              _NextDateRangeButton(),
+            ],
           ),
           GapVertical16(),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: _DateRangeTypeSelection(),
-          ),
+          _DateRangeTypeSelection(),
         ],
       );
 }
@@ -38,24 +32,21 @@ class _DateRange extends StatelessWidget {
 
   String _formatDateRange(
     DateRange dateRange,
-    bool isCurrentDateRange,
     BuildContext context,
   ) =>
       switch (dateRange) {
-        WeeklyDateRange() =>
-          _createWeeklyDateRangeLabel(dateRange, isCurrentDateRange, context),
-        MonthlyDateRange() =>
-          _createMonthlyDateRangeLabel(dateRange, isCurrentDateRange, context),
-        YearlyDateRange() =>
-          _createYearlyDateRangeLabel(dateRange, isCurrentDateRange, context),
+        WeeklyDateRange() => _createWeeklyDateRangeLabel(dateRange, context),
+        MonthlyDateRange() => _createMonthlyDateRangeLabel(dateRange, context),
+        YearlyDateRange() => _createYearlyDateRangeLabel(dateRange, context),
       };
 
   String _createWeeklyDateRangeLabel(
     WeeklyDateRange dateRange,
-    bool isCurrentWeek,
     BuildContext context,
   ) {
-    if (isCurrentWeek) return context.str.statsCurrentWeek;
+    if (context.read<DateRangeCubit>().isCurrentDateRange) {
+      return context.str.statsCurrentWeek;
+    }
     final String firstDateOfTheWeekStr = dateRange.firstDateOfRange.toUIDate();
     final String lastDateOfTheWeekStr = dateRange.lastDateOfRange.toUIDate();
     return '$firstDateOfTheWeekStr - $lastDateOfTheWeekStr';
@@ -63,19 +54,17 @@ class _DateRange extends StatelessWidget {
 
   String _createMonthlyDateRangeLabel(
     MonthlyDateRange dateRange,
-    bool isCurrentMonth,
     BuildContext context,
   ) =>
-      isCurrentMonth
+      context.read<DateRangeCubit>().isCurrentDateRange
           ? context.str.statsCurrentMonth
           : dateRange.firstDateOfRange.toNamedMonthWithYear(context);
 
   String _createYearlyDateRangeLabel(
     YearlyDateRange dateRange,
-    bool isCurrentYear,
     BuildContext context,
   ) =>
-      isCurrentYear
+      context.read<DateRangeCubit>().isCurrentDateRange
           ? context.str.statsCurrentYear
           : '${dateRange.firstDateOfRange.year}';
 
@@ -84,14 +73,9 @@ class _DateRange extends StatelessWidget {
     final DateRange? dateRange = context.select(
       (DateRangeCubit cubit) => cubit.state,
     );
-    final bool isCurrentDateRange = context.select(
-      (DateRangeCubit cubit) => cubit.isCurrentDateRange,
-    );
 
     return TitleMedium(
-      dateRange != null
-          ? _formatDateRange(dateRange, isCurrentDateRange, context)
-          : '',
+      dateRange != null ? _formatDateRange(dateRange, context) : '',
     );
   }
 }

@@ -158,16 +158,18 @@ void main() {
       final expectedMonthlyDuration2 = _calculateTotalDuration(monthlyDrives2);
       final expectedYearlyDuration1 = _calculateTotalDuration(yearlyDrives1);
       final expectedYearlyDuration2 = _calculateTotalDuration(yearlyDrives2);
-      final List<MileageBar> expectedWeeklyMileageBars1 = List.generate(
+      final List<MileageChartData> expectedWeeklyMileageChartData1 =
+          List.generate(
         7,
-        (int itemIndex) => MileageBar(
+        (int itemIndex) => MileageChartData(
           date: DateTime(2024, 7, 22 + itemIndex),
           value: itemIndex == 1 ? weeklyDrives1.first.distanceInKm : 0,
         ),
       );
-      final List<MileageBar> expectedWeeklyMileageBars2 = List.generate(
+      final List<MileageChartData> expectedWeeklyMileageChartData2 =
+          List.generate(
         7,
-        (int itemIndex) => MileageBar(
+        (int itemIndex) => MileageChartData(
           date: DateTime(2024, 7, 22 + itemIndex),
           value: switch (itemIndex) {
             1 =>
@@ -177,9 +179,10 @@ void main() {
           },
         ),
       );
-      final List<MileageBar> expectedMonthlyMileageBars1 = List.generate(
+      final List<MileageChartData> expectedMonthlyMileageChartData1 =
+          List.generate(
         31,
-        (int itemIndex) => MileageBar(
+        (int itemIndex) => MileageChartData(
           date: DateTime(2024, 7, itemIndex + 1),
           value: switch (itemIndex) {
             1 => monthlyDrives1.first.distanceInKm,
@@ -189,9 +192,10 @@ void main() {
           },
         ),
       );
-      final List<MileageBar> expectedMonthlyMileageBars2 = List.generate(
+      final List<MileageChartData> expectedMonthlyMileageChartData2 =
+          List.generate(
         31,
-        (int itemIndex) => MileageBar(
+        (int itemIndex) => MileageChartData(
           date: DateTime(2024, 7, itemIndex + 1),
           value: switch (itemIndex) {
             1 => monthlyDrives2.first.distanceInKm +
@@ -203,9 +207,10 @@ void main() {
           },
         ),
       );
-      final List<MileageBar> expectedYearlyMileageBars1 = List.generate(
+      final List<MileageChartData> expectedYearlyMileageChartData1 =
+          List.generate(
         12,
-        (int itemIndex) => MileageBar(
+        (int itemIndex) => MileageChartData(
           date: DateTime(2024, 1 + itemIndex),
           value: switch (itemIndex) {
             1 => yearlyDrives1.first.distanceInKm,
@@ -215,9 +220,10 @@ void main() {
           },
         ),
       );
-      final List<MileageBar> expectedYearlyMileageBars2 = List.generate(
+      final List<MileageChartData> expectedYearlyMileageChartData2 =
+          List.generate(
         12,
-        (int itemIndex) => MileageBar(
+        (int itemIndex) => MileageChartData(
           date: DateTime(2024, 1 + itemIndex),
           value: switch (itemIndex) {
             1 =>
@@ -249,7 +255,7 @@ void main() {
       blocTest(
         'should listen to drives from given date range and should prepare stats '
         'based on them, '
-        'for weekly date range list of mileage bars should contains elements '
+        'for weekly date range mileage chart data should contains elements '
         'represented each day of the week with values represented as sum of '
         'distance of all drives started in particular days',
         build: () => createCubit(),
@@ -298,13 +304,13 @@ void main() {
             numberOfDrives: expectedNumberOfWeeklyDrives1,
             mileageInKm: expectedWeeklyMileage1,
             totalDuration: expectedWeeklyDuration1,
-            mileageBars: expectedWeeklyMileageBars1,
+            mileageChartData: expectedWeeklyMileageChartData1,
           ),
           state = state?.copyWith(
             numberOfDrives: expectedNumberOfWeeklyDrives2,
             mileageInKm: expectedWeeklyMileage2,
             totalDuration: expectedWeeklyDuration2,
-            mileageBars: expectedWeeklyMileageBars2,
+            mileageChartData: expectedWeeklyMileageChartData2,
           ),
         ],
         verify: (_) {
@@ -328,7 +334,7 @@ void main() {
       blocTest(
         'should listen to drives from given date range and should prepare stats '
         'based on them, '
-        'for monthly date range list of mileage bars should contains elements '
+        'for monthly date range mileage chart data should contains elements '
         'represented each day of the month with values represented as sum of '
         'distance of all drives started in particular days',
         build: () => createCubit(),
@@ -389,13 +395,13 @@ void main() {
             numberOfDrives: expectedNumberOfMonthlyDrives1,
             mileageInKm: expectedMonthlyMileage1,
             totalDuration: expectedMonthlyDuration1,
-            mileageBars: expectedMonthlyMileageBars1,
+            mileageChartData: expectedMonthlyMileageChartData1,
           ),
           state = state?.copyWith(
             numberOfDrives: expectedNumberOfMonthlyDrives2,
             mileageInKm: expectedMonthlyMileage2,
             totalDuration: expectedMonthlyDuration2,
-            mileageBars: expectedMonthlyMileageBars2,
+            mileageChartData: expectedMonthlyMileageChartData2,
           ),
         ],
         verify: (_) {
@@ -419,7 +425,7 @@ void main() {
       blocTest(
         'should listen to drives from given date range and should prepare stats '
         'based on them, '
-        'for yearly date range list of mileage bars should contains elements '
+        'for yearly date range mileage chart data should contains elements '
         'represented each month from date range with values represented as sum '
         'of distance of all drives started in particular months',
         build: () => createCubit(),
@@ -489,13 +495,13 @@ void main() {
             numberOfDrives: expectedNumberOfYearlyDrives1,
             mileageInKm: expectedYearlyMileage1,
             totalDuration: expectedYearlyDuration1,
-            mileageBars: expectedYearlyMileageBars1,
+            mileageChartData: expectedYearlyMileageChartData1,
           ),
           state = state?.copyWith(
             numberOfDrives: expectedNumberOfYearlyDrives2,
             mileageInKm: expectedYearlyMileage2,
             totalDuration: expectedYearlyDuration2,
-            mileageBars: expectedYearlyMileageBars2,
+            mileageChartData: expectedYearlyMileageChartData2,
           ),
         ],
         verify: (_) {

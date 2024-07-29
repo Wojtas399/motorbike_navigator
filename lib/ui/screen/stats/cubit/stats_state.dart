@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../cubit/date_range/date_range_cubit.dart';
-
 part 'stats_state.freezed.dart';
 
 enum StatsStateStatus { loading, completed }
@@ -14,15 +12,15 @@ class StatsState with _$StatsState {
     int? numberOfDrives,
     double? mileageInKm,
     Duration? totalDuration,
-    List<MileageBar>? mileageBars,
+    List<MileageChartData>? mileageChartData,
   }) = _StatsState;
 }
 
-class MileageBar extends Equatable {
+class MileageChartData extends Equatable {
   final DateTime date;
   final double value;
 
-  const MileageBar({
+  const MileageChartData({
     required this.date,
     required this.value,
   });

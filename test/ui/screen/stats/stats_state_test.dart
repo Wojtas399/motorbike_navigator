@@ -139,7 +139,7 @@ void main() {
       );
 
       test(
-        'should set numberOfDrives as null if passed value is null',
+        'should set totalDuration as null if passed value is null',
         () {
           state = state.copyWith(totalDuration: null);
 
@@ -150,14 +150,14 @@ void main() {
   );
 
   group(
-    'copyWith mileageBars, ',
+    'copyWith mileageChartData, ',
     () {
-      final expectedMileageBars = [
-        MileageBar(
+      final expectedMileageChartData = [
+        MileageChartData(
           date: DateTime(2024),
           value: 250.22,
         ),
-        MileageBar(
+        MileageChartData(
           date: DateTime(2024, 2),
           value: 270.66,
         ),
@@ -165,11 +165,11 @@ void main() {
       StatsState state = const StatsState();
 
       test(
-        'should update mileageBars if new value has been passed, ',
+        'should update mileageChartData if new value has been passed, ',
         () {
-          state = state.copyWith(mileageBars: expectedMileageBars);
+          state = state.copyWith(mileageChartData: expectedMileageChartData);
 
-          expect(state.mileageBars, expectedMileageBars);
+          expect(state.mileageChartData, expectedMileageChartData);
         },
       );
 
@@ -178,16 +178,16 @@ void main() {
         () {
           state = state.copyWith();
 
-          expect(state.mileageBars, expectedMileageBars);
+          expect(state.mileageChartData, expectedMileageChartData);
         },
       );
 
       test(
-        'should set numberOfDrives as null if passed value is null',
+        'should set mileageOfChartData as null if passed value is null',
         () {
-          state = state.copyWith(mileageBars: null);
+          state = state.copyWith(mileageChartData: null);
 
-          expect(state.mileageBars, null);
+          expect(state.mileageChartData, null);
         },
       );
     },

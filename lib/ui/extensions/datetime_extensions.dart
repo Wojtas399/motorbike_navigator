@@ -18,6 +18,12 @@ extension DatetimeExtensions on DateTime {
     return '$hour:$minuteStr';
   }
 
+  String toDay() {
+    final numberService = getIt.get<NumberService>();
+    final dayStr = numberService.twoDigits(day);
+    return dayStr;
+  }
+
   String toNamedMonthWithYear(BuildContext context) {
     final List<String> monthName = [
       context.str.january,
@@ -34,5 +40,36 @@ extension DatetimeExtensions on DateTime {
       context.str.december,
     ];
     return '${monthName[month - 1]} $year';
+  }
+
+  String toDayAbbr(BuildContext context) {
+    final List<String> dayAbbrs = [
+      context.str.mondayAbbr,
+      context.str.tuesdayAbbr,
+      context.str.wednesdayAbbr,
+      context.str.thursdayAbbr,
+      context.str.fridayAbbr,
+      context.str.saturdayAbbr,
+      context.str.sundayAbbr,
+    ];
+    return dayAbbrs[weekday - 1];
+  }
+
+  String toMonthAbbr(BuildContext context) {
+    final List<String> monthAbbrs = [
+      context.str.januaryAbbr,
+      context.str.februaryAbbr,
+      context.str.marchAbbr,
+      context.str.aprilAbbr,
+      context.str.mayAbbr,
+      context.str.juneAbbr,
+      context.str.julyAbbr,
+      context.str.augustAbbr,
+      context.str.septemberAbbr,
+      context.str.octoberAbbr,
+      context.str.novemberAbbr,
+      context.str.decemberAbbr,
+    ];
+    return monthAbbrs[month - 1];
   }
 }

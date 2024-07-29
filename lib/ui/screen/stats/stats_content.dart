@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../component/gap.dart';
 import 'stats_date_range_selection.dart';
+import 'stats_mileage_column_chart.dart';
 
 class StatsContent extends StatelessWidget {
   const StatsContent({super.key});
@@ -10,10 +12,15 @@ class StatsContent extends StatelessWidget {
         appBar: AppBar(
           title: Text('Statystyki'),
         ),
-        body: const Column(
-          children: [
-            StatsDateRangeSelection(),
-          ],
+        body: const Padding(
+          padding: EdgeInsets.all(24),
+          child: Column(
+            children: [
+              StatsDateRangeSelection(),
+              GapVertical24(),
+              StatsMileageColumnChart(),
+            ],
+          ),
         ),
       );
 }

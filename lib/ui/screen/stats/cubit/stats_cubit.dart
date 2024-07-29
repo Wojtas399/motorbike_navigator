@@ -52,20 +52,20 @@ class StatsCubit extends Cubit<StatsState> {
       numberOfDrives: drives.length,
       mileageInKm: _calculateTotalDrivesMileage(drives),
       totalDuration: _calculateTotalDrivesDuration(drives),
-      mileageBars: _createMileageBars(dateRange, drives),
+      mileageChartData: _createMileageChartData(dateRange, drives),
     ));
   }
 
-  List<MileageBar> _createMileageBars(
+  List<MileageChartData> _createMileageChartData(
     DateRange dateRange,
     List<Drive> drives,
   ) =>
       switch (dateRange) {
         WeeklyDateRange() =>
-          _createMileageBarsForEachDayInDateRange(dateRange, drives),
+          _createMileageChartDataForEachDayInDateRange(dateRange, drives),
         MonthlyDateRange() =>
-          _createMileageBarsForEachDayInDateRange(dateRange, drives),
-        YearlyDateRange() => _createMileageBarsForEachMonthInAYear(
+          _createMileageChartDataForEachDayInDateRange(dateRange, drives),
+        YearlyDateRange() => _createMileageChartDataForEachMonthInAYear(
             dateRange.firstDateOfRange.year,
             drives,
           ),
@@ -87,7 +87,7 @@ class StatsCubit extends Cubit<StatsState> {
               )
           : const Duration();
 
-  List<MileageBar> _createMileageBarsForEachDayInDateRange(
+  List<MileageChartData> _createMileageChartDataForEachDayInDateRange(
     DateRange dateRange,
     List<Drive> drives,
   ) =>
@@ -108,14 +108,14 @@ class StatsCubit extends Cubit<StatsState> {
           );
           final double totalMileageFromDrivesStartedAtDay =
               _calculateTotalDrivesMileage(drivesStartedAtDay);
-          return MileageBar(
+          return MileageChartData(
             date: date,
             value: totalMileageFromDrivesStartedAtDay,
           );
         },
       );
 
-  List<MileageBar> _createMileageBarsForEachMonthInAYear(
+  List<MileageChartData> _createMileageChartDataForEachMonthInAYear(
     int year,
     List<Drive> drives,
   ) =>
@@ -131,7 +131,7 @@ class StatsCubit extends Cubit<StatsState> {
           );
           final double totalMileageFromDrivesStartedInMonth =
               _calculateTotalDrivesMileage(drivesStartedInMonth);
-          return MileageBar(
+          return MileageChartData(
             date: date,
             value: totalMileageFromDrivesStartedInMonth,
           );
