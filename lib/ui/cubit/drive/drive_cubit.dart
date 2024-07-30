@@ -88,7 +88,7 @@ class DriveCubit extends Cubit<DriveState> {
       distanceInKm: state.distanceInKm,
       duration: state.duration,
       avgSpeedInKmPerH: state.avgSpeedInKmPerH,
-      waypoints: state.waypoints,
+      positions: [], //TODO
     );
     emit(state.copyWith(
       status: DriveStateStatus.saved,

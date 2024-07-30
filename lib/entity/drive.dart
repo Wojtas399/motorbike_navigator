@@ -1,5 +1,5 @@
-import 'coordinates.dart';
 import 'entity.dart';
+import 'position.dart';
 
 class Drive extends Entity {
   final String userId;
@@ -7,7 +7,7 @@ class Drive extends Entity {
   final double distanceInKm;
   final Duration duration;
   final double avgSpeedInKmPerH;
-  final List<Coordinates> waypoints;
+  final List<Position> positions;
 
   const Drive({
     required super.id,
@@ -16,7 +16,7 @@ class Drive extends Entity {
     required this.distanceInKm,
     required this.duration,
     required this.avgSpeedInKmPerH,
-    required this.waypoints,
+    required this.positions,
   });
 
   @override
@@ -27,6 +27,6 @@ class Drive extends Entity {
         distanceInKm,
         duration,
         avgSpeedInKmPerH,
-        waypoints,
+        positions,
       ];
 }

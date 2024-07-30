@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
 import 'package:motorbike_navigator/data/dto/drive_dto.dart';
+import 'package:motorbike_navigator/data/dto/position_dto.dart';
 
 void main() {
   const String id = 'd1';
@@ -9,17 +10,25 @@ void main() {
   const double distanceInKm = 10.22;
   const Duration duration = Duration(hours: 1, minutes: 20);
   const double avgSpeedInKmPerH = 45.3;
-  const List<CoordinatesDto> waypoints = [
-    CoordinatesDto(latitude: 50, longitude: 19),
-    CoordinatesDto(latitude: 51, longitude: 20),
+  const List<PositionDto> positions = [
+    PositionDto(
+      coordinates: CoordinatesDto(latitude: 50, longitude: 19),
+      altitude: 100.22,
+      speedInKmPerH: 22.3,
+    ),
+    PositionDto(
+      coordinates: CoordinatesDto(latitude: 51, longitude: 20),
+      altitude: 101.22,
+      speedInKmPerH: 23.3,
+    ),
   ];
   final Map<String, Object?> driveJson = {
     'startDateTime': startDateTime.toIso8601String(),
     'distanceInKm': distanceInKm,
     'duration': duration.inMicroseconds,
     'avgSpeedInKmPerH': avgSpeedInKmPerH,
-    'waypoints': [
-      ...waypoints.map((waypoiny) => waypoiny.toJson()),
+    'positions': [
+      ...positions.map((positions) => positions.toJson()),
     ],
   };
 
@@ -32,7 +41,7 @@ void main() {
         distanceInKm: distanceInKm,
         duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
-        waypoints: waypoints,
+        positions: positions,
       );
 
       final DriveDto dto = DriveDto.fromJson(driveJson);
@@ -52,7 +61,7 @@ void main() {
         distanceInKm: distanceInKm,
         duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
-        waypoints: waypoints,
+        positions: positions,
       );
 
       final DriveDto dto = DriveDto.fromFirebaseFirestore(
@@ -76,7 +85,7 @@ void main() {
         distanceInKm: distanceInKm,
         duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
-        waypoints: waypoints,
+        positions: positions,
       );
 
       final Map<String, Object?> json = driveDto.toJson();

@@ -2,19 +2,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
 import 'package:motorbike_navigator/data/dto/drive_dto.dart';
+import 'package:motorbike_navigator/data/dto/position_dto.dart';
 import 'package:motorbike_navigator/data/repository/drive/drive_repository_impl.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
+import 'package:motorbike_navigator/entity/position.dart';
 
 import '../../creator/drive_creator.dart';
 import '../../creator/drive_dto_creator.dart';
 import '../../mock/data/firebase/mock_firebase_drive_service.dart';
 import '../../mock/data/mapper/mock_drive_mapper.dart';
+import '../../mock/data/mapper/mock_position_mapper.dart';
 import '../../mock/ui_service/mock_date_service.dart';
 
 void main() {
   final dbDriveService = MockFirebaseDriveService();
   final driveMapper = MockDriveMapper();
+  final positionMapper = MockPositionMapper();
   final dateService = MockDateService();
   final driveCreator = DriveCreator();
   final driveDtoCreator = DriveDtoCreator();
@@ -24,6 +28,7 @@ void main() {
     repositoryImpl = DriveRepositoryImpl(
       dbDriveService,
       driveMapper,
+      positionMapper,
       dateService,
     );
   });
@@ -31,6 +36,7 @@ void main() {
   tearDown(() {
     reset(dbDriveService);
     reset(driveMapper);
+    reset(positionMapper);
     reset(dateService);
   });
 
@@ -212,13 +218,29 @@ void main() {
       const double distanceInKm = 2.2;
       const Duration duration = Duration(minutes: 20);
       const double avgSpeedInKmPerH = 10.2;
-      const List<Coordinates> waypoints = [
-        Coordinates(50, 19),
-        Coordinates(51, 20),
+      const List<Position> positions = [
+        Position(
+          coordinates: Coordinates(50, 19),
+          altitude: 100.1,
+          speedInKmPerH: 22.2,
+        ),
+        Position(
+          coordinates: Coordinates(51, 20),
+          altitude: 110.1,
+          speedInKmPerH: 33.33,
+        ),
       ];
-      const List<CoordinatesDto> waypointDtos = [
-        CoordinatesDto(latitude: 50, longitude: 19),
-        CoordinatesDto(latitude: 51, longitude: 20),
+      const List<PositionDto> positionDtos = [
+        PositionDto(
+          coordinates: CoordinatesDto(latitude: 50, longitude: 19),
+          altitude: 100.1,
+          speedInKmPerH: 22.2,
+        ),
+        PositionDto(
+          coordinates: CoordinatesDto(latitude: 51, longitude: 20),
+          altitude: 110.1,
+          speedInKmPerH: 33.33,
+        ),
       ];
       final DriveDto addedDriveDto = DriveDto(
         id: id,
@@ -227,7 +249,7 @@ void main() {
         distanceInKm: distanceInKm,
         duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
-        waypoints: waypointDtos,
+        positions: positionDtos,
       );
       final Drive expectedAddedDrive = Drive(
         id: id,
@@ -236,7 +258,7 @@ void main() {
         distanceInKm: distanceInKm,
         duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
-        waypoints: waypoints,
+        positions: positions,
       );
       final List<Drive> existingDrives = [
         driveCreator.create(id: 'd2', userId: userId),
@@ -246,6 +268,12 @@ void main() {
         ...existingDrives,
         expectedAddedDrive,
       ];
+      when(
+        () => positionMapper.mapToDto(positions.first),
+      ).thenReturn(positionDtos.first);
+      when(
+        () => positionMapper.mapToDto(positions.last),
+      ).thenReturn(positionDtos.last);
       dbDriveService.mockAddDrive(expectedAddedDriveDto: addedDriveDto);
       driveMapper.mockMapFromDto(expectedDrive: expectedAddedDrive);
       repositoryImpl.addEntities(existingDrives);
@@ -256,7 +284,7 @@ void main() {
         distanceInKm: distanceInKm,
         duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
-        waypoints: waypoints,
+        positions: positions,
       );
 
       expect(
@@ -270,7 +298,7 @@ void main() {
           distanceInKm: distanceInKm,
           duration: duration,
           avgSpeedInKmPerH: avgSpeedInKmPerH,
-          waypoints: waypointDtos,
+          positions: positionDtos,
         ),
       ).called(1);
     },
@@ -286,16 +314,38 @@ void main() {
       const double distanceInKm = 2.2;
       const Duration duration = Duration(minutes: 20);
       const double avgSpeedInKmPerH = 10.2;
-      const List<Coordinates> waypoints = [
-        Coordinates(50, 19),
-        Coordinates(51, 20),
+      const List<Position> positions = [
+        Position(
+          coordinates: Coordinates(50, 19),
+          altitude: 100.1,
+          speedInKmPerH: 22.2,
+        ),
+        Position(
+          coordinates: Coordinates(51, 20),
+          altitude: 110.1,
+          speedInKmPerH: 33.33,
+        ),
       ];
-      const List<CoordinatesDto> waypointDtos = [
-        CoordinatesDto(latitude: 50, longitude: 19),
-        CoordinatesDto(latitude: 51, longitude: 20),
+      const List<PositionDto> positionDtos = [
+        PositionDto(
+          coordinates: CoordinatesDto(latitude: 50, longitude: 19),
+          altitude: 100.1,
+          speedInKmPerH: 22.2,
+        ),
+        PositionDto(
+          coordinates: CoordinatesDto(latitude: 51, longitude: 20),
+          altitude: 110.1,
+          speedInKmPerH: 33.33,
+        ),
       ];
       const String expectedException =
           '[DriveRepository] Cannot add new drive to db';
+      when(
+        () => positionMapper.mapToDto(positions.first),
+      ).thenReturn(positionDtos.first);
+      when(
+        () => positionMapper.mapToDto(positions.last),
+      ).thenReturn(positionDtos.last);
       dbDriveService.mockAddDrive(expectedAddedDriveDto: null);
 
       Object? exception;
@@ -306,7 +356,7 @@ void main() {
           distanceInKm: distanceInKm,
           duration: duration,
           avgSpeedInKmPerH: avgSpeedInKmPerH,
-          waypoints: waypoints,
+          positions: positions,
         );
       } catch (e) {
         exception = e;
@@ -320,7 +370,7 @@ void main() {
           distanceInKm: distanceInKm,
           duration: duration,
           avgSpeedInKmPerH: avgSpeedInKmPerH,
-          waypoints: waypointDtos,
+          positions: positionDtos,
         ),
       ).called(1);
     },

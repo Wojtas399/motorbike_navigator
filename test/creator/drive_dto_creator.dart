@@ -1,5 +1,5 @@
-import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
 import 'package:motorbike_navigator/data/dto/drive_dto.dart';
+import 'package:motorbike_navigator/data/dto/position_dto.dart';
 
 class DriveDtoCreator {
   DriveDto create({
@@ -9,7 +9,7 @@ class DriveDtoCreator {
     double distanceInKm = 0,
     Duration duration = const Duration(seconds: 0),
     double avgSpeedInKmPerH = 0,
-    List<CoordinatesDto> waypoints = const [],
+    List<PositionDto> positions = const [],
   }) =>
       DriveDto(
         id: id,
@@ -18,6 +18,6 @@ class DriveDtoCreator {
         distanceInKm: distanceInKm,
         duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
-        waypoints: waypoints,
+        positions: positions,
       );
 }

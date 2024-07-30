@@ -507,10 +507,7 @@ void main() {
               distanceInKm: firstDistanceBetweenPositions,
               duration: const Duration(seconds: 1),
               avgSpeedInKmPerH: positions.first.speedInKmPerH,
-              waypoints: [
-                startLocation,
-                positions.first.coordinates,
-              ],
+              positions: [], //TODO
             ),
           ).called(1);
         },

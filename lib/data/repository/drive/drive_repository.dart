@@ -1,5 +1,5 @@
-import '../../../entity/coordinates.dart';
 import '../../../entity/drive.dart';
+import '../../../entity/position.dart';
 
 abstract interface class DriveRepository {
   Stream<List<Drive>> getAllUserDrives({
@@ -18,6 +18,6 @@ abstract interface class DriveRepository {
     required double distanceInKm,
     required Duration duration,
     required double avgSpeedInKmPerH,
-    required List<Coordinates> waypoints,
+    required List<Position> positions,
   });
 }

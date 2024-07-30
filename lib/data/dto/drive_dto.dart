@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'coordinates_dto.dart';
+import 'position_dto.dart';
 
 part 'drive_dto.freezed.dart';
 part 'drive_dto.g.dart';
@@ -18,8 +18,7 @@ class DriveDto with _$DriveDto {
     required double distanceInKm,
     required Duration duration,
     required double avgSpeedInKmPerH,
-    @JsonKey(toJson: _mapWaypointsToJsons)
-    required List<CoordinatesDto> waypoints,
+    @JsonKey(toJson: _mapPositionsToJsons) required List<PositionDto> positions,
   }) = _DriveDto;
 
   factory DriveDto.fromJson(Map<String, Object?> json) =>
@@ -36,7 +35,7 @@ class DriveDto with _$DriveDto {
       );
 }
 
-List<Map<String, Object?>> _mapWaypointsToJsons(
-  List<CoordinatesDto> waypoints,
+List<Map<String, Object?>> _mapPositionsToJsons(
+  List<PositionDto> positionDtos,
 ) =>
-    waypoints.map((waypoint) => waypoint.toJson()).toList();
+    positionDtos.map((positionDto) => positionDto.toJson()).toList();

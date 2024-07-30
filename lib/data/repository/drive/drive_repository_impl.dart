@@ -1,12 +1,13 @@
 import 'package:injectable/injectable.dart';
 
-import '../../../entity/coordinates.dart';
 import '../../../entity/drive.dart';
+import '../../../entity/position.dart';
 import '../../../ui/service/date_service.dart';
-import '../../dto/coordinates_dto.dart';
 import '../../dto/drive_dto.dart';
+import '../../dto/position_dto.dart';
 import '../../firebase/firebase_drive_service.dart';
 import '../../mapper/drive_mapper.dart';
+import '../../mapper/position_mapper.dart';
 import '../repository.dart';
 import 'drive_repository.dart';
 
@@ -14,11 +15,13 @@ import 'drive_repository.dart';
 class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
   final FirebaseDriveService _dbDriveService;
   final DriveMapper _driveMapper;
+  final PositionMapper _positionMapper;
   final DateService _dateService;
 
   DriveRepositoryImpl(
     this._dbDriveService,
     this._driveMapper,
+    this._positionMapper,
     this._dateService,
   );
 
@@ -68,23 +71,17 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     required double distanceInKm,
     required Duration duration,
     required double avgSpeedInKmPerH,
-    required List<Coordinates> waypoints,
+    required List<Position> positions,
   }) async {
-    final List<CoordinatesDto> waypointDtos = waypoints
-        .map(
-          (waypoint) => CoordinatesDto(
-            latitude: waypoint.latitude,
-            longitude: waypoint.longitude,
-          ),
-        )
-        .toList();
+    final List<PositionDto> positionDtos =
+        positions.map(_positionMapper.mapToDto).toList();
     final DriveDto? addedDriveDto = await _dbDriveService.addDrive(
       userId: userId,
       startDateTime: startDateTime,
       distanceInKm: distanceInKm,
       duration: duration,
       avgSpeedInKmPerH: avgSpeedInKmPerH,
-      waypoints: waypointDtos,
+      positions: positionDtos,
     );
     if (addedDriveDto == null) {
       throw '[DriveRepository] Cannot add new drive to db';

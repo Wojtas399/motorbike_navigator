@@ -1,5 +1,5 @@
-import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
+import 'package:motorbike_navigator/entity/position.dart';
 
 class DriveCreator {
   Drive create({
@@ -9,7 +9,7 @@ class DriveCreator {
     double distanceInKm = 0,
     Duration duration = const Duration(seconds: 0),
     double avgSpeedInKmPerH = 0,
-    List<Coordinates> waypoints = const [],
+    List<Position> positions = const [],
   }) =>
       Drive(
         id: id,
@@ -18,6 +18,6 @@ class DriveCreator {
         distanceInKm: distanceInKm,
         duration: duration,
         avgSpeedInKmPerH: avgSpeedInKmPerH,
-        waypoints: waypoints,
+        positions: positions,
       );
 }

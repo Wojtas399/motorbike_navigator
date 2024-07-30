@@ -26,7 +26,10 @@ class SavedDrivesDriveItem extends StatelessWidget {
 
   void _onPressed(BuildContext context) {
     context.pushRoute(
-      RoutePreviewRoute(routeWaypoints: drive.waypoints),
+      RoutePreviewRoute(
+        routeWaypoints:
+            drive.positions.map((position) => position.coordinates).toList(),
+      ),
     );
   }
 
@@ -54,7 +57,9 @@ class SavedDrivesDriveItem extends StatelessWidget {
                 ),
               ),
               _RoutePreview(
-                waypoints: drive.waypoints,
+                waypoints: drive.positions
+                    .map((position) => position.coordinates)
+                    .toList(),
                 onTap: () => _onPressed(context),
               ),
               const GapVertical24(),
