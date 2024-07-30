@@ -21,7 +21,6 @@ class DriveCubit extends Cubit<DriveState> {
   final DateService _dateService;
   Timer? _timer;
   StreamSubscription<Position?>? _positionListener;
-  List<double> _speedsInKmPerH = [];
 
   DriveCubit(
     this._locationService,
@@ -95,7 +94,6 @@ class DriveCubit extends Cubit<DriveState> {
   }
 
   void resetDrive() {
-    _speedsInKmPerH = [];
     emit(const DriveState());
   }
 
@@ -127,12 +125,14 @@ class DriveCubit extends Cubit<DriveState> {
       );
     }
     updatedPositions.add(position);
-    _speedsInKmPerH.add(position.speedInKmPerH);
+    final double avgSpeed = updatedPositions
+        .map((Position position) => position.speedInKmPerH)
+        .average;
     emit(state.copyWith(
       status: DriveStateStatus.ongoing,
       distanceInKm: state.distanceInKm + distanceFromPreviousLocation,
       speedInKmPerH: position.speedInKmPerH,
-      avgSpeedInKmPerH: _speedsInKmPerH.average,
+      avgSpeedInKmPerH: avgSpeed,
       positions: updatedPositions,
     ));
   }
