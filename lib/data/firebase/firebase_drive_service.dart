@@ -36,14 +36,12 @@ class FirebaseDriveService {
     required DateTime startDateTime,
     required double distanceInKm,
     required Duration duration,
-    required double avgSpeedInKmPerH,
     required List<PositionDto> positions,
   }) async {
     final driveToAddDto = DriveDto(
       startDateTime: startDateTime,
       distanceInKm: distanceInKm,
       duration: duration,
-      avgSpeedInKmPerH: avgSpeedInKmPerH,
       positions: positions,
     );
     final docRef = await getDrivesRef(userId).add(driveToAddDto);

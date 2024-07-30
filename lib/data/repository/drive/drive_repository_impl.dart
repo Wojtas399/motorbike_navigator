@@ -70,7 +70,6 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     required DateTime startDateTime,
     required double distanceInKm,
     required Duration duration,
-    required double avgSpeedInKmPerH,
     required List<Position> positions,
   }) async {
     final List<PositionDto> positionDtos =
@@ -80,7 +79,6 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
       startDateTime: startDateTime,
       distanceInKm: distanceInKm,
       duration: duration,
-      avgSpeedInKmPerH: avgSpeedInKmPerH,
       positions: positionDtos,
     );
     if (addedDriveDto == null) {

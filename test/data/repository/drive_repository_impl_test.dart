@@ -217,7 +217,6 @@ void main() {
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 2.2;
       const Duration duration = Duration(minutes: 20);
-      const double avgSpeedInKmPerH = 10.2;
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50, 19),
@@ -248,7 +247,6 @@ void main() {
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
-        avgSpeedInKmPerH: avgSpeedInKmPerH,
         positions: positionDtos,
       );
       final Drive expectedAddedDrive = Drive(
@@ -257,7 +255,6 @@ void main() {
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
-        avgSpeedInKmPerH: avgSpeedInKmPerH,
         positions: positions,
       );
       final List<Drive> existingDrives = [
@@ -283,7 +280,6 @@ void main() {
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
-        avgSpeedInKmPerH: avgSpeedInKmPerH,
         positions: positions,
       );
 
@@ -297,7 +293,6 @@ void main() {
           startDateTime: startDateTime,
           distanceInKm: distanceInKm,
           duration: duration,
-          avgSpeedInKmPerH: avgSpeedInKmPerH,
           positions: positionDtos,
         ),
       ).called(1);
@@ -313,7 +308,6 @@ void main() {
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 2.2;
       const Duration duration = Duration(minutes: 20);
-      const double avgSpeedInKmPerH = 10.2;
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50, 19),
@@ -355,7 +349,6 @@ void main() {
           startDateTime: startDateTime,
           distanceInKm: distanceInKm,
           duration: duration,
-          avgSpeedInKmPerH: avgSpeedInKmPerH,
           positions: positions,
         );
       } catch (e) {
@@ -369,7 +362,6 @@ void main() {
           startDateTime: startDateTime,
           distanceInKm: distanceInKm,
           duration: duration,
-          avgSpeedInKmPerH: avgSpeedInKmPerH,
           positions: positionDtos,
         ),
       ).called(1);

@@ -40,7 +40,6 @@ class MockFirebaseDriveService extends Mock implements FirebaseDriveService {
         startDateTime: any(named: 'startDateTime'),
         distanceInKm: any(named: 'distanceInKm'),
         duration: any(named: 'duration'),
-        avgSpeedInKmPerH: any(named: 'avgSpeedInKmPerH'),
         positions: any(named: 'positions'),
       ),
     ).thenAnswer((_) => Future.value(expectedAddedDriveDto));

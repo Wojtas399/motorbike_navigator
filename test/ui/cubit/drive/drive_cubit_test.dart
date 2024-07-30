@@ -119,11 +119,16 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
+            speedInKmPerH: startPosition.speedInKmPerH,
+            avgSpeedInKmPerH: startPosition.speedInKmPerH,
             positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
-            avgSpeedInKmPerH: positions.first.speedInKmPerH,
+            avgSpeedInKmPerH: [
+              startPosition.speedInKmPerH,
+              positions.first.speedInKmPerH,
+            ].average,
             distanceInKm: firstDistanceBetweenPositions,
             positions: [
               startPosition,
@@ -136,6 +141,7 @@ void main() {
           state = state?.copyWith(
             speedInKmPerH: positions[1].speedInKmPerH,
             avgSpeedInKmPerH: [
+              startPosition.speedInKmPerH,
               positions.first.speedInKmPerH,
               positions[1].speedInKmPerH,
             ].average,
@@ -150,6 +156,7 @@ void main() {
           state = state?.copyWith(
             speedInKmPerH: positions[2].speedInKmPerH,
             avgSpeedInKmPerH: [
+              startPosition.speedInKmPerH,
               positions.first.speedInKmPerH,
               positions[1].speedInKmPerH,
               positions.last.speedInKmPerH,
@@ -218,11 +225,16 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
+            speedInKmPerH: startPosition.speedInKmPerH,
+            avgSpeedInKmPerH: startPosition.speedInKmPerH,
             positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
-            avgSpeedInKmPerH: positions.first.speedInKmPerH,
+            avgSpeedInKmPerH: [
+              startPosition.speedInKmPerH,
+              positions.first.speedInKmPerH,
+            ].average,
             distanceInKm: firstDistanceBetweenPositions,
             positions: [
               startPosition,
@@ -304,11 +316,16 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
+            speedInKmPerH: startPosition.speedInKmPerH,
+            avgSpeedInKmPerH: startPosition.speedInKmPerH,
             positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
-            avgSpeedInKmPerH: positions.first.speedInKmPerH,
+            avgSpeedInKmPerH: [
+              startPosition.speedInKmPerH,
+              positions.first.speedInKmPerH,
+            ].average,
             distanceInKm: firstDistanceBetweenPositions,
             positions: [
               startPosition,
@@ -330,6 +347,7 @@ void main() {
           state = state?.copyWith(
             speedInKmPerH: positions.last.speedInKmPerH,
             avgSpeedInKmPerH: [
+              startPosition.speedInKmPerH,
               positions.first.speedInKmPerH,
               positions.last.speedInKmPerH,
             ].average,
@@ -387,11 +405,16 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
+            speedInKmPerH: startPosition.speedInKmPerH,
+            avgSpeedInKmPerH: startPosition.speedInKmPerH,
             positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
-            avgSpeedInKmPerH: positions.first.speedInKmPerH,
+            avgSpeedInKmPerH: [
+              startPosition.speedInKmPerH,
+              positions.first.speedInKmPerH,
+            ].average,
             distanceInKm: firstDistanceBetweenPositions,
             positions: [
               startPosition,
@@ -436,11 +459,16 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
+            speedInKmPerH: startPosition.speedInKmPerH,
+            avgSpeedInKmPerH: startPosition.speedInKmPerH,
             positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
-            avgSpeedInKmPerH: positions.first.speedInKmPerH,
+            avgSpeedInKmPerH: [
+              startPosition.speedInKmPerH,
+              positions.first.speedInKmPerH,
+            ].average,
             distanceInKm: firstDistanceBetweenPositions,
             positions: [
               startPosition,
@@ -479,11 +507,16 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
+            speedInKmPerH: startPosition.speedInKmPerH,
+            avgSpeedInKmPerH: startPosition.speedInKmPerH,
             positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
-            avgSpeedInKmPerH: positions.first.speedInKmPerH,
+            avgSpeedInKmPerH: [
+              startPosition.speedInKmPerH,
+              positions.first.speedInKmPerH,
+            ].average,
             distanceInKm: firstDistanceBetweenPositions,
             positions: [
               startPosition,
@@ -510,7 +543,6 @@ void main() {
               startDateTime: now,
               distanceInKm: firstDistanceBetweenPositions,
               duration: const Duration(seconds: 1),
-              avgSpeedInKmPerH: positions.first.speedInKmPerH,
               positions: [
                 startPosition,
                 ...positions,
@@ -535,6 +567,8 @@ void main() {
       DriveState(
         status: DriveStateStatus.ongoing,
         startDatetime: now,
+        speedInKmPerH: startPosition.speedInKmPerH,
+        avgSpeedInKmPerH: startPosition.speedInKmPerH,
         positions: [startPosition],
       ),
       const DriveState(),

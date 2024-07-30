@@ -8,7 +8,6 @@ class DriveCreator {
     DateTime? startDateTime,
     double distanceInKm = 0,
     Duration duration = const Duration(seconds: 0),
-    double avgSpeedInKmPerH = 0,
     List<Position> positions = const [],
   }) =>
       Drive(
@@ -17,7 +16,6 @@ class DriveCreator {
         startDateTime: startDateTime ?? DateTime(2024),
         distanceInKm: distanceInKm,
         duration: duration,
-        avgSpeedInKmPerH: avgSpeedInKmPerH,
         positions: positions,
       );
 }

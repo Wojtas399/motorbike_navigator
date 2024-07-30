@@ -18,7 +18,6 @@ class DriveMapper extends Mapper<Drive, DriveDto> {
         startDateTime: dto.startDateTime,
         distanceInKm: dto.distanceInKm,
         duration: dto.duration,
-        avgSpeedInKmPerH: dto.avgSpeedInKmPerH,
         positions: dto.positions.map(_positionMapper.mapFromDto).toList(),
       );
 }

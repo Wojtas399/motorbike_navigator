@@ -13,7 +13,6 @@ void main() {
         duration: Duration.zero,
         distanceInKm: 0,
         speedInKmPerH: 0,
-        avgSpeedInKmPerH: 0,
         positions: [],
       );
 

@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 import 'entity.dart';
 import 'position.dart';
 
@@ -6,7 +8,6 @@ class Drive extends Entity {
   final DateTime startDateTime;
   final double distanceInKm;
   final Duration duration;
-  final double avgSpeedInKmPerH;
   final List<Position> positions;
 
   const Drive({
@@ -15,9 +16,11 @@ class Drive extends Entity {
     required this.startDateTime,
     required this.distanceInKm,
     required this.duration,
-    required this.avgSpeedInKmPerH,
     required this.positions,
   });
+
+  double get avgSpeedInKmPerH =>
+      positions.map((Position position) => position.speedInKmPerH).average;
 
   @override
   List<Object?> get props => [
@@ -26,7 +29,6 @@ class Drive extends Entity {
         startDateTime,
         distanceInKm,
         duration,
-        avgSpeedInKmPerH,
         positions,
       ];
 }

@@ -28,7 +28,6 @@ class MockDriveRepository extends Mock implements DriveRepository {
         startDateTime: any(named: 'startDateTime'),
         distanceInKm: any(named: 'distanceInKm'),
         duration: any(named: 'duration'),
-        avgSpeedInKmPerH: any(named: 'avgSpeedInKmPerH'),
         positions: any(named: 'positions'),
       ),
     ).thenAnswer((_) => Future.value());

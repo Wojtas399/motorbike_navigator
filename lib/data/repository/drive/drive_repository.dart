@@ -17,7 +17,6 @@ abstract interface class DriveRepository {
     required DateTime startDateTime,
     required double distanceInKm,
     required Duration duration,
-    required double avgSpeedInKmPerH,
     required List<Position> positions,
   });
 }

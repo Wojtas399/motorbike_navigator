@@ -9,7 +9,6 @@ void main() {
   final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
   const double distanceInKm = 10.22;
   const Duration duration = Duration(hours: 1, minutes: 20);
-  const double avgSpeedInKmPerH = 45.3;
   const List<PositionDto> positions = [
     PositionDto(
       coordinates: CoordinatesDto(latitude: 50, longitude: 19),
@@ -26,7 +25,6 @@ void main() {
     'startDateTime': startDateTime.toIso8601String(),
     'distanceInKm': distanceInKm,
     'duration': duration.inMicroseconds,
-    'avgSpeedInKmPerH': avgSpeedInKmPerH,
     'positions': [
       ...positions.map((positions) => positions.toJson()),
     ],
@@ -40,7 +38,6 @@ void main() {
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
-        avgSpeedInKmPerH: avgSpeedInKmPerH,
         positions: positions,
       );
 
@@ -60,7 +57,6 @@ void main() {
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
-        avgSpeedInKmPerH: avgSpeedInKmPerH,
         positions: positions,
       );
 
@@ -84,7 +80,6 @@ void main() {
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
-        avgSpeedInKmPerH: avgSpeedInKmPerH,
         positions: positions,
       );
 

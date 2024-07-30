@@ -28,7 +28,6 @@ void main() {
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 10.21;
       const Duration duration = Duration(hours: 1, minutes: 20);
-      const double avgSpeedInKmPerH = 15;
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50, 18),
@@ -59,7 +58,6 @@ void main() {
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
-        avgSpeedInKmPerH: avgSpeedInKmPerH,
         positions: positionDtos,
       );
       final Drive expectedDrive = Drive(
@@ -68,7 +66,6 @@ void main() {
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
-        avgSpeedInKmPerH: avgSpeedInKmPerH,
         positions: positions,
       );
       when(

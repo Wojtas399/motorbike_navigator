@@ -17,7 +17,6 @@ class DriveDto with _$DriveDto {
     required DateTime startDateTime,
     required double distanceInKm,
     required Duration duration,
-    required double avgSpeedInKmPerH,
     @JsonKey(toJson: _mapPositionsToJsons) required List<PositionDto> positions,
   }) = _DriveDto;
 

@@ -44,6 +44,8 @@ class DriveCubit extends Cubit<DriveState> {
     emit(state.copyWith(
       status: DriveStateStatus.ongoing,
       startDatetime: _dateService.getNow(),
+      speedInKmPerH: startPosition.speedInKmPerH,
+      avgSpeedInKmPerH: startPosition.speedInKmPerH,
       positions: [startPosition],
     ));
     _startTimer();
@@ -85,7 +87,6 @@ class DriveCubit extends Cubit<DriveState> {
       startDateTime: state.startDatetime!,
       distanceInKm: state.distanceInKm,
       duration: state.duration,
-      avgSpeedInKmPerH: state.avgSpeedInKmPerH,
       positions: state.positions,
     );
     emit(state.copyWith(
