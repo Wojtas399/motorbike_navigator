@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
+import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_state.dart';
 
 void main() {
@@ -10,7 +11,7 @@ void main() {
         status: MapStateStatus.loading,
         mode: MapMode.basic,
         centerLocation: null,
-        userLocation: null,
+        userPosition: null,
       );
 
       const state = MapState();
@@ -247,17 +248,21 @@ void main() {
   );
 
   group(
-    'copyWith userLocation, ',
+    'copyWith userPosition, ',
     () {
-      const Coordinates expectedUserLocation = Coordinates(50, 19);
+      const Position expectedUserPosition = Position(
+        coordinates: Coordinates(50, 19),
+        altitude: 111.11,
+        speedInKmPerH: 33.33,
+      );
       MapState state = const MapState();
 
       test(
         'should update userLocation if new value has been passed',
         () {
-          state = state.copyWith(userLocation: expectedUserLocation);
+          state = state.copyWith(userPosition: expectedUserPosition);
 
-          expect(state.userLocation, expectedUserLocation);
+          expect(state.userPosition, expectedUserPosition);
         },
       );
 
@@ -266,16 +271,16 @@ void main() {
         () {
           state = state.copyWith();
 
-          expect(state.userLocation, expectedUserLocation);
+          expect(state.userPosition, expectedUserPosition);
         },
       );
 
       test(
-        'should set userLocation as null if passed value is null',
+        'should set userPosition as null if passed value is null',
         () {
-          state = state.copyWith(userLocation: null);
+          state = state.copyWith(userPosition: null);
 
-          expect(state.userLocation, null);
+          expect(state.userPosition, null);
         },
       );
     },

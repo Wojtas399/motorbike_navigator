@@ -12,7 +12,7 @@ class MapMarkerLayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Coordinates? userLocation = context.select(
-      (MapCubit cubit) => cubit.state.userLocation,
+      (MapCubit cubit) => cubit.state.userPosition?.coordinates,
     );
 
     return MarkerLayer(

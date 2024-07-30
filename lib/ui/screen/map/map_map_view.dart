@@ -58,7 +58,7 @@ class _State extends State<MapMapView> {
 
   void _handleCenterLocationChange() {
     final mapCubit = context.read<MapCubit>();
-    final userLocation = mapCubit.state.userLocation;
+    final userLocation = mapCubit.state.userPosition?.coordinates;
     final mapFocusMode = mapCubit.state.focusMode;
     if (userLocation != null && mapFocusMode.isFollowingUserLocation) {
       final double centerPositionLatCorrection =

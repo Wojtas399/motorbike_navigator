@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../entity/coordinates.dart';
-import '../../../../entity/position.dart';
 import '../../../service/location_service.dart';
 import 'map_state.dart';
 
@@ -16,14 +15,14 @@ class MapCubit extends Cubit<MapState> {
 
   Future<void> initialize() async {
     await Future.delayed(const Duration(seconds: 3));
-    final currentLocation$ = _getCurrentLocation();
-    await for (final currentLocation in currentLocation$) {
+    final currentPosition$ = _locationService.getPosition();
+    await for (final currentPosition in currentPosition$) {
       emit(state.copyWith(
         status: MapStateStatus.completed,
         centerLocation: state.focusMode.isFollowingUserLocation
-            ? currentLocation
+            ? currentPosition?.coordinates
             : state.centerLocation,
-        userLocation: currentLocation,
+        userPosition: currentPosition,
       ));
     }
   }
@@ -43,10 +42,10 @@ class MapCubit extends Cubit<MapState> {
   }
 
   void followUserLocation() {
-    if (state.userLocation == null) return;
+    if (state.userPosition == null) return;
     emit(state.copyWith(
       focusMode: MapFocusMode.followUserLocation,
-      centerLocation: state.userLocation!,
+      centerLocation: state.userPosition!.coordinates,
     ));
   }
 
@@ -56,9 +55,4 @@ class MapCubit extends Cubit<MapState> {
       mode: newMode,
     ));
   }
-
-  Stream<Coordinates?> _getCurrentLocation() =>
-      _locationService.getPosition().map(
-            (Position? position) => position?.coordinates,
-          );
 }

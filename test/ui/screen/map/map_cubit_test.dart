@@ -36,9 +36,9 @@ void main() {
       MapState? state;
 
       blocTest(
-        'should listen to current location and if focus mode is set to '
-        'followUserLocation should assign listened location to centerLocation '
-        'and userLocation params else should only assign it to userLocation '
+        'should listen to current position and if focus mode is set to '
+        'followUserLocation should assign listened position to centerLocation '
+        'and userPosition params else should only assign it to userPosition '
         'param',
         build: () => createCubit(),
         setUp: () => when(
@@ -53,14 +53,14 @@ void main() {
           state = MapState(
             status: MapStateStatus.completed,
             centerLocation: positions.first.coordinates,
-            userLocation: positions.first.coordinates,
+            userPosition: positions.first,
           ),
           state = state?.copyWith(
             focusMode: MapFocusMode.free,
             centerLocation: locationOnDrag,
           ),
           state = state?.copyWith(
-            userLocation: positions.last.coordinates,
+            userPosition: positions.last,
           ),
         ],
       );
@@ -133,7 +133,7 @@ void main() {
 
       blocTest(
         'should set focus mode as followUserLocation and should assign user '
-        'location to centerLocation param',
+        'position to centerLocation param',
         build: () => createCubit(),
         setUp: () => locationService.mockGetPosition(
           expectedPosition: position,
@@ -147,7 +147,7 @@ void main() {
           state = MapState(
             status: MapStateStatus.completed,
             centerLocation: position.coordinates,
-            userLocation: position.coordinates,
+            userPosition: position,
           ),
           state = state?.copyWith(
             focusMode: MapFocusMode.free,

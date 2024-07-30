@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../entity/coordinates.dart';
+import '../../../../entity/position.dart';
 
 part 'map_state.freezed.dart';
 
@@ -31,6 +32,6 @@ class MapState with _$MapState {
     @Default(MapMode.basic) MapMode mode,
     @Default(MapFocusMode.followUserLocation) MapFocusMode focusMode,
     Coordinates? centerLocation,
-    Coordinates? userLocation,
+    Position? userPosition,
   }) = _MapState;
 }
