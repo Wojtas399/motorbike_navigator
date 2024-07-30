@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 
+import 'coordinates.dart';
 import 'entity.dart';
 import 'position.dart';
 
@@ -18,6 +19,9 @@ class Drive extends Entity {
     required this.duration,
     required this.positions,
   });
+
+  Iterable<Coordinates> get waypoints =>
+      positions.map((Position position) => position.coordinates);
 
   double get avgSpeedInKmPerH =>
       positions.map((Position position) => position.speedInKmPerH).average;
