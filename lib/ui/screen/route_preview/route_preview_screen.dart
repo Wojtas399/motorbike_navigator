@@ -12,7 +12,7 @@ import '../../extensions/coordinates_extensions.dart';
 
 @RoutePage()
 class RoutePreviewScreen extends StatelessWidget {
-  final List<Coordinates> routeWaypoints;
+  final Iterable<Coordinates> routeWaypoints;
 
   const RoutePreviewScreen({
     super.key,
@@ -49,7 +49,7 @@ class _CloseButton extends StatelessWidget {
 }
 
 class _Map extends StatelessWidget {
-  final List<Coordinates> routeWaypoints;
+  final Iterable<Coordinates> routeWaypoints;
 
   const _Map({
     required this.routeWaypoints,

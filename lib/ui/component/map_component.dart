@@ -10,7 +10,7 @@ import 'start_route_icon_component.dart';
 
 class MapComponent extends StatelessWidget {
   final Coordinates initialCenter;
-  final List<Coordinates>? routeWaypoints;
+  final Iterable<Coordinates>? routeWaypoints;
   final CameraFit? initialCameraFit;
   final bool disableMovement;
   final VoidCallback? onTap;
@@ -57,7 +57,7 @@ class MapComponent extends StatelessWidget {
 }
 
 class _PolylineLayer extends StatelessWidget {
-  final List<Coordinates>? routeWaypoints;
+  final Iterable<Coordinates>? routeWaypoints;
 
   const _PolylineLayer({
     this.routeWaypoints,
@@ -77,7 +77,7 @@ class _PolylineLayer extends StatelessWidget {
 }
 
 class _MarkerLayer extends StatelessWidget {
-  final List<Coordinates>? routeWaypoints;
+  final Iterable<Coordinates>? routeWaypoints;
 
   const _MarkerLayer({
     this.routeWaypoints,

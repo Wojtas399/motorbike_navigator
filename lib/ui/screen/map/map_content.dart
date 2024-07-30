@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../entity/position.dart';
 import '../../../entity/user.dart' as user;
 import '../../component/big_filled_button_component.dart';
 import '../../cubit/drive/drive_cubit.dart';
@@ -92,8 +93,15 @@ class _StartRideButton extends StatelessWidget {
 
   void _onPressed(BuildContext context) {
     final mapCubit = context.read<MapCubit>();
+    final userLocation = context.read<MapCubit>().state.userLocation;
     context.read<DriveCubit>().startDrive(
-          startLocation: mapCubit.state.userLocation,
+          startPosition: userLocation != null
+              ? Position(
+                  coordinates: userLocation,
+                  altitude: 0,
+                  speedInKmPerH: 0,
+                )
+              : null, //TODO
         );
     mapCubit.followUserLocation();
     mapCubit.changeMode(MapMode.drive);

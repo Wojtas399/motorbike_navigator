@@ -12,7 +12,7 @@ class MapPolylineLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Coordinates>? driveWaypoints = context.select(
+    final Iterable<Coordinates>? driveWaypoints = context.select(
       (DriveCubit cubit) => cubit.state.waypoints,
     );
 

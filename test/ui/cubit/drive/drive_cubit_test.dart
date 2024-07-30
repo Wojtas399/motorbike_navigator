@@ -21,7 +21,11 @@ void main() {
   final driveRepository = MockDriveRepository();
   final dateService = MockDateService();
   final DateTime now = DateTime(2024, 1, 2, 10, 45);
-  const Coordinates startLocation = Coordinates(50, 18);
+  const Position startPosition = Position(
+    coordinates: Coordinates(50, 18),
+    altitude: 111.11,
+    speedInKmPerH: 55.55,
+  );
 
   DriveCubit createCubit() => DriveCubit(
         locationService,
@@ -70,14 +74,14 @@ void main() {
       DriveState? state;
 
       blocTest(
-        'should do nothing if startLocation is null, ',
+        'should do nothing if startPosition is null, ',
         build: () => createCubit(),
-        act: (cubit) => cubit.startDrive(startLocation: null),
+        act: (cubit) => cubit.startDrive(startPosition: null),
         expect: () => [],
       );
 
       blocTest(
-        'should insert start location to waypoints, should set startDateTime '
+        'should insert start position to positions, should set startDateTime '
         'as now, should start timer and should listen to position changes',
         build: () => createCubit(),
         setUp: () {
@@ -86,7 +90,7 @@ void main() {
           ).thenAnswer((_) => positionStream$.stream);
           when(
             () => mapService.calculateDistanceInKm(
-              location1: startLocation,
+              location1: startPosition.coordinates,
               location2: positions.first.coordinates,
             ),
           ).thenReturn(firstDistanceBetweenPositions);
@@ -104,7 +108,7 @@ void main() {
           ).thenReturn(thirdDistanceBetweenPositions);
         },
         act: (cubit) async {
-          cubit.startDrive(startLocation: startLocation);
+          cubit.startDrive(startPosition: startPosition);
           positionStream$.add(positions.first);
           await Future.delayed(const Duration(seconds: 1));
           positionStream$.add(positions[1]);
@@ -115,15 +119,15 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
-            waypoints: [startLocation],
+            positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
             avgSpeedInKmPerH: positions.first.speedInKmPerH,
             distanceInKm: firstDistanceBetweenPositions,
-            waypoints: [
-              startLocation,
-              positions.first.coordinates,
+            positions: [
+              startPosition,
+              positions.first,
             ],
           ),
           state = state?.copyWith(
@@ -137,10 +141,10 @@ void main() {
             ].average,
             distanceInKm:
                 firstDistanceBetweenPositions + secondDistanceBetweenPositions,
-            waypoints: [
-              startLocation,
-              positions.first.coordinates,
-              positions[1].coordinates,
+            positions: [
+              startPosition,
+              positions.first,
+              positions[1],
             ],
           ),
           state = state?.copyWith(
@@ -153,11 +157,11 @@ void main() {
             distanceInKm: firstDistanceBetweenPositions +
                 secondDistanceBetweenPositions +
                 thirdDistanceBetweenPositions,
-            waypoints: [
-              startLocation,
-              positions.first.coordinates,
-              positions[1].coordinates,
-              positions.last.coordinates,
+            positions: [
+              startPosition,
+              positions.first,
+              positions[1],
+              positions.last,
             ],
           ),
           state = state?.copyWith(
@@ -197,13 +201,13 @@ void main() {
           ).thenAnswer((_) => positionStream$.stream);
           when(
             () => mapService.calculateDistanceInKm(
-              location1: startLocation,
+              location1: startPosition.coordinates,
               location2: positions.first.coordinates,
             ),
           ).thenReturn(firstDistanceBetweenPositions);
         },
         act: (cubit) async {
-          cubit.startDrive(startLocation: startLocation);
+          cubit.startDrive(startPosition: startPosition);
           positionStream$.add(positions.first);
           await Future.delayed(const Duration(seconds: 1));
           cubit.pauseDrive();
@@ -214,15 +218,15 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
-            waypoints: [startLocation],
+            positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
             avgSpeedInKmPerH: positions.first.speedInKmPerH,
             distanceInKm: firstDistanceBetweenPositions,
-            waypoints: [
-              startLocation,
-              positions.first.coordinates,
+            positions: [
+              startPosition,
+              positions.first,
             ],
           ),
           state = state?.copyWith(
@@ -271,7 +275,7 @@ void main() {
           ).thenAnswer((_) => positionStream$.stream);
           when(
             () => mapService.calculateDistanceInKm(
-              location1: startLocation,
+              location1: startPosition.coordinates,
               location2: positions.first.coordinates,
             ),
           ).thenReturn(firstDistanceBetweenPositions);
@@ -283,7 +287,7 @@ void main() {
           ).thenReturn(secondDistanceBetweenPositions);
         },
         act: (cubit) async {
-          cubit.startDrive(startLocation: startLocation);
+          cubit.startDrive(startPosition: startPosition);
           positionStream$.add(positions.first);
           await Future.delayed(const Duration(seconds: 1));
           cubit.pauseDrive();
@@ -300,15 +304,15 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
-            waypoints: [startLocation],
+            positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
             avgSpeedInKmPerH: positions.first.speedInKmPerH,
             distanceInKm: firstDistanceBetweenPositions,
-            waypoints: [
-              startLocation,
-              positions.first.coordinates,
+            positions: [
+              startPosition,
+              positions.first,
             ],
           ),
           state = state?.copyWith(
@@ -331,10 +335,10 @@ void main() {
             ].average,
             distanceInKm:
                 firstDistanceBetweenPositions + secondDistanceBetweenPositions,
-            waypoints: [
-              startLocation,
-              positions.first.coordinates,
-              positions.last.coordinates,
+            positions: [
+              startPosition,
+              positions.first,
+              positions.last,
             ],
           ),
         ],
@@ -364,7 +368,7 @@ void main() {
         ).thenAnswer((_) => positionStream$.stream);
         when(
           () => mapService.calculateDistanceInKm(
-            location1: startLocation,
+            location1: startPosition.coordinates,
             location2: positions.first.coordinates,
           ),
         ).thenReturn(firstDistanceBetweenPositions);
@@ -374,7 +378,7 @@ void main() {
         'should do nothing if drive is not paused',
         build: () => createCubit(),
         act: (cubit) async {
-          cubit.startDrive(startLocation: startLocation);
+          cubit.startDrive(startPosition: startPosition);
           positionStream$.add(positions.first);
           await Future.delayed(const Duration(seconds: 1));
           await cubit.saveDrive();
@@ -383,15 +387,15 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
-            waypoints: [startLocation],
+            positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
             avgSpeedInKmPerH: positions.first.speedInKmPerH,
             distanceInKm: firstDistanceBetweenPositions,
-            waypoints: [
-              startLocation,
-              positions.first.coordinates,
+            positions: [
+              startPosition,
+              positions.first,
             ],
           ),
           state = state?.copyWith(
@@ -421,7 +425,7 @@ void main() {
           authRepository.mockGetLoggedUserId(expectedLoggedUserId: null);
         },
         act: (cubit) async {
-          cubit.startDrive(startLocation: startLocation);
+          cubit.startDrive(startPosition: startPosition);
           positionStream$.add(positions.first);
           await Future.delayed(const Duration(seconds: 1));
           cubit.pauseDrive();
@@ -432,15 +436,15 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
-            waypoints: [startLocation],
+            positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
             avgSpeedInKmPerH: positions.first.speedInKmPerH,
             distanceInKm: firstDistanceBetweenPositions,
-            waypoints: [
-              startLocation,
-              positions.first.coordinates,
+            positions: [
+              startPosition,
+              positions.first,
             ],
           ),
           state = state?.copyWith(
@@ -465,7 +469,7 @@ void main() {
           driveRepository.mockAddDrive();
         },
         act: (cubit) async {
-          cubit.startDrive(startLocation: startLocation);
+          cubit.startDrive(startPosition: startPosition);
           positionStream$.add(positions.first);
           await Future.delayed(const Duration(seconds: 1));
           cubit.pauseDrive();
@@ -475,15 +479,15 @@ void main() {
           state = DriveState(
             status: DriveStateStatus.ongoing,
             startDatetime: now,
-            waypoints: [startLocation],
+            positions: [startPosition],
           ),
           state = state?.copyWith(
             speedInKmPerH: positions.first.speedInKmPerH,
             avgSpeedInKmPerH: positions.first.speedInKmPerH,
             distanceInKm: firstDistanceBetweenPositions,
-            waypoints: [
-              startLocation,
-              positions.first.coordinates,
+            positions: [
+              startPosition,
+              positions.first,
             ],
           ),
           state = state?.copyWith(
@@ -507,7 +511,10 @@ void main() {
               distanceInKm: firstDistanceBetweenPositions,
               duration: const Duration(seconds: 1),
               avgSpeedInKmPerH: positions.first.speedInKmPerH,
-              positions: [], //TODO
+              positions: [
+                startPosition,
+                ...positions,
+              ],
             ),
           ).called(1);
         },
@@ -521,14 +528,14 @@ void main() {
     build: () => createCubit(),
     setUp: () => locationService.mockGetPosition(expectedPosition: null),
     act: (cubit) {
-      cubit.startDrive(startLocation: startLocation);
+      cubit.startDrive(startPosition: startPosition);
       cubit.resetDrive();
     },
     expect: () => [
       DriveState(
         status: DriveStateStatus.ongoing,
         startDatetime: now,
-        waypoints: [startLocation],
+        positions: [startPosition],
       ),
       const DriveState(),
     ],

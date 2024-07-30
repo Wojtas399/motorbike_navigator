@@ -14,15 +14,15 @@ import '../../extensions/coordinates_extensions.dart';
 class DriveSummaryRoute extends StatelessWidget {
   const DriveSummaryRoute({super.key});
 
-  void _onTap(BuildContext context) {
+  void _onTap(BuildContext context, Iterable<Coordinates> routeWaypoints) {
     context.pushRoute(RoutePreviewRoute(
-      routeWaypoints: context.read<DriveCubit>().state.waypoints,
+      routeWaypoints: routeWaypoints,
     ));
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Coordinates> routeWaypoints =
+    final Iterable<Coordinates> routeWaypoints =
         context.read<DriveCubit>().state.waypoints;
     final user.ThemeMode? themeMode = context.select(
       (LoggedUserCubit cubit) => cubit.state.themeMode,
@@ -42,7 +42,7 @@ class DriveSummaryRoute extends StatelessWidget {
       disableMovement: true,
       initialCenter: routeWaypoints.first,
       initialCameraFit: cameraFit,
-      onTap: () => _onTap(context),
+      onTap: () => _onTap(context, routeWaypoints),
       routeWaypoints: routeWaypoints,
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
+import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/cubit/drive/drive_state.dart';
 
 void main() {
@@ -13,12 +14,45 @@ void main() {
         distanceInKm: 0,
         speedInKmPerH: 0,
         avgSpeedInKmPerH: 0,
-        waypoints: [],
+        positions: [],
       );
 
       const state = DriveState();
 
       expect(state, expectedDefaultState);
+    },
+  );
+
+  test(
+    'get waypoints, '
+    'should return coordinates got from positions',
+    () {
+      const List<Position> positions = [
+        Position(
+          coordinates: Coordinates(50, 19),
+          altitude: 111.11,
+          speedInKmPerH: 33.33,
+        ),
+        Position(
+          coordinates: Coordinates(51, 20),
+          altitude: 112.22,
+          speedInKmPerH: 44.44,
+        ),
+        Position(
+          coordinates: Coordinates(52, 21),
+          altitude: 113.33,
+          speedInKmPerH: 55.55,
+        ),
+      ];
+      final Iterable<Coordinates> expectedWaypoints = positions.map(
+        (Position position) => position.coordinates,
+      );
+
+      const DriveState state = DriveState(
+        positions: positions,
+      );
+
+      expect(state.waypoints, expectedWaypoints);
     },
   );
 
@@ -188,19 +222,23 @@ void main() {
   );
 
   group(
-    'copyWith waypoints, ',
+    'copyWith positions, ',
     () {
-      const List<Coordinates> expectedWaypoints = [
-        Coordinates(50, 12.3),
+      const List<Position> expectedPositions = [
+        Position(
+          coordinates: Coordinates(50, 19),
+          altitude: 111.11,
+          speedInKmPerH: 55.55,
+        ),
       ];
       DriveState state = const DriveState();
 
       test(
-        'should update waypoints if new value has been passed, ',
+        'should update positions if new value has been passed, ',
         () {
-          state = state.copyWith(waypoints: expectedWaypoints);
+          state = state.copyWith(positions: expectedPositions);
 
-          expect(state.waypoints, expectedWaypoints);
+          expect(state.positions, expectedPositions);
         },
       );
 
@@ -209,7 +247,7 @@ void main() {
         () {
           state = state.copyWith();
 
-          expect(state.waypoints, expectedWaypoints);
+          expect(state.positions, expectedPositions);
         },
       );
     },

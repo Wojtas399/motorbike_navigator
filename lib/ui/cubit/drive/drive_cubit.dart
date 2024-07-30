@@ -6,7 +6,6 @@ import 'package:injectable/injectable.dart';
 
 import '../../../data/repository/auth/auth_repository.dart';
 import '../../../data/repository/drive/drive_repository.dart';
-import '../../../entity/coordinates.dart';
 import '../../../entity/position.dart';
 import '../../service/date_service.dart';
 import '../../service/location_service.dart';
@@ -40,13 +39,13 @@ class DriveCubit extends Cubit<DriveState> {
   }
 
   void startDrive({
-    required Coordinates? startLocation,
+    required Position? startPosition,
   }) {
-    if (startLocation == null) return;
+    if (startPosition == null) return;
     emit(state.copyWith(
       status: DriveStateStatus.ongoing,
       startDatetime: _dateService.getNow(),
-      waypoints: [startLocation],
+      positions: [startPosition],
     ));
     _startTimer();
     _listenPosition();
@@ -88,7 +87,7 @@ class DriveCubit extends Cubit<DriveState> {
       distanceInKm: state.distanceInKm,
       duration: state.duration,
       avgSpeedInKmPerH: state.avgSpeedInKmPerH,
-      positions: [], //TODO
+      positions: state.positions,
     );
     emit(state.copyWith(
       status: DriveStateStatus.saved,
@@ -119,22 +118,22 @@ class DriveCubit extends Cubit<DriveState> {
 
   void _onPositionUpdated(Position? position) {
     if (position == null) return;
-    List<Coordinates> updatedWaypoints = [...state.waypoints];
+    List<Position> updatedPositions = [...state.positions];
     double distanceFromPreviousLocation = 0;
-    if (updatedWaypoints.isNotEmpty) {
+    if (updatedPositions.isNotEmpty) {
       distanceFromPreviousLocation = _mapService.calculateDistanceInKm(
-        location1: updatedWaypoints.last,
+        location1: updatedPositions.last.coordinates,
         location2: position.coordinates,
       );
     }
-    updatedWaypoints.add(position.coordinates);
+    updatedPositions.add(position);
     _speedsInKmPerH.add(position.speedInKmPerH);
     emit(state.copyWith(
       status: DriveStateStatus.ongoing,
       distanceInKm: state.distanceInKm + distanceFromPreviousLocation,
       speedInKmPerH: position.speedInKmPerH,
       avgSpeedInKmPerH: _speedsInKmPerH.average,
-      waypoints: updatedWaypoints,
+      positions: updatedPositions,
     ));
   }
 }
