@@ -2,10 +2,15 @@ import 'package:injectable/injectable.dart';
 
 import '../dto/drive_dto.dart';
 import '../dto/position_dto.dart';
+import '../mapper/datetime_mapper.dart';
 import 'firebase_collections.dart';
 
 @injectable
 class FirebaseDriveService {
+  final DateTimeMapper _dateTimeMapper;
+
+  const FirebaseDriveService(this._dateTimeMapper);
+
   Future<List<DriveDto>> fetchAllUserDrives({
     required String userId,
   }) async {
@@ -21,11 +26,11 @@ class FirebaseDriveService {
     final snapshot = await getDrivesRef(userId)
         .where(
           'startDateTime',
-          isGreaterThanOrEqualTo: firstDateOfRange.toIso8601String(),
+          isGreaterThanOrEqualTo: _dateTimeMapper.mapToDto(firstDateOfRange),
         )
         .where(
           'startDateTime',
-          isLessThanOrEqualTo: lastDateOfRange.toIso8601String(),
+          isLessThanOrEqualTo: _dateTimeMapper.mapToDto(lastDateOfRange),
         )
         .get();
     return snapshot.docs.map((doc) => doc.data()).toList();

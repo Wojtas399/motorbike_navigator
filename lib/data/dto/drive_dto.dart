@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../dependency_injection.dart';
+import '../mapper/datetime_mapper.dart';
 import 'position_dto.dart';
 
 part 'drive_dto.freezed.dart';
@@ -14,10 +16,17 @@ class DriveDto with _$DriveDto {
     @JsonKey(includeFromJson: false, includeToJson: false)
     @Default('')
     String userId,
+    @JsonKey(
+      fromJson: _mapStartDateTimeFromString,
+      toJson: _mapStartDateTimeToString,
+    )
     required DateTime startDateTime,
     required double distanceInKm,
     required Duration duration,
-    @JsonKey(toJson: _mapPositionsToJsons) required List<PositionDto> positions,
+    @JsonKey(
+      toJson: _mapPositionsToJsons,
+    )
+    required List<PositionDto> positions,
   }) = _DriveDto;
 
   factory DriveDto.fromJson(Map<String, Object?> json) =>
@@ -33,6 +42,12 @@ class DriveDto with _$DriveDto {
         userId: userId,
       );
 }
+
+DateTime _mapStartDateTimeFromString(String startDateTime) =>
+    getIt.get<DateTimeMapper>().mapFromDto(startDateTime);
+
+String _mapStartDateTimeToString(DateTime startDateTime) =>
+    getIt.get<DateTimeMapper>().mapToDto(startDateTime);
 
 List<Map<String, Object?>> _mapPositionsToJsons(
   List<PositionDto> positionDtos,
