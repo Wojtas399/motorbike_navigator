@@ -4,7 +4,6 @@ import 'package:flutter_map/flutter_map.dart';
 
 import '../../../entity/coordinates.dart';
 import '../../component/map_component.dart';
-import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 
 @RoutePage()
@@ -17,16 +16,14 @@ class RoutePreviewScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: const _CloseButton(),
-      ),
-      body: _Map(routeWaypoints: routeWaypoints),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          leading: const _CloseButton(),
+        ),
+        body: _Map(routeWaypoints: routeWaypoints),
+      );
 }
 
 class _CloseButton extends StatelessWidget {
@@ -35,12 +32,9 @@ class _CloseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(8.0),
-        child: IconButton.filled(
+        child: IconButton.filledTonal(
           onPressed: context.maybePop,
-          icon: Icon(
-            Icons.close,
-            color: context.theme.canvasColor,
-          ),
+          icon: const Icon(Icons.close),
         ),
       );
 }
