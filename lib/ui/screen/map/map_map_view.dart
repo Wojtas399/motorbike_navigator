@@ -6,10 +6,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../entity/coordinates.dart';
-import '../../../entity/user.dart' as user;
-import '../../../env.dart';
-import '../../cubit/logged_user/logged_user_cubit.dart';
 import '../../extensions/coordinates_extensions.dart';
+import '../../provider/map_tile_url_provider.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
 import 'map_marker_layer.dart';
@@ -106,14 +104,10 @@ class _TileLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user.ThemeMode? themeMode = context.select(
-      (LoggedUserCubit cubit) => cubit.state.themeMode,
+    final String? tileUrl = context.select(
+      (MapTileUrlProvider provider) => provider.state,
     );
 
-    return TileLayer(
-      urlTemplate: Env.mapboxTemplateUrl,
-      tileBuilder:
-          themeMode == user.ThemeMode.dark ? darkModeTileBuilder : null,
-    );
+    return tileUrl != null ? TileLayer(urlTemplate: tileUrl) : const SizedBox();
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 import '../../entity/coordinates.dart';
-import '../../env.dart';
 import '../extensions/context_extensions.dart';
 import '../extensions/coordinates_extensions.dart';
+import '../provider/map_tile_url_provider.dart';
 import 'end_route_icon_component.dart';
 import 'start_route_icon_component.dart';
 
@@ -14,7 +15,6 @@ class MapComponent extends StatelessWidget {
   final CameraFit? initialCameraFit;
   final bool disableMovement;
   final VoidCallback? onTap;
-  final bool isDarkMode;
 
   const MapComponent({
     super.key,
@@ -26,7 +26,6 @@ class MapComponent extends StatelessWidget {
     this.initialCameraFit,
     this.disableMovement = false,
     this.onTap,
-    this.isDarkMode = false,
   });
 
   @override
@@ -42,10 +41,7 @@ class MapComponent extends StatelessWidget {
           },
         ),
         children: [
-          TileLayer(
-            urlTemplate: Env.mapboxTemplateUrl,
-            tileBuilder: isDarkMode ? darkModeTileBuilder : null,
-          ),
+          const _TileLayer(),
           _PolylineLayer(
             routeWaypoints: routeWaypoints,
           ),
@@ -54,6 +50,19 @@ class MapComponent extends StatelessWidget {
           ),
         ],
       );
+}
+
+class _TileLayer extends StatelessWidget {
+  const _TileLayer();
+
+  @override
+  Widget build(BuildContext context) {
+    final String? tileUrl = context.select(
+      (MapTileUrlProvider provider) => provider.state,
+    );
+
+    return tileUrl != null ? TileLayer(urlTemplate: tileUrl) : const SizedBox();
+  }
 }
 
 class _PolylineLayer extends StatelessWidget {

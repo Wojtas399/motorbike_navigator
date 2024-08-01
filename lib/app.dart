@@ -8,13 +8,21 @@ import 'entity/user.dart' as user;
 import 'ui/config/app_router.dart';
 import 'ui/config/app_theme.dart';
 import 'ui/cubit/logged_user/logged_user_cubit.dart';
+import 'ui/provider/map_tile_url_provider.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (_) => getIt.get<LoggedUserCubit>()..initialize(),
+  Widget build(BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => getIt.get<LoggedUserCubit>()..initialize(),
+          ),
+          BlocProvider(
+            create: (_) => getIt.get<MapTileUrlProvider>()..initialize(),
+          ),
+        ],
         child: const _MaterialApp(),
       );
 }
