@@ -91,75 +91,16 @@ void main() {
     },
   );
 
-  test(
-    'updateUserThemeMode, '
-    'user does not exists in repo state, '
-    'should finish method call',
-    () async {
-      await repositoryImpl.updateUserThemeMode(
-        userId: userId,
-        themeMode: ThemeMode.dark,
-      );
-
-      verifyNever(
-        () => dbUserService.updateUserThemeMode(
-          userId: userId,
-          themeMode: any(named: 'themeMode'),
-        ),
-      );
-    },
-  );
-
-  test(
-    'updateUserThemeMode, '
-    'updated user is not returned from db, '
-    'should throw exception',
-    () async {
-      const UserDto existingUserDto = UserDto(
-        id: userId,
-        themeMode: ThemeModeDto.light,
-      );
-      const User existingUser = User(
-        id: userId,
-        themeMode: ThemeMode.light,
-      );
-      const ThemeMode newThemeMode = ThemeMode.dark;
-      const ThemeModeDto newThemeModeDto = ThemeModeDto.dark;
-      const expectedException = "Updated user's data not found";
-      dbUserService.mockFetchUserById(expectedUserDto: existingUserDto);
-      userMapper.mockMapFromDto(expectedUser: existingUser);
-      themeModeMapper.mockMapToDto(expectedThemeModeDto: newThemeModeDto);
-      dbUserService.mockUpdateUserThemeMode(expectedUpdatedUserDto: null);
-
-      Object? exception;
-      try {
-        final user$ = repositoryImpl.getUserById(userId: userId);
-        await user$.first;
-        await repositoryImpl.updateUserThemeMode(
-          userId: userId,
-          themeMode: newThemeMode,
-        );
-      } catch (e) {
-        exception = e;
-      }
-
-      expect(exception, expectedException);
-      verify(
-        () => dbUserService.updateUserThemeMode(
-          userId: userId,
-          themeMode: newThemeModeDto,
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'updateUserThemeMode, '
-    'should update user in db and in repo state',
-    () async {
+  group(
+    'updateUserThemeMode, ',
+    () {
       const UserDto existingUserDto = UserDto(
         id: userId,
         themeMode: ThemeModeDto.dark,
+      );
+      const User existingUser = User(
+        id: userId,
+        themeMode: ThemeMode.dark,
       );
       const ThemeMode newThemeMode = ThemeMode.light;
       const ThemeModeDto newThemeModeDto = ThemeModeDto.light;
@@ -171,30 +112,104 @@ void main() {
         id: userId,
         themeMode: newThemeModeDto,
       );
-      dbUserService.mockFetchUserById(expectedUserDto: existingUserDto);
-      themeModeMapper.mockMapToDto(expectedThemeModeDto: newThemeModeDto);
-      dbUserService.mockUpdateUserThemeMode(
-        expectedUpdatedUserDto: updatedUserDto,
-      );
-      userMapper.mockMapFromDto(expectedUser: updatedUser);
 
-      final user$ = repositoryImpl.getUserById(userId: userId);
-      await user$.first;
-      await repositoryImpl.updateUserThemeMode(
-        userId: userId,
-        themeMode: newThemeMode,
+      test(
+        'should finish method call if user does not exist in repo state',
+        () async {
+          await repositoryImpl.updateUserThemeMode(
+            userId: userId,
+            themeMode: ThemeMode.dark,
+          );
+
+          verifyNever(
+            () => dbUserService.updateUserThemeMode(
+              userId: userId,
+              themeMode: any(named: 'themeMode'),
+            ),
+          );
+        },
       );
 
-      expect(
-        await repositoryImpl.repositoryState$.first,
-        [updatedUser],
+      test(
+        "should update user's theme mode, then should call db method to update "
+        "theme mode and if updated user's data is not returned from db should "
+        'undo changes',
+        () async {
+          dbUserService.mockFetchUserById(expectedUserDto: existingUserDto);
+          userMapper.mockMapFromDto(expectedUser: existingUser);
+          themeModeMapper.mockMapToDto(expectedThemeModeDto: newThemeModeDto);
+          dbUserService.mockUpdateUserThemeMode(expectedUpdatedUserDto: null);
+          final List<List<User>> emittedStates = [];
+          repositoryImpl.repositoryState$.listen(
+            (state) => emittedStates.add(state),
+          );
+
+          final user1 = await repositoryImpl.getUserById(userId: userId).first;
+          await repositoryImpl.updateUserThemeMode(
+            userId: userId,
+            themeMode: newThemeMode,
+          );
+          final user2 = await repositoryImpl.getUserById(userId: userId).first;
+
+          expect(
+            emittedStates,
+            [
+              [],
+              [existingUser],
+              [updatedUser],
+              [existingUser],
+            ],
+          );
+          expect(user1, existingUser);
+          expect(user2, existingUser);
+          verify(
+            () => dbUserService.updateUserThemeMode(
+              userId: userId,
+              themeMode: newThemeModeDto,
+            ),
+          ).called(1);
+        },
       );
-      verify(
-        () => dbUserService.updateUserThemeMode(
-          userId: userId,
-          themeMode: newThemeModeDto,
-        ),
-      ).called(1);
+
+      test(
+        'should update user in repo state and in db',
+        () async {
+          dbUserService.mockFetchUserById(expectedUserDto: existingUserDto);
+          userMapper.mockMapFromDto(expectedUser: existingUser);
+          themeModeMapper.mockMapToDto(expectedThemeModeDto: newThemeModeDto);
+          dbUserService.mockUpdateUserThemeMode(
+            expectedUpdatedUserDto: updatedUserDto,
+          );
+          final List<List<User>> emittedStates = [];
+          repositoryImpl.repositoryState$.listen(
+            (state) => emittedStates.add(state),
+          );
+
+          final user1 = await repositoryImpl.getUserById(userId: userId).first;
+          await repositoryImpl.updateUserThemeMode(
+            userId: userId,
+            themeMode: newThemeMode,
+          );
+          final user2 = await repositoryImpl.getUserById(userId: userId).first;
+
+          expect(
+            emittedStates,
+            [
+              [],
+              [existingUser],
+              [updatedUser],
+            ],
+          );
+          expect(user1, existingUser);
+          expect(user2, updatedUser);
+          verify(
+            () => dbUserService.updateUserThemeMode(
+              userId: userId,
+              themeMode: newThemeModeDto,
+            ),
+          ).called(1);
+        },
+      );
     },
   );
 }

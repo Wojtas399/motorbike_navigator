@@ -101,113 +101,19 @@ void main() {
     'changeThemeMode',
     () {
       const String loggedUserId = 'u1';
-      LoggedUserState? state;
 
       blocTest(
-        'should emit state with light theme mode if current theme mode is null '
-        'and then should emit previous state if logged user id has not been found',
+        'should do nothing if logged user id is null',
         build: () => createCubit(),
         setUp: () => authRepository.mockGetLoggedUserId(),
         act: (cubit) => cubit.switchThemeMode(),
-        expect: () => [
-          state = const LoggedUserState(
-            status: LoggedUserStateStatus.completed,
-            themeMode: ThemeMode.light,
-          ),
-          state = state?.copyWith(
-            status: LoggedUserStateStatus.loading,
-            themeMode: null,
-          ),
-        ],
+        expect: () => [],
         verify: (_) => verify(() => authRepository.loggedUserId$).called(1),
       );
 
       blocTest(
-        'should emit state with dark theme mode if current theme mode is light '
-        'and then should emit previous state if logged user id has not been found',
-        build: () => createCubit(),
-        setUp: () {
-          authRepository.mockGetLoggedUserId(
-            expectedLoggedUserId: loggedUserId,
-          );
-          userRepository.mockGetUserById(
-            expectedUser: const User(
-              id: loggedUserId,
-              themeMode: ThemeMode.light,
-            ),
-          );
-        },
-        act: (cubit) async {
-          cubit.initialize();
-          authRepository.mockGetLoggedUserId(expectedLoggedUserId: null);
-          await cubit.stream.first;
-          cubit.switchThemeMode();
-        },
-        expect: () => [
-          state = const LoggedUserState(
-            status: LoggedUserStateStatus.completed,
-            themeMode: ThemeMode.light,
-          ),
-          state = state?.copyWith(
-            themeMode: ThemeMode.dark,
-          ),
-          state = state?.copyWith(
-            themeMode: ThemeMode.light,
-          ),
-        ],
-        verify: (_) {
-          verify(() => authRepository.loggedUserId$).called(2);
-          verify(
-            () => userRepository.getUserById(userId: loggedUserId),
-          ).called(1);
-        },
-      );
-
-      blocTest(
-        'should emit state with light theme mode if current theme mode is dark '
-        'and then should emit previous state if logged user id has not been found',
-        build: () => createCubit(),
-        setUp: () {
-          authRepository.mockGetLoggedUserId(
-            expectedLoggedUserId: loggedUserId,
-          );
-          userRepository.mockGetUserById(
-            expectedUser: const User(
-              id: loggedUserId,
-              themeMode: ThemeMode.dark,
-            ),
-          );
-        },
-        act: (cubit) async {
-          cubit.initialize();
-          authRepository.mockGetLoggedUserId(expectedLoggedUserId: null);
-          await cubit.stream.first;
-          cubit.switchThemeMode();
-        },
-        expect: () => [
-          state = const LoggedUserState(
-            status: LoggedUserStateStatus.completed,
-            themeMode: ThemeMode.dark,
-          ),
-          state = state?.copyWith(
-            themeMode: ThemeMode.light,
-          ),
-          state = state?.copyWith(
-            themeMode: ThemeMode.dark,
-          ),
-        ],
-        verify: (_) {
-          verify(() => authRepository.loggedUserId$).called(2);
-          verify(
-            () => userRepository.getUserById(userId: loggedUserId),
-          ).called(1);
-        },
-      );
-
-      blocTest(
-        'should emit state with light theme mode if current theme mode is null '
-        'and should call method from UserRepository to update theme mode to '
-        'light if logged user id has been found',
+        'should call method from UserRepository to update theme mode with light '
+        'theme mode if current theme mode is null',
         build: () => createCubit(),
         setUp: () {
           authRepository.mockGetLoggedUserId(
@@ -216,12 +122,7 @@ void main() {
           userRepository.mockUpdateUserThemeMode();
         },
         act: (cubit) => cubit.switchThemeMode(),
-        expect: () => [
-          state = const LoggedUserState(
-            status: LoggedUserStateStatus.completed,
-            themeMode: ThemeMode.light,
-          ),
-        ],
+        expect: () => [],
         verify: (_) {
           verify(() => authRepository.loggedUserId$).called(1);
           verify(
@@ -234,9 +135,8 @@ void main() {
       );
 
       blocTest(
-        'should emit state with dark theme mode if current theme mode is light '
-        'and should call method from UserRepository to update theme mode to '
-        'dark if logged user id has been found',
+        'should call method from UserRepository to update theme mode with dark '
+        'theme mode if current theme mode is light',
         build: () => createCubit(),
         setUp: () {
           authRepository.mockGetLoggedUserId(
@@ -256,12 +156,9 @@ void main() {
           cubit.switchThemeMode();
         },
         expect: () => [
-          state = const LoggedUserState(
+          const LoggedUserState(
             status: LoggedUserStateStatus.completed,
             themeMode: ThemeMode.light,
-          ),
-          state = state?.copyWith(
-            themeMode: ThemeMode.dark,
           ),
         ],
         verify: (_) {
@@ -279,9 +176,8 @@ void main() {
       );
 
       blocTest(
-        'should emit state with light theme mode if current theme mode is dark '
-        'and should call method from UserRepository to update theme mode to '
-        'light if logged user id has been found',
+        'should call method from UserRepository to update theme mode with light '
+        'theme mode if current theme mode is dark',
         build: () => createCubit(),
         setUp: () {
           authRepository.mockGetLoggedUserId(
@@ -301,12 +197,9 @@ void main() {
           cubit.switchThemeMode();
         },
         expect: () => [
-          state = const LoggedUserState(
+          const LoggedUserState(
             status: LoggedUserStateStatus.completed,
             themeMode: ThemeMode.dark,
-          ),
-          state = state?.copyWith(
-            themeMode: ThemeMode.light,
           ),
         ],
         verify: (_) {

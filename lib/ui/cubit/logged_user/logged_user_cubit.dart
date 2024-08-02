@@ -44,24 +44,17 @@ class LoggedUserCubit extends Cubit<LoggedUserState> {
   }
 
   Future<void> switchThemeMode() async {
-    final LoggedUserState prevState = state;
     final ThemeMode newThemeMode = switch (state.themeMode) {
       null => ThemeMode.light,
       ThemeMode.light => ThemeMode.dark,
       ThemeMode.dark => ThemeMode.light,
     };
-    emit(state.copyWith(
-      status: LoggedUserStateStatus.completed,
-      themeMode: newThemeMode,
-    ));
     final String? loggedUserId = await _authRepository.loggedUserId$.first;
     if (loggedUserId != null) {
       await _userRepository.updateUserThemeMode(
         userId: loggedUserId,
         themeMode: newThemeMode,
       );
-    } else {
-      emit(prevState);
     }
   }
 

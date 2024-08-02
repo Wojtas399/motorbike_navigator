@@ -49,15 +49,20 @@ class UserRepositoryImpl extends Repository<User> implements UserRepository {
     required String userId,
     required ThemeMode themeMode,
   }) async {
-    User? user = await _findExistingUserInRepoState(userId);
+    final User? user = await _findExistingUserInRepoState(userId);
     if (user == null) return;
+    final User updatedUser = User(
+      id: user.id,
+      themeMode: themeMode,
+    );
+    updateEntity(updatedUser);
     final UserDto? updatedUserDto = await _dbUserService.updateUserThemeMode(
       userId: userId,
       themeMode: _themeModeMapper.mapToDto(themeMode),
     );
-    if (updatedUserDto == null) throw "Updated user's data not found";
-    user = _userMapper.mapFromDto(updatedUserDto);
-    updateEntity(user);
+    if (updatedUserDto == null) {
+      updateEntity(user);
+    }
   }
 
   Future<User?> _fetchUserFromDb(String userId) async {
