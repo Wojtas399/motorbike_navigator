@@ -99,10 +99,12 @@ class _MarkerLayer extends StatelessWidget {
             Marker(
               point: routeWaypoints!.first.toLatLng(),
               child: const StartRouteIcon(),
+              rotate: true,
             ),
             Marker(
               point: routeWaypoints!.last.toLatLng(),
               child: const EndRouteIcon(),
+              rotate: true,
             ),
           ],
         ],

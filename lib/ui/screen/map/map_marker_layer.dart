@@ -29,6 +29,7 @@ class MapMarkerLayer extends StatelessWidget {
                 color: Colors.blue,
               ),
             ),
+            rotate: true,
           ),
       ],
     );
