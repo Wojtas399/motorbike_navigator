@@ -4,10 +4,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'dependency_injection.dart';
-import 'entity/user.dart' as user;
+import 'entity/settings.dart' as settings;
 import 'ui/config/app_router.dart';
 import 'ui/config/app_theme.dart';
-import 'ui/cubit/logged_user/logged_user_cubit.dart';
 import 'ui/provider/map_tile_url_provider.dart';
 
 class App extends StatelessWidget {
@@ -16,9 +15,6 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (_) => getIt.get<LoggedUserCubit>()..initialize(),
-          ),
           BlocProvider(
             create: (_) => getIt.get<MapTileUrlProvider>()..initialize(),
           ),
@@ -33,19 +29,18 @@ class _MaterialApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appTheme = getIt.get<AppTheme>();
-    final user.ThemeMode? themeMode = context.select(
-      (LoggedUserCubit cubit) => cubit.state.themeMode,
-    );
+    const settings.ThemeMode? themeMode = settings.ThemeMode.light; //TODO
 
     return MaterialApp.router(
       routerConfig: getIt<AppRouter>().config(),
       title: 'Motorbike navigator',
-      themeMode: themeMode != null
-          ? switch (themeMode) {
-              user.ThemeMode.light => ThemeMode.light,
-              user.ThemeMode.dark => ThemeMode.dark,
-            }
-          : null,
+      themeMode: ThemeMode.light,
+      // themeMode != null //TODO
+      //     ? switch (themeMode) {
+      //         user.ThemeMode.light => ThemeMode.light,
+      //         user.ThemeMode.dark => ThemeMode.dark,
+      //       }
+      //     : null,
       theme: appTheme.lightTheme,
       darkTheme: appTheme.darkTheme,
       localizationsDelegates: const [

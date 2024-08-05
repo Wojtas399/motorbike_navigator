@@ -2,23 +2,15 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:rxdart/rxdart.dart';
 
-import '../../data/repository/auth/auth_repository.dart';
-import '../../data/repository/user/user_repository.dart';
-import '../../entity/user.dart';
+import '../../entity/settings.dart';
 import '../../env.dart';
 
 @injectable
 class MapTileUrlProvider extends Cubit<String?> {
-  final AuthRepository _authRepository;
-  final UserRepository _userRepository;
   StreamSubscription<ThemeMode?>? _themeModeListener;
 
-  MapTileUrlProvider(
-    this._authRepository,
-    this._userRepository,
-  ) : super(null);
+  MapTileUrlProvider() : super(null);
 
   @override
   Future<void> close() {
@@ -39,11 +31,5 @@ class MapTileUrlProvider extends Cubit<String?> {
     emit(mapTile);
   }
 
-  Stream<ThemeMode?> _getThemeMode() => _authRepository.loggedUserId$
-      .whereNotNull()
-      .switchMap(
-        (String loggedUserId) =>
-            _userRepository.getUserById(userId: loggedUserId),
-      )
-      .map((User? loggedUser) => loggedUser?.themeMode);
+  Stream<ThemeMode?> _getThemeMode() => Stream.value(ThemeMode.light); //TODO
 }

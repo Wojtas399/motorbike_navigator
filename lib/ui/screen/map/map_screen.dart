@@ -6,8 +6,6 @@ import '../../../dependency_injection.dart';
 import '../../component/gap.dart';
 import '../../component/text.dart';
 import '../../cubit/drive/drive_cubit.dart';
-import '../../cubit/logged_user/logged_user_cubit.dart';
-import '../../cubit/logged_user/logged_user_state.dart';
 import '../../extensions/context_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
@@ -50,9 +48,6 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LoggedUserState loggedUserState = context.select(
-      (LoggedUserCubit cubit) => cubit.state,
-    );
     final MapStateStatus cubitStatus = context.select(
       (MapCubit cubit) => cubit.state.status,
     );
@@ -67,9 +62,10 @@ class _Content extends StatelessWidget {
           MapModeListener(),
           MapDriveCubitListener(),
         ],
-        child: loggedUserState.status.isLoading || cubitStatus.isLoading
-            ? const _LoadingIndicator()
-            : const MapContent(),
+        child: const MapContent(), //TODO
+        // loggedUserState.status.isLoading || cubitStatus.isLoading
+        //     ? const _LoadingIndicator()
+        //     : const MapContent(),
       ),
     );
   }

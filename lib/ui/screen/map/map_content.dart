@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../entity/user.dart' as user;
+import '../../../entity/settings.dart' as settings;
 import '../../component/big_filled_button_component.dart';
 import '../../cubit/drive/drive_cubit.dart';
-import '../../cubit/logged_user/logged_user_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import 'cubit/map_cubit.dart';
 import 'cubit/map_state.dart';
@@ -71,19 +70,23 @@ class _DarkModeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user.ThemeMode? themeMode = context.select(
-      (LoggedUserCubit cubit) => cubit.state.themeMode,
-    );
+    const settings.ThemeMode? themeMode = settings.ThemeMode.light; //TODO
 
-    return themeMode != null
-        ? IconButton.filledTonal(
-            icon: switch (themeMode) {
-              user.ThemeMode.light => const Icon(Icons.dark_mode),
-              user.ThemeMode.dark => const Icon(Icons.light_mode),
-            },
-            onPressed: context.read<LoggedUserCubit>().switchThemeMode,
-          )
-        : const CircularProgressIndicator();
+    return IconButton.filledTonal(
+      icon: const Icon(Icons.light_mode),
+      onPressed: () {
+        //TODO
+      },
+    );
+    // return themeMode != null
+    //     ? IconButton.filledTonal(
+    //         icon: switch (themeMode) {
+    //           user.ThemeMode.light => const Icon(Icons.dark_mode),
+    //           user.ThemeMode.dark => const Icon(Icons.light_mode),
+    //         },
+    //         onPressed: context.read<LoggedUserCubit>().switchThemeMode,
+    //       )
+    //     : const CircularProgressIndicator();
   }
 }
 
