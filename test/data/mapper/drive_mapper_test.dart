@@ -61,7 +61,7 @@ void main() {
         positions: positionDtos,
       );
       final Drive expectedDrive = Drive(
-        id: id,
+        id: 0,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,

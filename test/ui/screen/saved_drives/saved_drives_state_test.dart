@@ -50,7 +50,7 @@ void main() {
     () {
       final driveCreator = DriveCreator();
       final expectedDrives = <Drive>[
-        driveCreator.create(id: 'd1'),
+        driveCreator.create(id: 1),
       ];
       SavedDrivesState state = const SavedDrivesState();
 

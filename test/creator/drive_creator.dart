@@ -3,7 +3,7 @@ import 'package:motorbike_navigator/entity/position.dart';
 
 class DriveCreator {
   Drive create({
-    String id = '',
+    int id = 0,
     DateTime? startDateTime,
     double distanceInKm = 0,
     Duration duration = const Duration(seconds: 0),

@@ -43,7 +43,7 @@ void main() {
     () {
       repository.addEntity(
         const TestModel(
-          id: 't1',
+          id: 1,
           name: 'name',
         ),
       );
@@ -57,10 +57,10 @@ void main() {
     'entity with the same id already exists in state, '
     'should throw exception',
     () {
-      const TestModel newEntity = TestModel(id: 'e1', name: 'entity 1');
+      const TestModel newEntity = TestModel(id: 1, name: 'entity 1');
       final List<TestModel> existingEntities = [
-        const TestModel(id: 'e1', name: 'first entity'),
-        const TestModel(id: 'e2', name: 'second entity'),
+        const TestModel(id: 1, name: 'first entity'),
+        const TestModel(id: 2, name: 'second entity'),
       ];
       final String expectedException =
           '[Repository] Entity $newEntity already exists in repository state';
@@ -81,10 +81,10 @@ void main() {
     'addEntity, '
     'should add new entity to state',
     () {
-      const TestModel newEntity = TestModel(id: 'e3', name: 'entity 3');
+      const TestModel newEntity = TestModel(id: 3, name: 'entity 3');
       final List<TestModel> existingEntities = [
-        const TestModel(id: 'e1', name: 'first entity'),
-        const TestModel(id: 'e2', name: 'second entity'),
+        const TestModel(id: 1, name: 'first entity'),
+        const TestModel(id: 2, name: 'second entity'),
       ];
       final List<TestModel> expectedEntities = [
         ...existingEntities,
@@ -124,14 +124,14 @@ void main() {
     'should omit duplicated entity',
     () {
       const List<TestModel> entitiesToAdd = [
-        TestModel(id: 'e1', name: 'first entity'),
-        TestModel(id: 'e2', name: 'second entity'),
-        TestModel(id: 'e3', name: 'third entity'),
+        TestModel(id: 1, name: 'first entity'),
+        TestModel(id: 2, name: 'second entity'),
+        TestModel(id: 3, name: 'third entity'),
       ];
       const List<TestModel> existingEntities = [
-        TestModel(id: 'e3', name: 'third entity'),
-        TestModel(id: 'e4', name: 'fourth entity'),
-        TestModel(id: 'e5', name: 'fifth entity'),
+        TestModel(id: 3, name: 'third entity'),
+        TestModel(id: 4, name: 'fourth entity'),
+        TestModel(id: 5, name: 'fifth entity'),
       ];
       final List<TestModel> expectedEntities = [
         ...existingEntities,
@@ -151,13 +151,13 @@ void main() {
     'should add all passed entities to state',
     () {
       const List<TestModel> entitiesToAdd = [
-        TestModel(id: 'e1', name: 'first entity'),
-        TestModel(id: 'e2', name: 'second entity'),
-        TestModel(id: 'e3', name: 'third entity'),
+        TestModel(id: 1, name: 'first entity'),
+        TestModel(id: 2, name: 'second entity'),
+        TestModel(id: 3, name: 'third entity'),
       ];
       const List<TestModel> existingEntities = [
-        TestModel(id: 'e4', name: 'fourth entity'),
-        TestModel(id: 'e5', name: 'fifth entity'),
+        TestModel(id: 4, name: 'fourth entity'),
+        TestModel(id: 5, name: 'fifth entity'),
       ];
       final List<TestModel> expectedEntities = [
         ...existingEntities,
@@ -176,10 +176,10 @@ void main() {
     'entity does not exist in state, '
     'should do nothing',
     () {
-      const TestModel updateEntity = TestModel(id: 'e2', name: 'entity 2');
+      const TestModel updateEntity = TestModel(id: 2, name: 'entity 2');
       const List<TestModel> existingEntities = [
-        TestModel(id: 'e1', name: 'entity 1'),
-        TestModel(id: 'e3', name: 'entity 3'),
+        TestModel(id: 1, name: 'entity 1'),
+        TestModel(id: 3, name: 'entity 3'),
       ];
       repository.addEntities(existingEntities);
 
@@ -194,13 +194,13 @@ void main() {
     'should update entity in state',
     () {
       const TestModel updateEntity = TestModel(
-        id: 'e2',
+        id: 2,
         name: 'updated entity 2',
       );
       const List<TestModel> existingEntities = [
-        TestModel(id: 'e1', name: 'entity 1'),
-        TestModel(id: 'e2', name: 'entity 2'),
-        TestModel(id: 'e3', name: 'entity 3'),
+        TestModel(id: 1, name: 'entity 1'),
+        TestModel(id: 2, name: 'entity 2'),
+        TestModel(id: 3, name: 'entity 3'),
       ];
       repository.addEntities(existingEntities);
 

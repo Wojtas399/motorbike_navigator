@@ -31,18 +31,18 @@ void main() {
       const String loggedUserId = 'u1';
       final List<Drive> drives1 = [
         driveCreator.create(
-          id: 'd1',
+          id: 1,
           startDateTime: DateTime(2024, 7, 13, 10, 30),
         ),
         driveCreator.create(
-          id: 'd2',
+          id: 2,
           startDateTime: DateTime(2024, 7, 13, 12, 45),
         ),
       ];
       final List<Drive> drives2 = [
         ...drives1,
         driveCreator.create(
-          id: 'd3',
+          id: 3,
           startDateTime: DateTime(2024, 7, 14, 9, 50),
         ),
       ];
