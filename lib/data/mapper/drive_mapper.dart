@@ -14,7 +14,6 @@ class DriveMapper extends Mapper<Drive, DriveDto> {
   @override
   Drive mapFromDto(DriveDto dto) => Drive(
         id: dto.id,
-        userId: dto.userId,
         startDateTime: dto.startDateTime,
         distanceInKm: dto.distanceInKm,
         duration: dto.duration,

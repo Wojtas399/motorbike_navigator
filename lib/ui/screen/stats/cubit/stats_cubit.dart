@@ -37,8 +37,7 @@ class StatsCubit extends Cubit<StatsState> {
     _drivesListener = _authRepository.loggedUserId$
         .whereNotNull()
         .switchMap(
-          (String loggedUserId) => _driveRepository.getUserDrivesFromDateRange(
-            userId: loggedUserId,
+          (String loggedUserId) => _driveRepository.getDrivesFromDateRange(
             firstDateOfRange: dateRange.firstDateOfRange,
             lastDateOfRange: dateRange.lastDateOfRange,
           ),

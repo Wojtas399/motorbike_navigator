@@ -62,7 +62,6 @@ void main() {
       );
       final Drive expectedDrive = Drive(
         id: id,
-        userId: userId,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,

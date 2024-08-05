@@ -32,9 +32,7 @@ class SavedDrivesCubit extends Cubit<SavedDrivesState> {
 
   Stream<List<Drive>> _getLoggedUserDrives() =>
       _authRepository.loggedUserId$.whereNotNull().switchMap(
-            (String loggedUserId) => _driveRepository.getAllUserDrives(
-              userId: loggedUserId,
-            ),
+            (String loggedUserId) => _driveRepository.getAllDrives(),
           );
 
   void _handleLoggedUserDrives(List<Drive> drives) {

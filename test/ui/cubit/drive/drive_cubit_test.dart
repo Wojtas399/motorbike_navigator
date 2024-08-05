@@ -539,7 +539,6 @@ void main() {
         verify: (_) {
           verify(
             () => driveRepository.addDrive(
-              userId: loggedUserId,
               startDateTime: now,
               distanceInKm: firstDistanceBetweenPositions,
               duration: const Duration(seconds: 1),

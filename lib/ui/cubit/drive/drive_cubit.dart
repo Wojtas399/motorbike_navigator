@@ -83,7 +83,6 @@ class DriveCubit extends Cubit<DriveState> {
       status: DriveStateStatus.saving,
     ));
     await _driveRepository.addDrive(
-      userId: loggedUserId,
       startDateTime: state.startDatetime!,
       distanceInKm: state.distanceInKm,
       duration: state.duration,

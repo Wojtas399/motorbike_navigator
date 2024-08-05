@@ -5,7 +5,6 @@ import 'entity.dart';
 import 'position.dart';
 
 class Drive extends Entity {
-  final String userId;
   final DateTime startDateTime;
   final double distanceInKm;
   final Duration duration;
@@ -13,7 +12,6 @@ class Drive extends Entity {
 
   const Drive({
     required super.id,
-    required this.userId,
     required this.startDateTime,
     required this.distanceInKm,
     required this.duration,
@@ -29,7 +27,6 @@ class Drive extends Entity {
   @override
   List<Object?> get props => [
         id,
-        userId,
         startDateTime,
         distanceInKm,
         duration,

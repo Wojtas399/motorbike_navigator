@@ -9,12 +9,11 @@ class MockDriveRepository extends Mock implements DriveRepository {
     );
   }
 
-  void mockGetUserDrivesFromDateRange({
+  void mockGetDrivesFromDateRange({
     required List<Drive> expectedDrives,
   }) {
     when(
-      () => getUserDrivesFromDateRange(
-        userId: any(named: 'userId'),
+      () => getDrivesFromDateRange(
         firstDateOfRange: any(named: 'firstDateOfRange'),
         lastDateOfRange: any(named: 'lastDateOfRange'),
       ),
@@ -24,7 +23,6 @@ class MockDriveRepository extends Mock implements DriveRepository {
   void mockAddDrive() {
     when(
       () => addDrive(
-        userId: any(named: 'userId'),
         startDateTime: any(named: 'startDateTime'),
         distanceInKm: any(named: 'distanceInKm'),
         duration: any(named: 'duration'),

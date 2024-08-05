@@ -264,8 +264,7 @@ void main() {
             expectedLoggedUserId: loggedUserId,
           );
           when(
-            () => driveRepository.getUserDrivesFromDateRange(
-              userId: loggedUserId,
+            () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: weeklyDateRange.firstDateOfRange,
               lastDateOfRange: weeklyDateRange.lastDateOfRange,
             ),
@@ -316,8 +315,7 @@ void main() {
         verify: (_) {
           verify(() => authRepository.loggedUserId$).called(1);
           verify(
-            () => driveRepository.getUserDrivesFromDateRange(
-              userId: loggedUserId,
+            () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: weeklyDateRange.firstDateOfRange,
               lastDateOfRange: weeklyDateRange.lastDateOfRange,
             ),
@@ -343,8 +341,7 @@ void main() {
             expectedLoggedUserId: loggedUserId,
           );
           when(
-            () => driveRepository.getUserDrivesFromDateRange(
-              userId: loggedUserId,
+            () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: monthlyDateRange.firstDateOfRange,
               lastDateOfRange: monthlyDateRange.lastDateOfRange,
             ),
@@ -407,8 +404,7 @@ void main() {
         verify: (_) {
           verify(() => authRepository.loggedUserId$).called(1);
           verify(
-            () => driveRepository.getUserDrivesFromDateRange(
-              userId: loggedUserId,
+            () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: monthlyDateRange.firstDateOfRange,
               lastDateOfRange: monthlyDateRange.lastDateOfRange,
             ),
@@ -434,8 +430,7 @@ void main() {
             expectedLoggedUserId: loggedUserId,
           );
           when(
-            () => driveRepository.getUserDrivesFromDateRange(
-              userId: loggedUserId,
+            () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: yearlyDateRange.firstDateOfRange,
               lastDateOfRange: yearlyDateRange.lastDateOfRange,
             ),
@@ -507,8 +502,7 @@ void main() {
         verify: (_) {
           verify(() => authRepository.loggedUserId$).called(1);
           verify(
-            () => driveRepository.getUserDrivesFromDateRange(
-              userId: loggedUserId,
+            () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: yearlyDateRange.firstDateOfRange,
               lastDateOfRange: yearlyDateRange.lastDateOfRange,
             ),

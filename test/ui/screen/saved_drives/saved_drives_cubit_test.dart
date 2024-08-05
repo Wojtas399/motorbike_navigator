@@ -68,7 +68,7 @@ void main() {
             expectedLoggedUserId: loggedUserId,
           );
           when(
-            () => driveRepository.getAllUserDrives(userId: loggedUserId),
+            () => driveRepository.getAllDrives(),
           ).thenAnswer((_) => drivesStream$.stream);
         },
         act: (cubit) async {
@@ -96,7 +96,7 @@ void main() {
         verify: (_) {
           verify(() => authRepository.loggedUserId$).called(1);
           verify(
-            () => driveRepository.getAllUserDrives(userId: 'u1'),
+            () => driveRepository.getAllDrives(),
           ).called(1);
         },
       );
