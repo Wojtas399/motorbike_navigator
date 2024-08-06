@@ -24,7 +24,13 @@ class SqliteDb {
 
   Future<Database> _initializeDb() async {
     final String path = await _loadDbPath();
-    return await openDatabase(path, version: 1);
+    return await openDatabase(
+      path,
+      version: 1,
+      onConfigure: (Database db) async {
+        await db.execute('PRAGMA foreign_keys = ON');
+      },
+    );
   }
 
   Future<String> _loadDbPath() async {

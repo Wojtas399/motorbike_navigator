@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'dto/drive_sqlite_dto.dart';
 import 'sqlite_db.dart';
 
-@singleton
+@injectable
 class DriveSqliteService {
   final SqliteDb _sqliteDb;
   final String _tableName = 'Drives';

@@ -6,9 +6,9 @@ part 'position_sqlite_dto.g.dart';
 @freezed
 class PositionSqliteDto with _$PositionSqliteDto {
   const factory PositionSqliteDto({
-    @JsonKey(includeToJson: false) required int id,
+    @JsonKey(includeToJson: false) @Default(0) int id,
     @JsonKey(name: 'drive_id') required int driveId,
-    required int order,
+    @JsonKey(name: 'position_order') required int order,
     required double latitude,
     required double longitude,
     required double altitude,
