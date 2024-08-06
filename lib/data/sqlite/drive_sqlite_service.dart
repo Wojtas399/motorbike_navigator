@@ -12,9 +12,8 @@ class DriveSqliteService {
   final String _startDateTimeColName = 'start_date_time';
   final String _distanceColName = 'distance';
   final String _durationColName = 'duration';
-  Database? _dbInstance;
 
-  DriveSqliteService(this._sqliteDb);
+  const DriveSqliteService(this._sqliteDb);
 
   Future<DriveSqliteDto?> insert({
     required DateTime startDateTime,
@@ -55,25 +54,22 @@ class DriveSqliteService {
   }
 
   Future<Database> get _db async {
-    if (_dbInstance != null) return _dbInstance!;
-    _dbInstance = await _initializeDb();
-    return _dbInstance!;
+    if (await _sqliteDb.doesTableNotExist(_tableName)) {
+      await _createTable();
+    }
+    return _sqliteDb.db;
   }
 
-  Future<Database> _initializeDb() async {
-    final String path = await _sqliteDb.dbPath;
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute('''
+  Future<void> _createTable() async {
+    final db = await _sqliteDb.db;
+    await db.execute(
+      '''
           create table $_tableName ( 
             $_idColName integer primary key autoincrement, 
             $_startDateTimeColName text not null,
             $_distanceColName real not null,
-            _$_durationColName integer not null)
-          ''');
-      },
+            $_durationColName integer not null)
+          ''',
     );
   }
 }
