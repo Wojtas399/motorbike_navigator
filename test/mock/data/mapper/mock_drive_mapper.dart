@@ -2,13 +2,13 @@ import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/data/mapper/drive_mapper.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
 
-import '../../../creator/drive_dto_creator.dart';
+import '../../../creator/drive_sqlite_dto_creator.dart';
 
 class MockDriveMapper extends Mock implements DriveMapper {
   MockDriveMapper() {
-    final driveDtoCreator = DriveDtoCreator();
+    final driveSqliteDtoCreator = DriveSqliteDtoCreator();
     registerFallbackValue(
-      driveDtoCreator.create(),
+      driveSqliteDtoCreator.create(),
     );
   }
 
@@ -16,7 +16,10 @@ class MockDriveMapper extends Mock implements DriveMapper {
     required Drive expectedDrive,
   }) {
     when(
-      () => mapFromDto(any()),
+      () => mapFromDto(
+        driveDto: any(named: 'driveDto'),
+        positionDtos: any(named: 'positionDtos'),
+      ),
     ).thenReturn(expectedDrive);
   }
 }

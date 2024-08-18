@@ -18,6 +18,18 @@ class PositionSqliteService {
 
   const PositionSqliteService(this._sqliteDb);
 
+  Future<List<PositionSqliteDto>> queryByDriveId({
+    required int driveId,
+  }) async {
+    final db = await _db;
+    final List<Map<String, Object?>> positionJsons = await db.query(
+      _tableName,
+      where: '$_driveIdColName = ?',
+      whereArgs: [driveId],
+    );
+    return positionJsons.map(PositionSqliteDto.fromJson).toList();
+  }
+
   Future<PositionSqliteDto?> insert({
     required int driveId,
     required int order,
@@ -37,18 +49,6 @@ class PositionSqliteService {
     final db = await _db;
     final positionId = await db.insert(_tableName, positionToAdd.toJson());
     return await _queryById(id: positionId);
-  }
-
-  Future<List<PositionSqliteDto>> queryByDriveId({
-    required int driveId,
-  }) async {
-    final db = await _db;
-    final List<Map<String, Object?>> positionJsons = await db.query(
-      _tableName,
-      where: '$_driveIdColName = ?',
-      whereArgs: [driveId],
-    );
-    return positionJsons.map(PositionSqliteDto.fromJson).toList();
   }
 
   Future<PositionSqliteDto?> _queryById({

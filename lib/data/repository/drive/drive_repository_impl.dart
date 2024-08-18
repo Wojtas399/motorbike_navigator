@@ -3,23 +3,25 @@ import 'package:injectable/injectable.dart';
 import '../../../entity/drive.dart';
 import '../../../entity/position.dart';
 import '../../../ui/service/date_service.dart';
-import '../../firebase/firebase_drive_service.dart';
 import '../../mapper/drive_mapper.dart';
-import '../../mapper/position_mapper.dart';
+import '../../sqlite/drive_sqlite_service.dart';
+import '../../sqlite/dto/drive_sqlite_dto.dart';
+import '../../sqlite/dto/position_sqlite_dto.dart';
+import '../../sqlite/position_sqlite_service.dart';
 import '../repository.dart';
 import 'drive_repository.dart';
 
 @LazySingleton(as: DriveRepository)
 class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
-  final FirebaseDriveService _dbDriveService;
+  final DriveSqliteService _driveSqliteService;
+  final PositionSqliteService _positionSqliteService;
   final DriveMapper _driveMapper;
-  final PositionMapper _positionMapper;
   final DateService _dateService;
 
   DriveRepositoryImpl(
-    this._dbDriveService,
+    this._driveSqliteService,
+    this._positionSqliteService,
     this._driveMapper,
-    this._positionMapper,
     this._dateService,
   );
 
@@ -36,10 +38,7 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     required DateTime firstDateOfRange,
     required DateTime lastDateOfRange,
   }) async* {
-    await _fetchDrivesFromDateRange(
-      firstDateOfRange,
-      lastDateOfRange,
-    );
+    await _fetchDrivesFromDateRange(firstDateOfRange, lastDateOfRange);
     await for (final drives in repositoryState$) {
       final List<Drive> userDrives = drives
           .where(
@@ -61,45 +60,69 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     required Duration duration,
     required List<Position> positions,
   }) async {
-    //TODO: We should add drives to sqlite
-    // final List<PositionDto> positionDtos =
-    //     positions.map(_positionMapper.mapToDto).toList();
-    // final DriveDto? addedDriveDto = await _dbDriveService.addDrive(
-    //   userId: userId,
-    //   startDateTime: startDateTime,
-    //   distanceInKm: distanceInKm,
-    //   duration: duration,
-    //   positions: positionDtos,
-    // );
-    // if (addedDriveDto == null) {
-    //   throw '[DriveRepository] Cannot add new drive to db';
-    // }
-    // final Drive addedDrive = _driveMapper.mapFromDto(addedDriveDto);
-    // addEntity(addedDrive);
+    final addedDriveDto = await _driveSqliteService.insert(
+      startDateTime: startDateTime,
+      distanceInKm: distanceInKm,
+      duration: duration,
+    );
+    if (addedDriveDto == null) return;
+    final List<PositionSqliteDto> addedPositionDtos = [];
+    for (int i = 0; i < positions.length; i++) {
+      final pos = positions[i];
+      final addedPosDto = await _positionSqliteService.insert(
+        driveId: addedDriveDto.id,
+        order: i + 1,
+        latitude: pos.coordinates.latitude,
+        longitude: pos.coordinates.longitude,
+        altitude: pos.altitude,
+        speedInKmPerH: pos.speedInKmPerH,
+      );
+      if (addedPosDto != null) addedPositionDtos.add(addedPosDto);
+    }
+    final Drive addedDrive = _driveMapper.mapFromDto(
+      driveDto: addedDriveDto,
+      positionDtos: addedPositionDtos,
+    );
+    addEntity(addedDrive);
   }
 
   Future<void> _fetchAllDrives() async {
-    //TODO: We should fetch all drives from sqlite
-    // final List<DriveDto> driveDtos =
-    //     await _dbDriveService.fetchAllUserDrives(userId: userId);
-    // if (driveDtos.isEmpty) return;
-    // final List<Drive> drives = driveDtos.map(_driveMapper.mapFromDto).toList();
-    // addEntities(drives);
+    final List<DriveSqliteDto> driveDtos = await _driveSqliteService.queryAll();
+    if (driveDtos.isEmpty) return;
+    final List<Drive> drives = [];
+    for (final driveDto in driveDtos) {
+      final Drive drive = await _mapDriveSqliteDtoToDrive(driveDto);
+      drives.add(drive);
+    }
+    addEntities(drives);
   }
 
   Future<void> _fetchDrivesFromDateRange(
     DateTime firstDateOfRange,
     DateTime lastDateOfRange,
   ) async {
-    //TODO: We should fetch drives from date range from sqlite
-    // final List<DriveDto> driveDtos =
-    //     await _dbDriveService.fetchAllUserDrivesFromDateRange(
-    //   userId: userId,
-    //   firstDateOfRange: firstDateOfRange,
-    //   lastDateOfRange: lastDateOfRange,
-    // );
-    // if (driveDtos.isEmpty) return;
-    // final List<Drive> drives = driveDtos.map(_driveMapper.mapFromDto).toList();
-    // addEntities(drives);
+    final List<DriveSqliteDto> driveDtos =
+        await _driveSqliteService.queryByDateRange(
+      firstDateOfRange: firstDateOfRange,
+      lastDateOfRange: lastDateOfRange,
+    );
+    if (driveDtos.isEmpty) return;
+    final List<Drive> drives = [];
+    for (final driveDto in driveDtos) {
+      final Drive drive = await _mapDriveSqliteDtoToDrive(driveDto);
+      drives.add(drive);
+    }
+    addEntities(drives);
+  }
+
+  Future<Drive> _mapDriveSqliteDtoToDrive(DriveSqliteDto dto) async {
+    final List<PositionSqliteDto> positionDtos =
+        await _positionSqliteService.queryByDriveId(
+      driveId: dto.id,
+    );
+    return _driveMapper.mapFromDto(
+      driveDto: dto,
+      positionDtos: positionDtos,
+    );
   }
 }

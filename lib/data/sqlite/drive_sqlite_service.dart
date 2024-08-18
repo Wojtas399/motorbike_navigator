@@ -1,19 +1,57 @@
 import 'package:injectable/injectable.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../mapper/datetime_mapper.dart';
 import 'dto/drive_sqlite_dto.dart';
 import 'sqlite_db.dart';
 
 @injectable
 class DriveSqliteService {
   final SqliteDb _sqliteDb;
+  final DateTimeMapper _dateTimeMapper;
   final String _tableName = 'Drives';
   final String _idColName = 'id';
   final String _startDateTimeColName = 'start_date_time';
   final String _distanceColName = 'distance';
   final String _durationColName = 'duration';
 
-  const DriveSqliteService(this._sqliteDb);
+  const DriveSqliteService(this._sqliteDb, this._dateTimeMapper);
+
+  Future<DriveSqliteDto?> queryById({
+    required int id,
+  }) async {
+    final db = await _db;
+    final List<Map<String, Object?>> driveJsons = await db.query(
+      _tableName,
+      where: '$_idColName = ?',
+      whereArgs: [id],
+    );
+    return driveJsons.isNotEmpty
+        ? DriveSqliteDto.fromJson(driveJsons.first)
+        : null;
+  }
+
+  Future<List<DriveSqliteDto>> queryAll() async {
+    final db = await _db;
+    final List<Map<String, Object?>> driveJsons = await db.query(_tableName);
+    return driveJsons.map(DriveSqliteDto.fromJson).toList();
+  }
+
+  Future<List<DriveSqliteDto>> queryByDateRange({
+    required DateTime firstDateOfRange,
+    required DateTime lastDateOfRange,
+  }) async {
+    final db = await _db;
+    final List<Map<String, Object?>> driveJsons = await db.query(
+      _tableName,
+      where: '$_startDateTimeColName >= ? AND $_startDateTimeColName <= ?',
+      whereArgs: [
+        _dateTimeMapper.mapToDto(firstDateOfRange),
+        _dateTimeMapper.mapToDto(lastDateOfRange),
+      ],
+    );
+    return driveJsons.map(DriveSqliteDto.fromJson).toList();
+  }
 
   Future<DriveSqliteDto?> insert({
     required DateTime startDateTime,
@@ -30,27 +68,7 @@ class DriveSqliteService {
       _tableName,
       driveToAdd.toJson(),
     );
-    return await getById(id: driveId);
-  }
-
-  Future<DriveSqliteDto?> getById({
-    required int id,
-  }) async {
-    final db = await _db;
-    final List<Map<String, Object?>> driveJsons = await db.query(
-      _tableName,
-      where: '$_idColName = ?',
-      whereArgs: [id],
-    );
-    return driveJsons.isNotEmpty
-        ? DriveSqliteDto.fromJson(driveJsons.first)
-        : null;
-  }
-
-  Future<List<DriveSqliteDto>> getAll() async {
-    final db = await _db;
-    final List<Map<String, Object?>> driveJsons = await db.query(_tableName);
-    return driveJsons.map(DriveSqliteDto.fromJson).toList();
+    return await queryById(id: driveId);
   }
 
   Future<Database> get _db async {

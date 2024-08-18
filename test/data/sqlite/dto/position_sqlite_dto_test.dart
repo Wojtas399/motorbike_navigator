@@ -17,7 +17,7 @@ void main() {
       final Map<String, Object?> json = {
         'id': id,
         'drive_id': driveId,
-        'order': order,
+        'position_order': order,
         'latitude': latitude,
         'longitude': longitude,
         'altitude': altitude,
@@ -54,7 +54,7 @@ void main() {
       );
       final Map<String, Object?> expectedJson = {
         'drive_id': driveId,
-        'order': order,
+        'position_order': order,
         'latitude': latitude,
         'longitude': longitude,
         'altitude': altitude,

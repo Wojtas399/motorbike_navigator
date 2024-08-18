@@ -1,353 +1,501 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:motorbike_navigator/data/repository/drive/drive_repository_impl.dart';
+import 'package:motorbike_navigator/data/sqlite/dto/drive_sqlite_dto.dart';
+import 'package:motorbike_navigator/data/sqlite/dto/position_sqlite_dto.dart';
+import 'package:motorbike_navigator/entity/coordinates.dart';
+import 'package:motorbike_navigator/entity/drive.dart';
+import 'package:motorbike_navigator/entity/position.dart';
+
+import '../../creator/drive_creator.dart';
+import '../../creator/drive_sqlite_dto_creator.dart';
+import '../../mock/data/mapper/mock_drive_mapper.dart';
+import '../../mock/data/sqlite/mock_drive_sqlite_service.dart';
+import '../../mock/data/sqlite/mock_position_sqlite_service.dart';
+import '../../mock/ui_service/mock_date_service.dart';
+
 void main() {
-  // final dbDriveService = MockFirebaseDriveService();
-  // final driveMapper = MockDriveMapper();
-  // final positionMapper = MockPositionMapper();
-  // final dateService = MockDateService();
-  // final driveCreator = DriveCreator();
-  // final driveDtoCreator = DriveDtoCreator();
-  // late DriveRepositoryImpl repositoryImpl;
-  //
-  // setUp(() {
-  //   repositoryImpl = DriveRepositoryImpl(
-  //     dbDriveService,
-  //     driveMapper,
-  //     positionMapper,
-  //     dateService,
-  //   );
-  // });
-  //
-  // tearDown(() {
-  //   reset(dbDriveService);
-  //   reset(driveMapper);
-  //   reset(positionMapper);
-  //   reset(dateService);
-  // });
-  //
-  // test(
-  //   'getAllUserDrives, '
-  //   "should load all user's drives from db, add them to repo state and emit all "
-  //   'drives with matching user id',
-  //   () async {
-  //     const String userId = 'u1';
-  //     final List<DriveDto> fetchedDriveDtos = [
-  //       driveDtoCreator.create(id: 'd3', userId: userId),
-  //       driveDtoCreator.create(id: 'd4', userId: userId),
-  //     ];
-  //     final List<Drive> fetchedDrives = [
-  //       driveCreator.create(id: 'd3', userId: userId),
-  //       driveCreator.create(id: 'd4', userId: userId),
-  //     ];
-  //     final List<Drive> existingDrives = [
-  //       driveCreator.create(id: 'd1', userId: userId),
-  //       driveCreator.create(id: 'd2', userId: 'u2'),
-  //       driveCreator.create(id: 'd5', userId: 'u3'),
-  //     ];
-  //     final List<Drive> expectedDrives = [
-  //       existingDrives.first,
-  //       ...fetchedDrives,
-  //     ];
-  //     final List<Drive> expectedRepositoryState = [
-  //       ...existingDrives,
-  //       ...fetchedDrives
-  //     ];
-  //     dbDriveService.mockFetchAllUserDrives(
-  //       expectedDriveDtos: fetchedDriveDtos,
-  //     );
-  //     when(
-  //       () => driveMapper.mapFromDto(fetchedDriveDtos.first),
-  //     ).thenReturn(fetchedDrives.first);
-  //     when(
-  //       () => driveMapper.mapFromDto(fetchedDriveDtos.last),
-  //     ).thenReturn(fetchedDrives.last);
-  //     repositoryImpl.addEntities(existingDrives);
-  //
-  //     final Stream<List<Drive>> allUserDrives$ =
-  //         repositoryImpl.getAllUserDrives(userId: userId);
-  //
-  //     expect(await allUserDrives$.first, expectedDrives);
-  //     expect(
-  //       await repositoryImpl.repositoryState$.first,
-  //       expectedRepositoryState,
-  //     );
-  //     verify(
-  //       () => dbDriveService.fetchAllUserDrives(userId: userId),
-  //     ).called(1);
-  //   },
-  // );
-  //
-  // test(
-  //   'getUserDrivesFromDateRange, '
-  //   "should load from db user's drives which startDateTime is from given "
-  //   'date range, add them to repo state and should emit all drives with '
-  //   'matching user id and startDateTime',
-  //   () async {
-  //     const String userId = 'u1';
-  //     final DateTime firstDateOfRange = DateTime(2024, 7, 22);
-  //     final DateTime lastDateOfRange = DateTime(2024, 7, 28);
-  //     final List<DriveDto> fetchedDriveDtos = [
-  //       driveDtoCreator.create(
-  //         id: 'd3',
-  //         userId: userId,
-  //         startDateTime: DateTime(2024, 7, 23),
-  //       ),
-  //       driveDtoCreator.create(
-  //         id: 'd4',
-  //         userId: userId,
-  //         startDateTime: DateTime(2024, 7, 25),
-  //       ),
-  //     ];
-  //     final List<Drive> fetchedDrives = [
-  //       driveCreator.create(
-  //         id: 'd3',
-  //         userId: userId,
-  //         startDateTime: DateTime(2024, 7, 23),
-  //       ),
-  //       driveCreator.create(
-  //         id: 'd4',
-  //         userId: userId,
-  //         startDateTime: DateTime(2024, 7, 25),
-  //       ),
-  //     ];
-  //     final List<Drive> existingDrives = [
-  //       driveCreator.create(
-  //         id: 'd1',
-  //         userId: userId,
-  //         startDateTime: DateTime(2024, 7, 27),
-  //       ),
-  //       driveCreator.create(id: 'd2', userId: 'u2'),
-  //       driveCreator.create(
-  //         id: 'd5',
-  //         userId: userId,
-  //         startDateTime: DateTime(2024, 7, 29),
-  //       ),
-  //     ];
-  //     final List<Drive> expectedDrives = [
-  //       existingDrives.first,
-  //       ...fetchedDrives,
-  //     ];
-  //     final List<Drive> expectedRepositoryState = [
-  //       ...existingDrives,
-  //       ...fetchedDrives
-  //     ];
-  //     dbDriveService.mockFetchAllUserDrivesFromDateRange(
-  //       expectedDriveDtos: fetchedDriveDtos,
-  //     );
-  //     when(
-  //       () => driveMapper.mapFromDto(fetchedDriveDtos.first),
-  //     ).thenReturn(fetchedDrives.first);
-  //     when(
-  //       () => driveMapper.mapFromDto(fetchedDriveDtos.last),
-  //     ).thenReturn(fetchedDrives.last);
-  //     when(
-  //       () => dateService.isDateFromRange(
-  //         date: fetchedDrives.first.startDateTime,
-  //         firstDateOfRange: firstDateOfRange,
-  //         lastDateOfRange: lastDateOfRange,
-  //       ),
-  //     ).thenReturn(true);
-  //     when(
-  //       () => dateService.isDateFromRange(
-  //         date: fetchedDrives.last.startDateTime,
-  //         firstDateOfRange: firstDateOfRange,
-  //         lastDateOfRange: lastDateOfRange,
-  //       ),
-  //     ).thenReturn(true);
-  //     when(
-  //       () => dateService.isDateFromRange(
-  //         date: existingDrives.first.startDateTime,
-  //         firstDateOfRange: firstDateOfRange,
-  //         lastDateOfRange: lastDateOfRange,
-  //       ),
-  //     ).thenReturn(true);
-  //     when(
-  //       () => dateService.isDateFromRange(
-  //         date: existingDrives.last.startDateTime,
-  //         firstDateOfRange: firstDateOfRange,
-  //         lastDateOfRange: lastDateOfRange,
-  //       ),
-  //     ).thenReturn(false);
-  //     repositoryImpl.addEntities(existingDrives);
-  //
-  //     final Stream<List<Drive>> allUserDrives$ =
-  //         repositoryImpl.getUserDrivesFromDateRange(
-  //       userId: userId,
-  //       firstDateOfRange: firstDateOfRange,
-  //       lastDateOfRange: lastDateOfRange,
-  //     );
-  //
-  //     expect(await allUserDrives$.first, expectedDrives);
-  //     expect(
-  //       await repositoryImpl.repositoryState$.first,
-  //       expectedRepositoryState,
-  //     );
-  //     verify(
-  //       () => dbDriveService.fetchAllUserDrivesFromDateRange(
-  //         userId: userId,
-  //         firstDateOfRange: firstDateOfRange,
-  //         lastDateOfRange: lastDateOfRange,
-  //       ),
-  //     ).called(1);
-  //   },
-  // );
-  //
-  // test(
-  //   'addDrive, '
-  //   'should call method to add drive to db and should add added drive to repo '
-  //   'state',
-  //   () async {
-  //     const String id = 'd1';
-  //     const String userId = 'u1';
-  //     final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
-  //     const double distanceInKm = 2.2;
-  //     const Duration duration = Duration(minutes: 20);
-  //     const List<Position> positions = [
-  //       Position(
-  //         coordinates: Coordinates(50, 19),
-  //         altitude: 100.1,
-  //         speedInKmPerH: 22.2,
-  //       ),
-  //       Position(
-  //         coordinates: Coordinates(51, 20),
-  //         altitude: 110.1,
-  //         speedInKmPerH: 33.33,
-  //       ),
-  //     ];
-  //     const List<PositionDto> positionDtos = [
-  //       PositionDto(
-  //         coordinates: CoordinatesDto(latitude: 50, longitude: 19),
-  //         altitude: 100.1,
-  //         speedInKmPerH: 22.2,
-  //       ),
-  //       PositionDto(
-  //         coordinates: CoordinatesDto(latitude: 51, longitude: 20),
-  //         altitude: 110.1,
-  //         speedInKmPerH: 33.33,
-  //       ),
-  //     ];
-  //     final DriveDto addedDriveDto = DriveDto(
-  //       id: id,
-  //       userId: userId,
-  //       startDateTime: startDateTime,
-  //       distanceInKm: distanceInKm,
-  //       duration: duration,
-  //       positions: positionDtos,
-  //     );
-  //     final Drive expectedAddedDrive = Drive(
-  //       id: id,
-  //       userId: userId,
-  //       startDateTime: startDateTime,
-  //       distanceInKm: distanceInKm,
-  //       duration: duration,
-  //       positions: positions,
-  //     );
-  //     final List<Drive> existingDrives = [
-  //       driveCreator.create(id: 'd2', userId: userId),
-  //       driveCreator.create(id: 'd3', userId: 'u2'),
-  //     ];
-  //     final List<Drive> expectedRepoState = [
-  //       ...existingDrives,
-  //       expectedAddedDrive,
-  //     ];
-  //     when(
-  //       () => positionMapper.mapToDto(positions.first),
-  //     ).thenReturn(positionDtos.first);
-  //     when(
-  //       () => positionMapper.mapToDto(positions.last),
-  //     ).thenReturn(positionDtos.last);
-  //     dbDriveService.mockAddDrive(expectedAddedDriveDto: addedDriveDto);
-  //     driveMapper.mockMapFromDto(expectedDrive: expectedAddedDrive);
-  //     repositoryImpl.addEntities(existingDrives);
-  //
-  //     await repositoryImpl.addDrive(
-  //       userId: userId,
-  //       startDateTime: startDateTime,
-  //       distanceInKm: distanceInKm,
-  //       duration: duration,
-  //       positions: positions,
-  //     );
-  //
-  //     expect(
-  //       await repositoryImpl.repositoryState$.first,
-  //       expectedRepoState,
-  //     );
-  //     verify(
-  //       () => dbDriveService.addDrive(
-  //         userId: userId,
-  //         startDateTime: startDateTime,
-  //         distanceInKm: distanceInKm,
-  //         duration: duration,
-  //         positions: positionDtos,
-  //       ),
-  //     ).called(1);
-  //   },
-  // );
-  //
-  // test(
-  //   'addDrive, '
-  //   'method to add drive to db returns null, '
-  //   'should throw exception',
-  //   () async {
-  //     const String userId = 'u1';
-  //     final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
-  //     const double distanceInKm = 2.2;
-  //     const Duration duration = Duration(minutes: 20);
-  //     const List<Position> positions = [
-  //       Position(
-  //         coordinates: Coordinates(50, 19),
-  //         altitude: 100.1,
-  //         speedInKmPerH: 22.2,
-  //       ),
-  //       Position(
-  //         coordinates: Coordinates(51, 20),
-  //         altitude: 110.1,
-  //         speedInKmPerH: 33.33,
-  //       ),
-  //     ];
-  //     const List<PositionDto> positionDtos = [
-  //       PositionDto(
-  //         coordinates: CoordinatesDto(latitude: 50, longitude: 19),
-  //         altitude: 100.1,
-  //         speedInKmPerH: 22.2,
-  //       ),
-  //       PositionDto(
-  //         coordinates: CoordinatesDto(latitude: 51, longitude: 20),
-  //         altitude: 110.1,
-  //         speedInKmPerH: 33.33,
-  //       ),
-  //     ];
-  //     const String expectedException =
-  //         '[DriveRepository] Cannot add new drive to db';
-  //     when(
-  //       () => positionMapper.mapToDto(positions.first),
-  //     ).thenReturn(positionDtos.first);
-  //     when(
-  //       () => positionMapper.mapToDto(positions.last),
-  //     ).thenReturn(positionDtos.last);
-  //     dbDriveService.mockAddDrive(expectedAddedDriveDto: null);
-  //
-  //     Object? exception;
-  //     try {
-  //       await repositoryImpl.addDrive(
-  //         userId: userId,
-  //         startDateTime: startDateTime,
-  //         distanceInKm: distanceInKm,
-  //         duration: duration,
-  //         positions: positions,
-  //       );
-  //     } catch (e) {
-  //       exception = e;
-  //     }
-  //
-  //     expect(exception, expectedException);
-  //     verify(
-  //       () => dbDriveService.addDrive(
-  //         userId: userId,
-  //         startDateTime: startDateTime,
-  //         distanceInKm: distanceInKm,
-  //         duration: duration,
-  //         positions: positionDtos,
-  //       ),
-  //     ).called(1);
-  //   },
-  // );
+  final driveSqliteService = MockDriveSqliteService();
+  final positionSqliteService = MockPositionSqliteService();
+  final driveMapper = MockDriveMapper();
+  final dateService = MockDateService();
+  final driveCreator = DriveCreator();
+  final driveSqliteDtoCreator = DriveSqliteDtoCreator();
+  late DriveRepositoryImpl repositoryImpl;
+
+  setUp(() {
+    repositoryImpl = DriveRepositoryImpl(
+      driveSqliteService,
+      positionSqliteService,
+      driveMapper,
+      dateService,
+    );
+  });
+
+  tearDown(() {
+    reset(driveSqliteService);
+    reset(positionSqliteService);
+    reset(driveMapper);
+    reset(dateService);
+  });
+
+  test(
+    'getAllDrives, '
+    'should fetch all drives from db, add them to repo state and emit them all',
+    () async {
+      final List<DriveSqliteDto> fetchedDriveSqliteDtos = [
+        driveSqliteDtoCreator.create(id: 3),
+        driveSqliteDtoCreator.create(id: 4),
+      ];
+      final List<Drive> fetchedDrives = [
+        driveCreator.create(id: 3),
+        driveCreator.create(id: 4),
+      ];
+      final List<Drive> existingDrives = [
+        driveCreator.create(id: 1),
+        driveCreator.create(id: 2),
+        driveCreator.create(id: 5),
+      ];
+      final List<Drive> expectedDrives = [
+        ...existingDrives,
+        ...fetchedDrives,
+      ];
+      final List<Drive> expectedRepositoryState = [
+        ...existingDrives,
+        ...fetchedDrives
+      ];
+      driveSqliteService.mockQueryAll(
+        expectedDriveSqliteDtos: fetchedDriveSqliteDtos,
+      );
+      when(
+        () => positionSqliteService.queryByDriveId(driveId: 3),
+      ).thenAnswer((_) => Future.value([]));
+      when(
+        () => positionSqliteService.queryByDriveId(driveId: 4),
+      ).thenAnswer((_) => Future.value([]));
+      when(
+        () => driveMapper.mapFromDto(
+          driveDto: fetchedDriveSqliteDtos.first,
+          positionDtos: [],
+        ),
+      ).thenReturn(fetchedDrives.first);
+      when(
+        () => driveMapper.mapFromDto(
+          driveDto: fetchedDriveSqliteDtos.last,
+          positionDtos: [],
+        ),
+      ).thenReturn(fetchedDrives.last);
+      repositoryImpl.addEntities(existingDrives);
+
+      final Stream<List<Drive>> allDrives$ = repositoryImpl.getAllDrives();
+
+      expect(await allDrives$.first, expectedDrives);
+      expect(
+        await repositoryImpl.repositoryState$.first,
+        expectedRepositoryState,
+      );
+      verify(driveSqliteService.queryAll).called(1);
+      verify(() => positionSqliteService.queryByDriveId(driveId: 3)).called(1);
+      verify(() => positionSqliteService.queryByDriveId(driveId: 4)).called(1);
+    },
+  );
+
+  test(
+    'getUserDrivesFromDateRange, '
+    'should fetch from db drives which startDateTime is from given date range, '
+    'should add them to repo state and should emit all drives with matching '
+    'startDateTime',
+    () async {
+      final DateTime firstDateOfRange = DateTime(2024, 7, 22);
+      final DateTime lastDateOfRange = DateTime(2024, 7, 28);
+      final List<DriveSqliteDto> fetchedDriveSqliteDtos = [
+        driveSqliteDtoCreator.create(
+          id: 3,
+          startDateTime: DateTime(2024, 7, 23),
+        ),
+        driveSqliteDtoCreator.create(
+          id: 4,
+          startDateTime: DateTime(2024, 7, 25),
+        ),
+      ];
+      final List<Drive> fetchedDrives = [
+        driveCreator.create(
+          id: 3,
+          startDateTime: DateTime(2024, 7, 23),
+        ),
+        driveCreator.create(
+          id: 4,
+          startDateTime: DateTime(2024, 7, 25),
+        ),
+      ];
+      final List<Drive> existingDrives = [
+        driveCreator.create(
+          id: 1,
+          startDateTime: DateTime(2024, 7, 27),
+        ),
+        driveCreator.create(id: 2),
+        driveCreator.create(
+          id: 5,
+          startDateTime: DateTime(2024, 7, 29),
+        ),
+      ];
+      final List<Drive> expectedDrives = [
+        existingDrives.first,
+        ...fetchedDrives,
+      ];
+      final List<Drive> expectedRepositoryState = [
+        ...existingDrives,
+        ...fetchedDrives
+      ];
+      driveSqliteService.mockQueryByDateRange(
+        expectedDriveSqliteDtos: fetchedDriveSqliteDtos,
+      );
+      positionSqliteService.mockQueryByDriveId(
+        expectedPositionSqliteDtos: [],
+      );
+      when(
+        () => driveMapper.mapFromDto(
+          driveDto: fetchedDriveSqliteDtos.first,
+          positionDtos: [],
+        ),
+      ).thenReturn(fetchedDrives.first);
+      when(
+        () => driveMapper.mapFromDto(
+          driveDto: fetchedDriveSqliteDtos.last,
+          positionDtos: [],
+        ),
+      ).thenReturn(fetchedDrives.last);
+      dateService.mockIsDateFromRange(
+        expectedAnswer: false,
+      );
+      when(
+        () => dateService.isDateFromRange(
+          date: fetchedDrives.first.startDateTime,
+          firstDateOfRange: firstDateOfRange,
+          lastDateOfRange: lastDateOfRange,
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.isDateFromRange(
+          date: fetchedDrives.last.startDateTime,
+          firstDateOfRange: firstDateOfRange,
+          lastDateOfRange: lastDateOfRange,
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.isDateFromRange(
+          date: existingDrives.first.startDateTime,
+          firstDateOfRange: firstDateOfRange,
+          lastDateOfRange: lastDateOfRange,
+        ),
+      ).thenReturn(true);
+      repositoryImpl.addEntities(existingDrives);
+
+      final Stream<List<Drive>> allDrives$ =
+          repositoryImpl.getDrivesFromDateRange(
+        firstDateOfRange: firstDateOfRange,
+        lastDateOfRange: lastDateOfRange,
+      );
+
+      expect(await allDrives$.first, expectedDrives);
+      expect(
+        await repositoryImpl.repositoryState$.first,
+        expectedRepositoryState,
+      );
+      verify(
+        () => driveSqliteService.queryByDateRange(
+          firstDateOfRange: firstDateOfRange,
+          lastDateOfRange: lastDateOfRange,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'addDrive, '
+    'should call methods to add drive and its positions to db and should add '
+    'added drive to repo state',
+    () async {
+      const int driveId = 1;
+      final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
+      const double distanceInKm = 2.2;
+      const Duration duration = Duration(minutes: 20);
+      const List<Position> positions = [
+        Position(
+          coordinates: Coordinates(51, 20),
+          altitude: 110.1,
+          speedInKmPerH: 33.33,
+        ),
+        Position(
+          coordinates: Coordinates(50, 19),
+          altitude: 100.1,
+          speedInKmPerH: 22.22,
+        ),
+      ];
+      const List<PositionSqliteDto> positionSqliteDtos = [
+        PositionSqliteDto(
+          id: 1,
+          driveId: driveId,
+          order: 1,
+          latitude: 51,
+          longitude: 20,
+          altitude: 110.1,
+          speedInKmPerH: 33.33,
+        ),
+        PositionSqliteDto(
+          id: 2,
+          driveId: driveId,
+          order: 2,
+          latitude: 50,
+          longitude: 19,
+          altitude: 100.1,
+          speedInKmPerH: 22.2,
+        ),
+      ];
+      final DriveSqliteDto addedDriveSqliteDto = DriveSqliteDto(
+        id: driveId,
+        startDateTime: startDateTime,
+        distanceInKm: distanceInKm,
+        duration: duration,
+      );
+      final Drive expectedAddedDrive = Drive(
+        id: driveId,
+        startDateTime: startDateTime,
+        distanceInKm: distanceInKm,
+        duration: duration,
+        positions: positions,
+      );
+      final List<Drive> existingDrives = [
+        driveCreator.create(id: 2),
+        driveCreator.create(id: 3),
+      ];
+      final List<Drive> expectedRepoState = [
+        ...existingDrives,
+        expectedAddedDrive,
+      ];
+      driveSqliteService.mockInsert(
+        expectedInsertedDriveSqliteDto: addedDriveSqliteDto,
+      );
+      when(
+        () => positionSqliteService.insert(
+          driveId: driveId,
+          order: 1,
+          latitude: positions.first.coordinates.latitude,
+          longitude: positions.first.coordinates.longitude,
+          altitude: positions.first.altitude,
+          speedInKmPerH: positions.first.speedInKmPerH,
+        ),
+      ).thenAnswer((_) => Future.value(positionSqliteDtos.first));
+      when(
+        () => positionSqliteService.insert(
+          driveId: driveId,
+          order: 2,
+          latitude: positions.last.coordinates.latitude,
+          longitude: positions.last.coordinates.longitude,
+          altitude: positions.last.altitude,
+          speedInKmPerH: positions.last.speedInKmPerH,
+        ),
+      ).thenAnswer((_) => Future.value(positionSqliteDtos.last));
+      driveMapper.mockMapFromDto(expectedDrive: expectedAddedDrive);
+      repositoryImpl.addEntities(existingDrives);
+
+      await repositoryImpl.addDrive(
+        startDateTime: startDateTime,
+        distanceInKm: distanceInKm,
+        duration: duration,
+        positions: positions,
+      );
+
+      expect(
+        await repositoryImpl.repositoryState$.first,
+        expectedRepoState,
+      );
+      verify(
+        () => driveSqliteService.insert(
+          startDateTime: startDateTime,
+          distanceInKm: distanceInKm,
+          duration: duration,
+        ),
+      ).called(1);
+      verify(
+        () => positionSqliteService.insert(
+          driveId: driveId,
+          order: 1,
+          latitude: positions.first.coordinates.latitude,
+          longitude: positions.first.coordinates.longitude,
+          altitude: positions.first.altitude,
+          speedInKmPerH: positions.first.speedInKmPerH,
+        ),
+      ).called(1);
+      verify(
+        () => positionSqliteService.insert(
+          driveId: driveId,
+          order: 2,
+          latitude: positions.last.coordinates.latitude,
+          longitude: positions.last.coordinates.longitude,
+          altitude: positions.last.altitude,
+          speedInKmPerH: positions.last.speedInKmPerH,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'addDrive, '
+    'method to add drive to db returns null, '
+    'should finish method call',
+    () async {
+      final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
+      const double distanceInKm = 2.2;
+      const Duration duration = Duration(minutes: 20);
+      const List<Position> positions = [
+        Position(
+          coordinates: Coordinates(50, 19),
+          altitude: 100.1,
+          speedInKmPerH: 22.2,
+        ),
+        Position(
+          coordinates: Coordinates(51, 20),
+          altitude: 110.1,
+          speedInKmPerH: 33.33,
+        ),
+      ];
+      driveSqliteService.mockInsert(expectedInsertedDriveSqliteDto: null);
+
+      await repositoryImpl.addDrive(
+        startDateTime: startDateTime,
+        distanceInKm: distanceInKm,
+        duration: duration,
+        positions: positions,
+      );
+
+      verify(
+        () => driveSqliteService.insert(
+          startDateTime: startDateTime,
+          distanceInKm: distanceInKm,
+          duration: duration,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'addDrive, '
+    'method to add position to db returns null, '
+    'should omit position in list',
+    () async {
+      const int driveId = 1;
+      final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
+      const double distanceInKm = 2.2;
+      const Duration duration = Duration(minutes: 20);
+      const List<Position> positions = [
+        Position(
+          coordinates: Coordinates(51, 20),
+          altitude: 110.1,
+          speedInKmPerH: 33.33,
+        ),
+        Position(
+          coordinates: Coordinates(50, 19),
+          altitude: 100.1,
+          speedInKmPerH: 22.22,
+        ),
+      ];
+      const List<PositionSqliteDto> positionSqliteDtos = [
+        PositionSqliteDto(
+          id: 1,
+          driveId: driveId,
+          order: 1,
+          latitude: 51,
+          longitude: 20,
+          altitude: 110.1,
+          speedInKmPerH: 33.33,
+        ),
+      ];
+      final DriveSqliteDto addedDriveSqliteDto = DriveSqliteDto(
+        id: driveId,
+        startDateTime: startDateTime,
+        distanceInKm: distanceInKm,
+        duration: duration,
+      );
+      final Drive expectedAddedDrive = Drive(
+        id: driveId,
+        startDateTime: startDateTime,
+        distanceInKm: distanceInKm,
+        duration: duration,
+        positions: [positions.first],
+      );
+      final List<Drive> existingDrives = [
+        driveCreator.create(id: 2),
+        driveCreator.create(id: 3),
+      ];
+      final List<Drive> expectedRepoState = [
+        ...existingDrives,
+        expectedAddedDrive,
+      ];
+      driveSqliteService.mockInsert(
+        expectedInsertedDriveSqliteDto: addedDriveSqliteDto,
+      );
+      when(
+        () => positionSqliteService.insert(
+          driveId: driveId,
+          order: 1,
+          latitude: positions.first.coordinates.latitude,
+          longitude: positions.first.coordinates.longitude,
+          altitude: positions.first.altitude,
+          speedInKmPerH: positions.first.speedInKmPerH,
+        ),
+      ).thenAnswer((_) => Future.value(positionSqliteDtos.first));
+      when(
+        () => positionSqliteService.insert(
+          driveId: driveId,
+          order: 2,
+          latitude: positions.last.coordinates.latitude,
+          longitude: positions.last.coordinates.longitude,
+          altitude: positions.last.altitude,
+          speedInKmPerH: positions.last.speedInKmPerH,
+        ),
+      ).thenAnswer((_) => Future.value(null));
+      driveMapper.mockMapFromDto(expectedDrive: expectedAddedDrive);
+      repositoryImpl.addEntities(existingDrives);
+
+      await repositoryImpl.addDrive(
+        startDateTime: startDateTime,
+        distanceInKm: distanceInKm,
+        duration: duration,
+        positions: positions,
+      );
+
+      expect(
+        await repositoryImpl.repositoryState$.first,
+        expectedRepoState,
+      );
+      verify(
+        () => driveSqliteService.insert(
+          startDateTime: startDateTime,
+          distanceInKm: distanceInKm,
+          duration: duration,
+        ),
+      ).called(1);
+      verify(
+        () => positionSqliteService.insert(
+          driveId: driveId,
+          order: 1,
+          latitude: positions.first.coordinates.latitude,
+          longitude: positions.first.coordinates.longitude,
+          altitude: positions.first.altitude,
+          speedInKmPerH: positions.first.speedInKmPerH,
+        ),
+      ).called(1);
+      verify(
+        () => positionSqliteService.insert(
+          driveId: driveId,
+          order: 2,
+          latitude: positions.last.coordinates.latitude,
+          longitude: positions.last.coordinates.longitude,
+          altitude: positions.last.altitude,
+          speedInKmPerH: positions.last.speedInKmPerH,
+        ),
+      ).called(1);
+    },
+  );
 }

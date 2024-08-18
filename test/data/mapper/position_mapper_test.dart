@@ -1,26 +1,27 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
-import 'package:motorbike_navigator/data/dto/position_dto.dart';
 import 'package:motorbike_navigator/data/mapper/position_mapper.dart';
+import 'package:motorbike_navigator/data/sqlite/dto/position_sqlite_dto.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/position.dart';
 
 void main() {
-  const Coordinates coordinates = Coordinates(50, 19);
-  const CoordinatesDto coordinatesDto = CoordinatesDto(
-    latitude: 50,
-    longitude: 19,
-  );
+  const double latitude = 50.50;
+  const double longitude = 19.19;
+  const Coordinates coordinates = Coordinates(latitude, longitude);
   const double altitude = 111.11;
   const double speedInKmPerH = 33.33;
   const mapper = PositionMapper();
 
   test(
-    'fromDto, '
-    'should map PositionDto model to Position model',
+    'mapFromDto, '
+    'should map PositionSqliteDto model to Position model',
     () {
-      const positionDto = PositionDto(
-        coordinates: coordinatesDto,
+      const positionDto = PositionSqliteDto(
+        id: 1,
+        driveId: 1,
+        order: 1,
+        latitude: latitude,
+        longitude: longitude,
         altitude: altitude,
         speedInKmPerH: speedInKmPerH,
       );
@@ -33,27 +34,6 @@ void main() {
       final position = mapper.mapFromDto(positionDto);
 
       expect(position, expectedPosition);
-    },
-  );
-
-  test(
-    'toDto, '
-    'should map Position model to PositionDto model',
-    () {
-      const position = Position(
-        coordinates: coordinates,
-        altitude: altitude,
-        speedInKmPerH: speedInKmPerH,
-      );
-      const expectedPositionDto = PositionDto(
-        coordinates: coordinatesDto,
-        altitude: altitude,
-        speedInKmPerH: speedInKmPerH,
-      );
-
-      final positionDto = mapper.mapToDto(position);
-
-      expect(positionDto, expectedPositionDto);
     },
   );
 }

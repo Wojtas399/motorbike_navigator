@@ -1,9 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/data/dto/coordinates_dto.dart';
-import 'package:motorbike_navigator/data/dto/drive_dto.dart';
-import 'package:motorbike_navigator/data/dto/position_dto.dart';
 import 'package:motorbike_navigator/data/mapper/drive_mapper.dart';
+import 'package:motorbike_navigator/data/sqlite/dto/drive_sqlite_dto.dart';
+import 'package:motorbike_navigator/data/sqlite/dto/position_sqlite_dto.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
 import 'package:motorbike_navigator/entity/position.dart';
@@ -21,47 +20,53 @@ void main() {
 
   test(
     'mapFromDto, '
-    'should map DriveDto model to Drive model',
+    'should map DriveSqliteDto model to Drive model (positions should be sorted by '
+    'order param and then mapped to Position model)',
     () {
-      const String id = 'd1';
-      const String userId = 'u1';
+      const int id = 1;
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 10.21;
       const Duration duration = Duration(hours: 1, minutes: 20);
       const List<Position> positions = [
         Position(
-          coordinates: Coordinates(50, 18),
-          altitude: 100.22,
-          speedInKmPerH: 22.22,
-        ),
-        Position(
           coordinates: Coordinates(51, 19),
           altitude: 1001.22,
           speedInKmPerH: 23.33,
         ),
-      ];
-      const List<PositionDto> positionDtos = [
-        PositionDto(
-          coordinates: CoordinatesDto(latitude: 50, longitude: 18),
+        Position(
+          coordinates: Coordinates(50, 18),
           altitude: 100.22,
           speedInKmPerH: 22.22,
         ),
-        PositionDto(
-          coordinates: CoordinatesDto(latitude: 51, longitude: 19),
+      ];
+      const List<PositionSqliteDto> positionDtos = [
+        PositionSqliteDto(
+          id: 2,
+          driveId: id,
+          order: 2,
+          latitude: 50,
+          longitude: 18,
+          altitude: 100.22,
+          speedInKmPerH: 22.22,
+        ),
+        PositionSqliteDto(
+          id: 1,
+          driveId: id,
+          order: 1,
+          latitude: 51,
+          longitude: 19,
           altitude: 101.22,
           speedInKmPerH: 33.33,
         ),
       ];
-      final DriveDto driveDto = DriveDto(
+      final DriveSqliteDto driveDto = DriveSqliteDto(
         id: id,
-        userId: userId,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
-        positions: positionDtos,
       );
       final Drive expectedDrive = Drive(
-        id: 0,
+        id: id,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
@@ -74,7 +79,10 @@ void main() {
         () => positionMapper.mapFromDto(positionDtos.last),
       ).thenReturn(positions.last);
 
-      final Drive drive = mapper.mapFromDto(driveDto);
+      final Drive drive = mapper.mapFromDto(
+        driveDto: driveDto,
+        positionDtos: positionDtos,
+      );
 
       expect(drive, expectedDrive);
     },
