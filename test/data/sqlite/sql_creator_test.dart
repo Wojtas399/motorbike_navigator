@@ -141,7 +141,8 @@ void main() {
 
   test(
     'generateCreateTableSql, '
-    'should list all columns with their params separated by comma',
+    'should list all columns with their params separated by comma and should '
+    'add foreign key references at the end of the list',
     () {
       const List<SqlColumn> columns = [
         SqlColumn(
@@ -170,7 +171,7 @@ void main() {
         ),
       ];
       const String expectedSql =
-          'CREATE TABLE $tableName (id INTEGER PRIMARY KEY AUTOINCREMENT, family_id INTEGER NOT NULL, FOREIGN KEY(family_id) REFERENCES Families(id), name TEXT NOT NULL, surname TEXT, age INTEGER NOT NULL)';
+          'CREATE TABLE $tableName (id INTEGER PRIMARY KEY AUTOINCREMENT, family_id INTEGER NOT NULL, name TEXT NOT NULL, surname TEXT, age INTEGER NOT NULL, FOREIGN KEY(family_id) REFERENCES Families(id))';
 
       final String sql = generator.generateCreateTableSql(
         tableName: tableName,

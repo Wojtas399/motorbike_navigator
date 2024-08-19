@@ -38,7 +38,7 @@ class PositionSqliteService {
     required double altitude,
     required double speedInKmPerH,
   }) async {
-    _createTableIfNotExists();
+    await _createTableIfNotExists();
     final PositionSqliteDto positionToAdd = PositionSqliteDto(
       driveId: driveId,
       order: order,

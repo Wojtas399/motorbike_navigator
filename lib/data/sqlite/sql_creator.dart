@@ -14,6 +14,12 @@ class SqlGenerator {
     for (int i = 1; i < columns.length; i++) {
       columnsSql += ', ${_createColSql(columns[i])}';
     }
+    final foreignKeys = columns.where(
+      (col) => col.foreignKeyReference != null,
+    );
+    for (final foreignKeyCol in foreignKeys) {
+      columnsSql += ', ${_createForeignKeyReference(foreignKeyCol)}';
+    }
     return 'CREATE TABLE $tableName ($columnsSql)';
   }
 
@@ -31,10 +37,9 @@ class SqlGenerator {
       SqlColumnType.id => '',
     };
     if (column.isNotNull) query += ' NOT NULL';
-    if (column.foreignKeyReference != null) {
-      query +=
-          ', FOREIGN KEY(${column.name}) REFERENCES ${column.foreignKeyReference}';
-    }
     return query;
   }
+
+  String _createForeignKeyReference(SqlColumn column) =>
+      'FOREIGN KEY(${column.name}) REFERENCES ${column.foreignKeyReference}';
 }
