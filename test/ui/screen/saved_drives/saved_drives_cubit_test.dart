@@ -7,28 +7,21 @@ import 'package:motorbike_navigator/ui/screen/saved_drives/cubit/saved_drives_st
 import 'package:rxdart/rxdart.dart';
 
 import '../../../creator/drive_creator.dart';
-import '../../../mock/data/repository/mock_auth_repository.dart';
 import '../../../mock/data/repository/mock_drive_repository.dart';
 
 void main() {
-  final authRepository = MockAuthRepository();
   final driveRepository = MockDriveRepository();
   final driveCreator = DriveCreator();
 
-  SavedDrivesCubit createCubit() => SavedDrivesCubit(
-        authRepository,
-        driveRepository,
-      );
+  SavedDrivesCubit createCubit() => SavedDrivesCubit(driveRepository);
 
   tearDown(() {
-    reset(authRepository);
     reset(driveRepository);
   });
 
   group(
     'initialize, ',
     () {
-      const String loggedUserId = 'u1';
       final List<Drive> drives1 = [
         driveCreator.create(
           id: 1,
@@ -50,27 +43,12 @@ void main() {
       SavedDrivesState? state;
 
       blocTest(
-        'should do nothing if logged user does not exist',
+        'should listen to all drives, sort them by startDateTime in descending '
+        'order and should emit them',
         build: () => createCubit(),
-        setUp: () => authRepository.mockGetLoggedUserId(
-          expectedLoggedUserId: null,
-        ),
-        act: (cubit) => cubit.initialize(),
-        expect: () => [],
-      );
-
-      blocTest(
-        'should listen to all user drives, sort them by startDateTime in '
-        'descending order and should emit them',
-        build: () => createCubit(),
-        setUp: () {
-          authRepository.mockGetLoggedUserId(
-            expectedLoggedUserId: loggedUserId,
-          );
-          when(
-            () => driveRepository.getAllDrives(),
-          ).thenAnswer((_) => drivesStream$.stream);
-        },
+        setUp: () => when(
+          () => driveRepository.getAllDrives(),
+        ).thenAnswer((_) => drivesStream$.stream),
         act: (cubit) async {
           cubit.initialize();
           drivesStream$.add(drives1);
@@ -93,12 +71,7 @@ void main() {
             ],
           ),
         ],
-        verify: (_) {
-          verify(() => authRepository.loggedUserId$).called(1);
-          verify(
-            () => driveRepository.getAllDrives(),
-          ).called(1);
-        },
+        verify: (_) => verify(driveRepository.getAllDrives).called(1),
       );
     },
   );
