@@ -4,10 +4,10 @@ import '../../../entity/drive.dart';
 import '../../../entity/position.dart';
 import '../../../ui/service/date_service.dart';
 import '../../mapper/drive_mapper.dart';
-import '../../sqlite/drive_sqlite_service.dart';
 import '../../sqlite/dto/drive_sqlite_dto.dart';
 import '../../sqlite/dto/position_sqlite_dto.dart';
-import '../../sqlite/position_sqlite_service.dart';
+import '../../sqlite/service/drive_sqlite_service.dart';
+import '../../sqlite/service/position_sqlite_service.dart';
 import '../repository.dart';
 import 'drive_repository.dart';
 

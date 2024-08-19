@@ -1,6 +1,6 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/data/sqlite/dto/position_sqlite_dto.dart';
-import 'package:motorbike_navigator/data/sqlite/position_sqlite_service.dart';
+import 'package:motorbike_navigator/data/sqlite/service/position_sqlite_service.dart';
 
 class MockPositionSqliteService extends Mock implements PositionSqliteService {
   void mockQueryByDriveId({

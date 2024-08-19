@@ -1,7 +1,8 @@
 import 'package:injectable/injectable.dart';
 
-import 'dto/position_sqlite_dto.dart';
-import 'sqlite_db.dart';
+import '../dto/position_sqlite_dto.dart';
+import '../model/sql_column.dart';
+import '../sqlite_db.dart';
 
 @injectable
 class PositionSqliteService {
@@ -73,15 +74,13 @@ class PositionSqliteService {
         columns: [
           SqlColumn(
             name: _idColName,
-            type: SqlColumnType.integer,
-            isPrimaryKey: true,
-            isAutoIncrement: true,
+            type: SqlColumnType.id,
           ),
           SqlColumn(
             name: _driveIdColName,
             type: SqlColumnType.integer,
             isNotNull: true,
-            foreignKeyReferences: 'Drives(id)',
+            foreignKeyReference: 'Drives(id)',
           ),
           SqlColumn(
             name: _orderColName,

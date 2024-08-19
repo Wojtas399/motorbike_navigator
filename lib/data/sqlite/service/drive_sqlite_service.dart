@@ -1,8 +1,9 @@
 import 'package:injectable/injectable.dart';
 
-import '../mapper/datetime_mapper.dart';
-import 'dto/drive_sqlite_dto.dart';
-import 'sqlite_db.dart';
+import '../../mapper/datetime_mapper.dart';
+import '../dto/drive_sqlite_dto.dart';
+import '../model/sql_column.dart';
+import '../sqlite_db.dart';
 
 @injectable
 class DriveSqliteService {
@@ -72,9 +73,7 @@ class DriveSqliteService {
         columns: [
           SqlColumn(
             name: _idColName,
-            type: SqlColumnType.integer,
-            isPrimaryKey: true,
-            isAutoIncrement: true,
+            type: SqlColumnType.id,
           ),
           SqlColumn(
             name: _startDateColName,

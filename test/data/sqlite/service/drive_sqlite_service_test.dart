@@ -2,12 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/data/mapper/datetime_mapper.dart';
-import 'package:motorbike_navigator/data/sqlite/drive_sqlite_service.dart';
 import 'package:motorbike_navigator/data/sqlite/dto/drive_sqlite_dto.dart';
-import 'package:motorbike_navigator/data/sqlite/sqlite_db.dart';
+import 'package:motorbike_navigator/data/sqlite/model/sql_column.dart';
+import 'package:motorbike_navigator/data/sqlite/service/drive_sqlite_service.dart';
 
-import '../../mock/data/mapper/mock_datetime_mapper.dart';
-import '../../mock/data/sqlite/mock_sqlite_db.dart';
+import '../../../mock/data/mapper/mock_datetime_mapper.dart';
+import '../../../mock/data/sqlite/mock_sqlite_db.dart';
 
 void main() {
   const String tableName = 'Drives';
@@ -27,9 +27,7 @@ void main() {
         columns: const [
           SqlColumn(
             name: idColName,
-            type: SqlColumnType.integer,
-            isPrimaryKey: true,
-            isAutoIncrement: true,
+            type: SqlColumnType.id,
           ),
           SqlColumn(
             name: startDateColName,

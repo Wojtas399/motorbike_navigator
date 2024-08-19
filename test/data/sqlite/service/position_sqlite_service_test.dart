@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/data/sqlite/dto/position_sqlite_dto.dart';
-import 'package:motorbike_navigator/data/sqlite/position_sqlite_service.dart';
-import 'package:motorbike_navigator/data/sqlite/sqlite_db.dart';
+import 'package:motorbike_navigator/data/sqlite/model/sql_column.dart';
+import 'package:motorbike_navigator/data/sqlite/service/position_sqlite_service.dart';
 
-import '../../mock/data/sqlite/mock_sqlite_db.dart';
+import '../../../mock/data/sqlite/mock_sqlite_db.dart';
 
 void main() {
   const String tableName = 'Positions';
@@ -25,15 +25,13 @@ void main() {
         columns: const [
           SqlColumn(
             name: idColName,
-            type: SqlColumnType.integer,
-            isPrimaryKey: true,
-            isAutoIncrement: true,
+            type: SqlColumnType.id,
           ),
           SqlColumn(
             name: driveIdColName,
             type: SqlColumnType.integer,
             isNotNull: true,
-            foreignKeyReferences: 'Drives(id)',
+            foreignKeyReference: 'Drives(id)',
           ),
           SqlColumn(
             name: positionOrderColName,
