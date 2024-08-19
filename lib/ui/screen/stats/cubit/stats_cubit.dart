@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:rxdart/rxdart.dart';
 
-import '../../../../data/repository/auth/auth_repository.dart';
 import '../../../../data/repository/drive/drive_repository.dart';
 import '../../../../entity/drive.dart';
 import '../../../cubit/date_range/date_range_cubit.dart';
@@ -13,13 +11,11 @@ import 'stats_state.dart';
 
 @injectable
 class StatsCubit extends Cubit<StatsState> {
-  final AuthRepository _authRepository;
   final DriveRepository _driveRepository;
   final DateService _dateService;
   StreamSubscription<List<Drive>>? _drivesListener;
 
   StatsCubit(
-    this._authRepository,
     this._driveRepository,
     this._dateService,
   ) : super(const StatsState());
@@ -34,13 +30,10 @@ class StatsCubit extends Cubit<StatsState> {
     required DateRange dateRange,
   }) {
     _drivesListener?.cancel();
-    _drivesListener = _authRepository.loggedUserId$
-        .whereNotNull()
-        .switchMap(
-          (String loggedUserId) => _driveRepository.getDrivesFromDateRange(
-            firstDateOfRange: dateRange.firstDateOfRange,
-            lastDateOfRange: dateRange.lastDateOfRange,
-          ),
+    _drivesListener = _driveRepository
+        .getDrivesFromDateRange(
+          firstDateOfRange: dateRange.firstDateOfRange,
+          lastDateOfRange: dateRange.lastDateOfRange,
         )
         .listen((drives) => _handleDrives(drives, dateRange));
   }

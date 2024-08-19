@@ -8,24 +8,20 @@ import 'package:motorbike_navigator/ui/screen/stats/cubit/stats_state.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../creator/drive_creator.dart';
-import '../../../mock/data/repository/mock_auth_repository.dart';
 import '../../../mock/data/repository/mock_drive_repository.dart';
 import '../../../mock/ui_service/mock_date_service.dart';
 
 void main() {
-  final authRepository = MockAuthRepository();
   final driveRepository = MockDriveRepository();
   final dateService = MockDateService();
   final driveCreator = DriveCreator();
 
   StatsCubit createCubit() => StatsCubit(
-        authRepository,
         driveRepository,
         dateService,
       );
 
   tearDown(() {
-    reset(authRepository);
     reset(driveRepository);
     reset(dateService);
   });
@@ -33,7 +29,6 @@ void main() {
   group(
     'onDateRangeChanged, ',
     () {
-      const String loggedUserId = 'u1';
       final WeeklyDateRange weeklyDateRange = WeeklyDateRange(
         firstDateOfRange: DateTime(2024, 7, 22),
         lastDateOfRange: DateTime(2024, 7, 28),
@@ -244,15 +239,6 @@ void main() {
       StatsState? state;
 
       blocTest(
-        'should finish method call if logged user id is null',
-        build: () => createCubit(),
-        setUp: () => authRepository.mockGetLoggedUserId(),
-        act: (cubit) => cubit.onDateRangeChanged(dateRange: weeklyDateRange),
-        expect: () => [],
-        verify: (_) => verify(() => authRepository.loggedUserId$).called(1),
-      );
-
-      blocTest(
         'should listen to drives from given date range and should prepare stats '
         'based on them, '
         'for weekly date range mileage chart data should contains elements '
@@ -260,9 +246,6 @@ void main() {
         'distance of all drives started in particular days',
         build: () => createCubit(),
         setUp: () {
-          authRepository.mockGetLoggedUserId(
-            expectedLoggedUserId: loggedUserId,
-          );
           when(
             () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: weeklyDateRange.firstDateOfRange,
@@ -313,7 +296,6 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(() => authRepository.loggedUserId$).called(1);
           verify(
             () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: weeklyDateRange.firstDateOfRange,
@@ -337,9 +319,6 @@ void main() {
         'distance of all drives started in particular days',
         build: () => createCubit(),
         setUp: () {
-          authRepository.mockGetLoggedUserId(
-            expectedLoggedUserId: loggedUserId,
-          );
           when(
             () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: monthlyDateRange.firstDateOfRange,
@@ -402,7 +381,6 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(() => authRepository.loggedUserId$).called(1);
           verify(
             () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: monthlyDateRange.firstDateOfRange,
@@ -426,9 +404,6 @@ void main() {
         'of distance of all drives started in particular months',
         build: () => createCubit(),
         setUp: () {
-          authRepository.mockGetLoggedUserId(
-            expectedLoggedUserId: loggedUserId,
-          );
           when(
             () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: yearlyDateRange.firstDateOfRange,
@@ -500,7 +475,6 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(() => authRepository.loggedUserId$).called(1);
           verify(
             () => driveRepository.getDrivesFromDateRange(
               firstDateOfRange: yearlyDateRange.firstDateOfRange,
