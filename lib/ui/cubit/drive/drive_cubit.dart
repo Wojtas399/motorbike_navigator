@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../data/repository/auth/auth_repository.dart';
 import '../../../data/repository/drive/drive_repository.dart';
 import '../../../entity/position.dart';
 import '../../service/date_service.dart';
@@ -16,7 +15,6 @@ import 'drive_state.dart';
 class DriveCubit extends Cubit<DriveState> {
   final LocationService _locationService;
   final MapService _mapService;
-  final AuthRepository _authRepository;
   final DriveRepository _driveRepository;
   final DateService _dateService;
   Timer? _timer;
@@ -25,7 +23,6 @@ class DriveCubit extends Cubit<DriveState> {
   DriveCubit(
     this._locationService,
     this._mapService,
-    this._authRepository,
     this._driveRepository,
     this._dateService,
   ) : super(const DriveState());
@@ -74,10 +71,6 @@ class DriveCubit extends Cubit<DriveState> {
     if (state.status != DriveStateStatus.paused ||
         state.startDatetime == null) {
       return;
-    }
-    final String? loggedUserId = await _authRepository.loggedUserId$.first;
-    if (loggedUserId == null) {
-      throw '[DriveCubit] Cannot find logged user';
     }
     emit(state.copyWith(
       status: DriveStateStatus.saving,

@@ -8,7 +8,6 @@ import 'package:motorbike_navigator/ui/cubit/drive/drive_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/drive/drive_state.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../mock/data/repository/mock_auth_repository.dart';
 import '../../../mock/data/repository/mock_drive_repository.dart';
 import '../../../mock/ui_service/mock_date_service.dart';
 import '../../../mock/ui_service/mock_location_service.dart';
@@ -17,7 +16,6 @@ import '../../../mock/ui_service/mock_map_service.dart';
 void main() {
   final locationService = MockLocationService();
   final mapService = MockMapService();
-  final authRepository = MockAuthRepository();
   final driveRepository = MockDriveRepository();
   final dateService = MockDateService();
   final DateTime now = DateTime(2024, 1, 2, 10, 45);
@@ -30,7 +28,6 @@ void main() {
   DriveCubit createCubit() => DriveCubit(
         locationService,
         mapService,
-        authRepository,
         driveRepository,
         dateService,
       );
@@ -42,7 +39,6 @@ void main() {
   tearDown(() {
     reset(locationService);
     reset(mapService);
-    reset(authRepository);
     reset(driveRepository);
     reset(dateService);
   });
@@ -367,7 +363,6 @@ void main() {
   group(
     'saveDrive, ',
     () {
-      const String loggedUserId = 'u1';
       late BehaviorSubject<Position> positionStream$;
       const List<Position> positions = [
         Position(
@@ -442,60 +437,9 @@ void main() {
       );
 
       blocTest(
-        'should throw exception if logged user does not exist',
-        build: () => createCubit(),
-        setUp: () {
-          authRepository.mockGetLoggedUserId(expectedLoggedUserId: null);
-        },
-        act: (cubit) async {
-          cubit.startDrive(startPosition: startPosition);
-          positionStream$.add(positions.first);
-          await Future.delayed(const Duration(seconds: 1));
-          cubit.pauseDrive();
-          await Future.delayed(const Duration(milliseconds: 500));
-          await cubit.saveDrive();
-        },
-        expect: () => [
-          state = DriveState(
-            status: DriveStateStatus.ongoing,
-            startDatetime: now,
-            speedInKmPerH: startPosition.speedInKmPerH,
-            avgSpeedInKmPerH: startPosition.speedInKmPerH,
-            positions: [startPosition],
-          ),
-          state = state?.copyWith(
-            speedInKmPerH: positions.first.speedInKmPerH,
-            avgSpeedInKmPerH: [
-              startPosition.speedInKmPerH,
-              positions.first.speedInKmPerH,
-            ].average,
-            distanceInKm: firstDistanceBetweenPositions,
-            positions: [
-              startPosition,
-              positions.first,
-            ],
-          ),
-          state = state?.copyWith(
-            duration: const Duration(seconds: 1),
-          ),
-          state = state?.copyWith(
-            status: DriveStateStatus.paused,
-          ),
-        ],
-        errors: () => [
-          '[DriveCubit] Cannot find logged user',
-        ],
-      );
-
-      blocTest(
         'should call method from DriveRepository to add new drive',
         build: () => createCubit(),
-        setUp: () {
-          authRepository.mockGetLoggedUserId(
-            expectedLoggedUserId: loggedUserId,
-          );
-          driveRepository.mockAddDrive();
-        },
+        setUp: () => driveRepository.mockAddDrive(),
         act: (cubit) async {
           cubit.startDrive(startPosition: startPosition);
           positionStream$.add(positions.first);
