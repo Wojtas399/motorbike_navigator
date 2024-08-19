@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:injectable/injectable.dart';
 
@@ -32,12 +33,21 @@ class LocationService {
     );
   }
 
-  Stream<geolocator.Position> _getPositionStream() =>
-      geolocator.Geolocator.getPositionStream(
-        locationSettings: const geolocator.LocationSettings(
-          accuracy: geolocator.LocationAccuracy.bestForNavigation,
-        ),
+  Stream<geolocator.Position> _getPositionStream() {
+    geolocator.LocationSettings locationSettings;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      locationSettings = geolocator.AndroidSettings(
+        intervalDuration: const Duration(seconds: 1),
       );
+    } else {
+      locationSettings = const geolocator.LocationSettings(
+        accuracy: geolocator.LocationAccuracy.bestForNavigation,
+      );
+    }
+    return geolocator.Geolocator.getPositionStream(
+      locationSettings: locationSettings,
+    );
+  }
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
