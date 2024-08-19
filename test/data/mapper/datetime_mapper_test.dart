@@ -7,33 +7,48 @@ import '../../mock/ui_service/mock_number_service.dart';
 void main() {
   final numberService = MockNumberService();
   final mapper = DateTimeMapper(numberService);
-  final DateTime dateTime = DateTime(2024, 7, 31);
-  const String dateTimeStr = '2024-07-31';
+  final DateTime dateTime = DateTime(2024, 7, 31, 2, 30);
+  const String dateStr = '2024-07-31';
+  const String timeStr = '02:30';
 
   tearDown(() {
     reset(numberService);
   });
 
   test(
-    'mapFromDto, '
-    'should map dateTime from String type to DateTime type',
+    'mapFromDateAndTimeStrings, '
+    'should map date and time from Strings to DateTime type',
     () {
-      final DateTime mappedDateTime = mapper.mapFromDto(dateTimeStr);
+      final DateTime mappedDateTime =
+          mapper.mapFromDateAndTimeStrings(dateStr, timeStr);
 
       expect(mappedDateTime, dateTime);
     },
   );
 
   test(
-    'mapToDto, '
-    'should map dateTime from DateTime type to String type',
+    'mapToDateString, '
+    'should map date from DateTime type to String type',
     () {
       when(() => numberService.twoDigits(7)).thenReturn('07');
       when(() => numberService.twoDigits(31)).thenReturn('31');
 
-      final String mappedDateTime = mapper.mapToDto(dateTime);
+      final String mappedDate = mapper.mapToDateString(dateTime);
 
-      expect(mappedDateTime, dateTimeStr);
+      expect(mappedDate, dateStr);
+    },
+  );
+
+  test(
+    'mapToTimeString, '
+    'should map time from DateTime type to String type',
+    () {
+      when(() => numberService.twoDigits(2)).thenReturn('02');
+      when(() => numberService.twoDigits(30)).thenReturn('30');
+
+      final String mappedTime = mapper.mapToTimeString(dateTime);
+
+      expect(mappedTime, timeStr);
     },
   );
 }

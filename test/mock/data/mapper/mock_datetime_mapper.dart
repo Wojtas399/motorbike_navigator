@@ -2,15 +2,27 @@ import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/data/mapper/datetime_mapper.dart';
 
 class MockDatetimeMapper extends Mock implements DateTimeMapper {
-  void mockMapFromDto({
+  void mockMapFromDateAndTimeStrings({
     required DateTime expectedDateTime,
   }) {
-    when(() => mapFromDto(any())).thenReturn(expectedDateTime);
+    when(
+      () => mapFromDateAndTimeStrings(any(), any()),
+    ).thenReturn(expectedDateTime);
   }
 
-  void mockMapToDto({
-    required String expectedDateTimeStr,
+  void mockMapToDateString({
+    required String expectedDateStr,
   }) {
-    when(() => mapToDto(any())).thenReturn(expectedDateTimeStr);
+    when(
+      () => mapToDateString(any()),
+    ).thenReturn(expectedDateStr);
+  }
+
+  void mockMapToTimeString({
+    required String expectedTimeStr,
+  }) {
+    when(
+      () => mapToTimeString(any()),
+    ).thenReturn(expectedTimeStr);
   }
 }

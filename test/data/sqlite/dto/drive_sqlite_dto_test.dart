@@ -9,8 +9,9 @@ import '../../../mock/data/mapper/mock_datetime_mapper.dart';
 void main() {
   final dateTimeMapper = MockDatetimeMapper();
   const int id = 1;
-  final DateTime startDateTime = DateTime(2024, 7, 29);
-  const String startDateTimeStr = '2024-07-29';
+  final DateTime startDateTime = DateTime(2024, 7, 29, 2, 30);
+  const String startDateStr = '2024-07-29';
+  const String startTimeStr = '02:30';
   const double distance = 12.2;
   const Duration duration = Duration(hours: 1, minutes: 22);
 
@@ -28,9 +29,10 @@ void main() {
     () {
       final Map<String, Object?> json = {
         'id': id,
-        'start_date_time': startDateTimeStr,
+        'start_date': startDateStr,
+        'start_time': startTimeStr,
         'distance': distance,
-        'duration': duration.inMicroseconds,
+        'duration': duration.inSeconds,
       };
       final DriveSqliteDto expectedDto = DriveSqliteDto(
         id: id,
@@ -38,7 +40,9 @@ void main() {
         distanceInKm: distance,
         duration: duration,
       );
-      dateTimeMapper.mockMapFromDto(expectedDateTime: startDateTime);
+      dateTimeMapper.mockMapFromDateAndTimeStrings(
+        expectedDateTime: startDateTime,
+      );
 
       final DriveSqliteDto dto = DriveSqliteDto.fromJson(json);
 
@@ -57,11 +61,13 @@ void main() {
         duration: duration,
       );
       final Map<String, Object?> expectedJson = {
-        'start_date_time': startDateTimeStr,
+        'start_date': startDateStr,
+        'start_time': startTimeStr,
         'distance': distance,
-        'duration': duration.inMicroseconds,
+        'duration': duration.inSeconds,
       };
-      dateTimeMapper.mockMapToDto(expectedDateTimeStr: startDateTimeStr);
+      dateTimeMapper.mockMapToDateString(expectedDateStr: startDateStr);
+      dateTimeMapper.mockMapToTimeString(expectedTimeStr: startTimeStr);
 
       final Map<String, Object?> json = dto.toJson();
 

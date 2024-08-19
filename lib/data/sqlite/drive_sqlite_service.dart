@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-import 'package:sqflite/sqflite.dart';
 
 import '../mapper/datetime_mapper.dart';
 import 'dto/drive_sqlite_dto.dart';
@@ -11,7 +10,8 @@ class DriveSqliteService {
   final DateTimeMapper _dateTimeMapper;
   final String _tableName = 'Drives';
   final String _idColName = 'id';
-  final String _startDateTimeColName = 'start_date_time';
+  final String _startDateColName = 'start_date';
+  final String _startTimeColName = 'start_time';
   final String _distanceColName = 'distance';
   final String _durationColName = 'duration';
 
@@ -20,20 +20,14 @@ class DriveSqliteService {
   Future<DriveSqliteDto?> queryById({
     required int id,
   }) async {
-    final db = await _db;
-    final List<Map<String, Object?>> driveJsons = await db.query(
-      _tableName,
-      where: '$_idColName = ?',
-      whereArgs: [id],
-    );
-    return driveJsons.isNotEmpty
-        ? DriveSqliteDto.fromJson(driveJsons.first)
-        : null;
+    await _createTableIfNotExists();
+    return await _queryById(id);
   }
 
   Future<List<DriveSqliteDto>> queryAll() async {
-    final db = await _db;
-    final List<Map<String, Object?>> driveJsons = await db.query(_tableName);
+    await _createTableIfNotExists();
+    final List<Map<String, Object?>> driveJsons =
+        await _sqliteDb.query(tableName: _tableName);
     return driveJsons.map(DriveSqliteDto.fromJson).toList();
   }
 
@@ -41,13 +35,13 @@ class DriveSqliteService {
     required DateTime firstDateOfRange,
     required DateTime lastDateOfRange,
   }) async {
-    final db = await _db;
-    final List<Map<String, Object?>> driveJsons = await db.query(
-      _tableName,
-      where: '$_startDateTimeColName >= ? AND $_startDateTimeColName <= ?',
+    await _createTableIfNotExists();
+    final List<Map<String, Object?>> driveJsons = await _sqliteDb.query(
+      tableName: _tableName,
+      where: '$_startDateColName >= ? AND $_startDateColName <= ?',
       whereArgs: [
-        _dateTimeMapper.mapToDto(firstDateOfRange),
-        _dateTimeMapper.mapToDto(lastDateOfRange),
+        _dateTimeMapper.mapToDateString(firstDateOfRange),
+        _dateTimeMapper.mapToDateString(lastDateOfRange),
       ],
     );
     return driveJsons.map(DriveSqliteDto.fromJson).toList();
@@ -58,36 +52,63 @@ class DriveSqliteService {
     required double distanceInKm,
     required Duration duration,
   }) async {
+    await _createTableIfNotExists();
     final driveToAdd = DriveSqliteDto(
       startDateTime: startDateTime,
       distanceInKm: distanceInKm,
       duration: duration,
     );
-    final db = await _db;
-    final int driveId = await db.insert(
-      _tableName,
-      driveToAdd.toJson(),
+    final int driveId = await _sqliteDb.insert(
+      tableName: _tableName,
+      values: driveToAdd.toJson(),
     );
-    return await queryById(id: driveId);
+    return await _queryById(driveId);
   }
 
-  Future<Database> get _db async {
+  Future<void> _createTableIfNotExists() async {
     if (await _sqliteDb.doesTableNotExist(_tableName)) {
-      await _createTable();
+      await _sqliteDb.createTable(
+        tableName: _tableName,
+        columns: [
+          SqlColumn(
+            name: _idColName,
+            type: SqlColumnType.integer,
+            isPrimaryKey: true,
+            isAutoIncrement: true,
+          ),
+          SqlColumn(
+            name: _startDateColName,
+            type: SqlColumnType.text,
+            isNotNull: true,
+          ),
+          SqlColumn(
+            name: _startTimeColName,
+            type: SqlColumnType.text,
+            isNotNull: true,
+          ),
+          SqlColumn(
+            name: _distanceColName,
+            type: SqlColumnType.real,
+            isNotNull: true,
+          ),
+          SqlColumn(
+            name: _durationColName,
+            type: SqlColumnType.integer,
+            isNotNull: true,
+          ),
+        ],
+      );
     }
-    return _sqliteDb.db;
   }
 
-  Future<void> _createTable() async {
-    final db = await _sqliteDb.db;
-    await db.execute(
-      '''
-          create table $_tableName ( 
-            $_idColName integer primary key autoincrement, 
-            $_startDateTimeColName text not null,
-            $_distanceColName real not null,
-            $_durationColName integer not null)
-          ''',
+  Future<DriveSqliteDto?> _queryById(int id) async {
+    final List<Map<String, Object?>> driveJsons = await _sqliteDb.query(
+      tableName: _tableName,
+      where: '$_idColName = ?',
+      whereArgs: [id],
     );
+    return driveJsons.isNotEmpty
+        ? DriveSqliteDto.fromJson(driveJsons.first)
+        : null;
   }
 }

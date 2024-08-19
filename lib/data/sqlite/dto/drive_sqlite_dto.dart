@@ -1,31 +1,46 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../../dependency_injection.dart';
 import '../../mapper/datetime_mapper.dart';
 
-part 'drive_sqlite_dto.freezed.dart';
-part 'drive_sqlite_dto.g.dart';
+class DriveSqliteDto extends Equatable {
+  final int id;
+  final DateTime startDateTime;
+  final double distanceInKm;
+  final Duration duration;
 
-@freezed
-class DriveSqliteDto with _$DriveSqliteDto {
-  @JsonSerializable(fieldRename: FieldRename.snake)
-  const factory DriveSqliteDto({
-    @JsonKey(includeToJson: false) @Default(0) int id,
-    @JsonKey(
-      fromJson: _mapStartDateTimeFromString,
-      toJson: _mapStartDateTimeToString,
-    )
-    required DateTime startDateTime,
-    @JsonKey(name: 'distance') required double distanceInKm,
-    required Duration duration,
-  }) = _DriveSqliteDto;
+  const DriveSqliteDto({
+    this.id = 0,
+    required this.startDateTime,
+    required this.distanceInKm,
+    required this.duration,
+  });
 
-  factory DriveSqliteDto.fromJson(Map<String, Object?> json) =>
-      _$DriveSqliteDtoFromJson(json);
+  @override
+  List<Object?> get props => [
+        id,
+        startDateTime,
+        distanceInKm,
+        duration,
+      ];
+
+  factory DriveSqliteDto.fromJson(Map<String, Object?> json) => DriveSqliteDto(
+        startDateTime: getIt.get<DateTimeMapper>().mapFromDateAndTimeStrings(
+              json['start_date'] as String,
+              json['start_time'] as String,
+            ),
+        id: json['id'] as int? ?? 0,
+        distanceInKm: (json['distance'] as num).toDouble(),
+        duration: Duration(seconds: json['duration'] as int),
+      );
+
+  Map<String, dynamic> toJson() {
+    final dateTimeMapper = getIt.get<DateTimeMapper>();
+    return {
+      'start_date': dateTimeMapper.mapToDateString(startDateTime),
+      'start_time': dateTimeMapper.mapToTimeString(startDateTime),
+      'distance': distanceInKm,
+      'duration': duration.inSeconds,
+    };
+  }
 }
-
-DateTime _mapStartDateTimeFromString(String startDateTime) =>
-    getIt.get<DateTimeMapper>().mapFromDto(startDateTime);
-
-String _mapStartDateTimeToString(DateTime startDateTime) =>
-    getIt.get<DateTimeMapper>().mapToDto(startDateTime);

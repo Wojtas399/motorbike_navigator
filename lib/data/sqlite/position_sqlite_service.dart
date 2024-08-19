@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-import 'package:sqflite/sqflite.dart';
 
 import 'dto/position_sqlite_dto.dart';
 import 'sqlite_db.dart';
@@ -21,9 +20,9 @@ class PositionSqliteService {
   Future<List<PositionSqliteDto>> queryByDriveId({
     required int driveId,
   }) async {
-    final db = await _db;
-    final List<Map<String, Object?>> positionJsons = await db.query(
-      _tableName,
+    await _createTableIfNotExists();
+    final List<Map<String, Object?>> positionJsons = await _sqliteDb.query(
+      tableName: _tableName,
       where: '$_driveIdColName = ?',
       whereArgs: [driveId],
     );
@@ -38,6 +37,7 @@ class PositionSqliteService {
     required double altitude,
     required double speedInKmPerH,
   }) async {
+    _createTableIfNotExists();
     final PositionSqliteDto positionToAdd = PositionSqliteDto(
       driveId: driveId,
       order: order,
@@ -46,17 +46,18 @@ class PositionSqliteService {
       altitude: altitude,
       speedInKmPerH: speedInKmPerH,
     );
-    final db = await _db;
-    final positionId = await db.insert(_tableName, positionToAdd.toJson());
+    final positionId = await _sqliteDb.insert(
+      tableName: _tableName,
+      values: positionToAdd.toJson(),
+    );
     return await _queryById(id: positionId);
   }
 
   Future<PositionSqliteDto?> _queryById({
     required int id,
   }) async {
-    final db = await _db;
-    final List<Map<String, Object?>> positionJsons = await db.query(
-      _tableName,
+    final List<Map<String, Object?>> positionJsons = await _sqliteDb.query(
+      tableName: _tableName,
       where: '$_idColName = ?',
       whereArgs: [id],
     );
@@ -65,27 +66,50 @@ class PositionSqliteService {
         : null;
   }
 
-  Future<Database> get _db async {
+  Future<void> _createTableIfNotExists() async {
     if (await _sqliteDb.doesTableNotExist(_tableName)) {
-      await _createTable();
+      await _sqliteDb.createTable(
+        tableName: _tableName,
+        columns: [
+          SqlColumn(
+            name: _idColName,
+            type: SqlColumnType.integer,
+            isPrimaryKey: true,
+            isAutoIncrement: true,
+          ),
+          SqlColumn(
+            name: _driveIdColName,
+            type: SqlColumnType.integer,
+            isNotNull: true,
+            foreignKeyReferences: 'Drives(id)',
+          ),
+          SqlColumn(
+            name: _orderColName,
+            type: SqlColumnType.integer,
+            isNotNull: true,
+          ),
+          SqlColumn(
+            name: _latitudeColName,
+            type: SqlColumnType.real,
+            isNotNull: true,
+          ),
+          SqlColumn(
+            name: _longitudeColName,
+            type: SqlColumnType.real,
+            isNotNull: true,
+          ),
+          SqlColumn(
+            name: _altitudeColName,
+            type: SqlColumnType.real,
+            isNotNull: true,
+          ),
+          SqlColumn(
+            name: _speedColName,
+            type: SqlColumnType.real,
+            isNotNull: true,
+          ),
+        ],
+      );
     }
-    return _sqliteDb.db;
-  }
-
-  Future<void> _createTable() async {
-    final db = await _sqliteDb.db;
-    await db.execute(
-      '''
-          create table $_tableName ( 
-            $_idColName integer primary key autoincrement, 
-            $_driveIdColName integer not null,
-            $_orderColName integer not null,
-            $_latitudeColName real not null,
-            $_longitudeColName real not null,
-            $_altitudeColName real not null,
-            $_speedColName real not null,
-            FOREIGN KEY($_driveIdColName) REFERENCES Drives(id))
-          ''',
-    );
   }
 }
