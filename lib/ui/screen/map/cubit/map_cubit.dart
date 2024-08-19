@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../entity/coordinates.dart';
+import '../../../exception/location_exception.dart';
 import '../../../service/location_service.dart';
 import 'map_state.dart';
 
@@ -14,16 +15,23 @@ class MapCubit extends Cubit<MapState> {
   ) : super(const MapState());
 
   Future<void> initialize() async {
-    await Future.delayed(const Duration(seconds: 3));
-    final currentPosition$ = _locationService.getPosition();
-    await for (final currentPosition in currentPosition$) {
-      emit(state.copyWith(
-        status: MapStateStatus.completed,
-        centerLocation: state.focusMode.isFollowingUserLocation
-            ? currentPosition?.coordinates
-            : state.centerLocation,
-        userPosition: currentPosition,
-      ));
+    try {
+      final currentPosition$ = _locationService.getPosition();
+      await for (final currentPosition in currentPosition$) {
+        emit(state.copyWith(
+          status: MapStateStatus.completed,
+          centerLocation: state.focusMode.isFollowingUserLocation
+              ? currentPosition.coordinates
+              : state.centerLocation,
+          userPosition: currentPosition,
+        ));
+      }
+    } on LocationException catch (exception) {
+      if (exception is LocationExceptionAccessDenied) {
+        emit(state.copyWith(
+          status: MapStateStatus.gpsAccessDenied,
+        ));
+      }
     }
   }
 

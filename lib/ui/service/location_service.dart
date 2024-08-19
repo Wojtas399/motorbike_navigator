@@ -4,13 +4,14 @@ import 'package:injectable/injectable.dart';
 
 import '../../entity/coordinates.dart';
 import '../../entity/position.dart';
+import '../exception/location_exception.dart';
 
 @injectable
 class LocationService {
-  Stream<Position?> getPosition() async* {
+  Stream<Position> getPosition() async* {
     final hasPermission = await _handleLocationPermission();
     if (!hasPermission) {
-      yield null;
+      throw const LocationExceptionAccessDenied();
     } else {
       final position$ = _getPositionStream();
       await for (final position in position$) {
@@ -23,9 +24,9 @@ class LocationService {
     }
   }
 
-  Future<Coordinates?> loadLocation() async {
+  Future<Coordinates> loadLocation() async {
     final hasPermission = await _handleLocationPermission();
-    if (!hasPermission) return null;
+    if (!hasPermission) throw const LocationExceptionAccessDenied();
     final currentPosition = await geolocator.Geolocator.getCurrentPosition();
     return Coordinates(
       currentPosition.latitude,

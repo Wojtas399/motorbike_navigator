@@ -497,24 +497,52 @@ void main() {
     },
   );
 
-  blocTest(
-    'resetDrive, '
-    'should set default state',
-    build: () => createCubit(),
-    setUp: () => locationService.mockGetPosition(expectedPosition: null),
-    act: (cubit) {
-      cubit.startDrive(startPosition: startPosition);
-      cubit.resetDrive();
+  group(
+    'resetDrive, ',
+    () {
+      const position = Position(
+        coordinates: Coordinates(50, 19),
+        altitude: 100.1,
+        speedInKmPerH: 22.22,
+      );
+      DriveState? state;
+
+      blocTest(
+        'resetDrive, '
+        'should set default state',
+        build: () => createCubit(),
+        setUp: () {
+          locationService.mockGetPosition(expectedPosition: position);
+          mapService.mockCalculateDistanceInKm(expectedDistance: 10.10);
+        },
+        act: (cubit) async {
+          cubit.startDrive(startPosition: startPosition);
+          await cubit.stream.first;
+          cubit.resetDrive();
+        },
+        expect: () => [
+          state = DriveState(
+            status: DriveStateStatus.ongoing,
+            startDatetime: now,
+            speedInKmPerH: startPosition.speedInKmPerH,
+            avgSpeedInKmPerH: startPosition.speedInKmPerH,
+            positions: [startPosition],
+          ),
+          state = state?.copyWith(
+            distanceInKm: 10.10,
+            speedInKmPerH: 22.22,
+            avgSpeedInKmPerH: [
+              startPosition.speedInKmPerH,
+              22.22,
+            ].average,
+            positions: [
+              startPosition,
+              position,
+            ],
+          ),
+          const DriveState(),
+        ],
+      );
     },
-    expect: () => [
-      DriveState(
-        status: DriveStateStatus.ongoing,
-        startDatetime: now,
-        speedInKmPerH: startPosition.speedInKmPerH,
-        avgSpeedInKmPerH: startPosition.speedInKmPerH,
-        positions: [startPosition],
-      ),
-      const DriveState(),
-    ],
   );
 }

@@ -40,6 +40,51 @@ void main() {
           expect(state.status.isLoading, false);
         },
       );
+
+      test(
+        'should be false if status is set as gpsAccessDenied',
+        () {
+          const MapState state = MapState(
+            status: MapStateStatus.gpsAccessDenied,
+          );
+
+          expect(state.status.isLoading, false);
+        },
+      );
+    },
+  );
+
+  group(
+    'status.isGpsAccessDenied, ',
+    () {
+      test(
+        'should be true if status is set as gpsAccessDenied',
+        () {
+          const MapState state = MapState(
+            status: MapStateStatus.gpsAccessDenied,
+          );
+
+          expect(state.status.isGpsAccessDenied, true);
+        },
+      );
+
+      test(
+        'should be false if status is set as loading',
+        () {
+          const MapState state = MapState(status: MapStateStatus.loading);
+
+          expect(state.status.isGpsAccessDenied, false);
+        },
+      );
+
+      test(
+        'should be false if status is set as completed',
+        () {
+          const MapState state = MapState(status: MapStateStatus.completed);
+
+          expect(state.status.isGpsAccessDenied, false);
+        },
+      );
     },
   );
 

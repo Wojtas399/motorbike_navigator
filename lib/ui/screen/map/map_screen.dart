@@ -62,10 +62,14 @@ class _Content extends StatelessWidget {
           MapModeListener(),
           MapDriveCubitListener(),
         ],
-        child: const MapContent(), //TODO
-        // loggedUserState.status.isLoading || cubitStatus.isLoading
-        //     ? const _LoadingIndicator()
-        //     : const MapContent(),
+        child: cubitStatus.isLoading
+            ? const _LoadingIndicator()
+            : cubitStatus.isGpsAccessDenied
+                ? const Center(
+                    //TODO
+                    child: Text('Gps access denied'),
+                  )
+                : const MapContent(),
       ),
     );
   }

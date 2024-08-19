@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/position.dart';
+import 'package:motorbike_navigator/ui/exception/location_exception.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_cubit.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_state.dart';
 
@@ -66,15 +67,16 @@ void main() {
       );
 
       blocTest(
-        'should only emit completed status if current position is null',
+        'should only emit gpsAccessDenied status if method to get position '
+        'throws LocationExceptionAccessDenied exception',
         setUp: () => locationService.mockGetPosition(
-          expectedPosition: null,
+          exception: const LocationExceptionAccessDenied(),
         ),
         build: () => createCubit(),
         act: (cubit) async => await cubit.initialize(),
         expect: () => [
           const MapState(
-            status: MapStateStatus.completed,
+            status: MapStateStatus.gpsAccessDenied,
           ),
         ],
       );

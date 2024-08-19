@@ -107,8 +107,7 @@ class DriveCubit extends Cubit<DriveState> {
         _locationService.getPosition().listen(_onPositionUpdated);
   }
 
-  void _onPositionUpdated(Position? position) {
-    if (position == null) return;
+  void _onPositionUpdated(Position position) {
     List<Position> updatedPositions = [...state.positions];
     double distanceFromPreviousLocation = 0;
     if (updatedPositions.isNotEmpty) {
