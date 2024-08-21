@@ -1,65 +1,55 @@
 import 'package:flutter/foundation.dart';
-import 'package:geolocator/geolocator.dart' as geolocator;
+import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../entity/coordinates.dart';
-import '../../entity/position.dart';
-import '../exception/location_exception.dart';
+import '../../entity/position.dart' as position_entity;
 
 @injectable
 class LocationService {
-  Stream<Position> getPosition() async* {
-    final hasPermission = await _handleLocationPermission();
-    if (!hasPermission) {
-      throw const LocationExceptionAccessDenied();
-    } else {
-      final position$ = _getPositionStream();
-      await for (final position in position$) {
-        yield Position(
-          coordinates: Coordinates(position.latitude, position.longitude),
-          altitude: position.altitude,
-          speedInKmPerH: position.speed * 3.6,
-        );
-      }
+  Future<bool> hasPermission() async {
+    final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return false;
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return false;
+    }
+    return !(permission == LocationPermission.deniedForever);
+  }
+
+  Stream<position_entity.Position> getPosition() async* {
+    final position$ = _getPositionStream();
+    await for (final position in position$) {
+      yield position_entity.Position(
+        coordinates: Coordinates(position.latitude, position.longitude),
+        altitude: position.altitude,
+        speedInKmPerH: position.speed * 3.6,
+      );
     }
   }
 
   Future<Coordinates> loadLocation() async {
-    final hasPermission = await _handleLocationPermission();
-    if (!hasPermission) throw const LocationExceptionAccessDenied();
-    final currentPosition = await geolocator.Geolocator.getCurrentPosition();
+    final currentPosition = await Geolocator.getCurrentPosition();
     return Coordinates(
       currentPosition.latitude,
       currentPosition.longitude,
     );
   }
 
-  Stream<geolocator.Position> _getPositionStream() {
-    geolocator.LocationSettings locationSettings;
+  Stream<Position> _getPositionStream() {
+    LocationSettings locationSettings;
     if (defaultTargetPlatform == TargetPlatform.android) {
-      locationSettings = geolocator.AndroidSettings(
+      locationSettings = AndroidSettings(
         intervalDuration: const Duration(seconds: 1),
       );
     } else {
-      locationSettings = const geolocator.LocationSettings(
-        accuracy: geolocator.LocationAccuracy.bestForNavigation,
+      locationSettings = const LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
       );
     }
-    return geolocator.Geolocator.getPositionStream(
+    return Geolocator.getPositionStream(
       locationSettings: locationSettings,
     );
-  }
-
-  Future<bool> _handleLocationPermission() async {
-    bool serviceEnabled;
-    geolocator.LocationPermission permission;
-    serviceEnabled = await geolocator.Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) return false;
-    permission = await geolocator.Geolocator.checkPermission();
-    if (permission == geolocator.LocationPermission.denied) {
-      permission = await geolocator.Geolocator.requestPermission();
-      if (permission == geolocator.LocationPermission.denied) return false;
-    }
-    return !(permission == geolocator.LocationPermission.deniedForever);
   }
 }

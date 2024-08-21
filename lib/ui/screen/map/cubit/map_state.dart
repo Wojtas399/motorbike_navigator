@@ -5,7 +5,7 @@ import '../../../../entity/position.dart';
 
 part 'map_state.freezed.dart';
 
-enum MapStateStatus { loading, completed, gpsAccessDenied }
+enum MapStateStatus { loading, completed, locationAccessDenied }
 
 enum MapMode { basic, drive, selectingRoute, routePreview }
 
@@ -14,7 +14,8 @@ enum MapFocusMode { free, followUserLocation }
 extension MapStateStatusExtensions on MapStateStatus {
   bool get isLoading => this == MapStateStatus.loading;
 
-  bool get isGpsAccessDenied => this == MapStateStatus.gpsAccessDenied;
+  bool get isLocationAccessDenied =>
+      this == MapStateStatus.locationAccessDenied;
 }
 
 extension MapModeExtensions on MapMode {

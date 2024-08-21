@@ -3,16 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
-import '../../component/gap.dart';
-import '../../component/text.dart';
 import '../../cubit/drive/drive_cubit.dart';
-import '../../extensions/context_extensions.dart';
 import 'cubit/map_cubit.dart';
-import 'cubit/map_state.dart';
 import 'map_content.dart';
-import 'map_drawer.dart';
-import 'map_drive_cubit_listener.dart';
-import 'map_mode_listener.dart';
 
 @RoutePage()
 class MapScreen extends StatelessWidget {
@@ -20,7 +13,7 @@ class MapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const _BlocProviders(
-        child: _Content(),
+        child: MapContent(),
       );
 }
 
@@ -40,53 +33,5 @@ class _BlocProviders extends StatelessWidget {
           ),
         ],
         child: child,
-      );
-}
-
-class _Content extends StatelessWidget {
-  const _Content();
-
-  @override
-  Widget build(BuildContext context) {
-    final MapStateStatus cubitStatus = context.select(
-      (MapCubit cubit) => cubit.state.status,
-    );
-    final MapMode mapMode = context.select(
-      (MapCubit cubit) => cubit.state.mode,
-    );
-
-    return Scaffold(
-      drawer: mapMode.isBasic ? const MapDrawer() : null,
-      body: MultiBlocListener(
-        listeners: const [
-          MapModeListener(),
-          MapDriveCubitListener(),
-        ],
-        child: cubitStatus.isLoading
-            ? const _LoadingIndicator()
-            : cubitStatus.isGpsAccessDenied
-                ? const Center(
-                    //TODO
-                    child: Text('Gps access denied'),
-                  )
-                : const MapContent(),
-      ),
-    );
-  }
-}
-
-class _LoadingIndicator extends StatelessWidget {
-  const _LoadingIndicator();
-
-  @override
-  Widget build(BuildContext context) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TitleMedium(context.str.mapLoading),
-            const GapVertical24(),
-            const CircularProgressIndicator(),
-          ],
-        ),
       );
 }

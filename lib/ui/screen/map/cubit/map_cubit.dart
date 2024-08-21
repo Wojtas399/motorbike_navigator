@@ -1,37 +1,50 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../entity/coordinates.dart';
-import '../../../exception/location_exception.dart';
+import '../../../../entity/position.dart';
 import '../../../service/location_service.dart';
 import 'map_state.dart';
 
 @injectable
 class MapCubit extends Cubit<MapState> {
   final LocationService _locationService;
+  StreamSubscription<Position>? _currentPositionListener;
 
   MapCubit(
     this._locationService,
   ) : super(const MapState());
 
+  @override
+  Future<void> close() {
+    _currentPositionListener?.cancel();
+    return super.close();
+  }
+
   Future<void> initialize() async {
-    try {
-      final currentPosition$ = _locationService.getPosition();
-      await for (final currentPosition in currentPosition$) {
-        emit(state.copyWith(
-          status: MapStateStatus.completed,
-          centerLocation: state.focusMode.isFollowingUserLocation
-              ? currentPosition.coordinates
-              : state.centerLocation,
-          userPosition: currentPosition,
-        ));
-      }
-    } on LocationException catch (exception) {
-      if (exception is LocationExceptionAccessDenied) {
-        emit(state.copyWith(
-          status: MapStateStatus.gpsAccessDenied,
-        ));
-      }
+    final bool isGpsEnabled = await _locationService.hasPermission();
+    if (!isGpsEnabled) {
+      emit(state.copyWith(
+        status: MapStateStatus.locationAccessDenied,
+      ));
+      return;
+    }
+    _listenToCurrentPosition();
+  }
+
+  Future<void> refreshLocationPermission() async {
+    emit(state.copyWith(
+      status: MapStateStatus.loading,
+    ));
+    final bool isLocationEnabled = await _locationService.hasPermission();
+    if (isLocationEnabled) {
+      _listenToCurrentPosition();
+    } else {
+      emit(state.copyWith(
+        status: MapStateStatus.locationAccessDenied,
+      ));
     }
   }
 
@@ -61,6 +74,21 @@ class MapCubit extends Cubit<MapState> {
     emit(state.copyWith(
       status: MapStateStatus.completed,
       mode: newMode,
+    ));
+  }
+
+  void _listenToCurrentPosition() {
+    _currentPositionListener =
+        _locationService.getPosition().listen(_handleCurrentPosition);
+  }
+
+  void _handleCurrentPosition(Position position) {
+    emit(state.copyWith(
+      status: MapStateStatus.completed,
+      centerLocation: state.focusMode.isFollowingUserLocation
+          ? position.coordinates
+          : state.centerLocation,
+      userPosition: position,
     ));
   }
 }

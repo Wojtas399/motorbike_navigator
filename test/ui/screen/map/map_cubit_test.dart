@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/position.dart';
-import 'package:motorbike_navigator/ui/exception/location_exception.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_cubit.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_state.dart';
 
@@ -37,14 +36,29 @@ void main() {
       MapState? state;
 
       blocTest(
+        'should emit locationAccessDenied status if location permission is denied',
+        build: () => createCubit(),
+        setUp: () => locationService.mockHasPermission(expected: false),
+        act: (cubit) async => await cubit.initialize(),
+        expect: () => [
+          const MapState(
+            status: MapStateStatus.locationAccessDenied,
+          ),
+        ],
+      );
+
+      blocTest(
         'should listen to current position and if focus mode is set to '
         'followUserLocation should assign listened position to centerLocation '
         'and userPosition params else should only assign it to userPosition '
         'param',
         build: () => createCubit(),
-        setUp: () => when(
-          locationService.getPosition,
-        ).thenAnswer((_) => Stream.fromIterable(positions)),
+        setUp: () {
+          locationService.mockHasPermission(expected: true);
+          when(
+            locationService.getPosition,
+          ).thenAnswer((_) => Stream.fromIterable(positions));
+        },
         act: (cubit) async {
           cubit.initialize();
           await cubit.stream.first;
@@ -65,20 +79,68 @@ void main() {
           ),
         ],
       );
+    },
+  );
+
+  group(
+    'refreshLocationPermission, ',
+    () {
+      final List<Position> positions = [
+        const Position(
+          coordinates: Coordinates(50, 19),
+          altitude: 120.2,
+          speedInKmPerH: 10,
+        ),
+        const Position(
+          coordinates: Coordinates(51, 20),
+          altitude: 119.4,
+          speedInKmPerH: 11,
+        ),
+      ];
+      MapState? state;
 
       blocTest(
-        'should only emit gpsAccessDenied status if method to get position '
-        'throws LocationExceptionAccessDenied exception',
-        setUp: () => locationService.mockGetPosition(
-          exception: const LocationExceptionAccessDenied(),
-        ),
+        'should emit locationAccessDenied status if location permission is denied',
         build: () => createCubit(),
-        act: (cubit) async => await cubit.initialize(),
+        setUp: () => locationService.mockHasPermission(expected: false),
+        act: (cubit) async => await cubit.refreshLocationPermission(),
         expect: () => [
           const MapState(
-            status: MapStateStatus.gpsAccessDenied,
+            status: MapStateStatus.loading,
+          ),
+          const MapState(
+            status: MapStateStatus.locationAccessDenied,
           ),
         ],
+        verify: (_) => verify(locationService.hasPermission).called(1),
+      );
+
+      blocTest(
+        'should start listening to current position if location permission is '
+        'granted',
+        build: () => createCubit(),
+        setUp: () {
+          locationService.mockHasPermission(expected: true);
+          when(
+            locationService.getPosition,
+          ).thenAnswer((_) => Stream.fromIterable(positions));
+        },
+        act: (cubit) async => await cubit.refreshLocationPermission(),
+        expect: () => [
+          state = const MapState(
+            status: MapStateStatus.loading,
+          ),
+          state = state?.copyWith(
+            status: MapStateStatus.completed,
+            centerLocation: positions.first.coordinates,
+            userPosition: positions.first,
+          ),
+          state = state?.copyWith(
+            centerLocation: positions.last.coordinates,
+            userPosition: positions.last,
+          ),
+        ],
+        verify: (_) => verify(locationService.hasPermission).called(1),
       );
     },
   );
@@ -137,11 +199,15 @@ void main() {
         'should set focus mode as followUserLocation and should assign user '
         'position to centerLocation param',
         build: () => createCubit(),
-        setUp: () => locationService.mockGetPosition(
-          expectedPosition: position,
-        ),
+        setUp: () {
+          locationService.mockHasPermission(expected: true);
+          locationService.mockGetPosition(
+            expectedPosition: position,
+          );
+        },
         act: (cubit) async {
           await cubit.initialize();
+          await cubit.stream.first;
           cubit.onMapDrag(locationOnDrag);
           cubit.followUserLocation();
         },

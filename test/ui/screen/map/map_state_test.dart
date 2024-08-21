@@ -42,10 +42,10 @@ void main() {
       );
 
       test(
-        'should be false if status is set as gpsAccessDenied',
+        'should be false if status is set as locationAccessDenied',
         () {
           const MapState state = MapState(
-            status: MapStateStatus.gpsAccessDenied,
+            status: MapStateStatus.locationAccessDenied,
           );
 
           expect(state.status.isLoading, false);
@@ -55,16 +55,16 @@ void main() {
   );
 
   group(
-    'status.isGpsAccessDenied, ',
+    'status.isLocationAccessDenied, ',
     () {
       test(
-        'should be true if status is set as gpsAccessDenied',
+        'should be true if status is set as locationAccessDenied',
         () {
           const MapState state = MapState(
-            status: MapStateStatus.gpsAccessDenied,
+            status: MapStateStatus.locationAccessDenied,
           );
 
-          expect(state.status.isGpsAccessDenied, true);
+          expect(state.status.isLocationAccessDenied, true);
         },
       );
 
@@ -73,7 +73,7 @@ void main() {
         () {
           const MapState state = MapState(status: MapStateStatus.loading);
 
-          expect(state.status.isGpsAccessDenied, false);
+          expect(state.status.isLocationAccessDenied, false);
         },
       );
 
@@ -82,7 +82,7 @@ void main() {
         () {
           const MapState state = MapState(status: MapStateStatus.completed);
 
-          expect(state.status.isGpsAccessDenied, false);
+          expect(state.status.isLocationAccessDenied, false);
         },
       );
     },
