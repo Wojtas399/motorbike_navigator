@@ -69,6 +69,14 @@ class _LocationIsOffInfo extends StatelessWidget {
         child: Info(
           title: context.str.mapLocationIsOffTitle,
           message: context.str.mapLocationIsOffMessage,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: FilledButton(
+              onPressed: context.read<MapCubit>().openLocationSettings,
+              child: Text(context.str.mapGoToSettings),
+            ),
+          ),
         ),
       );
 }
@@ -81,9 +89,28 @@ class _LocationAccessDeniedInfo extends StatelessWidget {
         child: Info(
           title: context.str.mapLocationAccessDeniedTitle,
           message: context.str.mapLocationAccessDeniedMessage,
-          child: FilledButton(
-            onPressed: context.read<MapCubit>().refreshLocationPermission,
-            child: Text(context.str.refresh),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: context.read<MapCubit>().openLocationSettings,
+                    child: Text(context.str.mapGoToSettings),
+                  ),
+                ),
+                const GapVertical8(),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed:
+                        context.read<MapCubit>().refreshLocationPermission,
+                    child: Text(context.str.refresh),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );

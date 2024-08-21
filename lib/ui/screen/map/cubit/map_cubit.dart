@@ -5,17 +5,20 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../entity/coordinates.dart';
 import '../../../../entity/position.dart';
+import '../../../service/device_settings_service.dart';
 import '../../../service/location_service.dart';
 import 'map_state.dart';
 
 @injectable
 class MapCubit extends Cubit<MapState> {
   final LocationService _locationService;
+  final DeviceSettingsService _deviceSettingsService;
   StreamSubscription<LocationStatus>? _locationStatusListener;
   StreamSubscription<Position>? _currentPositionListener;
 
   MapCubit(
     this._locationService,
+    this._deviceSettingsService,
   ) : super(const MapState());
 
   @override
@@ -64,6 +67,10 @@ class MapCubit extends Cubit<MapState> {
       status: MapStateStatus.completed,
       mode: newMode,
     ));
+  }
+
+  void openLocationSettings() {
+    _deviceSettingsService.openLocationSettings();
   }
 
   void _handleLocationStatus(LocationStatus status) {

@@ -7,15 +7,21 @@ import 'package:motorbike_navigator/ui/screen/map/cubit/map_cubit.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_state.dart';
 import 'package:motorbike_navigator/ui/service/location_service.dart';
 
+import '../../../mock/ui_service/mock_device_settings_service.dart';
 import '../../../mock/ui_service/mock_location_service.dart';
 
 void main() {
   final locationService = MockLocationService();
+  final deviceSettingsService = MockDeviceSettingsService();
 
-  MapCubit createCubit() => MapCubit(locationService);
+  MapCubit createCubit() => MapCubit(
+        locationService,
+        deviceSettingsService,
+      );
 
   tearDown(() {
     reset(locationService);
+    reset(deviceSettingsService);
   });
 
   group(
@@ -268,5 +274,13 @@ void main() {
         mode: MapMode.selectingRoute,
       ),
     ],
+  );
+
+  blocTest(
+    'openLocationSettings, '
+    'should call method from DeviceSettingService to open location settings',
+    build: () => createCubit(),
+    act: (cubit) => cubit.openLocationSettings(),
+    verify: (_) => verify(deviceSettingsService.openLocationSettings).called(1),
   );
 }
