@@ -5,11 +5,28 @@ import 'package:injectable/injectable.dart';
 import '../../entity/coordinates.dart';
 import '../../entity/position.dart' as position_entity;
 
+enum LocationStatus { on, off }
+
 @injectable
 class LocationService {
+  Stream<LocationStatus> getLocationStatus() async* {
+    final bool isLocationOn = await Geolocator.isLocationServiceEnabled();
+    yield isLocationOn ? LocationStatus.on : LocationStatus.off;
+    final serviceStatus$ = Geolocator.getServiceStatusStream().map(
+      (ServiceStatus status) => switch (status) {
+        ServiceStatus.enabled => LocationStatus.on,
+        ServiceStatus.disabled => LocationStatus.off,
+      },
+    );
+    await for (final serviceStatus in serviceStatus$) {
+      yield switch (serviceStatus) {
+        LocationStatus.on => LocationStatus.on,
+        LocationStatus.off => LocationStatus.off,
+      };
+    }
+  }
+
   Future<bool> hasPermission() async {
-    final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) return false;
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();

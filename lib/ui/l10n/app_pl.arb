@@ -3,6 +3,8 @@
   "signInTitle": "Logowanie",
   "signInWithGoogleLabel": "Zaloguj z Google",
   "@----------MAP----------": {},
+  "mapLocationIsOffTitle": "Lokalizacja jest wyłączona",
+  "mapLocationIsOffMessage": "Włączenie lokalizacji jest wymagane do prawidłowego działania aplikacji. Możesz tego dokonać w ustawieniach urządzenia.",
   "mapLocationAccessDeniedTitle": "Brak dostępu do lokalizacji",
   "mapLocationAccessDeniedMessage": "Motorbike Navigator do prawidłowego działania wymaga dostępu do lokalizacji. Zezwól na to w ustawieniach urządzenia.",
   "mapSelectStartPlace": "Wybierz miejsce startowe",

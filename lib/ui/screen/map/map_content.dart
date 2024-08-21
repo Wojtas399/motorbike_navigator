@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../component/gap.dart';
+import '../../component/info_component.dart';
 import '../../component/text.dart';
 import '../../extensions/context_extensions.dart';
 import 'cubit/map_cubit.dart';
@@ -30,11 +31,13 @@ class MapContent extends StatelessWidget {
           MapModeListener(),
           MapDriveCubitListener(),
         ],
-        child: cubitStatus.isLoading
-            ? const _LoadingIndicator()
-            : cubitStatus.isLocationAccessDenied
-                ? const _LocationAccessDeniedInfo()
-                : const MapMapView(),
+        child: switch (cubitStatus) {
+          MapStateStatus.loading => const _LoadingIndicator(),
+          MapStateStatus.completed => const MapMapView(),
+          MapStateStatus.locationIsOff => const _LocationIsOffInfo(),
+          MapStateStatus.locationAccessDenied =>
+            const _LocationAccessDeniedInfo(),
+        },
       ),
     );
   }
@@ -44,14 +47,28 @@ class _LoadingIndicator extends StatelessWidget {
   const _LoadingIndicator();
 
   @override
-  Widget build(BuildContext context) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TitleMedium(context.str.mapLoading),
-            const GapVertical24(),
-            const CircularProgressIndicator(),
-          ],
+  Widget build(BuildContext context) => SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TitleMedium(context.str.mapLoading),
+              const GapVertical24(),
+              const CircularProgressIndicator(),
+            ],
+          ),
+        ),
+      );
+}
+
+class _LocationIsOffInfo extends StatelessWidget {
+  const _LocationIsOffInfo();
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+        child: Info(
+          title: context.str.mapLocationIsOffTitle,
+          message: context.str.mapLocationIsOffMessage,
         ),
       );
 }
@@ -60,27 +77,13 @@ class _LocationAccessDeniedInfo extends StatelessWidget {
   const _LocationAccessDeniedInfo();
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TitleLarge(
-                context.str.mapLocationAccessDeniedTitle,
-                fontWeight: FontWeight.bold,
-              ),
-              const GapVertical8(),
-              BodyMedium(
-                context.str.mapLocationAccessDeniedMessage,
-                color: context.colorScheme.outline,
-              ),
-              const GapVertical16(),
-              FilledButton(
-                onPressed: context.read<MapCubit>().refreshLocationPermission,
-                child: Text(context.str.refresh),
-              ),
-            ],
+  Widget build(BuildContext context) => SafeArea(
+        child: Info(
+          title: context.str.mapLocationAccessDeniedTitle,
+          message: context.str.mapLocationAccessDeniedMessage,
+          child: FilledButton(
+            onPressed: context.read<MapCubit>().refreshLocationPermission,
+            child: Text(context.str.refresh),
           ),
         ),
       );

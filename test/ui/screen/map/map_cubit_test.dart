@@ -5,6 +5,7 @@ import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_cubit.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_state.dart';
+import 'package:motorbike_navigator/ui/service/location_service.dart';
 
 import '../../../mock/ui_service/mock_location_service.dart';
 
@@ -36,9 +37,29 @@ void main() {
       MapState? state;
 
       blocTest(
-        'should emit locationAccessDenied status if location permission is denied',
+        'should emit locationIsOff status if location status is set as off',
         build: () => createCubit(),
-        setUp: () => locationService.mockHasPermission(expected: false),
+        setUp: () => locationService.mockGetLocationStatus(
+          expectedLocationStatus: LocationStatus.off,
+        ),
+        act: (cubit) async => await cubit.initialize(),
+        expect: () => [
+          const MapState(
+            status: MapStateStatus.locationIsOff,
+          ),
+        ],
+      );
+
+      blocTest(
+        'should emit locationAccessDenied status if location is on but location '
+        'permission is denied',
+        build: () => createCubit(),
+        setUp: () {
+          locationService.mockGetLocationStatus(
+            expectedLocationStatus: LocationStatus.on,
+          );
+          locationService.mockHasPermission(expected: false);
+        },
         act: (cubit) async => await cubit.initialize(),
         expect: () => [
           const MapState(
@@ -54,6 +75,9 @@ void main() {
         'param',
         build: () => createCubit(),
         setUp: () {
+          locationService.mockGetLocationStatus(
+            expectedLocationStatus: LocationStatus.on,
+          );
           locationService.mockHasPermission(expected: true);
           when(
             locationService.getPosition,
@@ -200,6 +224,9 @@ void main() {
         'position to centerLocation param',
         build: () => createCubit(),
         setUp: () {
+          locationService.mockGetLocationStatus(
+            expectedLocationStatus: LocationStatus.on,
+          );
           locationService.mockHasPermission(expected: true);
           locationService.mockGetPosition(
             expectedPosition: position,

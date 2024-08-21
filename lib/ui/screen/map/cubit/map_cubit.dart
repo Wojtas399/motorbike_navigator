@@ -11,6 +11,7 @@ import 'map_state.dart';
 @injectable
 class MapCubit extends Cubit<MapState> {
   final LocationService _locationService;
+  StreamSubscription<LocationStatus>? _locationStatusListener;
   StreamSubscription<Position>? _currentPositionListener;
 
   MapCubit(
@@ -19,33 +20,21 @@ class MapCubit extends Cubit<MapState> {
 
   @override
   Future<void> close() {
+    _locationStatusListener?.cancel();
     _currentPositionListener?.cancel();
     return super.close();
   }
 
   Future<void> initialize() async {
-    final bool isGpsEnabled = await _locationService.hasPermission();
-    if (!isGpsEnabled) {
-      emit(state.copyWith(
-        status: MapStateStatus.locationAccessDenied,
-      ));
-      return;
-    }
-    _listenToCurrentPosition();
+    _locationStatusListener =
+        _locationService.getLocationStatus().listen(_handleLocationStatus);
   }
 
   Future<void> refreshLocationPermission() async {
     emit(state.copyWith(
       status: MapStateStatus.loading,
     ));
-    final bool isLocationEnabled = await _locationService.hasPermission();
-    if (isLocationEnabled) {
-      _listenToCurrentPosition();
-    } else {
-      emit(state.copyWith(
-        status: MapStateStatus.locationAccessDenied,
-      ));
-    }
+    _listenToCurrentPosition();
   }
 
   void onMapDrag(Coordinates newCenterLocation) {
@@ -77,7 +66,26 @@ class MapCubit extends Cubit<MapState> {
     ));
   }
 
-  void _listenToCurrentPosition() {
+  void _handleLocationStatus(LocationStatus status) {
+    switch (status) {
+      case LocationStatus.on:
+        _listenToCurrentPosition();
+      case LocationStatus.off:
+        _currentPositionListener?.cancel();
+        emit(state.copyWith(
+          status: MapStateStatus.locationIsOff,
+        ));
+    }
+  }
+
+  Future<void> _listenToCurrentPosition() async {
+    final bool isLocationEnabled = await _locationService.hasPermission();
+    if (!isLocationEnabled) {
+      emit(state.copyWith(
+        status: MapStateStatus.locationAccessDenied,
+      ));
+      return;
+    }
     _currentPositionListener =
         _locationService.getPosition().listen(_handleCurrentPosition);
   }

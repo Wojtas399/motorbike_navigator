@@ -16,12 +16,14 @@ abstract class _Text extends StatelessWidget {
   final _TextType textType;
   final Color? color;
   final FontWeight? fontWeight;
+  final TextAlign? textAlign;
 
   const _Text(
     this.data, {
     required this.textType,
     this.color,
     this.fontWeight,
+    this.textAlign,
   });
 
   @override
@@ -42,6 +44,7 @@ abstract class _Text extends StatelessWidget {
         color: color,
         fontWeight: fontWeight,
       ),
+      textAlign: textAlign,
     );
   }
 }
@@ -65,6 +68,7 @@ class BodyMedium extends _Text {
     super.data, {
     super.color,
     super.fontWeight,
+    super.textAlign,
   }) : super(textType: _TextType.bodyMedium);
 }
 
@@ -77,6 +81,7 @@ class TitleLarge extends _Text {
     super.data, {
     super.fontWeight,
     super.color,
+    super.textAlign,
   }) : super(textType: _TextType.titleLarge);
 }
 

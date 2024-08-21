@@ -5,6 +5,14 @@ import 'package:motorbike_navigator/ui/exception/location_exception.dart';
 import 'package:motorbike_navigator/ui/service/location_service.dart';
 
 class MockLocationService extends Mock implements LocationService {
+  void mockGetLocationStatus({
+    required LocationStatus expectedLocationStatus,
+  }) {
+    when(
+      getLocationStatus,
+    ).thenAnswer((_) => Stream.value(expectedLocationStatus));
+  }
+
   void mockHasPermission({
     required bool expected,
   }) {
