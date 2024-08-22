@@ -6,6 +6,7 @@ import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_cubit.dart';
 import 'package:motorbike_navigator/ui/screen/map/cubit/map_state.dart';
 import 'package:motorbike_navigator/ui/service/location_service.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../mock/ui_service/mock_device_settings_service.dart';
 import '../../../mock/ui_service/mock_location_service.dart';
@@ -40,6 +41,8 @@ void main() {
         ),
       ];
       const Coordinates locationOnDrag = Coordinates(50.5, 19.5);
+      final positionStream$ =
+          BehaviorSubject<Position?>.seeded(positions.first);
       MapState? state;
 
       blocTest(
@@ -87,12 +90,14 @@ void main() {
           locationService.mockHasPermission(expected: true);
           when(
             locationService.getPosition,
-          ).thenAnswer((_) => Stream.fromIterable(positions));
+          ).thenAnswer((_) => positionStream$.stream);
         },
         act: (cubit) async {
           cubit.initialize();
           await cubit.stream.first;
+          positionStream$.add(null);
           cubit.onMapDrag(locationOnDrag);
+          positionStream$.add(positions.last);
         },
         expect: () => [
           state = MapState(

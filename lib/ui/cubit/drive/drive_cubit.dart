@@ -19,6 +19,7 @@ class DriveCubit extends Cubit<DriveState> {
   final DateService _dateService;
   Timer? _timer;
   StreamSubscription<Position?>? _positionListener;
+  StreamSubscription<LocationStatus>? _locationStatusListener;
 
   DriveCubit(
     this._locationService,
@@ -31,6 +32,7 @@ class DriveCubit extends Cubit<DriveState> {
   Future<void> close() {
     _timer?.cancel();
     _positionListener?.cancel();
+    _locationStatusListener?.cancel();
     return super.close();
   }
 
@@ -47,6 +49,7 @@ class DriveCubit extends Cubit<DriveState> {
     ));
     _startTimer();
     _listenPosition();
+    _listenLocationStatus();
   }
 
   void pauseDrive() {
@@ -104,10 +107,17 @@ class DriveCubit extends Cubit<DriveState> {
 
   void _listenPosition() {
     _positionListener ??=
-        _locationService.getPosition().listen(_onPositionUpdated);
+        _locationService.getPosition().listen(_handlePositionChange);
   }
 
-  void _onPositionUpdated(Position position) {
+  void _listenLocationStatus() {
+    _locationStatusListener ??= _locationService
+        .getLocationStatus()
+        .listen(_handleLocationStatusChange);
+  }
+
+  void _handlePositionChange(Position? position) {
+    if (position == null) return;
     List<Position> updatedPositions = [...state.positions];
     double distanceFromPreviousLocation = 0;
     if (updatedPositions.isNotEmpty) {
@@ -127,5 +137,18 @@ class DriveCubit extends Cubit<DriveState> {
       avgSpeedInKmPerH: avgSpeed,
       positions: updatedPositions,
     ));
+  }
+
+  void _handleLocationStatusChange(LocationStatus status) {
+    switch (status) {
+      case LocationStatus.on:
+        if (state.status != DriveStateStatus.ongoing) {
+          resumeDrive();
+        }
+      case LocationStatus.off:
+        if (state.status == DriveStateStatus.ongoing) {
+          pauseDrive();
+        }
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/cubit/drive/drive_cubit.dart';
 import 'package:motorbike_navigator/ui/cubit/drive/drive_state.dart';
+import 'package:motorbike_navigator/ui/service/location_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../mock/data/repository/mock_drive_repository.dart';
@@ -46,7 +47,8 @@ void main() {
   group(
     'startDrive, ',
     () {
-      final positionStream$ = BehaviorSubject<Position>();
+      final positionStream$ = BehaviorSubject<Position?>();
+      final locationStatusStream$ = BehaviorSubject<LocationStatus>();
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50.1, 18.1),
@@ -58,16 +60,19 @@ void main() {
           speedInKmPerH: 20,
           altitude: 101.22,
         ),
-        Position(
-          coordinates: Coordinates(52.3, 20.3),
-          speedInKmPerH: 25,
-          altitude: 102.22,
-        ),
       ];
       const double firstDistanceBetweenPositions = 5;
       const double secondDistanceBetweenPositions = 15;
-      const double thirdDistanceBetweenPositions = 11.2;
       DriveState? state;
+
+      setUp(() {
+        when(
+          locationService.getPosition,
+        ).thenAnswer((_) => const Stream.empty());
+        when(
+          locationService.getLocationStatus,
+        ).thenAnswer((_) => const Stream.empty());
+      });
 
       blocTest(
         'should do nothing if startPosition is null, ',
@@ -77,8 +82,49 @@ void main() {
       );
 
       blocTest(
-        'should insert start position to positions, should set startDateTime '
-        'as now, should start timer and should listen to position changes',
+        'should insert start position to positions and should set startDateTime '
+        'as now',
+        build: () => createCubit(),
+        act: (cubit) => cubit.startDrive(startPosition: startPosition),
+        expect: () => [
+          state = DriveState(
+            status: DriveStateStatus.ongoing,
+            startDatetime: now,
+            speedInKmPerH: startPosition.speedInKmPerH,
+            avgSpeedInKmPerH: startPosition.speedInKmPerH,
+            positions: [startPosition],
+          ),
+        ],
+      );
+
+      blocTest(
+        'should start timer',
+        build: () => createCubit(),
+        act: (cubit) async {
+          cubit.startDrive(startPosition: startPosition);
+          await Future.delayed(
+            const Duration(seconds: 2),
+          );
+        },
+        expect: () => [
+          state = DriveState(
+            status: DriveStateStatus.ongoing,
+            startDatetime: now,
+            speedInKmPerH: startPosition.speedInKmPerH,
+            avgSpeedInKmPerH: startPosition.speedInKmPerH,
+            positions: [startPosition],
+          ),
+          state = state?.copyWith(
+            duration: const Duration(seconds: 1),
+          ),
+          state = state?.copyWith(
+            duration: const Duration(seconds: 2),
+          ),
+        ],
+      );
+
+      blocTest(
+        'should listen to position change',
         build: () => createCubit(),
         setUp: () {
           when(
@@ -96,20 +142,12 @@ void main() {
               location2: positions[1].coordinates,
             ),
           ).thenReturn(secondDistanceBetweenPositions);
-          when(
-            () => mapService.calculateDistanceInKm(
-              location1: positions[1].coordinates,
-              location2: positions.last.coordinates,
-            ),
-          ).thenReturn(thirdDistanceBetweenPositions);
         },
-        act: (cubit) async {
+        act: (cubit) {
           cubit.startDrive(startPosition: startPosition);
           positionStream$.add(positions.first);
-          await Future.delayed(const Duration(seconds: 1));
+          positionStream$.add(null);
           positionStream$.add(positions[1]);
-          positionStream$.add(positions.last);
-          await Future.delayed(const Duration(seconds: 1));
         },
         expect: () => [
           state = DriveState(
@@ -120,55 +158,65 @@ void main() {
             positions: [startPosition],
           ),
           state = state?.copyWith(
+            distanceInKm: firstDistanceBetweenPositions,
             speedInKmPerH: positions.first.speedInKmPerH,
             avgSpeedInKmPerH: [
               startPosition.speedInKmPerH,
               positions.first.speedInKmPerH,
             ].average,
-            distanceInKm: firstDistanceBetweenPositions,
             positions: [
               startPosition,
               positions.first,
             ],
           ),
           state = state?.copyWith(
-            duration: const Duration(seconds: 1),
-          ),
-          state = state?.copyWith(
+            distanceInKm:
+                firstDistanceBetweenPositions + secondDistanceBetweenPositions,
             speedInKmPerH: positions[1].speedInKmPerH,
             avgSpeedInKmPerH: [
               startPosition.speedInKmPerH,
               positions.first.speedInKmPerH,
               positions[1].speedInKmPerH,
             ].average,
-            distanceInKm:
-                firstDistanceBetweenPositions + secondDistanceBetweenPositions,
             positions: [
               startPosition,
               positions.first,
               positions[1],
             ],
           ),
-          state = state?.copyWith(
-            speedInKmPerH: positions[2].speedInKmPerH,
-            avgSpeedInKmPerH: [
-              startPosition.speedInKmPerH,
-              positions.first.speedInKmPerH,
-              positions[1].speedInKmPerH,
-              positions.last.speedInKmPerH,
-            ].average,
-            distanceInKm: firstDistanceBetweenPositions +
-                secondDistanceBetweenPositions +
-                thirdDistanceBetweenPositions,
-            positions: [
-              startPosition,
-              positions.first,
-              positions[1],
-              positions.last,
-            ],
+        ],
+      );
+
+      blocTest(
+        'should listen to location status change, '
+        'should resume drive if location is on and drive status is different '
+        'than ongoing, '
+        'should pause drive if location is off and drive status is set as '
+        'ongoing',
+        build: () => createCubit(),
+        setUp: () {
+          when(
+            locationService.getLocationStatus,
+          ).thenAnswer((_) => locationStatusStream$.stream);
+        },
+        act: (cubit) {
+          cubit.startDrive(startPosition: startPosition);
+          locationStatusStream$.add(LocationStatus.off);
+          locationStatusStream$.add(LocationStatus.on);
+        },
+        expect: () => [
+          state = DriveState(
+            status: DriveStateStatus.ongoing,
+            startDatetime: now,
+            speedInKmPerH: startPosition.speedInKmPerH,
+            avgSpeedInKmPerH: startPosition.speedInKmPerH,
+            positions: [startPosition],
           ),
           state = state?.copyWith(
-            duration: const Duration(seconds: 2),
+            status: DriveStateStatus.paused,
+          ),
+          state = state?.copyWith(
+            status: DriveStateStatus.ongoing,
           ),
         ],
       );
@@ -202,6 +250,9 @@ void main() {
           when(
             locationService.getPosition,
           ).thenAnswer((_) => positionStream$.stream);
+          locationService.mockGetLocationStatus(
+            expectedLocationStatus: LocationStatus.on,
+          );
           when(
             () => mapService.calculateDistanceInKm(
               location1: startPosition.coordinates,
@@ -281,6 +332,9 @@ void main() {
           when(
             locationService.getPosition,
           ).thenAnswer((_) => positionStream$.stream);
+          locationService.mockGetLocationStatus(
+            expectedLocationStatus: LocationStatus.on,
+          );
           when(
             () => mapService.calculateDistanceInKm(
               location1: startPosition.coordinates,
@@ -379,6 +433,9 @@ void main() {
         when(
           locationService.getPosition,
         ).thenAnswer((_) => positionStream$.stream);
+        locationService.mockGetLocationStatus(
+          expectedLocationStatus: LocationStatus.on,
+        );
         when(
           () => mapService.calculateDistanceInKm(
             location1: startPosition.coordinates,
@@ -513,6 +570,9 @@ void main() {
         build: () => createCubit(),
         setUp: () {
           locationService.mockGetPosition(expectedPosition: position);
+          locationService.mockGetLocationStatus(
+            expectedLocationStatus: LocationStatus.on,
+          );
           mapService.mockCalculateDistanceInKm(expectedDistance: 10.10);
         },
         act: (cubit) async {

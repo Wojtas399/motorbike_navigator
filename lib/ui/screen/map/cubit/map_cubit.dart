@@ -14,7 +14,7 @@ class MapCubit extends Cubit<MapState> {
   final LocationService _locationService;
   final DeviceSettingsService _deviceSettingsService;
   StreamSubscription<LocationStatus>? _locationStatusListener;
-  StreamSubscription<Position>? _currentPositionListener;
+  StreamSubscription<Position?>? _currentPositionListener;
 
   MapCubit(
     this._locationService,
@@ -79,6 +79,7 @@ class MapCubit extends Cubit<MapState> {
         _listenToCurrentPosition();
       case LocationStatus.off:
         _currentPositionListener?.cancel();
+        _currentPositionListener = null;
         emit(state.copyWith(
           status: MapStateStatus.locationIsOff,
         ));
@@ -93,17 +94,19 @@ class MapCubit extends Cubit<MapState> {
       ));
       return;
     }
-    _currentPositionListener =
+    _currentPositionListener ??=
         _locationService.getPosition().listen(_handleCurrentPosition);
   }
 
-  void _handleCurrentPosition(Position position) {
-    emit(state.copyWith(
-      status: MapStateStatus.completed,
-      centerLocation: state.focusMode.isFollowingUserLocation
-          ? position.coordinates
-          : state.centerLocation,
-      userPosition: position,
-    ));
+  void _handleCurrentPosition(Position? position) {
+    if (position != null) {
+      emit(state.copyWith(
+        status: MapStateStatus.completed,
+        centerLocation: state.focusMode.isFollowingUserLocation
+            ? position.coordinates
+            : state.centerLocation,
+        userPosition: position,
+      ));
+    }
   }
 }
