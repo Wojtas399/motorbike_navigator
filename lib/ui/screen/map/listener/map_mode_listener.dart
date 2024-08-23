@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/single_child_widget.dart';
 
-import 'cubit/map_cubit.dart';
-import 'cubit/map_state.dart';
-import 'map_drive_details.dart';
+import '../cubit/map_cubit.dart';
+import '../cubit/map_state.dart';
+import '../map_drive_details.dart';
 
 class MapModeListener extends SingleChildStatefulWidget {
   const MapModeListener({super.key});

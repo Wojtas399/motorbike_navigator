@@ -5,11 +5,15 @@ import '../../../../entity/position.dart';
 
 part 'map_state.freezed.dart';
 
-enum MapStateStatus { loading, completed, locationIsOff, locationAccessDenied }
+enum MapStateStatus { loading, completed }
 
 enum MapMode { basic, drive, selectingRoute, routePreview }
 
 enum MapFocusMode { free, followUserLocation }
+
+extension MapStateStatusExtensions on MapStateStatus {
+  bool get isLoading => this == MapStateStatus.loading;
+}
 
 extension MapModeExtensions on MapMode {
   bool get isBasic => this == MapMode.basic;

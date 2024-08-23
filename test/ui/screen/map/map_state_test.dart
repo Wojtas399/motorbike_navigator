@@ -21,6 +21,29 @@ void main() {
   );
 
   group(
+    'status.isLoading, ',
+    () {
+      test(
+        'should be true if status is set as loading',
+        () {
+          const MapState state = MapState(status: MapStateStatus.loading);
+
+          expect(state.status.isLoading, true);
+        },
+      );
+
+      test(
+        'should be false if status is set as completed',
+        () {
+          const MapState state = MapState(status: MapStateStatus.completed);
+
+          expect(state.status.isLoading, false);
+        },
+      );
+    },
+  );
+
+  group(
     'mode.isBasic, ',
     () {
       test(

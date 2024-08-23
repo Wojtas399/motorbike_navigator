@@ -80,22 +80,15 @@ class MapCubit extends Cubit<MapState> {
       case LocationStatus.off:
         _currentPositionListener?.cancel();
         _currentPositionListener = null;
-        emit(state.copyWith(
-          status: MapStateStatus.locationIsOff,
-        ));
     }
   }
 
   Future<void> _listenToCurrentPosition() async {
     final bool isLocationEnabled = await _locationService.hasPermission();
-    if (!isLocationEnabled) {
-      emit(state.copyWith(
-        status: MapStateStatus.locationAccessDenied,
-      ));
-      return;
+    if (isLocationEnabled) {
+      _currentPositionListener ??=
+          _locationService.getPosition().listen(_handleCurrentPosition);
     }
-    _currentPositionListener ??=
-        _locationService.getPosition().listen(_handleCurrentPosition);
   }
 
   void _handleCurrentPosition(Position? position) {

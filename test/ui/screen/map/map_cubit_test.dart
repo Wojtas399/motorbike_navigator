@@ -41,26 +41,52 @@ void main() {
         ),
       ];
       const Coordinates locationOnDrag = Coordinates(50.5, 19.5);
-      final positionStream$ =
-          BehaviorSubject<Position?>.seeded(positions.first);
+      late BehaviorSubject<Position?> positionStream$;
+      late BehaviorSubject<LocationStatus> locationStatusStream$;
       MapState? state;
 
+      setUp(() {
+        positionStream$ = BehaviorSubject<Position?>.seeded(positions.first);
+      });
+
       blocTest(
-        'should emit locationIsOff status if location status is set as off',
+        'should cancel current position listener if location status is set as '
+        'off',
         build: () => createCubit(),
-        setUp: () => locationService.mockGetLocationStatus(
-          expectedLocationStatus: LocationStatus.off,
-        ),
-        act: (cubit) async => await cubit.initialize(),
+        setUp: () {
+          locationStatusStream$ = BehaviorSubject<LocationStatus>.seeded(
+            LocationStatus.on,
+          );
+          when(
+            locationService.getLocationStatus,
+          ).thenAnswer((_) => locationStatusStream$.stream);
+          locationService.mockHasPermission(expected: true);
+          when(
+            locationService.getPosition,
+          ).thenAnswer((_) => positionStream$.stream);
+        },
+        act: (cubit) async {
+          await cubit.initialize();
+          await cubit.stream.first;
+          locationStatusStream$.add(LocationStatus.off);
+          positionStream$.add(positions.last);
+        },
         expect: () => [
-          const MapState(
-            status: MapStateStatus.locationIsOff,
+          MapState(
+            status: MapStateStatus.completed,
+            centerLocation: positions.first.coordinates,
+            userPosition: positions.first,
           ),
         ],
+        verify: (_) {
+          verify(locationService.getLocationStatus).called(1);
+          verify(locationService.hasPermission).called(1);
+          verify(locationService.getPosition).called(1);
+        },
       );
 
       blocTest(
-        'should emit locationAccessDenied status if location is on but location '
+        'should not listen to current position if location is on but location '
         'permission is denied',
         build: () => createCubit(),
         setUp: () {
@@ -70,11 +96,12 @@ void main() {
           locationService.mockHasPermission(expected: false);
         },
         act: (cubit) async => await cubit.initialize(),
-        expect: () => [
-          const MapState(
-            status: MapStateStatus.locationAccessDenied,
-          ),
-        ],
+        expect: () => [],
+        verify: (_) {
+          verify(locationService.getLocationStatus).called(1);
+          verify(locationService.hasPermission).called(1);
+          verifyNever(locationService.getPosition);
+        },
       );
 
       blocTest(
@@ -135,7 +162,7 @@ void main() {
       MapState? state;
 
       blocTest(
-        'should emit locationAccessDenied status if location permission is denied',
+        'should not listen to current position if location permission is denied',
         build: () => createCubit(),
         setUp: () => locationService.mockHasPermission(expected: false),
         act: (cubit) async => await cubit.refreshLocationPermission(),
@@ -143,11 +170,11 @@ void main() {
           const MapState(
             status: MapStateStatus.loading,
           ),
-          const MapState(
-            status: MapStateStatus.locationAccessDenied,
-          ),
         ],
-        verify: (_) => verify(locationService.hasPermission).called(1),
+        verify: (_) {
+          verify(locationService.hasPermission).called(1);
+          verifyNever(locationService.getPosition);
+        },
       );
 
       blocTest(
