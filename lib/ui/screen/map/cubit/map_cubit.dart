@@ -5,39 +5,27 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../entity/coordinates.dart';
 import '../../../../entity/position.dart';
-import '../../../service/device_settings_service.dart';
 import '../../../service/location_service.dart';
 import 'map_state.dart';
 
 @injectable
 class MapCubit extends Cubit<MapState> {
   final LocationService _locationService;
-  final DeviceSettingsService _deviceSettingsService;
-  StreamSubscription<LocationStatus>? _locationStatusListener;
   StreamSubscription<Position?>? _currentPositionListener;
 
   MapCubit(
     this._locationService,
-    this._deviceSettingsService,
   ) : super(const MapState());
 
   @override
   Future<void> close() {
-    _locationStatusListener?.cancel();
     _currentPositionListener?.cancel();
     return super.close();
   }
 
   Future<void> initialize() async {
-    _locationStatusListener =
-        _locationService.getLocationStatus().listen(_handleLocationStatus);
-  }
-
-  Future<void> refreshLocationPermission() async {
-    emit(state.copyWith(
-      status: MapStateStatus.loading,
-    ));
-    _listenToCurrentPosition();
+    _currentPositionListener ??=
+        _locationService.getPosition().listen(_handleCurrentPosition);
   }
 
   void onMapDrag(Coordinates newCenterLocation) {
@@ -67,28 +55,6 @@ class MapCubit extends Cubit<MapState> {
       status: MapStateStatus.completed,
       mode: newMode,
     ));
-  }
-
-  void openLocationSettings() {
-    _deviceSettingsService.openLocationSettings();
-  }
-
-  void _handleLocationStatus(LocationStatus status) {
-    switch (status) {
-      case LocationStatus.on:
-        _listenToCurrentPosition();
-      case LocationStatus.off:
-        _currentPositionListener?.cancel();
-        _currentPositionListener = null;
-    }
-  }
-
-  Future<void> _listenToCurrentPosition() async {
-    final bool isLocationEnabled = await _locationService.hasPermission();
-    if (isLocationEnabled) {
-      _currentPositionListener ??=
-          _locationService.getPosition().listen(_handleCurrentPosition);
-    }
   }
 
   void _handleCurrentPosition(Position? position) {
