@@ -133,17 +133,11 @@ void main() {
         'should set focus mode as followUserLocation and should assign user '
         'position to centerLocation param',
         build: () => createCubit(),
-        setUp: () {
-          locationService.mockGetLocationStatus(
-            expectedLocationStatus: LocationStatus.on,
-          );
-          locationService.mockHasPermission(expected: true);
-          locationService.mockGetPosition(
-            expectedPosition: position,
-          );
-        },
+        setUp: () => locationService.mockGetPosition(
+          expectedPosition: position,
+        ),
         act: (cubit) async {
-          await cubit.initialize();
+          cubit.initialize();
           await cubit.stream.first;
           cubit.onMapDrag(locationOnDrag);
           cubit.followUserLocation();

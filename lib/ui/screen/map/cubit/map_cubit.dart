@@ -23,7 +23,7 @@ class MapCubit extends Cubit<MapState> {
     return super.close();
   }
 
-  Future<void> initialize() async {
+  void initialize() {
     _currentPositionListener ??=
         _locationService.getPosition().listen(_handleCurrentPosition);
   }
