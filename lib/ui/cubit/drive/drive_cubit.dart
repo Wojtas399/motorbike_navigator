@@ -140,15 +140,9 @@ class DriveCubit extends Cubit<DriveState> {
   }
 
   void _handleLocationStatusChange(LocationStatus status) {
-    switch (status) {
-      case LocationStatus.on:
-        if (state.status != DriveStateStatus.ongoing) {
-          resumeDrive();
-        }
-      case LocationStatus.off:
-        if (state.status == DriveStateStatus.ongoing) {
-          pauseDrive();
-        }
+    if (status == LocationStatus.off &&
+        state.status == DriveStateStatus.ongoing) {
+      pauseDrive();
     }
   }
 }

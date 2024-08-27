@@ -188,21 +188,15 @@ void main() {
       );
 
       blocTest(
-        'should listen to location status change, '
-        'should resume drive if location is on and drive status is different '
-        'than ongoing, '
-        'should pause drive if location is off and drive status is set as '
-        'ongoing',
+        'should listen to location status change and should pause drive if '
+        'location is off and drive status is set as ongoing',
         build: () => createCubit(),
-        setUp: () {
-          when(
-            locationService.getLocationStatus,
-          ).thenAnswer((_) => locationStatusStream$.stream);
-        },
+        setUp: () => when(
+          locationService.getLocationStatus,
+        ).thenAnswer((_) => locationStatusStream$.stream),
         act: (cubit) {
           cubit.startDrive(startPosition: startPosition);
           locationStatusStream$.add(LocationStatus.off);
-          locationStatusStream$.add(LocationStatus.on);
         },
         expect: () => [
           state = DriveState(
@@ -214,9 +208,6 @@ void main() {
           ),
           state = state?.copyWith(
             status: DriveStateStatus.paused,
-          ),
-          state = state?.copyWith(
-            status: DriveStateStatus.ongoing,
           ),
         ],
       );
