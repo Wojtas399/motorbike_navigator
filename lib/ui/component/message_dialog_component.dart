@@ -6,22 +6,25 @@ import '../extensions/context_extensions.dart';
 class MessageDialog extends StatelessWidget {
   final String title;
   final String message;
+  final List<Widget>? actions;
 
   const MessageDialog({
     super.key,
     required this.title,
     required this.message,
+    this.actions,
   });
 
   @override
   Widget build(BuildContext context) => AlertDialog(
         title: Text(title),
         content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: context.maybePop,
-            child: Text(context.str.close),
-          ),
-        ],
+        actions: actions ??
+            [
+              TextButton(
+                onPressed: context.maybePop,
+                child: Text(context.str.close),
+              ),
+            ],
       );
 }

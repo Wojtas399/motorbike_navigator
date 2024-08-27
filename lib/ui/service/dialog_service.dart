@@ -5,6 +5,7 @@ import '../component/confirmation_dialog_component.dart';
 import '../component/loading_dialog_component.dart';
 import '../component/message_dialog_component.dart';
 import '../config/app_router.dart';
+import '../extensions/context_extensions.dart';
 
 @Singleton()
 class DialogService {
@@ -39,13 +40,60 @@ class DialogService {
   Future<void> showMessageDialog({
     required String title,
     required String message,
+    List<Widget>? actions,
+    bool barrierDismissible = true,
   }) async {
     await _showAlertDialog(
       MessageDialog(
         title: title,
         message: message,
+        actions: actions,
       ),
+      barrierDismissible: barrierDismissible,
     );
+  }
+
+  Future<void> showLocationOffDialog({
+    required VoidCallback onOpenDeviceLocationSettings,
+  }) async {
+    final BuildContext? context = _appRouter.navigatorKey.currentContext;
+    if (context != null) {
+      await showMessageDialog(
+        barrierDismissible: false,
+        title: context.str.locationIsOffTitle,
+        message: context.str.locationIsOffMessage,
+        actions: [
+          TextButton(
+            onPressed: onOpenDeviceLocationSettings,
+            child: Text(context.str.goToSettings),
+          ),
+        ],
+      );
+    }
+  }
+
+  Future<void> showLocationAccessDeniedDialog({
+    required VoidCallback onOpenDeviceLocationSettings,
+    required VoidCallback onRefresh,
+  }) async {
+    final BuildContext? context = _appRouter.navigatorKey.currentContext;
+    if (context != null) {
+      await showMessageDialog(
+        barrierDismissible: false,
+        title: context.str.locationAccessDeniedTitle,
+        message: context.str.locationAccessDeniedMessage,
+        actions: [
+          TextButton(
+            onPressed: onOpenDeviceLocationSettings,
+            child: Text(context.str.goToSettings),
+          ),
+          TextButton(
+            onPressed: onRefresh,
+            child: Text(context.str.refresh),
+          ),
+        ],
+      );
+    }
   }
 
   Future<bool> askForConfirmation({
@@ -66,6 +114,13 @@ class DialogService {
     if (_isLoadingDialogOpened && context != null) {
       Navigator.of(context, rootNavigator: true).pop();
       _isLoadingDialogOpened = false;
+    }
+  }
+
+  void closeDialog() {
+    final BuildContext? context = _appRouter.navigatorKey.currentContext;
+    if (context != null) {
+      Navigator.of(context).pop();
     }
   }
 

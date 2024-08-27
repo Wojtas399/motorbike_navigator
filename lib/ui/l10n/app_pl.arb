@@ -3,11 +3,6 @@
   "signInTitle": "Logowanie",
   "signInWithGoogleLabel": "Zaloguj z Google",
   "@----------MAP----------": {},
-  "mapLocationIsOffTitle": "Lokalizacja jest wyłączona",
-  "mapLocationIsOffMessage": "Włączenie lokalizacji jest wymagane do prawidłowego działania aplikacji. Możesz tego dokonać w ustawieniach urządzenia.",
-  "mapLocationAccessDeniedTitle": "Brak dostępu do lokalizacji",
-  "mapLocationAccessDeniedMessage": "Motorbike Navigator do prawidłowego działania wymaga dostępu do lokalizacji. Zezwól na to w ustawieniach urządzenia.",
-  "mapGoToSettings": "Przejdź do ustawień",
   "mapSelectStartPlace": "Wybierz miejsce startowe",
   "mapSelectDestination": "Wybierz miejsce docelowe",
   "mapSearchRoute": "Szukaj trasy",
@@ -76,6 +71,11 @@
   "fridayAbbr": "Pt",
   "saturdayAbbr": "Sob",
   "sundayAbbr": "Ndz",
+  "@----------EXCEPTIONS----------": {},
+  "locationIsOffTitle": "Lokalizacja jest wyłączona",
+  "locationIsOffMessage": "Włączenie lokalizacji jest wymagane do prawidłowego działania aplikacji. Możesz tego dokonać w ustawieniach urządzenia.",
+  "locationAccessDeniedTitle": "Brak dostępu do lokalizacji",
+  "locationAccessDeniedMessage": "Motorbike Navigator do prawidłowego działania wymaga dostępu do lokalizacji. Zezwól na to w ustawieniach urządzenia.",
   "@----------COMMON----------": {},
   "map": "Mapa",
   "yourLocalization": "Twoja lokalizacja",
@@ -94,5 +94,6 @@
   "avgSpeed": "Średnia prędkość",
   "darkMode": "Ciemny motyw",
   "requiredField": "To pole jest wymagane",
-  "unknown": "Nieznane"
+  "unknown": "Nieznane",
+  "goToSettings": "Przejdź do ustawień"
 }

@@ -6,16 +6,28 @@ import 'package:motorbike_navigator/ui/cubit/location/location_state.dart';
 import 'package:motorbike_navigator/ui/service/location_service.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../mock/ui_service/mock_device_settings_service.dart';
 import '../../../mock/ui_service/mock_location_service.dart';
 
 void main() {
   final locationService = MockLocationService();
+  final deviceSettingsService = MockDeviceSettingsService();
 
-  LocationCubit createCubit() => LocationCubit(locationService);
+  LocationCubit createCubit() => LocationCubit(
+        locationService,
+        deviceSettingsService,
+      );
 
   tearDown(() {
     reset(locationService);
+    reset(deviceSettingsService);
   });
+
+  blocTest(
+    'default state should be set as null',
+    build: () => createCubit(),
+    verify: (cubit) => expect(cubit.state, null),
+  );
 
   group(
     'listenToLocationStatus, ',
@@ -58,5 +70,13 @@ void main() {
         },
       );
     },
+  );
+
+  blocTest(
+    'openLocationSettings, '
+    'should call method from DeviceSettingsService to open device location settings',
+    build: () => createCubit(),
+    act: (cubit) => cubit.openLocationSettings(),
+    verify: (_) => verify(deviceSettingsService.openLocationSettings).called(1),
   );
 }

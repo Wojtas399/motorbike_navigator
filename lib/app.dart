@@ -5,8 +5,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'dependency_injection.dart';
 import 'entity/settings.dart' as settings;
+import 'location_status_listener.dart';
+import 'route_location_observer.dart';
 import 'ui/config/app_router.dart';
 import 'ui/config/app_theme.dart';
+import 'ui/cubit/location/location_cubit.dart';
 import 'ui/provider/map_tile_url_provider.dart';
 
 class App extends StatelessWidget {
@@ -17,6 +20,9 @@ class App extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (_) => getIt.get<MapTileUrlProvider>()..initialize(),
+          ),
+          BlocProvider(
+            create: (_) => getIt.get<LocationCubit>()..listenToLocationStatus(),
           ),
         ],
         child: const _MaterialApp(),
@@ -32,7 +38,11 @@ class _MaterialApp extends StatelessWidget {
     const settings.ThemeMode? themeMode = settings.ThemeMode.light; //TODO
 
     return MaterialApp.router(
-      routerConfig: getIt<AppRouter>().config(),
+      routerConfig: getIt<AppRouter>().config(
+        navigatorObservers: () => [
+          RouteLocationObserver(),
+        ],
+      ),
       title: 'Motorbike navigator',
       themeMode: ThemeMode.light,
       // themeMode != null //TODO
@@ -52,6 +62,7 @@ class _MaterialApp extends StatelessWidget {
       supportedLocales: const [
         Locale('pl'),
       ],
+      builder: (_, child) => LocationStatusListener(child: child),
     );
   }
 }
