@@ -27,6 +27,7 @@ class MapDriveCubitListener extends SingleChildStatelessWidget {
   }
 
   void _handlePausedStatus(BuildContext context) {
+    getIt.get<DialogService>().closeDialogIfIsOpened();
     Navigator.push(
       context,
       MaterialPageRoute(

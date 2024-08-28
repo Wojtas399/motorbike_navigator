@@ -11,6 +11,7 @@ import '../extensions/context_extensions.dart';
 class DialogService {
   final AppRouter _appRouter;
   bool _isLoadingDialogOpened = false;
+  bool _isDialogOpened = false;
 
   DialogService(this._appRouter);
 
@@ -117,10 +118,11 @@ class DialogService {
     }
   }
 
-  void closeDialog() {
+  void closeDialogIfIsOpened() {
     final BuildContext? context = _appRouter.navigatorKey.currentContext;
-    if (context != null) {
+    if (_isDialogOpened && context != null) {
       Navigator.of(context).pop();
+      _isDialogOpened = false;
     }
   }
 
@@ -130,6 +132,7 @@ class DialogService {
   }) async {
     final BuildContext? context = _appRouter.navigatorKey.currentContext;
     if (context == null) return null;
+    _isDialogOpened = true;
     return await showGeneralDialog<T>(
       context: context,
       pageBuilder: (_, anim1, anim2) => dialog,
