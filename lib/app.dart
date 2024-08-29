@@ -9,11 +9,24 @@ import 'location_status_listener.dart';
 import 'route_location_observer.dart';
 import 'ui/config/app_router.dart';
 import 'ui/config/app_theme.dart';
+import 'ui/cubit/drive/drive_cubit.dart';
 import 'ui/cubit/location/location_cubit.dart';
 import 'ui/provider/map_tile_url_provider.dart';
+import 'ui/screen/map/cubit/map_cubit.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
+
+  @override
+  Widget build(BuildContext context) => const _GlobalProviders(
+        child: _MaterialApp(),
+      );
+}
+
+class _GlobalProviders extends StatelessWidget {
+  final Widget child;
+
+  const _GlobalProviders({required this.child});
 
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
@@ -24,8 +37,14 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (_) => getIt.get<LocationCubit>()..listenToLocationStatus(),
           ),
+          BlocProvider(
+            create: (_) => getIt.get<MapCubit>()..initialize(),
+          ),
+          BlocProvider(
+            create: (_) => getIt.get<DriveCubit>(),
+          ),
         ],
-        child: const _MaterialApp(),
+        child: child,
       );
 }
 

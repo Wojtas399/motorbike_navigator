@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../../../entity/coordinates.dart';
 import '../../../../entity/position.dart';
@@ -24,16 +23,12 @@ class MapCubit extends Cubit<MapState> {
     return super.close();
   }
 
-  void initialize() {
-    _currentPositionListener ??= _locationService
-        .getLocationStatus()
-        .switchMap(
-          (LocationStatus status) => switch (status) {
-            LocationStatus.on => _locationService.getPosition(),
-            LocationStatus.off => Stream.value(null),
-          },
-        )
-        .listen(_handleCurrentPosition);
+  Future<void> initialize() async {
+    final bool hasLocationPermission = await _locationService.hasPermission();
+    if (hasLocationPermission) {
+      _currentPositionListener ??=
+          _locationService.getPosition().listen(_handleCurrentPosition);
+    }
   }
 
   void onMapDrag(Coordinates newCenterLocation) {

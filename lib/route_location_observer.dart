@@ -21,13 +21,6 @@ class RouteLocationObserver extends AutoRouteObserver {
             onOpenDeviceLocationSettings: locationCubit.openLocationSettings,
           ),
         );
-      } else if (locationState is LocationStateAccessDenied) {
-        WidgetsBinding.instance.addPostFrameCallback(
-          (_) => dialogService.showLocationAccessDeniedDialog(
-            onOpenDeviceLocationSettings: locationCubit.openLocationSettings,
-            onRefresh: locationCubit.listenToLocationStatus,
-          ),
-        );
       }
     }
     super.didPush(route, previousRoute);

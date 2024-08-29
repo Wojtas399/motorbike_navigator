@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../dependency_injection.dart';
 import 'ui/cubit/location/location_cubit.dart';
 import 'ui/cubit/location/location_state.dart';
+import 'ui/screen/map/cubit/map_cubit.dart';
 import 'ui/service/dialog_service.dart';
 
 class LocationStatusListener extends StatelessWidget {
@@ -24,7 +25,10 @@ class LocationStatusListener extends StatelessWidget {
     } else if (state is LocationStateAccessDenied) {
       dialogService.showLocationAccessDeniedDialog(
         onOpenDeviceLocationSettings: locationCubit.openLocationSettings,
-        onRefresh: locationCubit.listenToLocationStatus,
+        onRefresh: () {
+          locationCubit.listenToLocationStatus();
+          context.read<MapCubit>().initialize();
+        },
       );
     } else {
       dialogService.closeDialogIfIsOpened();

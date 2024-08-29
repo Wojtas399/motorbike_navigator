@@ -40,25 +40,21 @@ void main() {
       MapState? state;
 
       blocTest(
-        'should do nothing if location is off',
+        'should do nothing if location permission is denied',
         build: () => createCubit(),
-        setUp: () => locationService.mockGetLocationStatus(
-          expectedLocationStatus: LocationStatus.off,
-        ),
+        setUp: () => locationService.mockHasPermission(expected: false),
         act: (cubit) => cubit.initialize(),
         expect: () => [],
       );
 
       blocTest(
-        'should listen to current position if location is on and if focus mode '
-        'is set to followUserLocation should assign listened position to '
-        'centerLocation and userPosition params else should only assign it to '
-        'userPosition param',
+        'should listen to current position if location permission is granted '
+        'and if focus mode is set to followUserLocation should assign listened '
+        'position to centerLocation and userPosition params else should only '
+        'assign it to userPosition param',
         build: () => createCubit(),
         setUp: () {
-          locationService.mockGetLocationStatus(
-            expectedLocationStatus: LocationStatus.on,
-          );
+          locationService.mockHasPermission(expected: true);
           locationService.mockGetLocationStatus(
             expectedLocationStatus: LocationStatus.on,
           );
@@ -147,9 +143,7 @@ void main() {
         'position to centerLocation param',
         build: () => createCubit(),
         setUp: () {
-          locationService.mockGetLocationStatus(
-            expectedLocationStatus: LocationStatus.on,
-          );
+          locationService.mockHasPermission(expected: true);
           locationService.mockGetPosition(expectedPosition: position);
         },
         act: (cubit) async {

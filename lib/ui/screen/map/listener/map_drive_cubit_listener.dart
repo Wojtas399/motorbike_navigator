@@ -31,17 +31,7 @@ class MapDriveCubitListener extends SingleChildStatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(
-              value: context.read<DriveCubit>(),
-            ),
-            BlocProvider.value(
-              value: context.read<MapCubit>(),
-            ),
-          ],
-          child: const DriveSummaryScreen(),
-        ),
+        builder: (_) => const DriveSummaryScreen(),
       ),
     );
   }
