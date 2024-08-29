@@ -36,17 +36,13 @@ class LocationService {
   }
 
   Stream<position_entity.Position?> getPosition() async* {
-    try {
-      final position$ = _getPositionStream();
-      await for (final position in position$) {
-        yield position_entity.Position(
-          coordinates: Coordinates(position.latitude, position.longitude),
-          altitude: position.altitude,
-          speedInKmPerH: position.speed * 3.6,
-        );
-      }
-    } catch (_) {
-      yield null;
+    final position$ = _getPositionStream();
+    await for (final position in position$) {
+      yield position_entity.Position(
+        coordinates: Coordinates(position.latitude, position.longitude),
+        altitude: position.altitude,
+        speedInKmPerH: position.speed * 3.6,
+      );
     }
   }
 

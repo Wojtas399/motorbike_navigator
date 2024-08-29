@@ -40,12 +40,25 @@ void main() {
       MapState? state;
 
       blocTest(
-        'should listen to current position and if focus mode is set to '
-        'followUserLocation should assign listened position to centerLocation '
-        'and userPosition params else should only assign it to userPosition '
-        'param',
+        'should do nothing if location is off',
+        build: () => createCubit(),
+        setUp: () => locationService.mockGetLocationStatus(
+          expectedLocationStatus: LocationStatus.off,
+        ),
+        act: (cubit) => cubit.initialize(),
+        expect: () => [],
+      );
+
+      blocTest(
+        'should listen to current position if location is on and if focus mode '
+        'is set to followUserLocation should assign listened position to '
+        'centerLocation and userPosition params else should only assign it to '
+        'userPosition param',
         build: () => createCubit(),
         setUp: () {
+          locationService.mockGetLocationStatus(
+            expectedLocationStatus: LocationStatus.on,
+          );
           locationService.mockGetLocationStatus(
             expectedLocationStatus: LocationStatus.on,
           );
@@ -123,7 +136,7 @@ void main() {
       MapState? state;
 
       blocTest(
-        'should do nothing if userLocation is null',
+        'should do nothing if userPosition is null',
         build: () => createCubit(),
         act: (cubit) => cubit.followUserLocation(),
         expect: () => [],
@@ -133,9 +146,12 @@ void main() {
         'should set focus mode as followUserLocation and should assign user '
         'position to centerLocation param',
         build: () => createCubit(),
-        setUp: () => locationService.mockGetPosition(
-          expectedPosition: position,
-        ),
+        setUp: () {
+          locationService.mockGetLocationStatus(
+            expectedLocationStatus: LocationStatus.on,
+          );
+          locationService.mockGetPosition(expectedPosition: position);
+        },
         act: (cubit) async {
           cubit.initialize();
           await cubit.stream.first;
