@@ -3,33 +3,35 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../data/repository/settings/settings_repository.dart';
 import '../../entity/settings.dart';
 import '../../env.dart';
 
 @injectable
 class MapTileUrlProvider extends Cubit<String?> {
-  StreamSubscription<ThemeMode?>? _themeModeListener;
+  final SettingsRepository _settingsRepository;
 
-  MapTileUrlProvider() : super(null);
-
-  @override
-  Future<void> close() {
-    _themeModeListener?.cancel();
-    return super.close();
-  }
+  MapTileUrlProvider(
+    this._settingsRepository,
+  ) : super(null);
 
   Future<void> initialize() async {
-    _themeModeListener = _getThemeMode().listen(_handleThemeModeChange);
+    final Stream<ThemeMode?> themeMode$ = _getThemeMode();
+    await for (final themeMode in themeMode$) {
+      _handleThemeModeChange(themeMode);
+    }
   }
 
   void _handleThemeModeChange(ThemeMode? themeMode) {
-    final String? mapTile = switch (themeMode) {
-      null => null,
+    if (themeMode == null) return;
+    final String mapTile = switch (themeMode) {
       ThemeMode.light => Env.mapboxTemplateUrl,
       ThemeMode.dark => Env.mapboxTemplateUrlDark,
     };
     emit(mapTile);
   }
 
-  Stream<ThemeMode?> _getThemeMode() => Stream.value(ThemeMode.light); //TODO
+  Stream<ThemeMode?> _getThemeMode() => _settingsRepository.getSettings().map(
+        (Settings? settings) => settings?.themeMode,
+      );
 }

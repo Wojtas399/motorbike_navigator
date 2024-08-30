@@ -1,45 +1,51 @@
+import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:motorbike_navigator/entity/settings.dart';
+import 'package:motorbike_navigator/env.dart';
+import 'package:motorbike_navigator/ui/provider/map_tile_url_provider.dart';
+import 'package:rxdart/rxdart.dart';
+
+import '../../mock/data/repository/mock_settings_repository.dart';
+
 void main() {
-  //TODO
-  //
-  // MapTileUrlProvider createProvider() =>
-  //     MapTileUrlProvider();
-  //
-  // group(
-  //   'initialize, ',
-  //   () {
-  //     const String loggedUserId = 'u1';
-  //     final loggedUserId$ = StreamController<String?>();
-  //     final loggedUser$ = StreamController<User?>();
-  //
-  //     blocTest(
-  //       'should listen to theme mode of logged user and should update tile url '
-  //       'based on it',
-  //       build: () => createProvider(),
-  //       setUp: () {
-  //         when(
-  //           () => authRepository.loggedUserId$,
-  //         ).thenAnswer((_) => loggedUserId$.stream);
-  //         when(
-  //           () => userRepository.getUserById(userId: loggedUserId),
-  //         ).thenAnswer((_) => loggedUser$.stream);
-  //       },
-  //       act: (cubit) {
-  //         cubit.initialize();
-  //         loggedUserId$.add(loggedUserId);
-  //         loggedUser$.add(loggedUser1);
-  //         loggedUser$.add(loggedUser2);
-  //       },
-  //       expect: () => [
-  //         Env.mapboxTemplateUrl,
-  //         Env.mapboxTemplateUrlDark,
-  //       ],
-  //       verify: (_) {
-  //         verify(() => authRepository.loggedUserId$).called(1);
-  //         verify(
-  //           () => userRepository.getUserById(userId: loggedUserId),
-  //         ).called(1);
-  //       },
-  //     );
-  //   },
-  // );
+  final settingsRepository = MockSettingsRepository();
+  MapTileUrlProvider createProvider() => MapTileUrlProvider(settingsRepository);
+
+  tearDown(() {
+    reset(settingsRepository);
+  });
+
+  group(
+    'initialize, ',
+    () {
+      final settings$ = BehaviorSubject<Settings?>.seeded(null);
+
+      blocTest(
+        'should listen to theme mode from SettingsRepository and should update '
+        'tile url based on it',
+        build: () => createProvider(),
+        setUp: () => when(
+          settingsRepository.getSettings,
+        ).thenAnswer((_) => settings$.stream),
+        act: (cubit) {
+          cubit.initialize();
+          settings$.add(
+            const Settings(
+              themeMode: ThemeMode.light,
+            ),
+          );
+          settings$.add(
+            const Settings(
+              themeMode: ThemeMode.dark,
+            ),
+          );
+        },
+        expect: () => [
+          Env.mapboxTemplateUrl,
+          Env.mapboxTemplateUrlDark,
+        ],
+      );
+    },
+  );
 }
