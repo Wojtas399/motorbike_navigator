@@ -7,7 +7,7 @@ import '../dto/theme_mode_dto.dart';
 class SettingsSharedPreferencesService {
   final String _themeModeId = 'theme_mode';
 
-  Future<ThemeModeDto?> getThemeMode() async {
+  Future<ThemeModeDto?> loadThemeMode() async {
     final sharedPrefs = await SharedPreferences.getInstance();
     final String? themeModeStr = sharedPrefs.getString(_themeModeId);
     return themeModeStr != null ? ThemeModeDto.fromString(themeModeStr) : null;
