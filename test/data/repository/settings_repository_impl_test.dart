@@ -92,7 +92,7 @@ void main() {
   );
 
   test(
-    'updateThemeMode, '
+    'setThemeMode, '
     'should call method from SettingsSharedPreferencesService to set theme '
     'mode and should update theme mode in settings object placed in repo state',
     () async {
@@ -106,7 +106,7 @@ void main() {
       );
       settingsSharedPreferencesService.mockSetThemeMode();
 
-      await repositoryImpl.updateThemeMode(newThemeMode);
+      await repositoryImpl.setThemeMode(newThemeMode);
 
       expect(
         await repositoryImpl.repositoryState$.first,

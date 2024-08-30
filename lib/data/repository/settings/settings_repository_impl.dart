@@ -27,7 +27,7 @@ class SettingsRepositoryImpl extends ItemRepository<Settings>
   }
 
   @override
-  Future<void> updateThemeMode(ThemeMode newThemeMode) async {
+  Future<void> setThemeMode(ThemeMode newThemeMode) async {
     final ThemeModeDto themeModeDto = _themeModeMapper.mapToDto(newThemeMode);
     await _settingsSharedPreferencesService.setThemeMode(themeModeDto);
     _updateThemeModeInState(newThemeMode);
