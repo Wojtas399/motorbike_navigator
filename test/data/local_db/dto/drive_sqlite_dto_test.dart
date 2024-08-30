@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:motorbike_navigator/data/local_db/dto/drive_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/mapper/datetime_mapper.dart';
-import 'package:motorbike_navigator/data/sqlite/dto/drive_sqlite_dto.dart';
 
 import '../../../mock/data/mapper/mock_datetime_mapper.dart';
 

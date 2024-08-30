@@ -3,11 +3,11 @@ import 'package:injectable/injectable.dart';
 import '../../../entity/drive.dart';
 import '../../../entity/position.dart';
 import '../../../ui/service/date_service.dart';
+import '../../local_db/dto/drive_sqlite_dto.dart';
+import '../../local_db/dto/position_sqlite_dto.dart';
+import '../../local_db/service/drive_sqlite_service.dart';
+import '../../local_db/service/position_sqlite_service.dart';
 import '../../mapper/drive_mapper.dart';
-import '../../sqlite/dto/drive_sqlite_dto.dart';
-import '../../sqlite/dto/position_sqlite_dto.dart';
-import '../../sqlite/service/drive_sqlite_service.dart';
-import '../../sqlite/service/position_sqlite_service.dart';
 import '../repository.dart';
 import 'drive_repository.dart';
 

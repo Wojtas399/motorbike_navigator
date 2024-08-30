@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/data/sqlite/model/sql_column.dart';
-import 'package:motorbike_navigator/data/sqlite/sql_creator.dart';
+import 'package:motorbike_navigator/data/local_db/model/sql_column.dart';
+import 'package:motorbike_navigator/data/local_db/sql_creator.dart';
 
 void main() {
   const generator = SqlGenerator();

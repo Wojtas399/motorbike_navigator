@@ -2,7 +2,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../entity/coordinates.dart';
 import '../../entity/position.dart';
-import '../sqlite/dto/position_sqlite_dto.dart';
+import '../local_db/dto/position_sqlite_dto.dart';
 
 @injectable
 class PositionMapper {

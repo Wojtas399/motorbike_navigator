@@ -1,17 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:motorbike_navigator/data/local_db/dto/drive_sqlite_dto.dart';
+import 'package:motorbike_navigator/data/local_db/dto/position_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/repository/drive/drive_repository_impl.dart';
-import 'package:motorbike_navigator/data/sqlite/dto/drive_sqlite_dto.dart';
-import 'package:motorbike_navigator/data/sqlite/dto/position_sqlite_dto.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
 import 'package:motorbike_navigator/entity/position.dart';
 
 import '../../creator/drive_creator.dart';
 import '../../creator/drive_sqlite_dto_creator.dart';
+import '../../mock/data/local_db/mock_drive_sqlite_service.dart';
+import '../../mock/data/local_db/mock_position_sqlite_service.dart';
 import '../../mock/data/mapper/mock_drive_mapper.dart';
-import '../../mock/data/sqlite/mock_drive_sqlite_service.dart';
-import '../../mock/data/sqlite/mock_position_sqlite_service.dart';
 import '../../mock/ui_service/mock_date_service.dart';
 
 void main() {

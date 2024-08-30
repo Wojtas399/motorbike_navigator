@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/data/sqlite/sqlite_db.dart';
+import 'package:motorbike_navigator/data/local_db/sqlite_db.dart';
 
 class MockSqliteDb extends Mock implements SqliteDb {
   void mockDoesTableNotExist({

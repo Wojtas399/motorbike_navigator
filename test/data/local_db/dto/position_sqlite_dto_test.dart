@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/data/sqlite/dto/position_sqlite_dto.dart';
+import 'package:motorbike_navigator/data/local_db/dto/position_sqlite_dto.dart';
 
 void main() {
   const int id = 1;

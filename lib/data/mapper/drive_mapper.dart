@@ -1,8 +1,8 @@
 import 'package:injectable/injectable.dart';
 
 import '../../entity/drive.dart';
-import '../sqlite/dto/drive_sqlite_dto.dart';
-import '../sqlite/dto/position_sqlite_dto.dart';
+import '../local_db/dto/drive_sqlite_dto.dart';
+import '../local_db/dto/position_sqlite_dto.dart';
 import 'position_mapper.dart';
 
 @injectable

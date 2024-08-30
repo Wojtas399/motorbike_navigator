@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/data/sqlite/dto/position_sqlite_dto.dart';
-import 'package:motorbike_navigator/data/sqlite/model/sql_column.dart';
-import 'package:motorbike_navigator/data/sqlite/service/position_sqlite_service.dart';
+import 'package:motorbike_navigator/data/local_db/dto/position_sqlite_dto.dart';
+import 'package:motorbike_navigator/data/local_db/model/sql_column.dart';
+import 'package:motorbike_navigator/data/local_db/service/position_sqlite_service.dart';
 
-import '../../../mock/data/sqlite/mock_sqlite_db.dart';
+import '../../../mock/data/local_db/mock_sqlite_db.dart';
 
 void main() {
   const String tableName = 'Positions';

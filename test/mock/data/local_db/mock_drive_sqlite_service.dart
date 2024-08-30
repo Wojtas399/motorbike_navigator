@@ -1,6 +1,6 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/data/sqlite/dto/drive_sqlite_dto.dart';
-import 'package:motorbike_navigator/data/sqlite/service/drive_sqlite_service.dart';
+import 'package:motorbike_navigator/data/local_db/dto/drive_sqlite_dto.dart';
+import 'package:motorbike_navigator/data/local_db/service/drive_sqlite_service.dart';
 
 class MockDriveSqliteService extends Mock implements DriveSqliteService {
   MockDriveSqliteService() {

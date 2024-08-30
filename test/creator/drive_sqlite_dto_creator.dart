@@ -1,5 +1,5 @@
 import 'package:motorbike_navigator/data/dto/position_dto.dart';
-import 'package:motorbike_navigator/data/sqlite/dto/drive_sqlite_dto.dart';
+import 'package:motorbike_navigator/data/local_db/dto/drive_sqlite_dto.dart';
 
 class DriveSqliteDtoCreator {
   DriveSqliteDto create({
