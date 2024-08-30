@@ -9,6 +9,7 @@ import '../../../entity/coordinates.dart';
 import '../../../entity/settings.dart' as settings;
 import '../../component/big_filled_button_component.dart';
 import '../../cubit/drive/drive_cubit.dart';
+import '../../cubit/settings/settings_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 import '../../provider/map_tile_url_provider.dart';
@@ -35,7 +36,7 @@ class MapMapView extends StatelessWidget {
               const Positioned(
                 top: 16,
                 right: 16,
-                child: _DarkModeButton(),
+                child: _ThemeModeButton(),
               ),
               Positioned(
                 bottom: mapMode.isDrive ? 406 : 104,
@@ -145,28 +146,24 @@ class _MapState extends State<_Map> {
   }
 }
 
-class _DarkModeButton extends StatelessWidget {
-  const _DarkModeButton();
+class _ThemeModeButton extends StatelessWidget {
+  const _ThemeModeButton();
 
   @override
   Widget build(BuildContext context) {
-    const settings.ThemeMode? themeMode = settings.ThemeMode.light; //TODO
-
-    return IconButton.filledTonal(
-      icon: const Icon(Icons.light_mode),
-      onPressed: () {
-        //TODO
-      },
+    final settings.ThemeMode? themeMode = context.select(
+      (SettingsCubit cubit) => cubit.state?.themeMode,
     );
-    // return themeMode != null
-    //     ? IconButton.filledTonal(
-    //         icon: switch (themeMode) {
-    //           user.ThemeMode.light => const Icon(Icons.dark_mode),
-    //           user.ThemeMode.dark => const Icon(Icons.light_mode),
-    //         },
-    //         onPressed: context.read<LoggedUserCubit>().switchThemeMode,
-    //       )
-    //     : const CircularProgressIndicator();
+
+    return themeMode != null
+        ? IconButton.filledTonal(
+            icon: switch (themeMode) {
+              settings.ThemeMode.light => const Icon(Icons.dark_mode),
+              settings.ThemeMode.dark => const Icon(Icons.light_mode),
+            },
+            onPressed: context.read<SettingsCubit>().switchThemeMode,
+          )
+        : const CircularProgressIndicator();
   }
 }
 

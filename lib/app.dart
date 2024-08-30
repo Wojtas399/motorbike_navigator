@@ -11,6 +11,7 @@ import 'ui/config/app_router.dart';
 import 'ui/config/app_theme.dart';
 import 'ui/cubit/drive/drive_cubit.dart';
 import 'ui/cubit/location/location_cubit.dart';
+import 'ui/cubit/settings/settings_cubit.dart';
 import 'ui/provider/map_tile_url_provider.dart';
 import 'ui/screen/map/cubit/map_cubit.dart';
 
@@ -31,6 +32,9 @@ class _GlobalProviders extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (_) => getIt.get<SettingsCubit>()..initialize(),
+          ),
           BlocProvider(
             create: (_) => getIt.get<MapTileUrlProvider>()..initialize(),
           ),
@@ -54,7 +58,9 @@ class _MaterialApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appTheme = getIt.get<AppTheme>();
-    const settings.ThemeMode? themeMode = settings.ThemeMode.light; //TODO
+    final settings.ThemeMode? themeMode = context.select(
+      (SettingsCubit cubit) => cubit.state?.themeMode,
+    );
 
     return MaterialApp.router(
       routerConfig: getIt<AppRouter>().config(
@@ -63,13 +69,12 @@ class _MaterialApp extends StatelessWidget {
         ],
       ),
       title: 'Motorbike navigator',
-      themeMode: ThemeMode.light,
-      // themeMode != null //TODO
-      //     ? switch (themeMode) {
-      //         user.ThemeMode.light => ThemeMode.light,
-      //         user.ThemeMode.dark => ThemeMode.dark,
-      //       }
-      //     : null,
+      themeMode: themeMode != null
+          ? switch (themeMode) {
+              settings.ThemeMode.light => ThemeMode.light,
+              settings.ThemeMode.dark => ThemeMode.dark,
+            }
+          : null,
       theme: appTheme.lightTheme,
       darkTheme: appTheme.darkTheme,
       localizationsDelegates: const [
