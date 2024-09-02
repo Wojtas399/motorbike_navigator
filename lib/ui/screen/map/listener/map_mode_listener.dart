@@ -14,7 +14,7 @@ class MapModeListener extends SingleChildStatefulWidget {
 }
 
 class _State extends SingleChildState<MapModeListener> {
-  bool _isBottomSheetOpened = false;
+  PersistentBottomSheetController? _bottomSheetController;
 
   Future<void> _onModeChanged(MapState state) async {
     switch (state.mode) {
@@ -27,24 +27,14 @@ class _State extends SingleChildState<MapModeListener> {
   }
 
   void _handleBasicMode() {
-    if (_isBottomSheetOpened) {
-      Navigator.pop(context);
-      setState(() {
-        _isBottomSheetOpened = false;
-      });
-    }
+    _bottomSheetController?.close();
   }
 
   void _handleDriveMode() {
-    setState(() {
-      _isBottomSheetOpened = true;
-    });
-    showModalBottomSheet(
+    _bottomSheetController?.close();
+    _bottomSheetController = showBottomSheet(
       context: context,
-      useSafeArea: true,
       enableDrag: false,
-      isDismissible: false,
-      barrierColor: Colors.transparent,
       builder: (_) => const MapDriveDetails(),
     );
   }

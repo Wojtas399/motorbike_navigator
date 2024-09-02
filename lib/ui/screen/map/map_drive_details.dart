@@ -35,22 +35,33 @@ class _Body extends StatelessWidget {
   const _Body({required this.child});
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
-        decoration: BoxDecoration(
-          color: context.colorScheme.surface,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              offset: const Offset(0, -2),
-              blurRadius: 20,
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: child,
-        ),
-      );
+  Widget build(BuildContext context) {
+    final BuildContext scaffoldContext = Scaffold.of(context).context;
+    final double safeAreaBottomPadding =
+        MediaQuery.of(scaffoldContext).viewPadding.bottom;
+
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        24,
+        24,
+        24,
+        safeAreaBottomPadding + 24,
+      ),
+      decoration: BoxDecoration(
+        color: context.colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            offset: const Offset(0, -2),
+            blurRadius: 20,
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: child,
+      ),
+    );
+  }
 }
 
 class _Duration extends StatelessWidget {
