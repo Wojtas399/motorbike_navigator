@@ -9,6 +9,7 @@ import '../../../entity/coordinates.dart';
 import '../../../entity/settings.dart' as settings;
 import '../../component/big_filled_button_component.dart';
 import '../../cubit/drive/drive_cubit.dart';
+import '../../cubit/drive/drive_state.dart';
 import '../../cubit/map/map_cubit.dart';
 import '../../cubit/map/map_state.dart';
 import '../../cubit/settings/settings_cubit.dart';
@@ -94,9 +95,20 @@ class _MapState extends State<_Map> {
     super.dispose();
   }
 
-  bool _canEmitMapCubitChange(MapState prevState, MapState currState) =>
+  bool _hasFollowedCenterLocationChanged(
+    MapState prevState,
+    MapState currState,
+  ) =>
       currState.focusMode.isFollowingUserLocation &&
       prevState.centerLocation != currState.centerLocation;
+
+  bool _hasDriveStartedOrBeenSetAsInitial(
+    DriveState prevState,
+    DriveState currState,
+  ) =>
+      (currState.status == DriveStateStatus.ongoing ||
+          currState.status == DriveStateStatus.initial) &&
+      prevState.status != currState.status;
 
   void _onDragMap(LatLng newCenterPosition) {
     context.read<MapCubit>().onMapDrag(Coordinates(
@@ -105,13 +117,13 @@ class _MapState extends State<_Map> {
         ));
   }
 
-  void _handleCenterLocationChange() {
-    final mapCubit = context.read<MapCubit>();
-    final userLocation = mapCubit.state.userPosition?.coordinates;
-    final mapFocusMode = mapCubit.state.focusMode;
+  void _adjustCenterLocationToCenterOfTheMap() {
+    final state = context.read<MapCubit>().state;
+    final userLocation = state.userPosition?.coordinates;
+    final mapFocusMode = state.focusMode;
     if (userLocation != null && mapFocusMode.isFollowingUserLocation) {
       final double centerPositionLatCorrection =
-          mapCubit.state.mode.isDrive ? -0.024 : 0;
+          state.mode.isDrive ? -0.024 : 0;
       _mapController.move(
         LatLng(
           userLocation.latitude + centerPositionLatCorrection,
@@ -127,9 +139,17 @@ class _MapState extends State<_Map> {
     final Coordinates? initialCenterLocation =
         context.read<MapCubit>().state.centerLocation;
 
-    return BlocListener<MapCubit, MapState>(
-      listenWhen: _canEmitMapCubitChange,
-      listener: (_, __) => _handleCenterLocationChange(),
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<MapCubit, MapState>(
+          listenWhen: _hasFollowedCenterLocationChanged,
+          listener: (_, state) => _adjustCenterLocationToCenterOfTheMap(),
+        ),
+        BlocListener<DriveCubit, DriveState>(
+          listenWhen: _hasDriveStartedOrBeenSetAsInitial,
+          listener: (_, state) => _adjustCenterLocationToCenterOfTheMap(),
+        ),
+      ],
       child: FlutterMap(
         mapController: _mapController,
         options: MapOptions(
