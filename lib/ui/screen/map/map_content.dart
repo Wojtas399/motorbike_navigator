@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../component/gap.dart';
 import '../../component/text.dart';
+import '../../cubit/map/map_cubit.dart';
+import '../../cubit/map/map_state.dart';
 import '../../extensions/context_extensions.dart';
-import 'cubit/map_cubit.dart';
-import 'cubit/map_state.dart';
 import 'listener/map_drive_cubit_listener.dart';
 import 'listener/map_mode_listener.dart';
 import 'map_drawer.dart';

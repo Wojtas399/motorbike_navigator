@@ -11,9 +11,9 @@ import 'ui/config/app_router.dart';
 import 'ui/config/app_theme.dart';
 import 'ui/cubit/drive/drive_cubit.dart';
 import 'ui/cubit/location/location_cubit.dart';
+import 'ui/cubit/map/map_cubit.dart';
 import 'ui/cubit/settings/settings_cubit.dart';
 import 'ui/provider/map_tile_url_provider.dart';
-import 'ui/screen/map/cubit/map_cubit.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

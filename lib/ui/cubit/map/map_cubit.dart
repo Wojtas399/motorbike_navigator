@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../entity/coordinates.dart';
 import '../../../../entity/position.dart';
-import '../../../service/location_service.dart';
+import '../../service/location_service.dart';
 import 'map_state.dart';
 
 @injectable

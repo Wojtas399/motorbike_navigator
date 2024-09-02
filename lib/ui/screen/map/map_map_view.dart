@@ -9,12 +9,12 @@ import '../../../entity/coordinates.dart';
 import '../../../entity/settings.dart' as settings;
 import '../../component/big_filled_button_component.dart';
 import '../../cubit/drive/drive_cubit.dart';
+import '../../cubit/map/map_cubit.dart';
+import '../../cubit/map/map_state.dart';
 import '../../cubit/settings/settings_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 import '../../provider/map_tile_url_provider.dart';
-import 'cubit/map_cubit.dart';
-import 'cubit/map_state.dart';
 import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
 

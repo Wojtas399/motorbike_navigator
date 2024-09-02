@@ -5,11 +5,11 @@ import 'package:provider/single_child_widget.dart';
 import '../../../../dependency_injection.dart';
 import '../../../cubit/drive/drive_cubit.dart';
 import '../../../cubit/drive/drive_state.dart';
+import '../../../cubit/map/map_cubit.dart';
+import '../../../cubit/map/map_state.dart';
 import '../../../extensions/context_extensions.dart';
 import '../../../service/dialog_service.dart';
 import '../../drive_summary/drive_summary_screen.dart';
-import '../cubit/map_cubit.dart';
-import '../cubit/map_state.dart';
 
 class MapDriveCubitListener extends SingleChildStatelessWidget {
   const MapDriveCubitListener({super.key});

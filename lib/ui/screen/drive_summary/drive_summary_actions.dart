@@ -5,10 +5,10 @@ import '../../../dependency_injection.dart';
 import '../../component/big_filled_button_component.dart';
 import '../../component/gap.dart';
 import '../../cubit/drive/drive_cubit.dart';
+import '../../cubit/map/map_cubit.dart';
+import '../../cubit/map/map_state.dart';
 import '../../extensions/context_extensions.dart';
 import '../../service/dialog_service.dart';
-import '../map/cubit/map_cubit.dart';
-import '../map/cubit/map_state.dart';
 
 class DriveSummaryActions extends StatelessWidget {
   const DriveSummaryActions({super.key});
