@@ -133,7 +133,7 @@ class DialogService {
     final BuildContext? context = _appRouter.navigatorKey.currentContext;
     if (context == null) return null;
     _isDialogOpened = true;
-    return await showGeneralDialog<T>(
+    final T? response = await showGeneralDialog<T>(
       context: context,
       pageBuilder: (_, anim1, anim2) => dialog,
       transitionBuilder: (BuildContext context, anim1, anim2, child) {
@@ -147,5 +147,7 @@ class DialogService {
       barrierDismissible: barrierDismissible,
       barrierLabel: '',
     );
+    _isDialogOpened = false;
+    return response;
   }
 }

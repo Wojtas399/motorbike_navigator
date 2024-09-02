@@ -39,7 +39,7 @@ class MapMapView extends StatelessWidget {
                 child: _ThemeModeButton(),
               ),
               Positioned(
-                bottom: mapMode.isDrive ? 406 : 104,
+                bottom: mapMode.isDrive ? 426 : 104,
                 right: 24,
                 child: const _FollowUserLocationButton(),
               ),

@@ -36,7 +36,7 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
         decoration: BoxDecoration(
           color: context.colorScheme.surface,
           boxShadow: [
@@ -47,7 +47,9 @@ class _Body extends StatelessWidget {
             ),
           ],
         ),
-        child: child,
+        child: SafeArea(
+          child: child,
+        ),
       );
 }
 
