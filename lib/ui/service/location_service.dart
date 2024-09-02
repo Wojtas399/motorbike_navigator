@@ -55,14 +55,17 @@ class LocationService {
       .onErrorReturn(null);
 
   Stream<Position> _getPositionStream() {
+    const int distanceFilter = 25;
     LocationSettings locationSettings;
     if (defaultTargetPlatform == TargetPlatform.android) {
       locationSettings = AndroidSettings(
         intervalDuration: const Duration(seconds: 1),
+        distanceFilter: distanceFilter,
       );
     } else {
       locationSettings = const LocationSettings(
         accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: distanceFilter,
       );
     }
     return Geolocator.getPositionStream(
