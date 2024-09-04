@@ -6,16 +6,15 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../entity/coordinates.dart';
-import '../../../entity/settings.dart' as settings;
 import '../../component/big_filled_button_component.dart';
 import '../../cubit/drive/drive_cubit.dart';
 import '../../cubit/drive/drive_state.dart';
 import '../../cubit/map/map_cubit.dart';
 import '../../cubit/map/map_state.dart';
-import '../../cubit/settings/settings_cubit.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 import '../../provider/map_tile_url_provider.dart';
+import 'component/map_theme_mode_button.dart';
 import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
 
@@ -37,7 +36,7 @@ class MapMapView extends StatelessWidget {
               const Positioned(
                 top: 16,
                 right: 16,
-                child: _ThemeModeButton(),
+                child: MapThemeModeButton(),
               ),
               Positioned(
                 bottom: mapMode.isDrive ? 426 : 104,
@@ -163,27 +162,6 @@ class _MapState extends State<_Map> {
         ],
       ),
     );
-  }
-}
-
-class _ThemeModeButton extends StatelessWidget {
-  const _ThemeModeButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final settings.ThemeMode? themeMode = context.select(
-      (SettingsCubit cubit) => cubit.state?.themeMode,
-    );
-
-    return themeMode != null
-        ? IconButton.filledTonal(
-            icon: switch (themeMode) {
-              settings.ThemeMode.light => const Icon(Icons.dark_mode),
-              settings.ThemeMode.dark => const Icon(Icons.light_mode),
-            },
-            onPressed: context.read<SettingsCubit>().switchThemeMode,
-          )
-        : const CircularProgressIndicator();
   }
 }
 
