@@ -15,6 +15,7 @@ import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 import '../../provider/map_tile_url_provider.dart';
 import 'component/map_follow_user_location_button.dart';
+import 'component/map_menu_button.dart';
 import 'component/map_theme_mode_button.dart';
 import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
@@ -48,7 +49,7 @@ class MapMapView extends StatelessWidget {
                 const Positioned(
                   left: 16,
                   top: 16,
-                  child: _MenuButton(),
+                  child: MapMenuButton(),
                 ),
                 const Positioned(
                   bottom: 24,
@@ -164,16 +165,6 @@ class _MapState extends State<_Map> {
       ),
     );
   }
-}
-
-class _MenuButton extends StatelessWidget {
-  const _MenuButton();
-
-  @override
-  Widget build(BuildContext context) => IconButton.filledTonal(
-        onPressed: Scaffold.of(context).openDrawer,
-        icon: const Icon(Icons.menu),
-      );
 }
 
 class _StartRideButton extends StatelessWidget {
