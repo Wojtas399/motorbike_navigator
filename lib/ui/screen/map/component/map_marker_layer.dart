@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 
-import '../../../entity/coordinates.dart';
-import '../../cubit/map/map_cubit.dart';
-import '../../extensions/coordinates_extensions.dart';
+import '../../../../entity/coordinates.dart';
+import '../../../cubit/map/map_cubit.dart';
+import '../../../extensions/coordinates_extensions.dart';
 
 class MapMarkerLayer extends StatelessWidget {
   const MapMarkerLayer({super.key});

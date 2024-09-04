@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../component/big_filled_button_component.dart';
-import '../../component/gap.dart';
-import '../../component/text.dart';
-import '../../cubit/drive/drive_cubit.dart';
-import '../../extensions/context_extensions.dart';
-import '../../extensions/double_extensions.dart';
-import '../../extensions/duration_extensions.dart';
+import '../../../component/big_filled_button_component.dart';
+import '../../../component/gap.dart';
+import '../../../component/text.dart';
+import '../../../cubit/drive/drive_cubit.dart';
+import '../../../extensions/context_extensions.dart';
+import '../../../extensions/double_extensions.dart';
+import '../../../extensions/duration_extensions.dart';
 
 class MapDriveDetails extends StatelessWidget {
   const MapDriveDetails({super.key});

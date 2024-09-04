@@ -4,7 +4,7 @@ import 'package:provider/single_child_widget.dart';
 
 import '../../../cubit/map/map_cubit.dart';
 import '../../../cubit/map/map_state.dart';
-import '../map_drive_details.dart';
+import '../component/map_drive_details.dart';
 
 class MapModeListener extends SingleChildStatefulWidget {
   const MapModeListener({super.key});
