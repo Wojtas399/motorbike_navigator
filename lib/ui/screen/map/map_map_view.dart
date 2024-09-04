@@ -123,13 +123,13 @@ class _MapState extends State<_Map> {
     final mapFocusMode = state.focusMode;
     if (userLocation != null && mapFocusMode.isFollowingUserLocation) {
       final double centerPositionLatCorrection =
-          state.mode.isDrive ? -0.024 : 0;
+          state.mode.isDrive ? -0.004 : 0;
       _mapController.move(
         LatLng(
           userLocation.latitude + centerPositionLatCorrection,
           userLocation.longitude,
         ),
-        13,
+        15,
       );
     }
   }
