@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
 import '../../../entity/drive.dart';
+import '../../component/text.dart';
 import '../../extensions/context_extensions.dart';
 import 'cubit/saved_drives_cubit.dart';
 import 'cubit/saved_drives_state.dart';
@@ -54,12 +55,26 @@ class _ListOfDrives extends StatelessWidget {
       (SavedDrivesCubit cubit) => cubit.state.drives,
     );
 
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      itemCount: drives.length,
-      itemBuilder: (_, int itemIndex) => SavedDrivesDriveItem(
-        drive: drives[itemIndex],
-      ),
-    );
+    return drives.isNotEmpty
+        ? ListView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            itemCount: drives.length,
+            itemBuilder: (_, int itemIndex) => SavedDrivesDriveItem(
+              drive: drives[itemIndex],
+            ),
+          )
+        : const _EmptyListInfo();
   }
+}
+
+class _EmptyListInfo extends StatelessWidget {
+  const _EmptyListInfo();
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: TitleMedium(
+          context.str.savedDrivesNoDrivesInfo,
+          color: context.colorScheme.outline,
+        ),
+      );
 }

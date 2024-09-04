@@ -73,7 +73,10 @@ class BodyMedium extends _Text {
 }
 
 class TitleMedium extends _Text {
-  const TitleMedium(super.data) : super(textType: _TextType.titleMedium);
+  const TitleMedium(
+    super.data, {
+    super.color,
+  }) : super(textType: _TextType.titleMedium);
 }
 
 class TitleLarge extends _Text {

@@ -29,6 +29,7 @@
   "routeInfoNavigate": "Nawiguj",
   "@----------SAVED_DRIVES----------": {},
   "savedDrivesScreenTitle": "Zapisane przejazdy",
+  "savedDrivesNoDrivesInfo": "Brak zapisanych przejazdów",
   "@----------STATS----------": {},
   "statsScreenTitle": "Statystyki",
   "statsWeek": "Tydzień",
