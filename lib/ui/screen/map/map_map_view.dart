@@ -12,67 +12,17 @@ import '../../cubit/map/map_cubit.dart';
 import '../../cubit/map/map_state.dart';
 import '../../extensions/coordinates_extensions.dart';
 import '../../provider/map_tile_url_provider.dart';
-import 'component/map_follow_user_location_button.dart';
-import 'component/map_menu_button.dart';
-import 'component/map_start_ride_button.dart';
-import 'component/map_theme_mode_button.dart';
 import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
 
-class MapMapView extends StatelessWidget {
+class MapMapView extends StatefulWidget {
   const MapMapView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final MapMode mapMode = context.select(
-      (MapCubit cubit) => cubit.state.mode,
-    );
-
-    return Stack(
-      children: [
-        const _Map(),
-        SafeArea(
-          child: Stack(
-            children: [
-              const Positioned(
-                top: 16,
-                right: 16,
-                child: MapThemeModeButton(),
-              ),
-              Positioned(
-                bottom: mapMode.isDrive ? 426 : 104,
-                right: 24,
-                child: const MapFollowUserLocationButton(),
-              ),
-              if (mapMode.isBasic) ...[
-                const Positioned(
-                  left: 16,
-                  top: 16,
-                  child: MapMenuButton(),
-                ),
-                const Positioned(
-                  bottom: 24,
-                  left: 24,
-                  right: 24,
-                  child: MapStartRideButton(),
-                ),
-              ],
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+  State<StatefulWidget> createState() => _State();
 }
 
-class _Map extends StatefulWidget {
-  const _Map();
-
-  @override
-  State<StatefulWidget> createState() => _MapState();
-}
-
-class _MapState extends State<_Map> {
+class _State extends State<MapMapView> {
   late final MapController _mapController;
   StreamSubscription? _mapListener;
 
