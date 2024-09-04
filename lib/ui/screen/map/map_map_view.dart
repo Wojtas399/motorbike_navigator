@@ -14,6 +14,7 @@ import '../../cubit/map/map_state.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 import '../../provider/map_tile_url_provider.dart';
+import 'component/map_follow_user_location_button.dart';
 import 'component/map_theme_mode_button.dart';
 import 'map_marker_layer.dart';
 import 'map_polyline_layer.dart';
@@ -41,7 +42,7 @@ class MapMapView extends StatelessWidget {
               Positioned(
                 bottom: mapMode.isDrive ? 426 : 104,
                 right: 24,
-                child: const _FollowUserLocationButton(),
+                child: const MapFollowUserLocationButton(),
               ),
               if (mapMode.isBasic) ...[
                 const Positioned(
@@ -160,31 +161,6 @@ class _MapState extends State<_Map> {
           MapPolylineLayer(),
           MapMarkerLayer(),
         ],
-      ),
-    );
-  }
-}
-
-class _FollowUserLocationButton extends StatelessWidget {
-  const _FollowUserLocationButton();
-
-  void _onPressed(BuildContext context) {
-    context.read<MapCubit>().followUserLocation();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final MapFocusMode focusMode = context.select(
-      (MapCubit cubit) => cubit.state.focusMode,
-    );
-
-    return FloatingActionButton(
-      heroTag: null,
-      onPressed: () => _onPressed(context),
-      child: Icon(
-        focusMode == MapFocusMode.followUserLocation
-            ? Icons.near_me
-            : Icons.near_me_outlined,
       ),
     );
   }
