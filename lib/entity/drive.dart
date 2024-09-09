@@ -18,8 +18,13 @@ class Drive extends Entity {
     required this.positions,
   });
 
-  Iterable<Coordinates> get waypoints =>
-      positions.map((Position position) => position.coordinates);
+  Iterable<Coordinates> get waypoints => positions.map(
+        (Position position) => position.coordinates,
+      );
+
+  Iterable<double> get altitudePoints => positions.map(
+        (Position position) => position.altitude,
+      );
 
   double get avgSpeedInKmPerH =>
       positions.map((Position position) => position.speedInKmPerH).average;
