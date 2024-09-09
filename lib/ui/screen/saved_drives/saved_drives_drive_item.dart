@@ -23,10 +23,7 @@ class SavedDrivesDriveItem extends StatelessWidget {
 
   void _onPressed(BuildContext context) {
     context.pushRoute(
-      RoutePreviewRoute(
-        routeWaypoints:
-            drive.positions.map((position) => position.coordinates).toList(),
-      ),
+      DriveDetailsRoute(driveId: drive.id),
     );
   }
 

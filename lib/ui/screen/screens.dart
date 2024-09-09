@@ -1,6 +1,7 @@
 export 'package:flutter/widgets.dart';
 
 export '../../entity/coordinates.dart';
+export 'drive_details/drive_details_screen.dart';
 export 'drive_summary/drive_summary_screen.dart';
 export 'map/map_screen.dart';
 export 'route_preview/route_preview_screen.dart';

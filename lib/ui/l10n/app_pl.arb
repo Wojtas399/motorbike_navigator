@@ -39,6 +39,8 @@
   "statsCurrentMonth": "Obecny miesiąc",
   "statsCurrentYear": "Obecny rok",
   "statsNumberOfDrives": "Przejazdy",
+  "@----------DRIVE_DETAILS----------": {},
+  "driveDetailsScreenTitle": "Przejazd",
   "@----------MONTHS----------": {},
   "january": "Styczeń",
   "february": "Luty",
