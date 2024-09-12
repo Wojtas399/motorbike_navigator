@@ -9,6 +9,14 @@ class MockDriveRepository extends Mock implements DriveRepository {
     );
   }
 
+  void mockGetDriveById({
+    Drive? expectedDrive,
+  }) {
+    when(
+      () => getDriveById(any()),
+    ).thenAnswer((_) => Stream.value(expectedDrive));
+  }
+
   void mockGetDrivesFromDateRange({
     required List<Drive> expectedDrives,
   }) {
