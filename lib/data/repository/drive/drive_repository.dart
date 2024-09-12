@@ -2,6 +2,8 @@ import '../../../entity/drive.dart';
 import '../../../entity/position.dart';
 
 abstract interface class DriveRepository {
+  Stream<Drive?> getDriveById(int id);
+
   Stream<List<Drive>> getAllDrives();
 
   Stream<List<Drive>> getDrivesFromDateRange({

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../entity/drive.dart';
@@ -24,6 +25,17 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     this._driveMapper,
     this._dateService,
   );
+
+  @override
+  Stream<Drive?> getDriveById(int id) async* {
+    await for (final drives in repositoryState$) {
+      Drive? matchingDrive = drives.firstWhereOrNull(
+        (Drive? drive) => drive?.id == id,
+      );
+      matchingDrive ??= await _fetchDriveById(id);
+      yield matchingDrive;
+    }
+  }
 
   @override
   Stream<List<Drive>> getAllDrives() async* {
@@ -84,6 +96,15 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
       positionDtos: addedPositionDtos,
     );
     addEntity(addedDrive);
+  }
+
+  Future<Drive?> _fetchDriveById(int id) async {
+    final DriveSqliteDto? driveDto =
+        await _driveSqliteService.queryById(id: id);
+    if (driveDto == null) return null;
+    final Drive drive = await _mapDriveSqliteDtoToDrive(driveDto);
+    addEntity(drive);
+    return drive;
   }
 
   Future<void> _fetchAllDrives() async {

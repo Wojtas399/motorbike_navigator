@@ -39,6 +39,59 @@ void main() {
     reset(dateService);
   });
 
+  group(
+    'getDriveById, ',
+    () {
+      const int id = 1;
+      final Drive expectedDrive = driveCreator.create(id: id);
+
+      test(
+        'should emit null if drive with matching id does not exist in repo '
+        'state and in db',
+        () async {
+          driveSqliteService.mockQueryById();
+
+          final Stream<Drive?> drive$ = repositoryImpl.getDriveById(id);
+
+          expect(await drive$.first, null);
+        },
+      );
+
+      test(
+        'should emit drive with matching id if it already exists in repo state',
+        () async {
+          repositoryImpl.addEntity(expectedDrive);
+
+          final Stream<Drive?> drive$ = repositoryImpl.getDriveById(id);
+
+          expect(await drive$.first, expectedDrive);
+        },
+      );
+
+      test(
+        'should fetch drive from db, add it to repo state and emit it if it '
+        'does not exist in repo state',
+        () async {
+          final DriveSqliteDto driveSqliteDto = driveSqliteDtoCreator.create(
+            id: id,
+          );
+          driveSqliteService.mockQueryById(
+            expectedDriveSqliteDto: driveSqliteDto,
+          );
+          positionSqliteService.mockQueryByDriveId(
+            expectedPositionSqliteDtos: [],
+          );
+          driveMapper.mockMapFromDto(expectedDrive: expectedDrive);
+
+          final Stream<Drive?> drive$ = repositoryImpl.getDriveById(id);
+
+          expect(await drive$.first, expectedDrive);
+          expect(await repositoryImpl.repositoryState$.first, [expectedDrive]);
+        },
+      );
+    },
+  );
+
   test(
     'getAllDrives, '
     'should fetch all drives from db, add them to repo state and emit them all',

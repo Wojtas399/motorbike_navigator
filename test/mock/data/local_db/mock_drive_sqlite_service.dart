@@ -7,6 +7,16 @@ class MockDriveSqliteService extends Mock implements DriveSqliteService {
     registerFallbackValue(const Duration(seconds: 1));
   }
 
+  void mockQueryById({
+    DriveSqliteDto? expectedDriveSqliteDto,
+  }) {
+    when(
+      () => queryById(
+        id: any(named: 'id'),
+      ),
+    ).thenAnswer((_) => Future.value(expectedDriveSqliteDto));
+  }
+
   void mockQueryAll({
     required List<DriveSqliteDto> expectedDriveSqliteDtos,
   }) {
