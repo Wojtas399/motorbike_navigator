@@ -29,17 +29,17 @@ void main() {
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50, 19),
-          altitude: 111.11,
+          elevation: 111.11,
           speedInKmPerH: 33.33,
         ),
         Position(
           coordinates: Coordinates(51, 20),
-          altitude: 112.22,
+          elevation: 112.22,
           speedInKmPerH: 44.44,
         ),
         Position(
           coordinates: Coordinates(52, 21),
-          altitude: 113.33,
+          elevation: 113.33,
           speedInKmPerH: 55.55,
         ),
       ];
@@ -226,7 +226,7 @@ void main() {
       const List<Position> expectedPositions = [
         Position(
           coordinates: Coordinates(50, 19),
-          altitude: 111.11,
+          elevation: 111.11,
           speedInKmPerH: 55.55,
         ),
       ];

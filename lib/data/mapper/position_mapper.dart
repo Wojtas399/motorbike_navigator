@@ -13,7 +13,7 @@ class PositionMapper {
           dto.latitude,
           dto.longitude,
         ),
-        altitude: dto.altitude,
+        elevation: dto.elevation,
         speedInKmPerH: dto.speedInKmPerH,
       );
 }

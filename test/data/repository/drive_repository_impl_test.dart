@@ -276,12 +276,12 @@ void main() {
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(51, 20),
-          altitude: 110.1,
+          elevation: 110.1,
           speedInKmPerH: 33.33,
         ),
         Position(
           coordinates: Coordinates(50, 19),
-          altitude: 100.1,
+          elevation: 100.1,
           speedInKmPerH: 22.22,
         ),
       ];
@@ -292,7 +292,7 @@ void main() {
           order: 1,
           latitude: 51,
           longitude: 20,
-          altitude: 110.1,
+          elevation: 110.1,
           speedInKmPerH: 33.33,
         ),
         PositionSqliteDto(
@@ -301,7 +301,7 @@ void main() {
           order: 2,
           latitude: 50,
           longitude: 19,
-          altitude: 100.1,
+          elevation: 100.1,
           speedInKmPerH: 22.2,
         ),
       ];
@@ -335,7 +335,7 @@ void main() {
           order: 1,
           latitude: positions.first.coordinates.latitude,
           longitude: positions.first.coordinates.longitude,
-          altitude: positions.first.altitude,
+          elevation: positions.first.elevation,
           speedInKmPerH: positions.first.speedInKmPerH,
         ),
       ).thenAnswer((_) => Future.value(positionSqliteDtos.first));
@@ -345,7 +345,7 @@ void main() {
           order: 2,
           latitude: positions.last.coordinates.latitude,
           longitude: positions.last.coordinates.longitude,
-          altitude: positions.last.altitude,
+          elevation: positions.last.elevation,
           speedInKmPerH: positions.last.speedInKmPerH,
         ),
       ).thenAnswer((_) => Future.value(positionSqliteDtos.last));
@@ -376,7 +376,7 @@ void main() {
           order: 1,
           latitude: positions.first.coordinates.latitude,
           longitude: positions.first.coordinates.longitude,
-          altitude: positions.first.altitude,
+          elevation: positions.first.elevation,
           speedInKmPerH: positions.first.speedInKmPerH,
         ),
       ).called(1);
@@ -386,7 +386,7 @@ void main() {
           order: 2,
           latitude: positions.last.coordinates.latitude,
           longitude: positions.last.coordinates.longitude,
-          altitude: positions.last.altitude,
+          elevation: positions.last.elevation,
           speedInKmPerH: positions.last.speedInKmPerH,
         ),
       ).called(1);
@@ -404,12 +404,12 @@ void main() {
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50, 19),
-          altitude: 100.1,
+          elevation: 100.1,
           speedInKmPerH: 22.2,
         ),
         Position(
           coordinates: Coordinates(51, 20),
-          altitude: 110.1,
+          elevation: 110.1,
           speedInKmPerH: 33.33,
         ),
       ];
@@ -444,12 +444,12 @@ void main() {
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(51, 20),
-          altitude: 110.1,
+          elevation: 110.1,
           speedInKmPerH: 33.33,
         ),
         Position(
           coordinates: Coordinates(50, 19),
-          altitude: 100.1,
+          elevation: 100.1,
           speedInKmPerH: 22.22,
         ),
       ];
@@ -460,7 +460,7 @@ void main() {
           order: 1,
           latitude: 51,
           longitude: 20,
-          altitude: 110.1,
+          elevation: 110.1,
           speedInKmPerH: 33.33,
         ),
       ];
@@ -494,7 +494,7 @@ void main() {
           order: 1,
           latitude: positions.first.coordinates.latitude,
           longitude: positions.first.coordinates.longitude,
-          altitude: positions.first.altitude,
+          elevation: positions.first.elevation,
           speedInKmPerH: positions.first.speedInKmPerH,
         ),
       ).thenAnswer((_) => Future.value(positionSqliteDtos.first));
@@ -504,7 +504,7 @@ void main() {
           order: 2,
           latitude: positions.last.coordinates.latitude,
           longitude: positions.last.coordinates.longitude,
-          altitude: positions.last.altitude,
+          elevation: positions.last.elevation,
           speedInKmPerH: positions.last.speedInKmPerH,
         ),
       ).thenAnswer((_) => Future.value(null));
@@ -535,7 +535,7 @@ void main() {
           order: 1,
           latitude: positions.first.coordinates.latitude,
           longitude: positions.first.coordinates.longitude,
-          altitude: positions.first.altitude,
+          elevation: positions.first.elevation,
           speedInKmPerH: positions.first.speedInKmPerH,
         ),
       ).called(1);
@@ -545,7 +545,7 @@ void main() {
           order: 2,
           latitude: positions.last.coordinates.latitude,
           longitude: positions.last.coordinates.longitude,
-          altitude: positions.last.altitude,
+          elevation: positions.last.elevation,
           speedInKmPerH: positions.last.speedInKmPerH,
         ),
       ).called(1);

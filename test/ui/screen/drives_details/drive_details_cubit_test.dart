@@ -33,22 +33,22 @@ void main() {
       final List<Position> positions = [
         const Position(
           coordinates: Coordinates(50, 19),
-          altitude: 105.25,
+          elevation: 105.25,
           speedInKmPerH: 35.5,
         ),
         const Position(
           coordinates: Coordinates(51, 20),
-          altitude: 110.5,
+          elevation: 110.5,
           speedInKmPerH: 45.75,
         ),
         const Position(
           coordinates: Coordinates(52, 21),
-          altitude: 115.75,
+          elevation: 115.75,
           speedInKmPerH: 55.9,
         ),
         const Position(
           coordinates: Coordinates(53, 22),
-          altitude: 120.15,
+          elevation: 120.15,
           speedInKmPerH: 65,
         ),
       ];
@@ -84,22 +84,22 @@ void main() {
           [
         DriveDetailsDistanceAreaChartData(
           distance: 0.0,
-          value: positions.first.altitude,
+          value: positions.first.elevation,
         ),
         DriveDetailsDistanceAreaChartData(
           distance: firstToSecondPositionDistance,
-          value: positions[1].altitude,
+          value: positions[1].elevation,
         ),
         DriveDetailsDistanceAreaChartData(
           distance:
               firstToSecondPositionDistance + secondToThirdPositionDistance,
-          value: positions[2].altitude,
+          value: positions[2].elevation,
         ),
         DriveDetailsDistanceAreaChartData(
           distance: firstToSecondPositionDistance +
               secondToThirdPositionDistance +
               thirdToFourthPositionDistance,
-          value: positions.last.altitude,
+          value: positions.last.elevation,
         ),
       ];
 

@@ -86,7 +86,7 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
         order: i + 1,
         latitude: pos.coordinates.latitude,
         longitude: pos.coordinates.longitude,
-        altitude: pos.altitude,
+        elevation: pos.elevation,
         speedInKmPerH: pos.speedInKmPerH,
       );
       if (addedPosDto != null) addedPositionDtos.add(addedPosDto);

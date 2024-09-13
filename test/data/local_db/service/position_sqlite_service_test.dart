@@ -13,7 +13,7 @@ void main() {
   const String positionOrderColName = 'position_order';
   const String latitudeColName = 'latitude';
   const String longitudeColName = 'longitude';
-  const String altitudeColName = 'altitude';
+  const String elevationColName = 'elevation';
   const String speedColName = 'speed';
   final sqliteDb = MockSqliteDb();
   final PositionSqliteService service = PositionSqliteService(sqliteDb);
@@ -49,7 +49,7 @@ void main() {
             isNotNull: true,
           ),
           SqlColumn(
-            name: altitudeColName,
+            name: elevationColName,
             type: SqlColumnType.real,
             isNotNull: true,
           ),
@@ -80,7 +80,7 @@ void main() {
           positionOrderColName: 1,
           latitudeColName: 50,
           longitudeColName: 19,
-          altitudeColName: 100.1,
+          elevationColName: 100.1,
           speedColName: 50.5,
         },
         {
@@ -89,7 +89,7 @@ void main() {
           positionOrderColName: 2,
           latitudeColName: 51,
           longitudeColName: 20,
-          altitudeColName: 110.1,
+          elevationColName: 110.1,
           speedColName: 51.5,
         },
       ];
@@ -100,7 +100,7 @@ void main() {
           order: 1,
           latitude: 50,
           longitude: 19,
-          altitude: 100.1,
+          elevation: 100.1,
           speedInKmPerH: 50.5,
         ),
         const PositionSqliteDto(
@@ -109,7 +109,7 @@ void main() {
           order: 2,
           latitude: 51,
           longitude: 20,
-          altitude: 110.1,
+          elevation: 110.1,
           speedInKmPerH: 51.5,
         ),
       ];
@@ -146,7 +146,7 @@ void main() {
           positionOrderColName: 1,
           latitudeColName: 50,
           longitudeColName: 19,
-          altitudeColName: 100.1,
+          elevationColName: 100.1,
           speedColName: 50.5,
         },
         {
@@ -155,7 +155,7 @@ void main() {
           positionOrderColName: 2,
           latitudeColName: 51,
           longitudeColName: 20,
-          altitudeColName: 110.1,
+          elevationColName: 110.1,
           speedColName: 51.5,
         },
       ];
@@ -166,7 +166,7 @@ void main() {
           order: 1,
           latitude: 50,
           longitude: 19,
-          altitude: 100.1,
+          elevation: 100.1,
           speedInKmPerH: 50.5,
         ),
         const PositionSqliteDto(
@@ -175,7 +175,7 @@ void main() {
           order: 2,
           latitude: 51,
           longitude: 20,
-          altitude: 110.1,
+          elevation: 110.1,
           speedInKmPerH: 51.5,
         ),
       ];
@@ -207,14 +207,14 @@ void main() {
       const int order = 1;
       const double latitude = 50.50;
       const double longitude = 19.19;
-      const double altitude = 100.10;
+      const double elevation = 100.10;
       const double speedInKmPerH = 55.55;
       final Map<String, Object?> positionToAddJson = {
         driveIdColName: driveId,
         positionOrderColName: order,
         latitudeColName: latitude,
         longitudeColName: longitude,
-        altitudeColName: altitude,
+        elevationColName: elevation,
         speedColName: speedInKmPerH,
       };
       final Map<String, Object?> addedPositionJson = {
@@ -227,7 +227,7 @@ void main() {
         order: order,
         latitude: latitude,
         longitude: longitude,
-        altitude: altitude,
+        elevation: elevation,
         speedInKmPerH: speedInKmPerH,
       );
       sqliteDb.mockDoesTableNotExist(expectedAnswer: true);
@@ -240,7 +240,7 @@ void main() {
         order: order,
         latitude: latitude,
         longitude: longitude,
-        altitude: altitude,
+        elevation: elevation,
         speedInKmPerH: speedInKmPerH,
       );
 
@@ -273,14 +273,14 @@ void main() {
       const int order = 1;
       const double latitude = 50.50;
       const double longitude = 19.19;
-      const double altitude = 100.10;
+      const double elevation = 100.10;
       const double speedInKmPerH = 55.55;
       final Map<String, Object?> positionToAddJson = {
         driveIdColName: driveId,
         positionOrderColName: order,
         latitudeColName: latitude,
         longitudeColName: longitude,
-        altitudeColName: altitude,
+        elevationColName: elevation,
         speedColName: speedInKmPerH,
       };
       final Map<String, Object?> addedPositionJson = {
@@ -293,7 +293,7 @@ void main() {
         order: order,
         latitude: latitude,
         longitude: longitude,
-        altitude: altitude,
+        elevation: elevation,
         speedInKmPerH: speedInKmPerH,
       );
       sqliteDb.mockDoesTableNotExist(expectedAnswer: false);
@@ -305,7 +305,7 @@ void main() {
         order: order,
         latitude: latitude,
         longitude: longitude,
-        altitude: altitude,
+        elevation: elevation,
         speedInKmPerH: speedInKmPerH,
       );
 

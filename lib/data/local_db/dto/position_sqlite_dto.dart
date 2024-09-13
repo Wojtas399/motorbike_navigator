@@ -11,7 +11,7 @@ class PositionSqliteDto with _$PositionSqliteDto {
     @JsonKey(name: 'position_order') required int order,
     required double latitude,
     required double longitude,
-    required double altitude,
+    required double elevation,
     @JsonKey(name: 'speed') required double speedInKmPerH,
   }) = _PositionSqliteDto;
 

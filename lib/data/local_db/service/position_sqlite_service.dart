@@ -13,7 +13,7 @@ class PositionSqliteService {
   final String _orderColName = 'position_order';
   final String _latitudeColName = 'latitude';
   final String _longitudeColName = 'longitude';
-  final String _altitudeColName = 'altitude';
+  final String _elevationColName = 'elevation';
   final String _speedColName = 'speed';
 
   const PositionSqliteService(this._sqliteDb);
@@ -35,7 +35,7 @@ class PositionSqliteService {
     required int order,
     required double latitude,
     required double longitude,
-    required double altitude,
+    required double elevation,
     required double speedInKmPerH,
   }) async {
     await _createTableIfNotExists();
@@ -44,7 +44,7 @@ class PositionSqliteService {
       order: order,
       latitude: latitude,
       longitude: longitude,
-      altitude: altitude,
+      elevation: elevation,
       speedInKmPerH: speedInKmPerH,
     );
     final positionId = await _sqliteDb.insert(
@@ -98,7 +98,7 @@ class PositionSqliteService {
             isNotNull: true,
           ),
           SqlColumn(
-            name: _altitudeColName,
+            name: _elevationColName,
             type: SqlColumnType.real,
             isNotNull: true,
           ),

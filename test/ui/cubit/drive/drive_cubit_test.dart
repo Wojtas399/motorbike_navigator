@@ -22,7 +22,7 @@ void main() {
   final DateTime now = DateTime(2024, 1, 2, 10, 45);
   const Position startPosition = Position(
     coordinates: Coordinates(50, 18),
-    altitude: 111.11,
+    elevation: 111.11,
     speedInKmPerH: 55.55,
   );
 
@@ -53,12 +53,12 @@ void main() {
         Position(
           coordinates: Coordinates(50.1, 18.1),
           speedInKmPerH: 15,
-          altitude: 100.22,
+          elevation: 100.22,
         ),
         Position(
           coordinates: Coordinates(51.2, 19.2),
           speedInKmPerH: 20,
-          altitude: 101.22,
+          elevation: 101.22,
         ),
       ];
       const double firstDistanceBetweenPositions = 5;
@@ -221,12 +221,12 @@ void main() {
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50.1, 18.1),
-          altitude: 100.22,
+          elevation: 100.22,
           speedInKmPerH: 15,
         ),
         Position(
           coordinates: Coordinates(51.2, 19.2),
-          altitude: 101.22,
+          elevation: 101.22,
           speedInKmPerH: 20,
         ),
       ];
@@ -298,17 +298,17 @@ void main() {
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50.1, 18.1),
-          altitude: 100.22,
+          elevation: 100.22,
           speedInKmPerH: 15,
         ),
         Position(
           coordinates: Coordinates(51.2, 19.2),
-          altitude: 101.22,
+          elevation: 101.22,
           speedInKmPerH: 20,
         ),
         Position(
           coordinates: Coordinates(52.2, 20.2),
-          altitude: 102.22,
+          elevation: 102.22,
           speedInKmPerH: 11.2,
         ),
       ];
@@ -412,7 +412,7 @@ void main() {
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(50.1, 18.1),
-          altitude: 100.22,
+          elevation: 100.22,
           speedInKmPerH: 15,
         ),
       ];
@@ -550,7 +550,7 @@ void main() {
     () {
       const position = Position(
         coordinates: Coordinates(50, 19),
-        altitude: 100.1,
+        elevation: 100.1,
         speedInKmPerH: 22.22,
       );
       DriveState? state;

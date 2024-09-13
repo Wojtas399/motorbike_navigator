@@ -48,7 +48,7 @@ class LocationService {
       .map<position_entity.Position?>(
         (Position position) => position_entity.Position(
           coordinates: Coordinates(position.latitude, position.longitude),
-          altitude: position.altitude,
+          elevation: position.altitude,
           speedInKmPerH: position.speed * 3.6,
         ),
       )

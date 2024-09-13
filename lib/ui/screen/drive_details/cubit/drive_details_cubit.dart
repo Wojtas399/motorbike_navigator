@@ -49,7 +49,7 @@ class DriveDetailsCubit extends Cubit<DriveDetailsState> {
       ));
       elevationAreaChartData.add(DriveDetailsDistanceAreaChartData(
         distance: distance,
-        value: positions[i].altitude,
+        value: positions[i].elevation,
       ));
       if (i < positions.length - 1) {
         distance += _mapService.calculateDistanceInKm(

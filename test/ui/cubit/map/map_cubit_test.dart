@@ -25,12 +25,12 @@ void main() {
       final List<Position> positions = [
         const Position(
           coordinates: Coordinates(50, 19),
-          altitude: 120.2,
+          elevation: 120.2,
           speedInKmPerH: 10,
         ),
         const Position(
           coordinates: Coordinates(51, 20),
-          altitude: 119.4,
+          elevation: 119.4,
           speedInKmPerH: 11,
         ),
       ];
@@ -125,7 +125,7 @@ void main() {
     () {
       const Position position = Position(
         coordinates: Coordinates(50.2, 25.4),
-        altitude: 100.22,
+        elevation: 100.22,
         speedInKmPerH: 0,
       );
       const Coordinates locationOnDrag = Coordinates(50.1, 25.2);

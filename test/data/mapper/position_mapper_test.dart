@@ -8,7 +8,7 @@ void main() {
   const double latitude = 50.50;
   const double longitude = 19.19;
   const Coordinates coordinates = Coordinates(latitude, longitude);
-  const double altitude = 111.11;
+  const double elevation = 111.11;
   const double speedInKmPerH = 33.33;
   const mapper = PositionMapper();
 
@@ -22,12 +22,12 @@ void main() {
         order: 1,
         latitude: latitude,
         longitude: longitude,
-        altitude: altitude,
+        elevation: elevation,
         speedInKmPerH: speedInKmPerH,
       );
       const expectedPosition = Position(
         coordinates: coordinates,
-        altitude: altitude,
+        elevation: elevation,
         speedInKmPerH: speedInKmPerH,
       );
 

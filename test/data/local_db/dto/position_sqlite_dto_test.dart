@@ -7,7 +7,7 @@ void main() {
   const int order = 12;
   const double latitude = 50.11;
   const double longitude = 19.19;
-  const double altitude = 300.22;
+  const double elevation = 300.22;
   const double speedInKmPerH = 33.33;
 
   test(
@@ -20,7 +20,7 @@ void main() {
         'position_order': order,
         'latitude': latitude,
         'longitude': longitude,
-        'altitude': altitude,
+        'elevation': elevation,
         'speed': speedInKmPerH,
       };
       const PositionSqliteDto expectedDto = PositionSqliteDto(
@@ -29,7 +29,7 @@ void main() {
         order: order,
         latitude: latitude,
         longitude: longitude,
-        altitude: altitude,
+        elevation: elevation,
         speedInKmPerH: speedInKmPerH,
       );
 
@@ -49,7 +49,7 @@ void main() {
         order: order,
         latitude: latitude,
         longitude: longitude,
-        altitude: altitude,
+        elevation: elevation,
         speedInKmPerH: speedInKmPerH,
       );
       final Map<String, Object?> expectedJson = {
@@ -57,7 +57,7 @@ void main() {
         'position_order': order,
         'latitude': latitude,
         'longitude': longitude,
-        'altitude': altitude,
+        'elevation': elevation,
         'speed': speedInKmPerH,
       };
 

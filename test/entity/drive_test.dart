@@ -33,24 +33,24 @@ void main() {
   );
 
   test(
-    'altitudePoints getter should return list of altitude points',
+    'elevationPoints getter should return list of elevation points',
     () {
       final List<Position> positions = [
-        positionCreator.create(altitude: 155.5),
-        positionCreator.create(altitude: 165.5),
-        positionCreator.create(altitude: 175.5),
-        positionCreator.create(altitude: 185.5),
+        positionCreator.create(elevation: 155.5),
+        positionCreator.create(elevation: 165.5),
+        positionCreator.create(elevation: 175.5),
+        positionCreator.create(elevation: 185.5),
       ];
       final Iterable<double> expectedAltitudePoints = [
-        positions.first.altitude,
-        positions[1].altitude,
-        positions[2].altitude,
-        positions.last.altitude,
+        positions.first.elevation,
+        positions[1].elevation,
+        positions[2].elevation,
+        positions.last.elevation,
       ];
 
       final drive = driveCreator.create(positions: positions);
 
-      expect(drive.altitudePoints, expectedAltitudePoints);
+      expect(drive.elevationPoints, expectedAltitudePoints);
     },
   );
 
@@ -94,9 +94,9 @@ void main() {
     'maxElevation getter should return max elevation from list of position',
     () {
       final List<Position> positions = [
-        positionCreator.create(altitude: 105.2),
-        positionCreator.create(altitude: 122.22),
-        positionCreator.create(altitude: 95.55),
+        positionCreator.create(elevation: 105.2),
+        positionCreator.create(elevation: 122.22),
+        positionCreator.create(elevation: 95.55),
       ];
       const double expectedMaxElevation = 122.22;
 
@@ -110,9 +110,9 @@ void main() {
     'minElevation getter should return min elevation from list of position',
     () {
       final List<Position> positions = [
-        positionCreator.create(altitude: 105.2),
-        positionCreator.create(altitude: 122.22),
-        positionCreator.create(altitude: 95.55),
+        positionCreator.create(elevation: 105.2),
+        positionCreator.create(elevation: 122.22),
+        positionCreator.create(elevation: 95.55),
       ];
       const double expectedMinElevation = 95.55;
 

@@ -30,12 +30,12 @@ void main() {
       const List<Position> positions = [
         Position(
           coordinates: Coordinates(51, 19),
-          altitude: 1001.22,
+          elevation: 1001.22,
           speedInKmPerH: 23.33,
         ),
         Position(
           coordinates: Coordinates(50, 18),
-          altitude: 100.22,
+          elevation: 100.22,
           speedInKmPerH: 22.22,
         ),
       ];
@@ -46,7 +46,7 @@ void main() {
           order: 2,
           latitude: 50,
           longitude: 18,
-          altitude: 100.22,
+          elevation: 100.22,
           speedInKmPerH: 22.22,
         ),
         PositionSqliteDto(
@@ -55,7 +55,7 @@ void main() {
           order: 1,
           latitude: 51,
           longitude: 19,
-          altitude: 101.22,
+          elevation: 101.22,
           speedInKmPerH: 33.33,
         ),
       ];

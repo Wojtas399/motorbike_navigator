@@ -252,7 +252,7 @@ void main() {
     () {
       const Position expectedUserPosition = Position(
         coordinates: Coordinates(50, 19),
-        altitude: 111.11,
+        elevation: 111.11,
         speedInKmPerH: 33.33,
       );
       MapState state = const MapState();
