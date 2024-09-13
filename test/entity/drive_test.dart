@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/position.dart';
@@ -64,12 +63,62 @@ void main() {
         positionCreator.create(speedInKmPerH: 22.22),
         positionCreator.create(speedInKmPerH: 55.55),
       ];
-      final double expectedAvgSpeed =
-          positions.map((Position position) => position.speedInKmPerH).average;
+      final double expectedAvgSpeed = (positions.first.speedInKmPerH +
+              positions[1].speedInKmPerH +
+              positions.last.speedInKmPerH) /
+          3;
 
       final drive = driveCreator.create(positions: positions);
 
       expect(drive.avgSpeedInKmPerH, expectedAvgSpeed);
+    },
+  );
+
+  test(
+    'maxSpeedInKmPerH getter should return max speed from list of position',
+    () {
+      final List<Position> positions = [
+        positionCreator.create(speedInKmPerH: 33.33),
+        positionCreator.create(speedInKmPerH: 22.22),
+        positionCreator.create(speedInKmPerH: 55.55),
+      ];
+      const double expectedMaxSpeed = 55.55;
+
+      final drive = driveCreator.create(positions: positions);
+
+      expect(drive.maxSpeedInKmPerH, expectedMaxSpeed);
+    },
+  );
+
+  test(
+    'maxElevation getter should return max elevation from list of position',
+    () {
+      final List<Position> positions = [
+        positionCreator.create(altitude: 105.2),
+        positionCreator.create(altitude: 122.22),
+        positionCreator.create(altitude: 95.55),
+      ];
+      const double expectedMaxElevation = 122.22;
+
+      final drive = driveCreator.create(positions: positions);
+
+      expect(drive.maxElevation, expectedMaxElevation);
+    },
+  );
+
+  test(
+    'minElevation getter should return min elevation from list of position',
+    () {
+      final List<Position> positions = [
+        positionCreator.create(altitude: 105.2),
+        positionCreator.create(altitude: 122.22),
+        positionCreator.create(altitude: 95.55),
+      ];
+      const double expectedMinElevation = 95.55;
+
+      final drive = driveCreator.create(positions: positions);
+
+      expect(drive.minElevation, expectedMinElevation);
     },
   );
 }

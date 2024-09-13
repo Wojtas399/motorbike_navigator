@@ -29,6 +29,15 @@ class Drive extends Entity {
   double get avgSpeedInKmPerH =>
       positions.map((Position position) => position.speedInKmPerH).average;
 
+  double get maxSpeedInKmPerH =>
+      positions.map((Position position) => position.speedInKmPerH).max;
+
+  double get maxElevation =>
+      positions.map((Position position) => position.altitude).max;
+
+  double get minElevation =>
+      positions.map((Position position) => position.altitude).min;
+
   @override
   List<Object?> get props => [
         id,
