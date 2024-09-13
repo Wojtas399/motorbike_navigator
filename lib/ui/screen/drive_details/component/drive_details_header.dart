@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../component/gap.dart';
 import '../../../component/text.dart';
 import '../../../extensions/context_extensions.dart';
 import '../../../extensions/datetime_extensions.dart';
@@ -24,9 +25,10 @@ class DriveDetailsHeader extends StatelessWidget {
             '${startDateTime?.toUIDate()},',
             fontWeight: FontWeight.bold,
           ),
+          const GapHorizontal8(),
           TitleMedium(
-            ' godz. ${startDateTime?.toUITime()}',
-            color: context.colorScheme.outline,
+            '${context.str.hourAbbr} ${startDateTime?.toUITime()}',
+            fontWeight: FontWeight.w300,
           ),
         ],
       ),

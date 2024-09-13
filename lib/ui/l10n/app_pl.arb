@@ -103,5 +103,6 @@
   "darkMode": "Ciemny motyw",
   "requiredField": "To pole jest wymagane",
   "unknown": "Nieznane",
-  "goToSettings": "Przejdź do ustawień"
+  "goToSettings": "Przejdź do ustawień",
+  "hourAbbr": "godz."
 }

@@ -53,6 +53,7 @@ class LabelMedium extends _Text {
   const LabelMedium(
     super.data, {
     super.color,
+    super.fontWeight,
   }) : super(textType: _TextType.labelMedium);
 }
 
@@ -76,6 +77,7 @@ class TitleMedium extends _Text {
   const TitleMedium(
     super.data, {
     super.color,
+    super.fontWeight,
   }) : super(textType: _TextType.titleMedium);
 }
 

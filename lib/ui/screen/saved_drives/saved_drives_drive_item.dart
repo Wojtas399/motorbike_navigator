@@ -77,8 +77,8 @@ class _StartDateTime extends StatelessWidget {
           ),
           const GapHorizontal8(),
           BodyMedium(
-            'godz. ${startDateTime.toUITime()}',
-            color: context.colorScheme.outline,
+            '${context.str.hourAbbr} ${startDateTime.toUITime()}',
+            fontWeight: FontWeight.w300,
           ),
         ],
       );
@@ -131,7 +131,7 @@ class _ValueWithLabel extends StatelessWidget {
         children: [
           LabelMedium(
             label,
-            color: context.colorScheme.outline,
+            fontWeight: FontWeight.w300,
           ),
           const GapVertical4(),
           BodyMedium(
