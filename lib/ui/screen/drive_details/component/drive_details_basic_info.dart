@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../component/gap.dart';
 import '../../../component/text.dart';
 import '../../../extensions/context_extensions.dart';
+import '../../../extensions/double_extensions.dart';
 import '../../../extensions/duration_extensions.dart';
 import '../cubit/drive_details_cubit.dart';
 
@@ -38,7 +39,7 @@ class _Distance extends StatelessWidget {
 
     return _LabelWithValue(
       label: context.str.distance,
-      value: '${distanceInKm?.toStringAsFixed(2)} km',
+      value: '${distanceInKm?.toDistanceFormat()}',
     );
   }
 }

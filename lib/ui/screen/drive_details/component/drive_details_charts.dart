@@ -4,6 +4,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../component/gap.dart';
 import '../../../extensions/context_extensions.dart';
+import '../../../extensions/double_extensions.dart';
 import '../cubit/drive_details_cubit.dart';
 import '../cubit/drive_details_state.dart';
 import 'drive_details_chart.dart';
@@ -54,11 +55,11 @@ class _SpeedChart extends StatelessWidget {
       details: [
         DriveDetailsChartDetail(
           label: context.str.avgSpeed,
-          value: '${avgSpeedInKmPerH?.toStringAsFixed(2)} km/h',
+          value: '${avgSpeedInKmPerH?.toDistanceFormat()}',
         ),
         DriveDetailsChartDetail(
           label: context.str.driveDetailsMaxSpeed,
-          value: '${maxSpeedInKmPerH?.toStringAsFixed(2)} km/h',
+          value: '${maxSpeedInKmPerH?.toDistanceFormat()}',
         ),
       ],
     );
@@ -95,11 +96,11 @@ class _ElevationChart extends StatelessWidget {
       details: [
         DriveDetailsChartDetail(
           label: context.str.driveDetailsMaxElevation,
-          value: '${maxElevation?.toStringAsFixed(2)} m n.p.m',
+          value: '${maxElevation?.toElevationFormat()}',
         ),
         DriveDetailsChartDetail(
           label: context.str.driveDetailsMinElevation,
-          value: '${minElevation?.toStringAsFixed(2)} m n.p.m',
+          value: '${minElevation?.toElevationFormat()}',
         ),
       ],
     );

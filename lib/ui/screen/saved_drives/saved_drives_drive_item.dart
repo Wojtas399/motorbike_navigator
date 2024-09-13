@@ -11,6 +11,7 @@ import '../../config/app_router.dart';
 import '../../extensions/context_extensions.dart';
 import '../../extensions/coordinates_extensions.dart';
 import '../../extensions/datetime_extensions.dart';
+import '../../extensions/double_extensions.dart';
 import '../../extensions/duration_extensions.dart';
 
 class SavedDrivesDriveItem extends StatelessWidget {
@@ -99,7 +100,7 @@ class _DriveData extends StatelessWidget {
         children: [
           _ValueWithLabel(
             label: context.str.distance,
-            value: '${distanceInKm.toStringAsFixed(2)} km',
+            value: distanceInKm.toDistanceFormat(),
           ),
           const GapHorizontal32(),
           _ValueWithLabel(
@@ -109,7 +110,7 @@ class _DriveData extends StatelessWidget {
           const GapHorizontal32(),
           _ValueWithLabel(
             label: context.str.avgSpeed,
-            value: '${avgSpeedInKmPerH.toStringAsFixed(2)} km/h',
+            value: avgSpeedInKmPerH.toSpeedFormat(),
           ),
         ],
       );
