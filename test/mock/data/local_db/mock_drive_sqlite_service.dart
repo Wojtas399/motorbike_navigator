@@ -39,6 +39,7 @@ class MockDriveSqliteService extends Mock implements DriveSqliteService {
   }) {
     when(
       () => insert(
+        title: any(named: 'title'),
         startDateTime: any(named: 'startDateTime'),
         distanceInKm: any(named: 'distanceInKm'),
         duration: any(named: 'duration'),

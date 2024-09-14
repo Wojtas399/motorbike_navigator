@@ -72,7 +72,9 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     required Duration duration,
     required List<Position> positions,
   }) async {
+    //TODO: Set default title
     final addedDriveDto = await _driveSqliteService.insert(
+      title: 'title',
       startDateTime: startDateTime,
       distanceInKm: distanceInKm,
       duration: duration,

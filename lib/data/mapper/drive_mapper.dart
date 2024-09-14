@@ -19,6 +19,7 @@ class DriveMapper {
     sortedPositionDtos.sort((pos1, pos2) => pos2.order.compareTo(pos1.order));
     return Drive(
       id: driveDto.id,
+      title: driveDto.title,
       startDateTime: driveDto.startDateTime,
       distanceInKm: driveDto.distanceInKm,
       duration: driveDto.duration,

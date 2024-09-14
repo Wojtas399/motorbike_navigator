@@ -9,6 +9,7 @@ import '../../../mock/data/mapper/mock_datetime_mapper.dart';
 void main() {
   final dateTimeMapper = MockDatetimeMapper();
   const int id = 1;
+  const String title = 'drive title';
   final DateTime startDateTime = DateTime(2024, 7, 29, 2, 30);
   const String startDateStr = '2024-07-29';
   const String startTimeStr = '02:30';
@@ -29,6 +30,7 @@ void main() {
     () {
       final Map<String, Object?> json = {
         'id': id,
+        'title': title,
         'start_date': startDateStr,
         'start_time': startTimeStr,
         'distance': distance,
@@ -36,6 +38,7 @@ void main() {
       };
       final DriveSqliteDto expectedDto = DriveSqliteDto(
         id: id,
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distance,
         duration: duration,
@@ -56,11 +59,13 @@ void main() {
     () {
       final DriveSqliteDto dto = DriveSqliteDto(
         id: id,
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distance,
         duration: duration,
       );
       final Map<String, Object?> expectedJson = {
+        'title': title,
         'start_date': startDateStr,
         'start_time': startTimeStr,
         'distance': distance,

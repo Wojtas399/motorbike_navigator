@@ -11,6 +11,7 @@ class DriveSqliteService {
   final DateTimeMapper _dateTimeMapper;
   final String _tableName = 'Drives';
   final String _idColName = 'id';
+  final String _titleColName = 'title';
   final String _startDateColName = 'start_date';
   final String _startTimeColName = 'start_time';
   final String _distanceColName = 'distance';
@@ -49,12 +50,14 @@ class DriveSqliteService {
   }
 
   Future<DriveSqliteDto?> insert({
+    required String title,
     required DateTime startDateTime,
     required double distanceInKm,
     required Duration duration,
   }) async {
     await _createTableIfNotExists();
     final driveToAdd = DriveSqliteDto(
+      title: title,
       startDateTime: startDateTime,
       distanceInKm: distanceInKm,
       duration: duration,
@@ -74,6 +77,11 @@ class DriveSqliteService {
           SqlColumn(
             name: _idColName,
             type: SqlColumnType.id,
+          ),
+          SqlColumn(
+            name: _titleColName,
+            type: SqlColumnType.text,
+            isNotNull: true,
           ),
           SqlColumn(
             name: _startDateColName,

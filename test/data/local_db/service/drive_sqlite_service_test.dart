@@ -12,6 +12,7 @@ import '../../../mock/data/mapper/mock_datetime_mapper.dart';
 void main() {
   const String tableName = 'Drives';
   const String idColName = 'id';
+  const String titleColName = 'title';
   const String startDateColName = 'start_date';
   const String startTimeColName = 'start_time';
   const String distanceColName = 'distance';
@@ -28,6 +29,11 @@ void main() {
           SqlColumn(
             name: idColName,
             type: SqlColumnType.id,
+          ),
+          SqlColumn(
+            name: titleColName,
+            type: SqlColumnType.text,
+            isNotNull: true,
           ),
           SqlColumn(
             name: startDateColName,
@@ -69,18 +75,23 @@ void main() {
     'DriveSqliteDto object if drive with passed id exists in table',
     () async {
       const int driveId = 1;
+      const String title = 'drive title';
       final DateTime startDateTime = DateTime(2024, 8, 20, 12, 30);
+      const String startDateStr = '2024-08-20';
+      const String startTimeStr = '12:30';
       const double distance = 22.22;
       const Duration duration = Duration(minutes: 33, seconds: 20);
       final Map<String, Object?> driveJson = {
         idColName: driveId,
-        startDateColName: '2024-08-20',
-        startTimeColName: '12:30',
+        titleColName: title,
+        startDateColName: startDateStr,
+        startTimeColName: startTimeStr,
         distanceColName: distance,
         durationColName: duration.inSeconds,
       };
       final DriveSqliteDto expectedDriveSqliteDto = DriveSqliteDto(
         id: driveId,
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distance,
         duration: duration,
@@ -114,18 +125,23 @@ void main() {
     'DriveSqliteDto object if drive with passed id exists in table',
     () async {
       const int driveId = 1;
+      const String title = 'drive title';
       final DateTime startDateTime = DateTime(2024, 8, 20, 12, 30);
+      const String startDateStr = '2024-08-20';
+      const String startTimeStr = '12:30';
       const double distance = 22.22;
       const Duration duration = Duration(minutes: 33, seconds: 20);
       final Map<String, Object?> driveJson = {
         idColName: driveId,
-        startDateColName: '2024-08-20',
-        startTimeColName: '12:30',
+        titleColName: title,
+        startDateColName: startDateStr,
+        startTimeColName: startTimeStr,
         distanceColName: distance,
         durationColName: duration.inSeconds,
       };
       final DriveSqliteDto expectedDriveSqliteDto = DriveSqliteDto(
         id: driveId,
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distance,
         duration: duration,
@@ -181,6 +197,7 @@ void main() {
       final List<Map<String, Object?>> allDriveJsons = [
         {
           idColName: 1,
+          titleColName: 'drive 1',
           startDateColName: '2024-08-20',
           startTimeColName: '02:30',
           distanceColName: 22.22,
@@ -188,6 +205,7 @@ void main() {
         },
         {
           idColName: 2,
+          titleColName: 'drive 2',
           startDateColName: '2024-08-21',
           startTimeColName: '12:31',
           distanceColName: 44.44,
@@ -195,6 +213,7 @@ void main() {
         },
         {
           idColName: 3,
+          titleColName: 'drive 3',
           startDateColName: '2024-08-22',
           startTimeColName: '21:10',
           distanceColName: 10.10,
@@ -204,18 +223,21 @@ void main() {
       final List<DriveSqliteDto> expectedAllDriveSqliteDtos = [
         DriveSqliteDto(
           id: 1,
+          title: 'drive 1',
           startDateTime: DateTime(2024, 8, 20, 2, 30),
           distanceInKm: 22.22,
           duration: const Duration(minutes: 33, seconds: 20),
         ),
         DriveSqliteDto(
           id: 2,
+          title: 'drive 2',
           startDateTime: DateTime(2024, 8, 21, 12, 31),
           distanceInKm: 44.44,
           duration: const Duration(minutes: 44, seconds: 24),
         ),
         DriveSqliteDto(
           id: 3,
+          title: 'drive 3',
           startDateTime: DateTime(2024, 8, 22, 21, 10),
           distanceInKm: 10.10,
           duration: const Duration(minutes: 11, seconds: 11),
@@ -262,6 +284,7 @@ void main() {
       final List<Map<String, Object?>> allDriveJsons = [
         {
           idColName: 1,
+          titleColName: 'drive 1',
           startDateColName: '2024-08-20',
           startTimeColName: '02:30',
           distanceColName: 22.22,
@@ -269,6 +292,7 @@ void main() {
         },
         {
           idColName: 2,
+          titleColName: 'drive 2',
           startDateColName: '2024-08-21',
           startTimeColName: '12:31',
           distanceColName: 44.44,
@@ -276,6 +300,7 @@ void main() {
         },
         {
           idColName: 3,
+          titleColName: 'drive 3',
           startDateColName: '2024-08-22',
           startTimeColName: '21:10',
           distanceColName: 10.10,
@@ -285,18 +310,21 @@ void main() {
       final List<DriveSqliteDto> expectedAllDriveSqliteDtos = [
         DriveSqliteDto(
           id: 1,
+          title: 'drive 1',
           startDateTime: DateTime(2024, 8, 20, 2, 30),
           distanceInKm: 22.22,
           duration: const Duration(minutes: 33, seconds: 20),
         ),
         DriveSqliteDto(
           id: 2,
+          title: 'drive 2',
           startDateTime: DateTime(2024, 8, 21, 12, 31),
           distanceInKm: 44.44,
           duration: const Duration(minutes: 44, seconds: 24),
         ),
         DriveSqliteDto(
           id: 3,
+          title: 'drive 3',
           startDateTime: DateTime(2024, 8, 22, 21, 10),
           distanceInKm: 10.10,
           duration: const Duration(minutes: 11, seconds: 11),
@@ -345,6 +373,7 @@ void main() {
       final List<Map<String, Object?>> driveJsons = [
         {
           idColName: 1,
+          titleColName: 'drive 1',
           startDateColName: '2024-08-20',
           startTimeColName: '02:30',
           distanceColName: 22.22,
@@ -352,6 +381,7 @@ void main() {
         },
         {
           idColName: 2,
+          titleColName: 'drive 2',
           startDateColName: '2024-08-21',
           startTimeColName: '12:31',
           distanceColName: 44.44,
@@ -361,12 +391,14 @@ void main() {
       final List<DriveSqliteDto> expectedDriveSqliteDtos = [
         DriveSqliteDto(
           id: 1,
+          title: 'drive 1',
           startDateTime: DateTime(2024, 8, 20, 2, 30),
           distanceInKm: 22.22,
           duration: const Duration(minutes: 33, seconds: 20),
         ),
         DriveSqliteDto(
           id: 2,
+          title: 'drive 2',
           startDateTime: DateTime(2024, 8, 21, 12, 31),
           distanceInKm: 44.44,
           duration: const Duration(minutes: 44, seconds: 24),
@@ -428,6 +460,7 @@ void main() {
       final List<Map<String, Object?>> driveJsons = [
         {
           idColName: 1,
+          titleColName: 'drive 1',
           startDateColName: '2024-08-20',
           startTimeColName: '02:30',
           distanceColName: 22.22,
@@ -435,6 +468,7 @@ void main() {
         },
         {
           idColName: 2,
+          titleColName: 'drive 2',
           startDateColName: '2024-08-21',
           startTimeColName: '12:31',
           distanceColName: 44.44,
@@ -444,12 +478,14 @@ void main() {
       final List<DriveSqliteDto> expectedDriveSqliteDtos = [
         DriveSqliteDto(
           id: 1,
+          title: 'drive 1',
           startDateTime: DateTime(2024, 8, 20, 2, 30),
           distanceInKm: 22.22,
           duration: const Duration(minutes: 33, seconds: 20),
         ),
         DriveSqliteDto(
           id: 2,
+          title: 'drive 2',
           startDateTime: DateTime(2024, 8, 21, 12, 31),
           distanceInKm: 44.44,
           duration: const Duration(minutes: 44, seconds: 24),
@@ -503,12 +539,14 @@ void main() {
     'to table and should return DriveSqliteDto object',
     () async {
       const int addedDriveId = 1;
+      const String title = 'title';
       final DateTime startDateTime = DateTime(2024, 8, 20, 2, 30);
       const String startDateStr = '2024-08-20';
       const String startTimeStr = '02:30';
       const double distanceInKm = 22.22;
       const Duration duration = Duration(minutes: 25, seconds: 30);
       final Map<String, Object> driveToAddJson = {
+        titleColName: title,
         startDateColName: startDateStr,
         startTimeColName: startTimeStr,
         distanceColName: distanceInKm,
@@ -520,6 +558,7 @@ void main() {
       };
       final DriveSqliteDto expectedDriveSqliteDto = DriveSqliteDto(
         id: addedDriveId,
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
@@ -535,6 +574,7 @@ void main() {
       );
 
       final DriveSqliteDto? driveSqliteDto = await service.insert(
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
@@ -565,12 +605,14 @@ void main() {
     'values to table and should return DriveSqliteDto object',
     () async {
       const int addedDriveId = 1;
+      const String title = 'title';
       final DateTime startDateTime = DateTime(2024, 8, 20, 2, 30);
       const String startDateStr = '2024-08-20';
       const String startTimeStr = '02:30';
       const double distanceInKm = 22.22;
       const Duration duration = Duration(minutes: 25, seconds: 30);
       final Map<String, Object> driveToAddJson = {
+        titleColName: title,
         startDateColName: startDateStr,
         startTimeColName: startTimeStr,
         distanceColName: distanceInKm,
@@ -582,6 +624,7 @@ void main() {
       };
       final DriveSqliteDto expectedDriveSqliteDto = DriveSqliteDto(
         id: addedDriveId,
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
@@ -596,6 +639,7 @@ void main() {
       );
 
       final DriveSqliteDto? driveSqliteDto = await service.insert(
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,

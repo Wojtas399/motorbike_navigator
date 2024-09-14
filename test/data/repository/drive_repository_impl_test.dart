@@ -270,6 +270,7 @@ void main() {
     'added drive to repo state',
     () async {
       const int driveId = 1;
+      const String title = 'title';
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 2.2;
       const Duration duration = Duration(minutes: 20);
@@ -307,12 +308,14 @@ void main() {
       ];
       final DriveSqliteDto addedDriveSqliteDto = DriveSqliteDto(
         id: driveId,
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
       );
       final Drive expectedAddedDrive = Drive(
         id: driveId,
+        title: '',
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
@@ -365,6 +368,7 @@ void main() {
       );
       verify(
         () => driveSqliteService.insert(
+          title: title,
           startDateTime: startDateTime,
           distanceInKm: distanceInKm,
           duration: duration,
@@ -398,6 +402,7 @@ void main() {
     'method to add drive to db returns null, '
     'should finish method call',
     () async {
+      const String title = 'title';
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 2.2;
       const Duration duration = Duration(minutes: 20);
@@ -424,6 +429,7 @@ void main() {
 
       verify(
         () => driveSqliteService.insert(
+          title: title,
           startDateTime: startDateTime,
           distanceInKm: distanceInKm,
           duration: duration,
@@ -438,6 +444,7 @@ void main() {
     'should omit position in list',
     () async {
       const int driveId = 1;
+      const String title = 'title';
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 2.2;
       const Duration duration = Duration(minutes: 20);
@@ -466,12 +473,14 @@ void main() {
       ];
       final DriveSqliteDto addedDriveSqliteDto = DriveSqliteDto(
         id: driveId,
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
       );
       final Drive expectedAddedDrive = Drive(
         id: driveId,
+        title: '',
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
@@ -524,6 +533,7 @@ void main() {
       );
       verify(
         () => driveSqliteService.insert(
+          title: title,
           startDateTime: startDateTime,
           distanceInKm: distanceInKm,
           duration: duration,

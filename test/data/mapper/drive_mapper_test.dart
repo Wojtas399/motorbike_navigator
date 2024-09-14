@@ -24,6 +24,7 @@ void main() {
     'order param and then mapped to Position model)',
     () {
       const int id = 1;
+      const String title = 'title';
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 10.21;
       const Duration duration = Duration(hours: 1, minutes: 20);
@@ -61,12 +62,14 @@ void main() {
       ];
       final DriveSqliteDto driveDto = DriveSqliteDto(
         id: id,
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
       );
       final Drive expectedDrive = Drive(
         id: id,
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
