@@ -6,7 +6,6 @@ import '../creator/drive_creator.dart';
 import '../creator/position_creator.dart';
 
 void main() {
-  final driveCreator = DriveCreator();
   final positionCreator = PositionCreator();
 
   test(
@@ -26,7 +25,7 @@ void main() {
       final Iterable<Coordinates> expectedWaypoints =
           positions.map((Position position) => position.coordinates);
 
-      final drive = driveCreator.create(positions: positions);
+      final drive = DriveCreator(positions: positions).createEntity();
 
       expect(drive.waypoints, expectedWaypoints);
     },
@@ -48,7 +47,7 @@ void main() {
         positions.last.elevation,
       ];
 
-      final drive = driveCreator.create(positions: positions);
+      final drive = DriveCreator(positions: positions).createEntity();
 
       expect(drive.elevationPoints, expectedAltitudePoints);
     },
@@ -68,7 +67,7 @@ void main() {
               positions.last.speedInKmPerH) /
           3;
 
-      final drive = driveCreator.create(positions: positions);
+      final drive = DriveCreator(positions: positions).createEntity();
 
       expect(drive.avgSpeedInKmPerH, expectedAvgSpeed);
     },
@@ -84,7 +83,7 @@ void main() {
       ];
       const double expectedMaxSpeed = 55.55;
 
-      final drive = driveCreator.create(positions: positions);
+      final drive = DriveCreator(positions: positions).createEntity();
 
       expect(drive.maxSpeedInKmPerH, expectedMaxSpeed);
     },
@@ -100,7 +99,7 @@ void main() {
       ];
       const double expectedMaxElevation = 122.22;
 
-      final drive = driveCreator.create(positions: positions);
+      final drive = DriveCreator(positions: positions).createEntity();
 
       expect(drive.maxElevation, expectedMaxElevation);
     },
@@ -116,7 +115,7 @@ void main() {
       ];
       const double expectedMinElevation = 95.55;
 
-      final drive = driveCreator.create(positions: positions);
+      final drive = DriveCreator(positions: positions).createEntity();
 
       expect(drive.minElevation, expectedMinElevation);
     },

@@ -14,7 +14,6 @@ import '../../../mock/ui_service/mock_map_service.dart';
 void main() {
   final driveRepository = MockDriveRepository();
   final mapService = MockMapService();
-  final driveCreator = DriveCreator();
 
   DriveDetailsCubit createCubit() => DriveDetailsCubit(
         driveRepository,
@@ -52,10 +51,10 @@ void main() {
           speedInKmPerH: 65,
         ),
       ];
-      final Drive drive = driveCreator.create(
+      final Drive drive = DriveCreator(
         id: driveId,
         positions: positions,
-      );
+      ).createEntity();
       const double firstToSecondPositionDistance = 10.25;
       const double secondToThirdPositionDistance = 10.5;
       const double thirdToFourthPositionDistance = 10.75;

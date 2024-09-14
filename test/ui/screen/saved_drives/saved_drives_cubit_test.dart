@@ -11,7 +11,6 @@ import '../../../mock/data/repository/mock_drive_repository.dart';
 
 void main() {
   final driveRepository = MockDriveRepository();
-  final driveCreator = DriveCreator();
 
   SavedDrivesCubit createCubit() => SavedDrivesCubit(driveRepository);
 
@@ -23,21 +22,21 @@ void main() {
     'initialize, ',
     () {
       final List<Drive> drives1 = [
-        driveCreator.create(
+        DriveCreator(
           id: 1,
           startDateTime: DateTime(2024, 7, 13, 10, 30),
-        ),
-        driveCreator.create(
+        ).createEntity(),
+        DriveCreator(
           id: 2,
           startDateTime: DateTime(2024, 7, 13, 12, 45),
-        ),
+        ).createEntity(),
       ];
       final List<Drive> drives2 = [
         ...drives1,
-        driveCreator.create(
+        DriveCreator(
           id: 3,
           startDateTime: DateTime(2024, 7, 14, 9, 50),
-        ),
+        ).createEntity(),
       ];
       final drivesStream$ = BehaviorSubject<List<Drive>>();
       SavedDrivesState? state;

@@ -48,9 +48,8 @@ void main() {
   group(
     'copyWith drives, ',
     () {
-      final driveCreator = DriveCreator();
       final expectedDrives = <Drive>[
-        driveCreator.create(id: 1),
+        DriveCreator(id: 1).createEntity(),
       ];
       SavedDrivesState state = const SavedDrivesState();
 

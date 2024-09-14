@@ -14,7 +14,6 @@ import '../../../mock/ui_service/mock_date_service.dart';
 void main() {
   final driveRepository = MockDriveRepository();
   final dateService = MockDateService();
-  final driveCreator = DriveCreator();
 
   StatsCubit createCubit() => StatsCubit(
         driveRepository,
@@ -42,98 +41,98 @@ void main() {
         lastDateOfRange: DateTime(2024, 12, 31),
       );
       final List<Drive> weeklyDrives1 = [
-        driveCreator.create(
+        DriveCreator(
           startDateTime: DateTime(2024, 7, 23, 10, 35),
           distanceInKm: 52.30,
           duration: const Duration(minutes: 52, seconds: 33),
-        ),
+        ).createEntity(),
       ];
       final List<Drive> weeklyDrives2 = [
         weeklyDrives1.first,
-        driveCreator.create(
+        DriveCreator(
           startDateTime: DateTime(2024, 7, 23, 17, 15),
           distanceInKm: 52.30,
           duration: const Duration(minutes: 52, seconds: 33),
-        ),
-        driveCreator.create(
+        ).createEntity(),
+        DriveCreator(
           startDateTime: DateTime(2024, 7, 25, 23, 10),
           distanceInKm: 12.22,
           duration: const Duration(minutes: 15, seconds: 22),
-        ),
+        ).createEntity(),
       ];
       final List<Drive> monthlyDrives1 = [
-        driveCreator.create(
+        DriveCreator(
           startDateTime: DateTime(2024, 7, 2, 10, 30),
           distanceInKm: 22.22,
           duration: const Duration(minutes: 22, seconds: 22),
-        ),
-        driveCreator.create(
+        ).createEntity(),
+        DriveCreator(
           startDateTime: DateTime(2024, 7, 12, 11, 31),
           distanceInKm: 44.44,
           duration: const Duration(minutes: 44, seconds: 44),
-        ),
-        driveCreator.create(
+        ).createEntity(),
+        DriveCreator(
           startDateTime: DateTime(2024, 7, 30, 12, 32),
           distanceInKm: 55.55,
           duration: const Duration(minutes: 55, seconds: 55),
-        ),
+        ).createEntity(),
       ];
       final List<Drive> monthlyDrives2 = [
         monthlyDrives1.first,
-        driveCreator.create(
+        DriveCreator(
           startDateTime: DateTime(2024, 7, 2, 13, 13),
           distanceInKm: 33.33,
           duration: const Duration(minutes: 33, seconds: 33),
-        ),
+        ).createEntity(),
         monthlyDrives1[1],
         monthlyDrives1[2],
-        driveCreator.create(
+        DriveCreator(
           startDateTime: DateTime(2024, 7, 30, 14, 14),
           distanceInKm: 66.66,
           duration: const Duration(minutes: 59, seconds: 59),
-        ),
+        ).createEntity(),
       ];
       final List<Drive> yearlyDrives1 = [
-        driveCreator.create(
+        DriveCreator(
           startDateTime: DateTime(2024, 2, 2, 2, 2),
           distanceInKm: 22.22,
           duration: const Duration(minutes: 22, seconds: 22),
-        ),
-        driveCreator.create(
+        ).createEntity(),
+        DriveCreator(
           startDateTime: DateTime(2024, 3, 3, 3, 3),
           distanceInKm: 33.33,
           duration: const Duration(minutes: 33, seconds: 33),
-        ),
-        driveCreator.create(
+        ).createEntity(),
+        DriveCreator(
           startDateTime: DateTime(2024, 8, 8, 8, 8),
           distanceInKm: 88.88,
           duration: const Duration(hours: 1, minutes: 22, seconds: 22),
-        ),
+        ).createEntity(),
       ];
       final List<Drive> yearlyDrives2 = [
         yearlyDrives1.first,
-        driveCreator.create(
+        DriveCreator(
           startDateTime: DateTime(2024, 2, 12, 12, 12),
           distanceInKm: 44.44,
           duration: const Duration(minutes: 44, seconds: 44),
-        ),
+        ).createEntity(),
         yearlyDrives1[1],
-        driveCreator.create(
+        DriveCreator(
           startDateTime: DateTime(2024, 3, 23, 23, 23),
           distanceInKm: 66.66,
           duration: const Duration(hours: 1, minutes: 6, seconds: 46),
-        ),
-        driveCreator.create(
+        ).createEntity(),
+        DriveCreator(
           startDateTime: DateTime(2024, 3, 24, 20, 20),
           distanceInKm: 44.44,
           duration: const Duration(minutes: 44, seconds: 44),
-        ),
+        ).createEntity(),
         yearlyDrives1.last,
-        driveCreator.create(
+        DriveCreator(
           startDateTime: DateTime(2024, 12, 12, 12, 12),
           distanceInKm: 11.11,
           duration: const Duration(minutes: 11, seconds: 11),
-        ),
+        ).createEntity(),
       ];
       final expectedNumberOfWeeklyDrives1 = weeklyDrives1.length;
       final expectedNumberOfWeeklyDrives2 = weeklyDrives2.length;

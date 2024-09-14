@@ -8,7 +8,6 @@ import 'package:motorbike_navigator/entity/drive.dart';
 import 'package:motorbike_navigator/entity/position.dart';
 
 import '../../creator/drive_creator.dart';
-import '../../creator/drive_sqlite_dto_creator.dart';
 import '../../mock/data/local_db/mock_drive_sqlite_service.dart';
 import '../../mock/data/local_db/mock_position_sqlite_service.dart';
 import '../../mock/data/mapper/mock_drive_mapper.dart';
@@ -19,8 +18,6 @@ void main() {
   final positionSqliteService = MockPositionSqliteService();
   final driveMapper = MockDriveMapper();
   final dateService = MockDateService();
-  final driveCreator = DriveCreator();
-  final driveSqliteDtoCreator = DriveSqliteDtoCreator();
   late DriveRepositoryImpl repositoryImpl;
 
   setUp(() {
@@ -43,7 +40,8 @@ void main() {
     'getDriveById, ',
     () {
       const int id = 1;
-      final Drive expectedDrive = driveCreator.create(id: id);
+      final driveCreator = DriveCreator(id: id);
+      final Drive expectedDrive = driveCreator.createEntity();
 
       test(
         'should emit null if drive with matching id does not exist in repo '
@@ -72,9 +70,8 @@ void main() {
         'should fetch drive from db, add it to repo state and emit it if it '
         'does not exist in repo state',
         () async {
-          final DriveSqliteDto driveSqliteDto = driveSqliteDtoCreator.create(
-            id: id,
-          );
+          final DriveSqliteDto driveSqliteDto =
+              DriveCreator(id: id).createSqliteDto();
           driveSqliteService.mockQueryById(
             expectedDriveSqliteDto: driveSqliteDto,
           );
@@ -96,18 +93,25 @@ void main() {
     'getAllDrives, '
     'should fetch all drives from db, add them to repo state and emit them all',
     () async {
+      final driveCreators = [
+        DriveCreator(id: 1),
+        DriveCreator(id: 2),
+        DriveCreator(id: 3),
+        DriveCreator(id: 4),
+        DriveCreator(id: 5),
+      ];
       final List<DriveSqliteDto> fetchedDriveSqliteDtos = [
-        driveSqliteDtoCreator.create(id: 3),
-        driveSqliteDtoCreator.create(id: 4),
+        driveCreators[2].createSqliteDto(),
+        driveCreators[3].createSqliteDto(),
       ];
       final List<Drive> fetchedDrives = [
-        driveCreator.create(id: 3),
-        driveCreator.create(id: 4),
+        driveCreators[2].createEntity(),
+        driveCreators[3].createEntity(),
       ];
       final List<Drive> existingDrives = [
-        driveCreator.create(id: 1),
-        driveCreator.create(id: 2),
-        driveCreator.create(id: 5),
+        driveCreators.first.createEntity(),
+        driveCreators[1].createEntity(),
+        driveCreators.last.createEntity(),
       ];
       final List<Drive> expectedDrives = [
         ...existingDrives,
@@ -161,36 +165,39 @@ void main() {
     () async {
       final DateTime firstDateOfRange = DateTime(2024, 7, 22);
       final DateTime lastDateOfRange = DateTime(2024, 7, 28);
-      final List<DriveSqliteDto> fetchedDriveSqliteDtos = [
-        driveSqliteDtoCreator.create(
-          id: 3,
-          startDateTime: DateTime(2024, 7, 23),
-        ),
-        driveSqliteDtoCreator.create(
-          id: 4,
-          startDateTime: DateTime(2024, 7, 25),
-        ),
-      ];
-      final List<Drive> fetchedDrives = [
-        driveCreator.create(
-          id: 3,
-          startDateTime: DateTime(2024, 7, 23),
-        ),
-        driveCreator.create(
-          id: 4,
-          startDateTime: DateTime(2024, 7, 25),
-        ),
-      ];
-      final List<Drive> existingDrives = [
-        driveCreator.create(
+      final driveCreators = [
+        DriveCreator(
           id: 1,
           startDateTime: DateTime(2024, 7, 27),
         ),
-        driveCreator.create(id: 2),
-        driveCreator.create(
+        DriveCreator(
+          id: 2,
+        ),
+        DriveCreator(
+          id: 3,
+          startDateTime: DateTime(2024, 7, 23),
+        ),
+        DriveCreator(
+          id: 4,
+          startDateTime: DateTime(2024, 7, 25),
+        ),
+        DriveCreator(
           id: 5,
           startDateTime: DateTime(2024, 7, 29),
         ),
+      ];
+      final List<DriveSqliteDto> fetchedDriveSqliteDtos = [
+        driveCreators[2].createSqliteDto(),
+        driveCreators[3].createSqliteDto(),
+      ];
+      final List<Drive> fetchedDrives = [
+        driveCreators[2].createEntity(),
+        driveCreators[3].createEntity(),
+      ];
+      final List<Drive> existingDrives = [
+        driveCreators.first.createEntity(),
+        driveCreators[1].createEntity(),
+        driveCreators.last.createEntity(),
       ];
       final List<Drive> expectedDrives = [
         existingDrives.first,
@@ -315,15 +322,15 @@ void main() {
       );
       final Drive expectedAddedDrive = Drive(
         id: driveId,
-        title: '',
+        title: title,
         startDateTime: startDateTime,
         distanceInKm: distanceInKm,
         duration: duration,
         positions: positions,
       );
       final List<Drive> existingDrives = [
-        driveCreator.create(id: 2),
-        driveCreator.create(id: 3),
+        DriveCreator(id: 2).createEntity(),
+        DriveCreator(id: 3).createEntity(),
       ];
       final List<Drive> expectedRepoState = [
         ...existingDrives,
@@ -487,8 +494,8 @@ void main() {
         positions: [positions.first],
       );
       final List<Drive> existingDrives = [
-        driveCreator.create(id: 2),
-        driveCreator.create(id: 3),
+        DriveCreator(id: 2).createEntity(),
+        DriveCreator(id: 3).createEntity(),
       ];
       final List<Drive> expectedRepoState = [
         ...existingDrives,
