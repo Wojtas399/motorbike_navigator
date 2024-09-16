@@ -67,11 +67,9 @@ void main() {
     reset(sqliteDb);
   });
 
-  test(
-    'queryByDriveId, '
-    'should create table if it does not exist in db, should query drives by id '
-    'and should return PositionSqliteDto objects',
-    () async {
+  group(
+    'queryByDriveId, ',
+    () {
       const int driveId = 1;
       final List<Map<String, Object?>> driveJsons = [
         {
@@ -113,95 +111,55 @@ void main() {
           speedInKmPerH: 51.5,
         ),
       ];
-      sqliteDb.mockDoesTableNotExist(expectedAnswer: true);
-      sqliteDb.mockCreateTable();
-      sqliteDb.mockQuery(expectedResult: driveJsons);
 
-      final List<PositionSqliteDto> positionSqliteDtos =
-          await service.queryByDriveId(driveId: driveId);
+      setUp(() {
+        sqliteDb.mockQuery(expectedResult: driveJsons);
+      });
 
-      expect(positionSqliteDtos, expectedPositionSqliteDtos);
-      verify(() => sqliteDb.doesTableNotExist(tableName)).called(1);
-      verifyTableCreation();
-      verify(
-        () => sqliteDb.query(
-          tableName: tableName,
-          where: '$driveIdColName = ?',
-          whereArgs: [driveId],
-        ),
-      ).called(1);
+      tearDown(() {
+        verify(() => sqliteDb.doesTableNotExist(tableName)).called(1);
+        verify(
+          () => sqliteDb.query(
+            tableName: tableName,
+            where: '$driveIdColName = ?',
+            whereArgs: [driveId],
+          ),
+        ).called(1);
+      });
+
+      test(
+        'should create table if it does not exist in db, should query drives '
+        'by id and should return PositionSqliteDto objects',
+        () async {
+          sqliteDb.mockDoesTableNotExist(expectedAnswer: true);
+          sqliteDb.mockCreateTable();
+
+          final List<PositionSqliteDto> positionSqliteDtos =
+              await service.queryByDriveId(driveId: driveId);
+
+          expect(positionSqliteDtos, expectedPositionSqliteDtos);
+          verifyTableCreation();
+        },
+      );
+
+      test(
+        'should not create table if it already exists in db, should query '
+        'drives by id and should return PositionSqliteDto objects',
+        () async {
+          sqliteDb.mockDoesTableNotExist(expectedAnswer: false);
+
+          final List<PositionSqliteDto> positionSqliteDtos =
+              await service.queryByDriveId(driveId: driveId);
+
+          expect(positionSqliteDtos, expectedPositionSqliteDtos);
+        },
+      );
     },
   );
 
-  test(
-    'queryByDriveId, '
-    'should not create table if it already exists in db, should query drives by '
-    'id and should return PositionSqliteDto objects',
-    () async {
-      const int driveId = 1;
-      final List<Map<String, Object?>> driveJsons = [
-        {
-          idColName: 1,
-          driveIdColName: driveId,
-          positionOrderColName: 1,
-          latitudeColName: 50,
-          longitudeColName: 19,
-          elevationColName: 100.1,
-          speedColName: 50.5,
-        },
-        {
-          idColName: 2,
-          driveIdColName: driveId,
-          positionOrderColName: 2,
-          latitudeColName: 51,
-          longitudeColName: 20,
-          elevationColName: 110.1,
-          speedColName: 51.5,
-        },
-      ];
-      final List<PositionSqliteDto> expectedPositionSqliteDtos = [
-        const PositionSqliteDto(
-          id: 1,
-          driveId: driveId,
-          order: 1,
-          latitude: 50,
-          longitude: 19,
-          elevation: 100.1,
-          speedInKmPerH: 50.5,
-        ),
-        const PositionSqliteDto(
-          id: 2,
-          driveId: driveId,
-          order: 2,
-          latitude: 51,
-          longitude: 20,
-          elevation: 110.1,
-          speedInKmPerH: 51.5,
-        ),
-      ];
-      sqliteDb.mockDoesTableNotExist(expectedAnswer: false);
-      sqliteDb.mockQuery(expectedResult: driveJsons);
-
-      final List<PositionSqliteDto> positionSqliteDtos =
-          await service.queryByDriveId(driveId: driveId);
-
-      expect(positionSqliteDtos, expectedPositionSqliteDtos);
-      verify(() => sqliteDb.doesTableNotExist(tableName)).called(1);
-      verify(
-        () => sqliteDb.query(
-          tableName: tableName,
-          where: '$driveIdColName = ?',
-          whereArgs: [driveId],
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'insert, '
-    'should create table if it does not exist, then should insert passed values '
-    'to db and should return PositionSqliteDto object',
-    () async {
+  group(
+    'insert, ',
+    () {
       const int addedPositionId = 1;
       const int driveId = 1;
       const int order = 1;
@@ -230,100 +188,68 @@ void main() {
         elevation: elevation,
         speedInKmPerH: speedInKmPerH,
       );
-      sqliteDb.mockDoesTableNotExist(expectedAnswer: true);
-      sqliteDb.mockCreateTable();
-      sqliteDb.mockInsert(expectedId: addedPositionId);
-      sqliteDb.mockQuery(expectedResult: [addedPositionJson]);
 
-      final PositionSqliteDto? positionSqliteDto = await service.insert(
-        driveId: driveId,
-        order: order,
-        latitude: latitude,
-        longitude: longitude,
-        elevation: elevation,
-        speedInKmPerH: speedInKmPerH,
+      setUp(() {
+        sqliteDb.mockInsert(expectedId: addedPositionId);
+        sqliteDb.mockQuery(expectedResult: [addedPositionJson]);
+      });
+
+      tearDown(() {
+        verify(() => sqliteDb.doesTableNotExist(tableName)).called(1);
+        verify(
+          () => sqliteDb.insert(
+            tableName: tableName,
+            values: positionToAddJson,
+          ),
+        ).called(1);
+        verify(
+          () => sqliteDb.query(
+            tableName: tableName,
+            where: '$idColName = ?',
+            whereArgs: [addedPositionId],
+          ),
+        ).called(1);
+      });
+
+      test(
+        'should create table if it does not exist, then should insert passed '
+        'values to db and should return PositionSqliteDto object',
+        () async {
+          sqliteDb.mockDoesTableNotExist(expectedAnswer: true);
+          sqliteDb.mockCreateTable();
+
+          final PositionSqliteDto? positionSqliteDto = await service.insert(
+            driveId: driveId,
+            order: order,
+            latitude: latitude,
+            longitude: longitude,
+            elevation: elevation,
+            speedInKmPerH: speedInKmPerH,
+          );
+
+          expect(positionSqliteDto, expectedPositionSqliteDto);
+          verifyTableCreation();
+        },
       );
 
-      expect(positionSqliteDto, expectedPositionSqliteDto);
-      verify(() => sqliteDb.doesTableNotExist(tableName)).called(1);
-      verifyTableCreation();
-      verify(
-        () => sqliteDb.insert(
-          tableName: tableName,
-          values: positionToAddJson,
-        ),
-      ).called(1);
-      verify(
-        () => sqliteDb.query(
-          tableName: tableName,
-          where: '$idColName = ?',
-          whereArgs: [addedPositionId],
-        ),
-      ).called(1);
-    },
-  );
+      test(
+        'should not create table if it already exists, should insert passed '
+        'values to db and should return PositionSqliteDto object',
+        () async {
+          sqliteDb.mockDoesTableNotExist(expectedAnswer: false);
 
-  test(
-    'insert, '
-    'should not create table if it already exists, should insert passed values '
-    'to db and should return PositionSqliteDto object',
-    () async {
-      const int addedPositionId = 1;
-      const int driveId = 1;
-      const int order = 1;
-      const double latitude = 50.50;
-      const double longitude = 19.19;
-      const double elevation = 100.10;
-      const double speedInKmPerH = 55.55;
-      final Map<String, Object?> positionToAddJson = {
-        driveIdColName: driveId,
-        positionOrderColName: order,
-        latitudeColName: latitude,
-        longitudeColName: longitude,
-        elevationColName: elevation,
-        speedColName: speedInKmPerH,
-      };
-      final Map<String, Object?> addedPositionJson = {
-        idColName: addedPositionId,
-        ...positionToAddJson,
-      };
-      const PositionSqliteDto expectedPositionSqliteDto = PositionSqliteDto(
-        id: addedPositionId,
-        driveId: driveId,
-        order: order,
-        latitude: latitude,
-        longitude: longitude,
-        elevation: elevation,
-        speedInKmPerH: speedInKmPerH,
+          final PositionSqliteDto? positionSqliteDto = await service.insert(
+            driveId: driveId,
+            order: order,
+            latitude: latitude,
+            longitude: longitude,
+            elevation: elevation,
+            speedInKmPerH: speedInKmPerH,
+          );
+
+          expect(positionSqliteDto, expectedPositionSqliteDto);
+        },
       );
-      sqliteDb.mockDoesTableNotExist(expectedAnswer: false);
-      sqliteDb.mockInsert(expectedId: addedPositionId);
-      sqliteDb.mockQuery(expectedResult: [addedPositionJson]);
-
-      final PositionSqliteDto? positionSqliteDto = await service.insert(
-        driveId: driveId,
-        order: order,
-        latitude: latitude,
-        longitude: longitude,
-        elevation: elevation,
-        speedInKmPerH: speedInKmPerH,
-      );
-
-      expect(positionSqliteDto, expectedPositionSqliteDto);
-      verify(() => sqliteDb.doesTableNotExist(tableName)).called(1);
-      verify(
-        () => sqliteDb.insert(
-          tableName: tableName,
-          values: positionToAddJson,
-        ),
-      ).called(1);
-      verify(
-        () => sqliteDb.query(
-          tableName: tableName,
-          where: '$idColName = ?',
-          whereArgs: [addedPositionId],
-        ),
-      ).called(1);
     },
   );
 }
