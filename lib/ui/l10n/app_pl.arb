@@ -45,6 +45,8 @@
   "driveDetailsMaxSpeed": "Maksymalna prędkość",
   "driveDetailsMaxElevation": "Maksymalna wysokość",
   "driveDetailsMinElevation": "Minimalna wysokość",
+  "driveDetailsEditTitle": "Zmień tytuł",
+  "driveDetailsDeleteDrive": "Usuń przejazd",
   "@----------MONTHS----------": {},
   "january": "Styczeń",
   "february": "Luty",

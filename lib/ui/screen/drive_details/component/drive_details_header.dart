@@ -12,22 +12,26 @@ class DriveDetailsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? title = context.select(
+      (DriveDetailsCubit cubit) => cubit.state.drive?.title,
+    );
     final DateTime? startDateTime = context.select(
       (DriveDetailsCubit cubit) => cubit.state.drive?.startDateTime,
     );
 
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TitleLarge(
-            '${startDateTime?.toUIDate()},',
+            '$title',
             fontWeight: FontWeight.bold,
           ),
           const GapHorizontal8(),
           TitleMedium(
-            '${context.str.hourAbbr} ${startDateTime?.toUITime()}',
+            '${startDateTime?.toUIDate()}, ${context.str.hourAbbr} ${startDateTime?.toUITime()}',
             fontWeight: FontWeight.w300,
           ),
         ],

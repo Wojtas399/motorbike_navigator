@@ -76,7 +76,7 @@ class _LabelWithValue extends StatelessWidget {
             label,
             fontWeight: FontWeight.w300,
           ),
-          const GapVertical8(),
+          const GapVertical4(),
           TitleLarge(
             value,
             fontWeight: FontWeight.bold,
