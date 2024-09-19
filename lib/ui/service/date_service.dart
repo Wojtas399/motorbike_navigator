@@ -31,6 +31,19 @@ class DateService {
         const Duration(milliseconds: 1),
       );
 
+  PartOfTheDay getPartOfTheDay(DateTime dateTime) {
+    final hour = dateTime.hour;
+    return hour <= 5
+        ? PartOfTheDay.night
+        : hour <= 12
+            ? PartOfTheDay.morning
+            : hour <= 18
+                ? PartOfTheDay.afternoon
+                : hour <= 23
+                    ? PartOfTheDay.evening
+                    : PartOfTheDay.night;
+  }
+
   bool isDateFromRange({
     required DateTime date,
     required DateTime firstDateOfRange,
@@ -57,4 +70,11 @@ class DateService {
     final correctedTo = DateTime(to.year, to.month, to.day, 23, 59);
     return (correctedTo.difference(correctedFrom).inHours / 24).round();
   }
+}
+
+enum PartOfTheDay {
+  morning,
+  afternoon,
+  evening,
+  night,
 }

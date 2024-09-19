@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:motorbike_navigator/ui/service/date_service.dart';
 
 void main() {
-  final dateService = DateService();
+  final service = DateService();
 
   test(
     'getFirstDateOfTheWeek, '
@@ -11,7 +11,7 @@ void main() {
       final dateTime = DateTime(2024, 7, 25, 12, 30);
       final expectedFirstDateOfTheWeek = DateTime(2024, 7, 22);
 
-      final firstDateOfTheWeek = dateService.getFirstDateOfTheWeek(dateTime);
+      final firstDateOfTheWeek = service.getFirstDateOfTheWeek(dateTime);
 
       expect(firstDateOfTheWeek, expectedFirstDateOfTheWeek);
     },
@@ -24,7 +24,7 @@ void main() {
       final dateTime = DateTime(2024, 7, 25, 12, 30);
       final expectedLastDateOfTheWeek = DateTime(2024, 7, 28);
 
-      final lastDateOfTheWeek = dateService.getLastDateOfTheWeek(dateTime);
+      final lastDateOfTheWeek = service.getLastDateOfTheWeek(dateTime);
 
       expect(lastDateOfTheWeek, expectedLastDateOfTheWeek);
     },
@@ -37,7 +37,7 @@ void main() {
       final dateTime = DateTime(2024, 7, 25, 12, 30);
       final expectedFirstDateOfTheMonth = DateTime(2024, 7);
 
-      final firstDateOfTheMonth = dateService.getFirstDateOfTheMonth(dateTime);
+      final firstDateOfTheMonth = service.getFirstDateOfTheMonth(dateTime);
 
       expect(firstDateOfTheMonth, expectedFirstDateOfTheMonth);
     },
@@ -50,7 +50,7 @@ void main() {
       final dateTime = DateTime(2024, 7, 25, 12, 30);
       final expectedLastDateOfTheMonth = DateTime(2024, 7, 31);
 
-      final lastDateOfTheMonth = dateService.getLastDateOfTheMonth(dateTime);
+      final lastDateOfTheMonth = service.getLastDateOfTheMonth(dateTime);
 
       expect(lastDateOfTheMonth, expectedLastDateOfTheMonth);
     },
@@ -63,7 +63,7 @@ void main() {
       final dateTime = DateTime(2024, 7, 25, 12, 30);
       final expectedFirstDateOfTheYear = DateTime(2024);
 
-      final firstDateOfTheYear = dateService.getFirstDateOfTheYear(dateTime);
+      final firstDateOfTheYear = service.getFirstDateOfTheYear(dateTime);
 
       expect(firstDateOfTheYear, expectedFirstDateOfTheYear);
     },
@@ -76,9 +76,158 @@ void main() {
       final dateTime = DateTime(2024, 7, 25, 12, 30);
       final expectedLastDateOfTheYear = DateTime(2024, 12, 31, 23, 59, 59, 999);
 
-      final lastDateOfTheYear = dateService.getLastDateOfTheYear(dateTime);
+      final lastDateOfTheYear = service.getLastDateOfTheYear(dateTime);
 
       expect(lastDateOfTheYear, expectedLastDateOfTheYear);
+    },
+  );
+
+  group(
+    'getPartOfTheDay, ',
+    () {
+      test(
+        'should return night if hour is 0 ',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 0);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.night;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
+
+      test(
+        'should return night if hour is 5',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 5);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.night;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
+
+      test(
+        'should return night if hour is between 0 and 5',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 3);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.night;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
+
+      test(
+        'should return morning if hour is 6',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 6);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.morning;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
+
+      test(
+        'should return morning if hour is 12',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 12);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.morning;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
+
+      test(
+        'should return morning if hour is between 6 and 12',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 10);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.morning;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
+
+      test(
+        'should return afternoon if hour is 13',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 13);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.afternoon;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
+
+      test(
+        'should return afternoon if hour is 18',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 18);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.afternoon;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
+
+      test(
+        'should return afternoon if hour is between 13 and 18',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 14);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.afternoon;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
+
+      test(
+        'should return evening if hour is 19',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 19);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.evening;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
+
+      test(
+        'should return evening if hour is 23',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 23);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.evening;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
+
+      test(
+        'should return evening if hour is between 19 and 23',
+        () {
+          final DateTime dateTime = DateTime(2024, 1, 1, 22);
+          const PartOfTheDay expectedPartOfTheDay = PartOfTheDay.evening;
+
+          final PartOfTheDay partOfTheDay = service.getPartOfTheDay(dateTime);
+
+          expect(partOfTheDay, expectedPartOfTheDay);
+        },
+      );
     },
   );
 
@@ -93,7 +242,7 @@ void main() {
         () {
           final DateTime date = DateTime(2024, 07, 21, 12, 15);
 
-          final bool answer = dateService.isDateFromRange(
+          final bool answer = service.isDateFromRange(
             date: date,
             firstDateOfRange: firstDateOfRange,
             lastDateOfRange: lastDateOfRange,
@@ -108,7 +257,7 @@ void main() {
         () {
           final DateTime date = DateTime(2024, 07, 29, 15, 44, 1);
 
-          final bool answer = dateService.isDateFromRange(
+          final bool answer = service.isDateFromRange(
             date: date,
             firstDateOfRange: firstDateOfRange,
             lastDateOfRange: lastDateOfRange,
@@ -123,7 +272,7 @@ void main() {
         () {
           final DateTime date = DateTime(2024, 07, 22, 10, 30);
 
-          final bool answer = dateService.isDateFromRange(
+          final bool answer = service.isDateFromRange(
             date: date,
             firstDateOfRange: firstDateOfRange,
             lastDateOfRange: lastDateOfRange,
@@ -138,7 +287,7 @@ void main() {
         () {
           final DateTime date = DateTime(2024, 07, 28, 15, 45);
 
-          final bool answer = dateService.isDateFromRange(
+          final bool answer = service.isDateFromRange(
             date: date,
             firstDateOfRange: firstDateOfRange,
             lastDateOfRange: lastDateOfRange,
@@ -154,7 +303,7 @@ void main() {
         () {
           final DateTime date = DateTime(2024, 07, 23, 12, 30, 1);
 
-          final bool answer = dateService.isDateFromRange(
+          final bool answer = service.isDateFromRange(
             date: date,
             firstDateOfRange: firstDateOfRange,
             lastDateOfRange: lastDateOfRange,
@@ -175,7 +324,7 @@ void main() {
           final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
           final DateTime date2 = DateTime(2024, 7, 25, 10, 10);
 
-          final bool answer = dateService.areDatesEqual(date1, date2);
+          final bool answer = service.areDatesEqual(date1, date2);
 
           expect(answer, true);
         },
@@ -187,7 +336,7 @@ void main() {
           final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
           final DateTime date2 = DateTime(2024, 7, 24, 10, 10);
 
-          final bool answer = dateService.areDatesEqual(date1, date2);
+          final bool answer = service.areDatesEqual(date1, date2);
 
           expect(answer, false);
         },
@@ -199,7 +348,7 @@ void main() {
           final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
           final DateTime date2 = DateTime(2024, 8, 25, 10, 10);
 
-          final bool answer = dateService.areDatesEqual(date1, date2);
+          final bool answer = service.areDatesEqual(date1, date2);
 
           expect(answer, false);
         },
@@ -211,7 +360,7 @@ void main() {
           final DateTime date1 = DateTime(2024, 7, 25, 12, 30);
           final DateTime date2 = DateTime(2022, 7, 25, 10, 10);
 
-          final bool answer = dateService.areDatesEqual(date1, date2);
+          final bool answer = service.areDatesEqual(date1, date2);
 
           expect(answer, false);
         },
@@ -228,7 +377,7 @@ void main() {
           final DateTime date1 = DateTime(2024, 7, 25);
           final DateTime date2 = DateTime(2024, 7, 24);
 
-          final bool answer = dateService.areMonthsEqual(date1, date2);
+          final bool answer = service.areMonthsEqual(date1, date2);
 
           expect(answer, true);
         },
@@ -240,7 +389,7 @@ void main() {
           final DateTime date1 = DateTime(2024, 7, 25);
           final DateTime date2 = DateTime(2024, 6, 25);
 
-          final bool answer = dateService.areMonthsEqual(date1, date2);
+          final bool answer = service.areMonthsEqual(date1, date2);
 
           expect(answer, false);
         },
@@ -252,7 +401,7 @@ void main() {
           final DateTime date1 = DateTime(2024, 7, 25);
           final DateTime date2 = DateTime(2025, 7, 25);
 
-          final bool answer = dateService.areMonthsEqual(date1, date2);
+          final bool answer = service.areMonthsEqual(date1, date2);
 
           expect(answer, false);
         },
@@ -271,8 +420,8 @@ void main() {
           final DateTime to = DateTime(2024, 7, 28);
           const int expectedNumberOfDays = 7;
 
-          final int numberOfDays = dateService
-              .calculateNumberOfDaysBetweenDatesInclusively(from, to);
+          final int numberOfDays =
+              service.calculateNumberOfDaysBetweenDatesInclusively(from, to);
 
           expect(numberOfDays, expectedNumberOfDays);
         },
@@ -286,8 +435,8 @@ void main() {
           final DateTime to = DateTime(2024, 8, 4);
           const int expectedNumberOfDays = 14;
 
-          final int numberOfDays = dateService
-              .calculateNumberOfDaysBetweenDatesInclusively(from, to);
+          final int numberOfDays =
+              service.calculateNumberOfDaysBetweenDatesInclusively(from, to);
 
           expect(numberOfDays, expectedNumberOfDays);
         },
