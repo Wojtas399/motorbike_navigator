@@ -7,6 +7,7 @@ import 'package:injectable/injectable.dart';
 import '../../../data/repository/drive/drive_repository.dart';
 import '../../../entity/position.dart';
 import '../../service/date_service.dart';
+import '../../service/drive_service.dart';
 import '../../service/location_service.dart';
 import '../../service/map_service.dart';
 import 'drive_state.dart';
@@ -17,6 +18,7 @@ class DriveCubit extends Cubit<DriveState> {
   final MapService _mapService;
   final DriveRepository _driveRepository;
   final DateService _dateService;
+  final DriveService _driveService;
   Timer? _timer;
   StreamSubscription<Position?>? _positionListener;
   StreamSubscription<LocationStatus>? _locationStatusListener;
@@ -26,6 +28,7 @@ class DriveCubit extends Cubit<DriveState> {
     this._mapService,
     this._driveRepository,
     this._dateService,
+    this._driveService,
   ) : super(const DriveState());
 
   @override
@@ -79,6 +82,7 @@ class DriveCubit extends Cubit<DriveState> {
       status: DriveStateStatus.saving,
     ));
     await _driveRepository.addDrive(
+      title: _driveService.getDefaultTitle(),
       startDateTime: state.startDatetime!,
       distanceInKm: state.distanceInKm,
       duration: state.duration,

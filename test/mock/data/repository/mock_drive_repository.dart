@@ -31,6 +31,7 @@ class MockDriveRepository extends Mock implements DriveRepository {
   void mockAddDrive() {
     when(
       () => addDrive(
+        title: any(named: 'title'),
         startDateTime: any(named: 'startDateTime'),
         distanceInKm: any(named: 'distanceInKm'),
         duration: any(named: 'duration'),

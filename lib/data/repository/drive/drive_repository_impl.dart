@@ -67,14 +67,14 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
 
   @override
   Future<void> addDrive({
+    required String title,
     required DateTime startDateTime,
     required double distanceInKm,
     required Duration duration,
     required List<Position> positions,
   }) async {
-    //TODO: Set default title
     final addedDriveDto = await _driveSqliteService.insert(
-      title: 'title',
+      title: title,
       startDateTime: startDateTime,
       distanceInKm: distanceInKm,
       duration: duration,

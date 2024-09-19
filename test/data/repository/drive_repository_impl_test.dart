@@ -366,6 +366,7 @@ void main() {
           repositoryImpl.addEntities(existingDrives);
 
           await repositoryImpl.addDrive(
+            title: title,
             startDateTime: startDateTime,
             distanceInKm: distanceInKm,
             duration: duration,
@@ -414,6 +415,7 @@ void main() {
           driveSqliteService.mockInsert(expectedInsertedDriveSqliteDto: null);
 
           await repositoryImpl.addDrive(
+            title: title,
             startDateTime: startDateTime,
             distanceInKm: distanceInKm,
             duration: duration,
@@ -496,6 +498,7 @@ void main() {
           repositoryImpl.addEntities(existingDrives);
 
           await repositoryImpl.addDrive(
+            title: title,
             startDateTime: startDateTime,
             distanceInKm: distanceInKm,
             duration: duration,

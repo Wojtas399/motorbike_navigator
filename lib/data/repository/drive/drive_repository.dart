@@ -12,6 +12,7 @@ abstract interface class DriveRepository {
   });
 
   Future<void> addDrive({
+    required String title,
     required DateTime startDateTime,
     required double distanceInKm,
     required Duration duration,

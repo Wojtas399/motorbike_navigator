@@ -11,6 +11,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../mock/data/repository/mock_drive_repository.dart';
 import '../../../mock/ui_service/mock_date_service.dart';
+import '../../../mock/ui_service/mock_drive_service.dart';
 import '../../../mock/ui_service/mock_location_service.dart';
 import '../../../mock/ui_service/mock_map_service.dart';
 
@@ -19,6 +20,7 @@ void main() {
   final mapService = MockMapService();
   final driveRepository = MockDriveRepository();
   final dateService = MockDateService();
+  final driveService = MockDriveService();
   final DateTime now = DateTime(2024, 1, 2, 10, 45);
   const Position startPosition = Position(
     coordinates: Coordinates(50, 18),
@@ -31,6 +33,7 @@ void main() {
         mapService,
         driveRepository,
         dateService,
+        driveService,
       );
 
   setUp(() {
@@ -487,7 +490,10 @@ void main() {
       blocTest(
         'should call method from DriveRepository to add new drive',
         build: () => createCubit(),
-        setUp: () => driveRepository.mockAddDrive(),
+        setUp: () {
+          driveService.mockGetDefaultTitle(expectedTitle: 'default title');
+          driveRepository.mockAddDrive();
+        },
         act: (cubit) async {
           cubit.startDrive(startPosition: startPosition);
           positionStream$.add(positions.first);
@@ -531,6 +537,7 @@ void main() {
         verify: (_) {
           verify(
             () => driveRepository.addDrive(
+              title: 'default title',
               startDateTime: now,
               distanceInKm: firstDistanceBetweenPositions,
               duration: const Duration(seconds: 1),
