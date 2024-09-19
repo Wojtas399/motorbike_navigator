@@ -56,6 +56,14 @@ class MockDateService extends Mock implements DateService {
     ).thenReturn(expectedLastDateOfTheYear);
   }
 
+  void mockGetPartOfTheDay({
+    required PartOfTheDay expectedPartOfTheDay,
+  }) {
+    when(
+      () => getPartOfTheDay(any()),
+    ).thenReturn(expectedPartOfTheDay);
+  }
+
   void mockIsDateFromRange({
     required bool expectedAnswer,
   }) {
