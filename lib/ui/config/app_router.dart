@@ -7,7 +7,7 @@ part 'app_router.gr.dart';
 
 @Singleton()
 @AutoRouterConfig()
-class AppRouter extends _$AppRouter {
+class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
         AutoRoute(
