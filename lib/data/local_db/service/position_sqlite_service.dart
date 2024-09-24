@@ -54,6 +54,18 @@ class PositionSqliteService {
     return await _queryById(id: positionId);
   }
 
+  Future<void> deleteByDriveId({
+    required int driveId,
+  }) async {
+    if (!(await _sqliteDb.doesTableNotExist(_tableName))) {
+      await _sqliteDb.delete(
+        tableName: _tableName,
+        where: '$_driveIdColName = ?',
+        whereArgs: [driveId],
+      );
+    }
+  }
+
   Future<PositionSqliteDto?> _queryById({
     required int id,
   }) async {

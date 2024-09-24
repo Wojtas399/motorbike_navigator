@@ -252,4 +252,39 @@ void main() {
       );
     },
   );
+
+  group(
+    'deleteByDriveId, ',
+    () {
+      const int driveId = 1;
+
+      test(
+        'should do nothing if table does not exist',
+        () async {
+          sqliteDb.mockDoesTableNotExist(expectedAnswer: true);
+
+          await service.deleteByDriveId(driveId: driveId);
+        },
+      );
+
+      test(
+        'should call method to delete positions with matching drive id from '
+        'table',
+        () async {
+          sqliteDb.mockDoesTableNotExist(expectedAnswer: false);
+          sqliteDb.mockDelete();
+
+          await service.deleteByDriveId(driveId: driveId);
+
+          verify(
+            () => sqliteDb.delete(
+              tableName: tableName,
+              where: '$driveIdColName = ?',
+              whereArgs: [driveId],
+            ),
+          ).called(1);
+        },
+      );
+    },
+  );
 }
