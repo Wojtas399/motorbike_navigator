@@ -208,7 +208,41 @@ void main() {
 
       expect(
         repository.repositoryState$,
-        emits([existingEntities.first, updateEntity, existingEntities.last]),
+        emits(
+          [
+            existingEntities.first,
+            updateEntity,
+            existingEntities.last,
+          ],
+        ),
+      );
+    },
+  );
+
+  test(
+    'removeEntity, '
+    'should remove entity from state',
+    () {
+      const int idOfEntityToRemove = 3;
+      const List<TestModel> existingEntities = [
+        TestModel(id: 1, name: 'entity 1'),
+        TestModel(id: 2, name: 'entity 2'),
+        TestModel(id: idOfEntityToRemove, name: 'entity 3'),
+        TestModel(id: 4, name: 'entity 4'),
+      ];
+      repository.addEntities(existingEntities);
+
+      repository.removeEntity(idOfEntityToRemove);
+
+      expect(
+        repository.repositoryState$,
+        emits(
+          [
+            existingEntities.first,
+            existingEntities[1],
+            existingEntities[3],
+          ],
+        ),
       );
     },
   );

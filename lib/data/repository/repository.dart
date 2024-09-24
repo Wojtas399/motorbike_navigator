@@ -49,4 +49,10 @@ abstract class Repository<T extends Entity> {
       _repositoryState$.add(entities);
     }
   }
+
+  void removeEntity(int id) {
+    final List<T> entities = [..._repositoryState$.value];
+    entities.removeWhere((T entity) => entity.id == id);
+    _repositoryState$.add(entities);
+  }
 }
