@@ -70,8 +70,8 @@ class _DeleteButton extends StatelessWidget {
     BuildContext context,
   ) async =>
       await getIt.get<DialogService>().askForConfirmation(
-            title: context.str.driveSummaryDeleteConfirmationTitle,
-            message: context.str.driveSummaryDeleteConfirmationMessage,
+            title: context.str.driveSummaryDeletionConfirmationTitle,
+            message: context.str.driveSummaryDeletionConfirmationMessage,
           );
 
   @override
