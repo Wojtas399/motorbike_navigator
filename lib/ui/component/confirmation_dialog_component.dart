@@ -7,11 +7,13 @@ import 'text.dart';
 class ConfirmationDialogComponent extends StatelessWidget {
   final String title;
   final String message;
+  final String? confirmationButtonText;
 
   const ConfirmationDialogComponent({
     super.key,
     required this.title,
     required this.message,
+    this.confirmationButtonText,
   });
 
   @override
@@ -33,7 +35,7 @@ class ConfirmationDialogComponent extends StatelessWidget {
             width: 120,
             child: FilledButton(
               onPressed: () => context.maybePop(true),
-              child: Text(context.str.confirm),
+              child: Text(confirmationButtonText ?? context.str.confirm),
             ),
           ),
         ],

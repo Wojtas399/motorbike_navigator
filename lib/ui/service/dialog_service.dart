@@ -100,11 +100,13 @@ class DialogService {
   Future<bool> askForConfirmation({
     required String title,
     required String message,
+    String? confirmationButtonText,
   }) async =>
       await _showAlertDialog(
         ConfirmationDialogComponent(
           title: title,
           message: message,
+          confirmationButtonText: confirmationButtonText,
         ),
         barrierDismissible: false,
       ) ==
