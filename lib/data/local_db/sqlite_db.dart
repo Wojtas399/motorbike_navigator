@@ -56,6 +56,15 @@ class SqliteDb {
     return db.insert(tableName, values);
   }
 
+  Future<void> delete({
+    required String tableName,
+    required String where,
+    required List<dynamic> whereArgs,
+  }) async {
+    final Database db = await _db;
+    await db.delete(tableName, where: where, whereArgs: whereArgs);
+  }
+
   Future<Database> get _db async {
     if (_dbInstance != null) return _dbInstance!;
     _dbInstance = await _initializeDb();
