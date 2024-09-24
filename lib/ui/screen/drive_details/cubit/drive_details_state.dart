@@ -5,7 +5,12 @@ import '../../../../entity/drive.dart';
 
 part 'drive_details_state.freezed.dart';
 
-enum DriveDetailsStateStatus { loading, completed, driveNotFound }
+enum DriveDetailsStateStatus {
+  loading,
+  completed,
+  driveNotFound,
+  driveDeleted,
+}
 
 @freezed
 class DriveDetailsState with _$DriveDetailsState {

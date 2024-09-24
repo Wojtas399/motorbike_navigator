@@ -152,4 +152,46 @@ void main() {
       );
     },
   );
+
+  group(
+    'deleteDrive, ',
+    () {
+      const int driveId = 1;
+      final Drive drive = DriveCreator(id: driveId).createEntity();
+      DriveDetailsState? state;
+
+      blocTest(
+        'should do nothing if drive does not exist',
+        build: () => createCubit(),
+        act: (cubit) async => await cubit.deleteDrive(),
+        expect: () => [],
+      );
+
+      blocTest(
+        'should call method from DriveRepository to delete drive and should '
+        'emit driveDeleted status',
+        build: () => createCubit(),
+        setUp: () {
+          driveRepository.mockGetDriveById(expectedDrive: drive);
+          driveRepository.mockDeleteDriveById();
+        },
+        act: (cubit) async {
+          await cubit.initialize(driveId);
+          await cubit.deleteDrive();
+        },
+        expect: () => [
+          state = DriveDetailsState(
+            status: DriveDetailsStateStatus.completed,
+            drive: drive,
+          ),
+          state = state?.copyWith(
+            status: DriveDetailsStateStatus.loading,
+          ),
+          state = state?.copyWith(
+            status: DriveDetailsStateStatus.driveDeleted,
+          ),
+        ],
+      );
+    },
+  );
 }

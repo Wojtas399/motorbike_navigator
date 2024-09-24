@@ -30,6 +30,18 @@ class DriveDetailsCubit extends Cubit<DriveDetailsState> {
     }
   }
 
+  Future<void> deleteDrive() async {
+    final int? driveId = state.drive?.id;
+    if (driveId == null) return;
+    emit(state.copyWith(
+      status: DriveDetailsStateStatus.loading,
+    ));
+    await _driveRepository.deleteDriveById(driveId);
+    emit(state.copyWith(
+      status: DriveDetailsStateStatus.driveDeleted,
+    ));
+  }
+
   void _initializeDriveDetails(Drive drive) {
     final List<Position> positions = drive.positions;
     if (positions.isEmpty) {
