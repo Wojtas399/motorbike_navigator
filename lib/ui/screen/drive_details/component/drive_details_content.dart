@@ -15,36 +15,38 @@ class DriveDetailsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) => const Scaffold(
         appBar: DriveDetailsAppBar(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _FilledContainer(
-                child: Column(
-                  children: [
-                    DriveDetailsHeader(),
-                    GapVertical24(),
-                    DriveDetailsBasicInfo(),
-                    GapVertical24(),
-                    DriveDetailsRoutePreview(),
-                  ],
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _FilledContainer(
+                  child: Column(
+                    children: [
+                      DriveDetailsHeader(),
+                      GapVertical24(),
+                      DriveDetailsBasicInfo(),
+                      GapVertical24(),
+                      DriveDetailsRoutePreview(),
+                    ],
+                  ),
                 ),
-              ),
-              GapVertical16(),
-              _FilledContainer(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: DriveDetailsSpeedChart(),
+                GapVertical16(),
+                _FilledContainer(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    child: DriveDetailsSpeedChart(),
+                  ),
                 ),
-              ),
-              GapVertical16(),
-              _FilledContainer(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: DriveDetailsElevationChart(),
+                GapVertical16(),
+                _FilledContainer(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    child: DriveDetailsElevationChart(),
+                  ),
                 ),
-              ),
-              GapVertical16(),
-            ],
+                GapVertical16(),
+              ],
+            ),
           ),
         ),
       );
