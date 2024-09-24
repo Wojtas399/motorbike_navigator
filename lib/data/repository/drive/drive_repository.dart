@@ -18,4 +18,6 @@ abstract interface class DriveRepository {
     required Duration duration,
     required List<Position> positions,
   });
+
+  Future<void> deleteDriveById(int id);
 }

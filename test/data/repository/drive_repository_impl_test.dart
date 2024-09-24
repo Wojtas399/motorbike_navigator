@@ -541,4 +541,40 @@ void main() {
       );
     },
   );
+
+  test(
+    'deleteDriveById, '
+    'should call method from PositionSqliteService to delete positions by '
+    'drive id, method from DriveSqliteService to delete drive by id and should '
+    'delete drive from repo state',
+    () async {
+      const int id = 2;
+      final List<Drive> existingDrives = [
+        DriveCreator(id: 1).createEntity(),
+        DriveCreator(id: 2).createEntity(),
+        DriveCreator(id: 3).createEntity(),
+        DriveCreator(id: 4).createEntity(),
+      ];
+      positionSqliteService.mockDeleteByDriveId();
+      driveSqliteService.mockDeleteById();
+      repositoryImpl.addEntities(existingDrives);
+
+      await repositoryImpl.deleteDriveById(id);
+
+      expect(
+        await repositoryImpl.repositoryState$.first,
+        [
+          existingDrives.first,
+          existingDrives[2],
+          existingDrives[3],
+        ],
+      );
+      verify(
+        () => positionSqliteService.deleteByDriveId(driveId: id),
+      ).called(1);
+      verify(
+        () => driveSqliteService.deleteById(id: id),
+      ).called(1);
+    },
+  );
 }

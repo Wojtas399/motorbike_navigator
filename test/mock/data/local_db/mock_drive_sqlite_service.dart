@@ -46,4 +46,12 @@ class MockDriveSqliteService extends Mock implements DriveSqliteService {
       ),
     ).thenAnswer((_) => Future.value(expectedInsertedDriveSqliteDto));
   }
+
+  void mockDeleteById() {
+    when(
+      () => deleteById(
+        id: any(named: 'id'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
 }

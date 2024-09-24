@@ -12,4 +12,12 @@ class MockPositionSqliteService extends Mock implements PositionSqliteService {
       ),
     ).thenAnswer((_) => Future.value(expectedPositionSqliteDtos));
   }
+
+  void mockDeleteByDriveId() {
+    when(
+      () => deleteByDriveId(
+        driveId: any(named: 'driveId'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
 }

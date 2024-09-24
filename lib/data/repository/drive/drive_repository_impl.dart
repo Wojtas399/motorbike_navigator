@@ -100,6 +100,13 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
     addEntity(addedDrive);
   }
 
+  @override
+  Future<void> deleteDriveById(int id) async {
+    await _positionSqliteService.deleteByDriveId(driveId: id);
+    await _driveSqliteService.deleteById(id: id);
+    removeEntity(id);
+  }
+
   Future<Drive?> _fetchDriveById(int id) async {
     final DriveSqliteDto? driveDto =
         await _driveSqliteService.queryById(id: id);
