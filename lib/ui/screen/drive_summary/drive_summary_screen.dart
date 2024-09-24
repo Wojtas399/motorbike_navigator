@@ -44,7 +44,7 @@ class DriveSummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PopScope(
         canPop: false,
-        onPopInvoked: (bool didPop) => _onPop(didPop, context),
+        onPopInvokedWithResult: (bool didPop, _) => _onPop(didPop, context),
         child: Scaffold(
           appBar: AppBar(
             title: Text(context.str.driveSummaryScreenTitle),
@@ -52,9 +52,7 @@ class DriveSummaryScreen extends StatelessWidget {
           body: const SafeArea(
             child: Column(
               children: [
-                SizedBox(
-                  height: 400,
-                  width: double.infinity,
+                Expanded(
                   child: DriveSummaryRoute(),
                 ),
                 GapVertical8(),
