@@ -409,4 +409,38 @@ void main() {
       );
     },
   );
+
+  group(
+    'deleteById, ',
+    () {
+      const int id = 1;
+
+      test(
+        'should do nothing if table does not exist',
+        () async {
+          sqliteDb.mockDoesTableNotExist(expectedAnswer: true);
+
+          await service.deleteById(id: id);
+        },
+      );
+
+      test(
+        'should call method to delete drive from table',
+        () async {
+          sqliteDb.mockDoesTableNotExist(expectedAnswer: false);
+          sqliteDb.mockDelete();
+
+          await service.deleteById(id: id);
+
+          verify(
+            () => sqliteDb.delete(
+              tableName: tableName,
+              where: '$idColName = ?',
+              whereArgs: [id],
+            ),
+          ).called(1);
+        },
+      );
+    },
+  );
 }

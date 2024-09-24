@@ -69,6 +69,18 @@ class DriveSqliteService {
     return await _queryById(driveId);
   }
 
+  Future<void> deleteById({
+    required int id,
+  }) async {
+    if (!(await _sqliteDb.doesTableNotExist(_tableName))) {
+      await _sqliteDb.delete(
+        tableName: _tableName,
+        where: '$_idColName = ?',
+        whereArgs: [id],
+      );
+    }
+  }
+
   Future<void> _createTableIfNotExists() async {
     if (await _sqliteDb.doesTableNotExist(_tableName)) {
       await _sqliteDb.createTable(
