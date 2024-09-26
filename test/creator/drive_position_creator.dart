@@ -1,13 +1,15 @@
 import 'package:motorbike_navigator/entity/coordinates.dart';
-import 'package:motorbike_navigator/entity/position.dart';
+import 'package:motorbike_navigator/entity/drive.dart';
 
-class PositionCreator {
-  Position create({
+class DrivePositionCreator {
+  DrivePosition create({
+    int order = 1,
     Coordinates coordinates = const Coordinates(0, 0),
     double elevation = 0,
     double speedInKmPerH = 0,
   }) =>
-      Position(
+      DrivePosition(
+        order: 1,
         coordinates: coordinates,
         elevation: elevation,
         speedInKmPerH: speedInKmPerH,

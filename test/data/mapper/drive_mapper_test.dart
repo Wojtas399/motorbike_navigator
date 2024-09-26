@@ -5,17 +5,15 @@ import 'package:motorbike_navigator/data/local_db/dto/position_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/mapper/drive_mapper.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
-import 'package:motorbike_navigator/entity/position.dart';
 
-import '../../mock/data/mapper/mock_position_mapper.dart';
+import '../../mock/data/mapper/mock_drive_position_mapper.dart';
 
 void main() {
-  final positionMapper = MockPositionMapper();
-
-  final DriveMapper mapper = DriveMapper(positionMapper);
+  final drivePositionMapper = MockDrivePositionMapper();
+  final DriveMapper mapper = DriveMapper(drivePositionMapper);
 
   tearDown(() {
-    reset(positionMapper);
+    reset(drivePositionMapper);
   });
 
   test(
@@ -28,13 +26,15 @@ void main() {
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 10.21;
       const Duration duration = Duration(hours: 1, minutes: 20);
-      const List<Position> positions = [
-        Position(
+      const List<DrivePosition> positions = [
+        DrivePosition(
+          order: 2,
           coordinates: Coordinates(51, 19),
           elevation: 1001.22,
           speedInKmPerH: 23.33,
         ),
-        Position(
+        DrivePosition(
+          order: 1,
           coordinates: Coordinates(50, 18),
           elevation: 100.22,
           speedInKmPerH: 22.22,
@@ -76,10 +76,10 @@ void main() {
         positions: positions,
       );
       when(
-        () => positionMapper.mapFromDto(positionDtos.first),
+        () => drivePositionMapper.mapFromDto(positionDtos.first),
       ).thenReturn(positions.first);
       when(
-        () => positionMapper.mapFromDto(positionDtos.last),
+        () => drivePositionMapper.mapFromDto(positionDtos.last),
       ).thenReturn(positions.last);
 
       final Drive drive = mapper.mapFromDto(

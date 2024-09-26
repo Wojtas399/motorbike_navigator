@@ -1,24 +1,25 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
+import 'package:motorbike_navigator/entity/drive.dart';
 import 'package:motorbike_navigator/entity/position.dart';
 
 import '../creator/drive_creator.dart';
-import '../creator/position_creator.dart';
+import '../creator/drive_position_creator.dart';
 
 void main() {
-  final positionCreator = PositionCreator();
+  final drivePositionCreator = DrivePositionCreator();
 
   test(
     'waypoints getter should return list of coordinates',
     () {
-      final List<Position> positions = [
-        positionCreator.create(
+      final List<DrivePosition> positions = [
+        drivePositionCreator.create(
           coordinates: const Coordinates(50, 18),
         ),
-        positionCreator.create(
+        drivePositionCreator.create(
           coordinates: const Coordinates(51, 19),
         ),
-        positionCreator.create(
+        drivePositionCreator.create(
           coordinates: const Coordinates(52, 20),
         ),
       ];
@@ -34,11 +35,11 @@ void main() {
   test(
     'elevationPoints getter should return list of elevation points',
     () {
-      final List<Position> positions = [
-        positionCreator.create(elevation: 155.5),
-        positionCreator.create(elevation: 165.5),
-        positionCreator.create(elevation: 175.5),
-        positionCreator.create(elevation: 185.5),
+      final List<DrivePosition> positions = [
+        drivePositionCreator.create(elevation: 155.5),
+        drivePositionCreator.create(elevation: 165.5),
+        drivePositionCreator.create(elevation: 175.5),
+        drivePositionCreator.create(elevation: 185.5),
       ];
       final Iterable<double> expectedAltitudePoints = [
         positions.first.elevation,
@@ -57,10 +58,10 @@ void main() {
     'avgSpeedInKmPerH getter should return average speed calculated from list '
     'of positions',
     () {
-      final List<Position> positions = [
-        positionCreator.create(speedInKmPerH: 33.33),
-        positionCreator.create(speedInKmPerH: 22.22),
-        positionCreator.create(speedInKmPerH: 55.55),
+      final List<DrivePosition> positions = [
+        drivePositionCreator.create(speedInKmPerH: 33.33),
+        drivePositionCreator.create(speedInKmPerH: 22.22),
+        drivePositionCreator.create(speedInKmPerH: 55.55),
       ];
       final double expectedAvgSpeed = (positions.first.speedInKmPerH +
               positions[1].speedInKmPerH +
@@ -76,10 +77,10 @@ void main() {
   test(
     'maxSpeedInKmPerH getter should return max speed from list of position',
     () {
-      final List<Position> positions = [
-        positionCreator.create(speedInKmPerH: 33.33),
-        positionCreator.create(speedInKmPerH: 22.22),
-        positionCreator.create(speedInKmPerH: 55.55),
+      final List<DrivePosition> positions = [
+        drivePositionCreator.create(speedInKmPerH: 33.33),
+        drivePositionCreator.create(speedInKmPerH: 22.22),
+        drivePositionCreator.create(speedInKmPerH: 55.55),
       ];
       const double expectedMaxSpeed = 55.55;
 
@@ -92,10 +93,10 @@ void main() {
   test(
     'maxElevation getter should return max elevation from list of position',
     () {
-      final List<Position> positions = [
-        positionCreator.create(elevation: 105.2),
-        positionCreator.create(elevation: 122.22),
-        positionCreator.create(elevation: 95.55),
+      final List<DrivePosition> positions = [
+        drivePositionCreator.create(elevation: 105.2),
+        drivePositionCreator.create(elevation: 122.22),
+        drivePositionCreator.create(elevation: 95.55),
       ];
       const double expectedMaxElevation = 122.22;
 
@@ -108,10 +109,10 @@ void main() {
   test(
     'minElevation getter should return min elevation from list of position',
     () {
-      final List<Position> positions = [
-        positionCreator.create(elevation: 105.2),
-        positionCreator.create(elevation: 122.22),
-        positionCreator.create(elevation: 95.55),
+      final List<DrivePosition> positions = [
+        drivePositionCreator.create(elevation: 105.2),
+        drivePositionCreator.create(elevation: 122.22),
+        drivePositionCreator.create(elevation: 95.55),
       ];
       const double expectedMinElevation = 95.55;
 

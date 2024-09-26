@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
-import 'package:motorbike_navigator/entity/position.dart';
 import 'package:motorbike_navigator/ui/screen/drive_details/cubit/drive_details_cubit.dart';
 import 'package:motorbike_navigator/ui/screen/drive_details/cubit/drive_details_state.dart';
 
@@ -29,23 +28,27 @@ void main() {
     'initialize, ',
     () {
       const int driveId = 1;
-      final List<Position> positions = [
-        const Position(
+      final List<DrivePosition> positions = [
+        const DrivePosition(
+          order: 1,
           coordinates: Coordinates(50, 19),
           elevation: 105.25,
           speedInKmPerH: 35.5,
         ),
-        const Position(
+        const DrivePosition(
+          order: 2,
           coordinates: Coordinates(51, 20),
           elevation: 110.5,
           speedInKmPerH: 45.75,
         ),
-        const Position(
+        const DrivePosition(
+          order: 3,
           coordinates: Coordinates(52, 21),
           elevation: 115.75,
           speedInKmPerH: 55.9,
         ),
-        const Position(
+        const DrivePosition(
+          order: 4,
           coordinates: Coordinates(53, 22),
           elevation: 120.15,
           speedInKmPerH: 65,

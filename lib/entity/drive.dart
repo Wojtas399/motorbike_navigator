@@ -9,7 +9,7 @@ class Drive extends Entity {
   final DateTime startDateTime;
   final double distanceInKm;
   final Duration duration;
-  final List<Position> positions;
+  final List<DrivePosition> positions;
 
   const Drive({
     required super.id,
@@ -48,5 +48,24 @@ class Drive extends Entity {
         distanceInKm,
         duration,
         positions,
+      ];
+}
+
+class DrivePosition extends Position {
+  final int order;
+
+  const DrivePosition({
+    required this.order,
+    required super.coordinates,
+    required super.elevation,
+    required super.speedInKmPerH,
+  });
+
+  @override
+  List<Object?> get props => [
+        order,
+        coordinates,
+        elevation,
+        speedInKmPerH,
       ];
 }

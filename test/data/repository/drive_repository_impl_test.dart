@@ -5,7 +5,6 @@ import 'package:motorbike_navigator/data/local_db/dto/position_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/repository/drive/drive_repository_impl.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
-import 'package:motorbike_navigator/entity/position.dart';
 
 import '../../creator/drive_creator.dart';
 import '../../mock/data/local_db/mock_drive_sqlite_service.dart';
@@ -279,13 +278,15 @@ void main() {
       final DateTime startDateTime = DateTime(2024, 7, 10, 9, 28);
       const double distanceInKm = 2.2;
       const Duration duration = Duration(minutes: 20);
-      const List<Position> positions = [
-        Position(
+      const List<DrivePosition> positions = [
+        DrivePosition(
+          order: 1,
           coordinates: Coordinates(50, 19),
           elevation: 100.1,
           speedInKmPerH: 22.2,
         ),
-        Position(
+        DrivePosition(
+          order: 2,
           coordinates: Coordinates(51, 20),
           elevation: 110.1,
           speedInKmPerH: 33.33,

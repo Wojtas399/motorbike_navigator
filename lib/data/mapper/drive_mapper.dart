@@ -3,13 +3,13 @@ import 'package:injectable/injectable.dart';
 import '../../entity/drive.dart';
 import '../local_db/dto/drive_sqlite_dto.dart';
 import '../local_db/dto/position_sqlite_dto.dart';
-import 'position_mapper.dart';
+import 'drive_position_mapper.dart';
 
 @injectable
 class DriveMapper {
-  final PositionMapper _positionMapper;
+  final DrivePositionMapper _drivePositionMapper;
 
-  const DriveMapper(this._positionMapper);
+  const DriveMapper(this._drivePositionMapper);
 
   Drive mapFromDto({
     required DriveSqliteDto driveDto,
@@ -23,7 +23,8 @@ class DriveMapper {
       startDateTime: driveDto.startDateTime,
       distanceInKm: driveDto.distanceInKm,
       duration: driveDto.duration,
-      positions: sortedPositionDtos.map(_positionMapper.mapFromDto).toList(),
+      positions:
+          sortedPositionDtos.map(_drivePositionMapper.mapFromDto).toList(),
     );
   }
 }

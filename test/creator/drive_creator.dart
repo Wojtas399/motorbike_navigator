@@ -1,6 +1,5 @@
 import 'package:motorbike_navigator/data/local_db/dto/drive_sqlite_dto.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
-import 'package:motorbike_navigator/entity/position.dart';
 
 class DriveCreator {
   final int id;
@@ -8,7 +7,7 @@ class DriveCreator {
   late final DateTime startDateTime;
   final double distanceInKm;
   final Duration duration;
-  final List<Position> positions;
+  final List<DrivePosition> positions;
 
   DriveCreator({
     this.id = 0,
