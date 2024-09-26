@@ -69,6 +69,22 @@ class DriveSqliteService {
     return await _queryById(driveId);
   }
 
+  Future<DriveSqliteDto?> updateTitle({
+    required int driveId,
+    required String newTitle,
+  }) async {
+    if (await _sqliteDb.doesTableNotExist(_tableName)) return null;
+    await _sqliteDb.update(
+      tableName: _tableName,
+      values: {
+        _titleColName: newTitle,
+      },
+      where: '$_idColName = ?',
+      whereArgs: [driveId],
+    );
+    return await _queryById(driveId);
+  }
+
   Future<void> deleteById({
     required int id,
   }) async {

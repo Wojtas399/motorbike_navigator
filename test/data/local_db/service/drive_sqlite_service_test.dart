@@ -411,6 +411,66 @@ void main() {
   );
 
   group(
+    'updateTitle, ',
+    () {
+      const int driveId = 1;
+      const String newTitle = 'new title';
+      final DriveCreator updatedDriveCreator = DriveCreator(
+        id: driveId,
+        title: newTitle,
+      );
+      final Map<String, Object?> updatedDriveJson =
+          updatedDriveCreator.createJson();
+      final DriveSqliteDto updatedDriveSqliteDto =
+          updatedDriveCreator.createSqliteDto();
+
+      test(
+        'should return null if table does not exist',
+        () async {
+          sqliteDb.mockDoesTableNotExist(expectedAnswer: true);
+
+          final DriveSqliteDto? driveSqliteDto = await service.updateTitle(
+            driveId: driveId,
+            newTitle: newTitle,
+          );
+
+          expect(driveSqliteDto, null);
+        },
+      );
+
+      test(
+        'should call method to update title of the drive and should return '
+        'updated drive',
+        () async {
+          sqliteDb.mockDoesTableNotExist(expectedAnswer: false);
+          sqliteDb.mockUpdate();
+          sqliteDb.mockQuery(expectedResult: [updatedDriveJson]);
+          dateTimeMapper.mockMapFromDateAndTimeStrings(
+            expectedDateTime: updatedDriveCreator.startDateTime,
+          );
+
+          final DriveSqliteDto? driveSqliteDto = await service.updateTitle(
+            driveId: driveId,
+            newTitle: newTitle,
+          );
+
+          expect(driveSqliteDto, updatedDriveSqliteDto);
+          verify(
+            () => sqliteDb.update(
+              tableName: tableName,
+              values: {
+                titleColName: newTitle,
+              },
+              where: '$idColName = ?',
+              whereArgs: [driveId],
+            ),
+          ).called(1);
+        },
+      );
+    },
+  );
+
+  group(
     'deleteById, ',
     () {
       const int id = 1;

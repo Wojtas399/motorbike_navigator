@@ -42,6 +42,17 @@ class MockSqliteDb extends Mock implements SqliteDb {
     ).thenAnswer((_) => Future.value(expectedId));
   }
 
+  void mockUpdate() {
+    when(
+      () => update(
+        tableName: any(named: 'tableName'),
+        values: any(named: 'values'),
+        where: any(named: 'where'),
+        whereArgs: any(named: 'whereArgs'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
+
   void mockDelete() {
     when(
       () => delete(
