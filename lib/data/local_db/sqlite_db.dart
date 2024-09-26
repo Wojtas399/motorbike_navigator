@@ -56,6 +56,21 @@ class SqliteDb {
     return db.insert(tableName, values);
   }
 
+  Future<void> update({
+    required String tableName,
+    required Map<String, Object?> values,
+    required String where,
+    required List<dynamic> whereArgs,
+  }) async {
+    final Database db = await _db;
+    await db.update(
+      tableName,
+      values,
+      where: where,
+      whereArgs: whereArgs,
+    );
+  }
+
   Future<void> delete({
     required String tableName,
     required String where,
