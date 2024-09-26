@@ -4,10 +4,10 @@ import 'package:injectable/injectable.dart';
 import '../../../entity/drive.dart';
 import '../../../entity/position.dart';
 import '../../../ui/service/date_service.dart';
+import '../../local_db/dto/drive_position_sqlite_dto.dart';
 import '../../local_db/dto/drive_sqlite_dto.dart';
-import '../../local_db/dto/position_sqlite_dto.dart';
+import '../../local_db/service/drive_position_sqlite_service.dart';
 import '../../local_db/service/drive_sqlite_service.dart';
-import '../../local_db/service/position_sqlite_service.dart';
 import '../../mapper/drive_mapper.dart';
 import '../repository.dart';
 import 'drive_repository.dart';
@@ -15,13 +15,13 @@ import 'drive_repository.dart';
 @LazySingleton(as: DriveRepository)
 class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
   final DriveSqliteService _driveSqliteService;
-  final PositionSqliteService _positionSqliteService;
+  final DrivePositionSqliteService _drivePositionSqliteService;
   final DriveMapper _driveMapper;
   final DateService _dateService;
 
   DriveRepositoryImpl(
     this._driveSqliteService,
-    this._positionSqliteService,
+    this._drivePositionSqliteService,
     this._driveMapper,
     this._dateService,
   );
@@ -80,10 +80,10 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
       duration: duration,
     );
     if (addedDriveDto == null) return;
-    final List<PositionSqliteDto> addedPositionDtos = [];
+    final List<DrivePositionSqliteDto> addedPositionDtos = [];
     for (int i = 0; i < positions.length; i++) {
       final pos = positions[i];
-      final addedPosDto = await _positionSqliteService.insert(
+      final addedPosDto = await _drivePositionSqliteService.insert(
         driveId: addedDriveDto.id,
         order: i + 1,
         latitude: pos.coordinates.latitude,
@@ -102,7 +102,7 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
 
   @override
   Future<void> deleteDriveById(int id) async {
-    await _positionSqliteService.deleteByDriveId(driveId: id);
+    await _drivePositionSqliteService.deleteByDriveId(driveId: id);
     await _driveSqliteService.deleteById(id: id);
     removeEntity(id);
   }
@@ -146,8 +146,8 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
   }
 
   Future<Drive> _mapDriveSqliteDtoToDrive(DriveSqliteDto dto) async {
-    final List<PositionSqliteDto> positionDtos =
-        await _positionSqliteService.queryByDriveId(
+    final List<DrivePositionSqliteDto> positionDtos =
+        await _drivePositionSqliteService.queryByDriveId(
       driveId: dto.id,
     );
     return _driveMapper.mapFromDto(

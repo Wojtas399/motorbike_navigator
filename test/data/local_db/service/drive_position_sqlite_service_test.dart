@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/data/local_db/dto/position_sqlite_dto.dart';
+import 'package:motorbike_navigator/data/local_db/dto/drive_position_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/local_db/model/sql_column.dart';
-import 'package:motorbike_navigator/data/local_db/service/position_sqlite_service.dart';
+import 'package:motorbike_navigator/data/local_db/service/drive_position_sqlite_service.dart';
 
 import '../../../mock/data/local_db/mock_sqlite_db.dart';
 
@@ -16,7 +16,8 @@ void main() {
   const String elevationColName = 'elevation';
   const String speedColName = 'speed';
   final sqliteDb = MockSqliteDb();
-  final PositionSqliteService service = PositionSqliteService(sqliteDb);
+  final DrivePositionSqliteService service =
+      DrivePositionSqliteService(sqliteDb);
 
   void verifyTableCreation() {
     verify(
@@ -91,8 +92,8 @@ void main() {
           speedColName: 51.5,
         },
       ];
-      final List<PositionSqliteDto> expectedPositionSqliteDtos = [
-        const PositionSqliteDto(
+      final List<DrivePositionSqliteDto> expectedPositionSqliteDtos = [
+        const DrivePositionSqliteDto(
           id: 1,
           driveId: driveId,
           order: 1,
@@ -101,7 +102,7 @@ void main() {
           elevation: 100.1,
           speedInKmPerH: 50.5,
         ),
-        const PositionSqliteDto(
+        const DrivePositionSqliteDto(
           id: 2,
           driveId: driveId,
           order: 2,
@@ -129,12 +130,12 @@ void main() {
 
       test(
         'should create table if it does not exist in db, should query drives '
-        'by id and should return PositionSqliteDto objects',
+        'by id and should return DrivePositionSqliteDto objects',
         () async {
           sqliteDb.mockDoesTableNotExist(expectedAnswer: true);
           sqliteDb.mockCreateTable();
 
-          final List<PositionSqliteDto> positionSqliteDtos =
+          final List<DrivePositionSqliteDto> positionSqliteDtos =
               await service.queryByDriveId(driveId: driveId);
 
           expect(positionSqliteDtos, expectedPositionSqliteDtos);
@@ -144,11 +145,11 @@ void main() {
 
       test(
         'should not create table if it already exists in db, should query '
-        'drives by id and should return PositionSqliteDto objects',
+        'drives by id and should return DrivePositionSqliteDto objects',
         () async {
           sqliteDb.mockDoesTableNotExist(expectedAnswer: false);
 
-          final List<PositionSqliteDto> positionSqliteDtos =
+          final List<DrivePositionSqliteDto> positionSqliteDtos =
               await service.queryByDriveId(driveId: driveId);
 
           expect(positionSqliteDtos, expectedPositionSqliteDtos);
@@ -179,7 +180,8 @@ void main() {
         idColName: addedPositionId,
         ...positionToAddJson,
       };
-      const PositionSqliteDto expectedPositionSqliteDto = PositionSqliteDto(
+      const DrivePositionSqliteDto expectedPositionSqliteDto =
+          DrivePositionSqliteDto(
         id: addedPositionId,
         driveId: driveId,
         order: order,
@@ -213,12 +215,13 @@ void main() {
 
       test(
         'should create table if it does not exist, then should insert passed '
-        'values to db and should return PositionSqliteDto object',
+        'values to db and should return DrivePositionSqliteDto object',
         () async {
           sqliteDb.mockDoesTableNotExist(expectedAnswer: true);
           sqliteDb.mockCreateTable();
 
-          final PositionSqliteDto? positionSqliteDto = await service.insert(
+          final DrivePositionSqliteDto? positionSqliteDto =
+              await service.insert(
             driveId: driveId,
             order: order,
             latitude: latitude,
@@ -234,11 +237,12 @@ void main() {
 
       test(
         'should not create table if it already exists, should insert passed '
-        'values to db and should return PositionSqliteDto object',
+        'values to db and should return DrivePositionSqliteDto object',
         () async {
           sqliteDb.mockDoesTableNotExist(expectedAnswer: false);
 
-          final PositionSqliteDto? positionSqliteDto = await service.insert(
+          final DrivePositionSqliteDto? positionSqliteDto =
+              await service.insert(
             driveId: driveId,
             order: order,
             latitude: latitude,

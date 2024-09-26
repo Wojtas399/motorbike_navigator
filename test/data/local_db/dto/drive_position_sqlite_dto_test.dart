@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/data/local_db/dto/position_sqlite_dto.dart';
+import 'package:motorbike_navigator/data/local_db/dto/drive_position_sqlite_dto.dart';
 
 void main() {
   const int id = 1;
@@ -12,7 +12,7 @@ void main() {
 
   test(
     'fromJson, '
-    'should map json object to PositionSqliteDto object',
+    'should map json object to DrivePositionSqliteDto object',
     () {
       final Map<String, Object?> json = {
         'id': id,
@@ -23,7 +23,7 @@ void main() {
         'elevation': elevation,
         'speed': speedInKmPerH,
       };
-      const PositionSqliteDto expectedDto = PositionSqliteDto(
+      const DrivePositionSqliteDto expectedDto = DrivePositionSqliteDto(
         id: id,
         driveId: driveId,
         order: order,
@@ -33,7 +33,7 @@ void main() {
         speedInKmPerH: speedInKmPerH,
       );
 
-      final PositionSqliteDto dto = PositionSqliteDto.fromJson(json);
+      final DrivePositionSqliteDto dto = DrivePositionSqliteDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -41,9 +41,9 @@ void main() {
 
   test(
     'toJson, '
-    'should map PositionSqliteDto object to json object without id key',
+    'should map DrivePositionSqliteDto object to json object without id key',
     () {
-      const PositionSqliteDto dto = PositionSqliteDto(
+      const DrivePositionSqliteDto dto = DrivePositionSqliteDto(
         id: id,
         driveId: driveId,
         order: order,

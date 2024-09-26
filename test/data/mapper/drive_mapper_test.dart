@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:motorbike_navigator/data/local_db/dto/drive_position_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/local_db/dto/drive_sqlite_dto.dart';
-import 'package:motorbike_navigator/data/local_db/dto/position_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/mapper/drive_mapper.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
@@ -18,8 +18,7 @@ void main() {
 
   test(
     'mapFromDto, '
-    'should map DriveSqliteDto model to Drive model (positions should be sorted by '
-    'order param and then mapped to Position model)',
+    'should map DriveSqliteDto model to Drive model',
     () {
       const int id = 1;
       const String title = 'title';
@@ -29,19 +28,19 @@ void main() {
       const List<DrivePosition> positions = [
         DrivePosition(
           order: 2,
-          coordinates: Coordinates(51, 19),
-          elevation: 1001.22,
-          speedInKmPerH: 23.33,
-        ),
-        DrivePosition(
-          order: 1,
           coordinates: Coordinates(50, 18),
           elevation: 100.22,
           speedInKmPerH: 22.22,
         ),
+        DrivePosition(
+          order: 1,
+          coordinates: Coordinates(51, 19),
+          elevation: 1001.22,
+          speedInKmPerH: 23.33,
+        ),
       ];
-      const List<PositionSqliteDto> positionDtos = [
-        PositionSqliteDto(
+      const List<DrivePositionSqliteDto> positionDtos = [
+        DrivePositionSqliteDto(
           id: 2,
           driveId: id,
           order: 2,
@@ -50,7 +49,7 @@ void main() {
           elevation: 100.22,
           speedInKmPerH: 22.22,
         ),
-        PositionSqliteDto(
+        DrivePositionSqliteDto(
           id: 1,
           driveId: id,
           order: 1,

@@ -1,20 +1,20 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:motorbike_navigator/data/local_db/dto/drive_position_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/local_db/dto/drive_sqlite_dto.dart';
-import 'package:motorbike_navigator/data/local_db/dto/position_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/repository/drive/drive_repository_impl.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
 
 import '../../creator/drive_creator.dart';
+import '../../mock/data/local_db/mock_drive_position_sqlite_service.dart';
 import '../../mock/data/local_db/mock_drive_sqlite_service.dart';
-import '../../mock/data/local_db/mock_position_sqlite_service.dart';
 import '../../mock/data/mapper/mock_drive_mapper.dart';
 import '../../mock/ui_service/mock_date_service.dart';
 
 void main() {
   final driveSqliteService = MockDriveSqliteService();
-  final positionSqliteService = MockPositionSqliteService();
+  final drivePositionSqliteService = MockDrivePositionSqliteService();
   final driveMapper = MockDriveMapper();
   final dateService = MockDateService();
   late DriveRepositoryImpl repositoryImpl;
@@ -22,7 +22,7 @@ void main() {
   setUp(() {
     repositoryImpl = DriveRepositoryImpl(
       driveSqliteService,
-      positionSqliteService,
+      drivePositionSqliteService,
       driveMapper,
       dateService,
     );
@@ -30,7 +30,7 @@ void main() {
 
   tearDown(() {
     reset(driveSqliteService);
-    reset(positionSqliteService);
+    reset(drivePositionSqliteService);
     reset(driveMapper);
     reset(dateService);
   });
@@ -74,8 +74,8 @@ void main() {
           driveSqliteService.mockQueryById(
             expectedDriveSqliteDto: driveSqliteDto,
           );
-          positionSqliteService.mockQueryByDriveId(
-            expectedPositionSqliteDtos: [],
+          drivePositionSqliteService.mockQueryByDriveId(
+            expectedDrivePositionSqliteDtos: [],
           );
           driveMapper.mockMapFromDto(expectedDrive: expectedDrive);
 
@@ -124,10 +124,10 @@ void main() {
         expectedDriveSqliteDtos: fetchedDriveSqliteDtos,
       );
       when(
-        () => positionSqliteService.queryByDriveId(driveId: 3),
+        () => drivePositionSqliteService.queryByDriveId(driveId: 3),
       ).thenAnswer((_) => Future.value([]));
       when(
-        () => positionSqliteService.queryByDriveId(driveId: 4),
+        () => drivePositionSqliteService.queryByDriveId(driveId: 4),
       ).thenAnswer((_) => Future.value([]));
       when(
         () => driveMapper.mapFromDto(
@@ -151,8 +151,10 @@ void main() {
         expectedRepositoryState,
       );
       verify(driveSqliteService.queryAll).called(1);
-      verify(() => positionSqliteService.queryByDriveId(driveId: 3)).called(1);
-      verify(() => positionSqliteService.queryByDriveId(driveId: 4)).called(1);
+      verify(() => drivePositionSqliteService.queryByDriveId(driveId: 3))
+          .called(1);
+      verify(() => drivePositionSqliteService.queryByDriveId(driveId: 4))
+          .called(1);
     },
   );
 
@@ -209,8 +211,8 @@ void main() {
       driveSqliteService.mockQueryByDateRange(
         expectedDriveSqliteDtos: fetchedDriveSqliteDtos,
       );
-      positionSqliteService.mockQueryByDriveId(
-        expectedPositionSqliteDtos: [],
+      drivePositionSqliteService.mockQueryByDriveId(
+        expectedDrivePositionSqliteDtos: [],
       );
       when(
         () => driveMapper.mapFromDto(
@@ -297,8 +299,8 @@ void main() {
         'should call methods to add drive and its positions to db and should '
         'add added drive to repo state',
         () async {
-          const List<PositionSqliteDto> positionSqliteDtos = [
-            PositionSqliteDto(
+          const List<DrivePositionSqliteDto> positionSqliteDtos = [
+            DrivePositionSqliteDto(
               id: 1,
               driveId: driveId,
               order: 1,
@@ -307,7 +309,7 @@ void main() {
               elevation: 110.1,
               speedInKmPerH: 33.33,
             ),
-            PositionSqliteDto(
+            DrivePositionSqliteDto(
               id: 2,
               driveId: driveId,
               order: 2,
@@ -344,7 +346,7 @@ void main() {
             expectedInsertedDriveSqliteDto: addedDriveSqliteDto,
           );
           when(
-            () => positionSqliteService.insert(
+            () => drivePositionSqliteService.insert(
               driveId: driveId,
               order: 1,
               latitude: positions.first.coordinates.latitude,
@@ -354,7 +356,7 @@ void main() {
             ),
           ).thenAnswer((_) => Future.value(positionSqliteDtos.first));
           when(
-            () => positionSqliteService.insert(
+            () => drivePositionSqliteService.insert(
               driveId: driveId,
               order: 2,
               latitude: positions.last.coordinates.latitude,
@@ -387,7 +389,7 @@ void main() {
             ),
           ).called(1);
           verify(
-            () => positionSqliteService.insert(
+            () => drivePositionSqliteService.insert(
               driveId: driveId,
               order: 1,
               latitude: positions.first.coordinates.latitude,
@@ -397,7 +399,7 @@ void main() {
             ),
           ).called(1);
           verify(
-            () => positionSqliteService.insert(
+            () => drivePositionSqliteService.insert(
               driveId: driveId,
               order: 2,
               latitude: positions.last.coordinates.latitude,
@@ -438,8 +440,8 @@ void main() {
         'should omit position in list if  method to add position to db returns '
         'null',
         () async {
-          const List<PositionSqliteDto> positionSqliteDtos = [
-            PositionSqliteDto(
+          const List<DrivePositionSqliteDto> positionSqliteDtos = [
+            DrivePositionSqliteDto(
               id: 1,
               driveId: driveId,
               order: 1,
@@ -476,7 +478,7 @@ void main() {
             expectedInsertedDriveSqliteDto: addedDriveSqliteDto,
           );
           when(
-            () => positionSqliteService.insert(
+            () => drivePositionSqliteService.insert(
               driveId: driveId,
               order: 1,
               latitude: positions.first.coordinates.latitude,
@@ -486,7 +488,7 @@ void main() {
             ),
           ).thenAnswer((_) => Future.value(positionSqliteDtos.first));
           when(
-            () => positionSqliteService.insert(
+            () => drivePositionSqliteService.insert(
               driveId: driveId,
               order: 2,
               latitude: positions.last.coordinates.latitude,
@@ -519,7 +521,7 @@ void main() {
             ),
           ).called(1);
           verify(
-            () => positionSqliteService.insert(
+            () => drivePositionSqliteService.insert(
               driveId: driveId,
               order: 1,
               latitude: positions.first.coordinates.latitude,
@@ -529,7 +531,7 @@ void main() {
             ),
           ).called(1);
           verify(
-            () => positionSqliteService.insert(
+            () => drivePositionSqliteService.insert(
               driveId: driveId,
               order: 2,
               latitude: positions.last.coordinates.latitude,
@@ -556,7 +558,7 @@ void main() {
         DriveCreator(id: 3).createEntity(),
         DriveCreator(id: 4).createEntity(),
       ];
-      positionSqliteService.mockDeleteByDriveId();
+      drivePositionSqliteService.mockDeleteByDriveId();
       driveSqliteService.mockDeleteById();
       repositoryImpl.addEntities(existingDrives);
 
@@ -571,7 +573,7 @@ void main() {
         ],
       );
       verify(
-        () => positionSqliteService.deleteByDriveId(driveId: id),
+        () => drivePositionSqliteService.deleteByDriveId(driveId: id),
       ).called(1);
       verify(
         () => driveSqliteService.deleteById(id: id),

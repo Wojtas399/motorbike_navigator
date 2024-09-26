@@ -2,13 +2,13 @@ import 'package:injectable/injectable.dart';
 
 import '../../entity/coordinates.dart';
 import '../../entity/drive.dart';
-import '../local_db/dto/position_sqlite_dto.dart';
+import '../local_db/dto/drive_position_sqlite_dto.dart';
 
 @injectable
 class DrivePositionMapper {
   const DrivePositionMapper();
 
-  DrivePosition mapFromDto(PositionSqliteDto dto) => DrivePosition(
+  DrivePosition mapFromDto(DrivePositionSqliteDto dto) => DrivePosition(
         order: dto.order,
         coordinates: Coordinates(
           dto.latitude,

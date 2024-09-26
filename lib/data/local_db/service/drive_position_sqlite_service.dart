@@ -1,11 +1,11 @@
 import 'package:injectable/injectable.dart';
 
-import '../dto/position_sqlite_dto.dart';
+import '../dto/drive_position_sqlite_dto.dart';
 import '../model/sql_column.dart';
 import '../sqlite_db.dart';
 
 @injectable
-class PositionSqliteService {
+class DrivePositionSqliteService {
   final SqliteDb _sqliteDb;
   final String _tableName = 'Positions';
   final String _idColName = 'id';
@@ -16,9 +16,9 @@ class PositionSqliteService {
   final String _elevationColName = 'elevation';
   final String _speedColName = 'speed';
 
-  const PositionSqliteService(this._sqliteDb);
+  const DrivePositionSqliteService(this._sqliteDb);
 
-  Future<List<PositionSqliteDto>> queryByDriveId({
+  Future<List<DrivePositionSqliteDto>> queryByDriveId({
     required int driveId,
   }) async {
     await _createTableIfNotExists();
@@ -27,10 +27,10 @@ class PositionSqliteService {
       where: '$_driveIdColName = ?',
       whereArgs: [driveId],
     );
-    return positionJsons.map(PositionSqliteDto.fromJson).toList();
+    return positionJsons.map(DrivePositionSqliteDto.fromJson).toList();
   }
 
-  Future<PositionSqliteDto?> insert({
+  Future<DrivePositionSqliteDto?> insert({
     required int driveId,
     required int order,
     required double latitude,
@@ -39,7 +39,7 @@ class PositionSqliteService {
     required double speedInKmPerH,
   }) async {
     await _createTableIfNotExists();
-    final PositionSqliteDto positionToAdd = PositionSqliteDto(
+    final DrivePositionSqliteDto positionToAdd = DrivePositionSqliteDto(
       driveId: driveId,
       order: order,
       latitude: latitude,
@@ -66,7 +66,7 @@ class PositionSqliteService {
     }
   }
 
-  Future<PositionSqliteDto?> _queryById({
+  Future<DrivePositionSqliteDto?> _queryById({
     required int id,
   }) async {
     final List<Map<String, Object?>> positionJsons = await _sqliteDb.query(
@@ -75,7 +75,7 @@ class PositionSqliteService {
       whereArgs: [id],
     );
     return positionJsons.isNotEmpty
-        ? PositionSqliteDto.fromJson(positionJsons.first)
+        ? DrivePositionSqliteDto.fromJson(positionJsons.first)
         : null;
   }
 

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:motorbike_navigator/data/local_db/dto/position_sqlite_dto.dart';
+import 'package:motorbike_navigator/data/local_db/dto/drive_position_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/mapper/drive_position_mapper.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
@@ -15,9 +15,9 @@ void main() {
 
   test(
     'mapFromDto, '
-    'should map PositionSqliteDto model to DrivePosition model',
+    'should map DrivePositionSqliteDto model to DrivePosition model',
     () {
-      const positionDto = PositionSqliteDto(
+      const positionDto = DrivePositionSqliteDto(
         id: 1,
         driveId: 1,
         order: order,
