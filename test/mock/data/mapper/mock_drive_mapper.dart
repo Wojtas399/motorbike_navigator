@@ -17,7 +17,7 @@ class MockDriveMapper extends Mock implements DriveMapper {
     when(
       () => mapFromDto(
         driveDto: any(named: 'driveDto'),
-        positionDtos: any(named: 'positionDtos'),
+        positions: any(named: 'positions'),
       ),
     ).thenReturn(expectedDrive);
   }

@@ -1,20 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:motorbike_navigator/data/local_db/dto/drive_position_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/local_db/dto/drive_sqlite_dto.dart';
 import 'package:motorbike_navigator/data/mapper/drive_mapper.dart';
 import 'package:motorbike_navigator/entity/coordinates.dart';
 import 'package:motorbike_navigator/entity/drive.dart';
 
-import '../../mock/data/mapper/mock_drive_position_mapper.dart';
-
 void main() {
-  final drivePositionMapper = MockDrivePositionMapper();
-  final DriveMapper mapper = DriveMapper(drivePositionMapper);
-
-  tearDown(() {
-    reset(drivePositionMapper);
-  });
+  const DriveMapper mapper = DriveMapper();
 
   test(
     'mapFromDto, '
@@ -39,26 +30,6 @@ void main() {
           speedInKmPerH: 23.33,
         ),
       ];
-      const List<DrivePositionSqliteDto> positionDtos = [
-        DrivePositionSqliteDto(
-          id: 2,
-          driveId: id,
-          order: 2,
-          latitude: 50,
-          longitude: 18,
-          elevation: 100.22,
-          speedInKmPerH: 22.22,
-        ),
-        DrivePositionSqliteDto(
-          id: 1,
-          driveId: id,
-          order: 1,
-          latitude: 51,
-          longitude: 19,
-          elevation: 101.22,
-          speedInKmPerH: 33.33,
-        ),
-      ];
       final DriveSqliteDto driveDto = DriveSqliteDto(
         id: id,
         title: title,
@@ -74,16 +45,10 @@ void main() {
         duration: duration,
         positions: positions,
       );
-      when(
-        () => drivePositionMapper.mapFromDto(positionDtos.first),
-      ).thenReturn(positions.first);
-      when(
-        () => drivePositionMapper.mapFromDto(positionDtos.last),
-      ).thenReturn(positions.last);
 
       final Drive drive = mapper.mapFromDto(
         driveDto: driveDto,
-        positionDtos: positionDtos,
+        positions: positions,
       );
 
       expect(drive, expectedDrive);

@@ -7,21 +7,13 @@ import '../creator/drive_creator.dart';
 import '../creator/drive_position_creator.dart';
 
 void main() {
-  final drivePositionCreator = DrivePositionCreator();
-
   test(
     'waypoints getter should return list of coordinates',
     () {
       final List<DrivePosition> positions = [
-        drivePositionCreator.create(
-          coordinates: const Coordinates(50, 18),
-        ),
-        drivePositionCreator.create(
-          coordinates: const Coordinates(51, 19),
-        ),
-        drivePositionCreator.create(
-          coordinates: const Coordinates(52, 20),
-        ),
+        const DrivePositionCreator(latitude: 50, longitude: 18).createEntity(),
+        const DrivePositionCreator(latitude: 51, longitude: 19).createEntity(),
+        const DrivePositionCreator(latitude: 52, longitude: 20).createEntity(),
       ];
       final Iterable<Coordinates> expectedWaypoints =
           positions.map((Position position) => position.coordinates);
@@ -36,10 +28,10 @@ void main() {
     'elevationPoints getter should return list of elevation points',
     () {
       final List<DrivePosition> positions = [
-        drivePositionCreator.create(elevation: 155.5),
-        drivePositionCreator.create(elevation: 165.5),
-        drivePositionCreator.create(elevation: 175.5),
-        drivePositionCreator.create(elevation: 185.5),
+        const DrivePositionCreator(elevation: 155.5).createEntity(),
+        const DrivePositionCreator(elevation: 165.5).createEntity(),
+        const DrivePositionCreator(elevation: 175.5).createEntity(),
+        const DrivePositionCreator(elevation: 185.5).createEntity(),
       ];
       final Iterable<double> expectedAltitudePoints = [
         positions.first.elevation,
@@ -59,9 +51,9 @@ void main() {
     'of positions',
     () {
       final List<DrivePosition> positions = [
-        drivePositionCreator.create(speedInKmPerH: 33.33),
-        drivePositionCreator.create(speedInKmPerH: 22.22),
-        drivePositionCreator.create(speedInKmPerH: 55.55),
+        const DrivePositionCreator(speedInKmPerH: 33.33).createEntity(),
+        const DrivePositionCreator(speedInKmPerH: 22.22).createEntity(),
+        const DrivePositionCreator(speedInKmPerH: 55.55).createEntity(),
       ];
       final double expectedAvgSpeed = (positions.first.speedInKmPerH +
               positions[1].speedInKmPerH +
@@ -78,9 +70,9 @@ void main() {
     'maxSpeedInKmPerH getter should return max speed from list of position',
     () {
       final List<DrivePosition> positions = [
-        drivePositionCreator.create(speedInKmPerH: 33.33),
-        drivePositionCreator.create(speedInKmPerH: 22.22),
-        drivePositionCreator.create(speedInKmPerH: 55.55),
+        const DrivePositionCreator(speedInKmPerH: 33.33).createEntity(),
+        const DrivePositionCreator(speedInKmPerH: 22.22).createEntity(),
+        const DrivePositionCreator(speedInKmPerH: 55.55).createEntity(),
       ];
       const double expectedMaxSpeed = 55.55;
 
@@ -94,9 +86,9 @@ void main() {
     'maxElevation getter should return max elevation from list of position',
     () {
       final List<DrivePosition> positions = [
-        drivePositionCreator.create(elevation: 105.2),
-        drivePositionCreator.create(elevation: 122.22),
-        drivePositionCreator.create(elevation: 95.55),
+        const DrivePositionCreator(elevation: 105.2).createEntity(),
+        const DrivePositionCreator(elevation: 122.22).createEntity(),
+        const DrivePositionCreator(elevation: 95.55).createEntity(),
       ];
       const double expectedMaxElevation = 122.22;
 
@@ -110,9 +102,9 @@ void main() {
     'minElevation getter should return min elevation from list of position',
     () {
       final List<DrivePosition> positions = [
-        drivePositionCreator.create(elevation: 105.2),
-        drivePositionCreator.create(elevation: 122.22),
-        drivePositionCreator.create(elevation: 95.55),
+        const DrivePositionCreator(elevation: 105.2).createEntity(),
+        const DrivePositionCreator(elevation: 122.22).createEntity(),
+        const DrivePositionCreator(elevation: 95.55).createEntity(),
       ];
       const double expectedMinElevation = 95.55;
 

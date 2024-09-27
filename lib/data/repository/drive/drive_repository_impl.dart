@@ -9,6 +9,7 @@ import '../../local_db/dto/drive_sqlite_dto.dart';
 import '../../local_db/service/drive_position_sqlite_service.dart';
 import '../../local_db/service/drive_sqlite_service.dart';
 import '../../mapper/drive_mapper.dart';
+import '../../mapper/drive_position_mapper.dart';
 import '../repository.dart';
 import 'drive_repository.dart';
 
@@ -16,12 +17,14 @@ import 'drive_repository.dart';
 class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
   final DriveSqliteService _driveSqliteService;
   final DrivePositionSqliteService _drivePositionSqliteService;
+  final DrivePositionMapper _drivePositionMapper;
   final DriveMapper _driveMapper;
   final DateService _dateService;
 
   DriveRepositoryImpl(
     this._driveSqliteService,
     this._drivePositionSqliteService,
+    this._drivePositionMapper,
     this._driveMapper,
     this._dateService,
   );
@@ -80,10 +83,10 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
       duration: duration,
     );
     if (addedDriveDto == null) return;
-    final List<DrivePositionSqliteDto> addedPositionDtos = [];
+    final List<DrivePositionSqliteDto> drivePositionDtos = [];
     for (int i = 0; i < positions.length; i++) {
       final pos = positions[i];
-      final addedPosDto = await _drivePositionSqliteService.insert(
+      final drivePosDto = await _drivePositionSqliteService.insert(
         driveId: addedDriveDto.id,
         order: i + 1,
         latitude: pos.coordinates.latitude,
@@ -91,11 +94,13 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
         elevation: pos.elevation,
         speedInKmPerH: pos.speedInKmPerH,
       );
-      if (addedPosDto != null) addedPositionDtos.add(addedPosDto);
+      if (drivePosDto != null) drivePositionDtos.add(drivePosDto);
     }
+    final List<DrivePosition> drivePositions =
+        drivePositionDtos.map(_drivePositionMapper.mapFromDto).toList();
     final Drive addedDrive = _driveMapper.mapFromDto(
       driveDto: addedDriveDto,
-      positionDtos: addedPositionDtos,
+      positions: drivePositions,
     );
     addEntity(addedDrive);
   }
@@ -150,9 +155,11 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
         await _drivePositionSqliteService.queryByDriveId(
       driveId: dto.id,
     );
+    final List<DrivePosition> positions =
+        positionDtos.map(_drivePositionMapper.mapFromDto).toList();
     return _driveMapper.mapFromDto(
       driveDto: dto,
-      positionDtos: positionDtos,
+      positions: positions,
     );
   }
 }
