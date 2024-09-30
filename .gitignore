@@ -37,7 +37,19 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
+# Android Studio will place_suggestion build artifacts here
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+*.env
+*.g.dart
+*.freezed.dart
+*.config.dart
+*.gr.dart
+firebase_options.dart
+firebase.json
+google-services.json
+GoogleService-Info.plist
+Podfile
+Podfile.lock
