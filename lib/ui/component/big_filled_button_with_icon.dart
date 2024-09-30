@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import '../extensions/context_extensions.dart';
 import 'text.dart';
 
-class BigFilledButton extends StatelessWidget {
+class BigFilledButtonWithIcon extends StatelessWidget {
   final String label;
-  final IconData? icon;
+  final IconData icon;
   final VoidCallback? onPressed;
 
-  const BigFilledButton({
+  const BigFilledButtonWithIcon({
     super.key,
     required this.label,
-    this.icon,
+    required this.icon,
     this.onPressed,
   });
 

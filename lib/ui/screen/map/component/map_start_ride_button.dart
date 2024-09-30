@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../component/big_filled_button_component.dart';
+import '../../../component/big_filled_button_with_icon.dart';
 import '../../../cubit/drive/drive_cubit.dart';
 import '../../../cubit/map/map_cubit.dart';
 import '../../../cubit/map/map_state.dart';
@@ -19,7 +19,7 @@ class MapStartRideButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => BigFilledButton(
+  Widget build(BuildContext context) => BigFilledButtonWithIcon(
         onPressed: () => _onPressed(context),
         icon: Icons.navigation,
         label: context.str.mapStartNavigation,
