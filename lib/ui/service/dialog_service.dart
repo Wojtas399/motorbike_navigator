@@ -128,6 +128,24 @@ class DialogService {
     }
   }
 
+  Future<T?> showFullScreenDialog<T>(
+    Widget dialog,
+  ) async {
+    final BuildContext? context = _appRouter.navigatorKey.currentContext;
+    if (context == null) return null;
+    _isDialogOpened = true;
+    final T? response = await showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      barrierDismissible: false,
+      builder: (_) => Dialog.fullscreen(
+        child: dialog,
+      ),
+    );
+    _isDialogOpened = false;
+    return response;
+  }
+
   Future<T?> _showAlertDialog<T>(
     Widget dialog, {
     bool barrierDismissible = true,
