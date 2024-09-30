@@ -7,6 +7,7 @@ import '../../../component/text.dart';
 import '../../../extensions/context_extensions.dart';
 import '../../../service/dialog_service.dart';
 import '../cubit/drive_details_cubit.dart';
+import 'drive_details_new_title_dialog.dart';
 
 class DriveDetailsAppBar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -33,11 +34,20 @@ class _PopupMenu extends StatelessWidget {
   void _onActionSelected(_PopupMenuAction action, BuildContext context) {
     switch (action) {
       case _PopupMenuAction.editTitle:
-        //TODO
+        _editTitle(context);
         break;
       case _PopupMenuAction.deleteDrive:
         _deleteDrive(context);
     }
+  }
+
+  Future<void> _editTitle(BuildContext context) async {
+    await getIt.get<DialogService>().showFullScreenDialog(
+          BlocProvider.value(
+            value: context.read<DriveDetailsCubit>(),
+            child: const DriveDetailsNewTitleDialog(),
+          ),
+        );
   }
 
   Future<void> _deleteDrive(BuildContext context) async {

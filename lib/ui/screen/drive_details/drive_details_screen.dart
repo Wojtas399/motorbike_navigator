@@ -40,7 +40,12 @@ class _CubitStatusListener extends StatelessWidget {
       dialogService.showLoadingDialog();
     } else {
       dialogService.closeLoadingDialog();
-      if (status == DriveDetailsStateStatus.driveDeleted) {
+      if (status == DriveDetailsStateStatus.newTitleSaved) {
+        Navigator.pop(context);
+        dialogService.showSnackbarMessage(
+          context.str.driveDetailsSuccessfullySavedTitle,
+        );
+      } else if (status == DriveDetailsStateStatus.driveDeleted) {
         Navigator.pop(context);
         dialogService.showSnackbarMessage(
           context.str.driveDetailsSuccessfullyDeletedDrive,
