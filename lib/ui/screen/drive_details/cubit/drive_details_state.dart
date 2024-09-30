@@ -9,6 +9,8 @@ enum DriveDetailsStateStatus {
   loading,
   completed,
   driveNotFound,
+  newTitleIsEmptyString,
+  newTitleSaved,
   driveDeleted,
 }
 

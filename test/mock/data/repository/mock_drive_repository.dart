@@ -40,6 +40,15 @@ class MockDriveRepository extends Mock implements DriveRepository {
     ).thenAnswer((_) => Future.value());
   }
 
+  void mockUpdateDriveTitle() {
+    when(
+      () => updateDriveTitle(
+        driveId: any(named: 'driveId'),
+        newTitle: any(named: 'newTitle'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
+
   void mockDeleteDriveById() {
     when(
       () => deleteDriveById(any()),

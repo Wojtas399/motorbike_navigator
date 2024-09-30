@@ -30,6 +30,27 @@ class DriveDetailsCubit extends Cubit<DriveDetailsState> {
     }
   }
 
+  Future<void> saveNewTitle(String newTitle) async {
+    final int? driveId = state.drive?.id;
+    if (driveId == null) return;
+    if (newTitle.isEmpty) {
+      emit(state.copyWith(
+        status: DriveDetailsStateStatus.newTitleIsEmptyString,
+      ));
+      return;
+    }
+    emit(state.copyWith(
+      status: DriveDetailsStateStatus.loading,
+    ));
+    await _driveRepository.updateDriveTitle(
+      driveId: driveId,
+      newTitle: newTitle,
+    );
+    emit(state.copyWith(
+      status: DriveDetailsStateStatus.newTitleSaved,
+    ));
+  }
+
   Future<void> deleteDrive() async {
     final int? driveId = state.drive?.id;
     if (driveId == null) return;

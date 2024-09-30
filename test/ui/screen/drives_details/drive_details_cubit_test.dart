@@ -157,6 +157,75 @@ void main() {
   );
 
   group(
+    'saveNewTitle, ',
+    () {
+      const int driveId = 1;
+      const String newTitle = 'new title';
+      final Drive drive = DriveCreator(id: driveId).createEntity();
+      DriveDetailsState? state;
+
+      blocTest(
+        'should do nothing if drive does not exist',
+        build: () => createCubit(),
+        act: (cubit) async => await cubit.saveNewTitle(newTitle),
+        expect: () => [],
+      );
+
+      blocTest(
+        'should emit newTitleIsEmptyString status if passed title is empty '
+        'string',
+        build: () => createCubit(),
+        setUp: () => driveRepository.mockGetDriveById(expectedDrive: drive),
+        act: (cubit) async {
+          await cubit.initialize(driveId);
+          await cubit.saveNewTitle('');
+        },
+        expect: () => [
+          state = DriveDetailsState(
+            status: DriveDetailsStateStatus.completed,
+            drive: drive,
+          ),
+          state = state?.copyWith(
+            status: DriveDetailsStateStatus.newTitleIsEmptyString,
+          ),
+        ],
+      );
+
+      blocTest(
+        'should call method from DriveRepository to update title of the drive '
+        'and should emit newTitleSaved status',
+        build: () => createCubit(),
+        setUp: () {
+          driveRepository.mockGetDriveById(expectedDrive: drive);
+          driveRepository.mockUpdateDriveTitle();
+        },
+        act: (cubit) async {
+          await cubit.initialize(driveId);
+          await cubit.saveNewTitle(newTitle);
+        },
+        expect: () => [
+          state = DriveDetailsState(
+            status: DriveDetailsStateStatus.completed,
+            drive: drive,
+          ),
+          state = state?.copyWith(
+            status: DriveDetailsStateStatus.loading,
+          ),
+          state = state?.copyWith(
+            status: DriveDetailsStateStatus.newTitleSaved,
+          ),
+        ],
+        verify: (_) => verify(
+          () => driveRepository.updateDriveTitle(
+            driveId: driveId,
+            newTitle: newTitle,
+          ),
+        ).called(1),
+      );
+    },
+  );
+
+  group(
     'deleteDrive, ',
     () {
       const int driveId = 1;
