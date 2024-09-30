@@ -21,7 +21,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-      - name: Flutter pub get main
+      - name: Create env file
+        run: touch .env && echo "${{ secrets.MAPBOX_API_KEYS }}" > .env
+      - name: Flutter pub get
         run: flutter pub get
       - name: Flutter run build_runner
         run: flutter packages pub run build_runner build
