@@ -106,6 +106,27 @@ class DriveRepositoryImpl extends Repository<Drive> implements DriveRepository {
   }
 
   @override
+  Future<void> updateDriveTitle({
+    required int driveId,
+    required String newTitle,
+  }) async {
+    final Drive? existingDrive = (await repositoryState$.first)
+        .firstWhereOrNull((Drive drive) => drive.id == driveId);
+    if (existingDrive == null) return;
+    final DriveSqliteDto? updatedDriveSqliteDto =
+        await _driveSqliteService.updateTitle(
+      driveId: driveId,
+      newTitle: newTitle,
+    );
+    if (updatedDriveSqliteDto == null) return;
+    final Drive updatedDrive = _driveMapper.mapFromDto(
+      driveDto: updatedDriveSqliteDto,
+      positions: existingDrive.positions,
+    );
+    updateEntity(updatedDrive);
+  }
+
+  @override
   Future<void> deleteDriveById(int id) async {
     await _drivePositionSqliteService.deleteByDriveId(driveId: id);
     await _driveSqliteService.deleteById(id: id);

@@ -47,6 +47,17 @@ class MockDriveSqliteService extends Mock implements DriveSqliteService {
     ).thenAnswer((_) => Future.value(expectedInsertedDriveSqliteDto));
   }
 
+  void mockUpdateTitle({
+    DriveSqliteDto? updatedDriveSqliteDto,
+  }) {
+    when(
+      () => updateTitle(
+        driveId: any(named: 'driveId'),
+        newTitle: any(named: 'newTitle'),
+      ),
+    ).thenAnswer((_) => Future.value(updatedDriveSqliteDto));
+  }
+
   void mockDeleteById() {
     when(
       () => deleteById(

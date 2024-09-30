@@ -19,5 +19,10 @@ abstract interface class DriveRepository {
     required List<Position> positions,
   });
 
+  Future<void> updateDriveTitle({
+    required int driveId,
+    required String newTitle,
+  });
+
   Future<void> deleteDriveById(int id);
 }

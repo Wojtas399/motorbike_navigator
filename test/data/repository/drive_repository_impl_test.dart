@@ -626,6 +626,110 @@ void main() {
     },
   );
 
+  group(
+    'updateDriveTitle, ',
+    () {
+      const int driveId = 1;
+      const String newTitle = 'new title';
+
+      test(
+        'should do nothing if drive does not exist in repo state',
+        () async {
+          await repositoryImpl.updateDriveTitle(
+            driveId: driveId,
+            newTitle: newTitle,
+          );
+
+          verifyNever(
+            () => driveSqliteService.updateTitle(
+              driveId: driveId,
+              newTitle: newTitle,
+            ),
+          );
+        },
+      );
+
+      test(
+        'should not update drive in repo state if method from '
+        'DriveSqliteService to update title of the drive returns null',
+        () async {
+          final List<Drive> existingDrives = [
+            DriveCreator(id: driveId).createEntity(),
+            DriveCreator(id: 2).createEntity(),
+            DriveCreator(id: 3).createEntity(),
+          ];
+          driveSqliteService.mockUpdateTitle();
+          repositoryImpl.addEntities(existingDrives);
+
+          await repositoryImpl.updateDriveTitle(
+            driveId: driveId,
+            newTitle: newTitle,
+          );
+
+          expect(await repositoryImpl.repositoryState$.first, existingDrives);
+          verify(
+            () => driveSqliteService.updateTitle(
+              driveId: driveId,
+              newTitle: newTitle,
+            ),
+          ).called(1);
+        },
+      );
+
+      test(
+        'should call method from DriveSqliteService to update title and should '
+        'update drive in repo state',
+        () async {
+          final List<Drive> existingDrives = [
+            DriveCreator(
+              id: driveId,
+              positions: [
+                const DrivePositionCreator(order: 1).createEntity(),
+              ],
+            ).createEntity(),
+            DriveCreator(id: 2).createEntity(),
+            DriveCreator(id: 3).createEntity(),
+          ];
+          final DriveCreator updatedDriveCreator = DriveCreator(
+            id: driveId,
+            title: newTitle,
+            positions: existingDrives.first.positions,
+          );
+          final DriveSqliteDto updatedDriveSqliteDto =
+              updatedDriveCreator.createSqliteDto();
+          final Drive updatedDrive = updatedDriveCreator.createEntity();
+          driveSqliteService.mockUpdateTitle(
+            updatedDriveSqliteDto: updatedDriveSqliteDto,
+          );
+          driveMapper.mockMapFromDto(
+            expectedDrive: updatedDrive,
+          );
+          repositoryImpl.addEntities(existingDrives);
+
+          await repositoryImpl.updateDriveTitle(
+            driveId: driveId,
+            newTitle: newTitle,
+          );
+
+          expect(
+            await repositoryImpl.repositoryState$.first,
+            [
+              updatedDrive,
+              existingDrives[1],
+              existingDrives[2],
+            ],
+          );
+          verify(
+            () => driveSqliteService.updateTitle(
+              driveId: driveId,
+              newTitle: newTitle,
+            ),
+          ).called(1);
+        },
+      );
+    },
+  );
+
   test(
     'deleteDriveById, '
     'should call method from PositionSqliteService to delete positions by '
